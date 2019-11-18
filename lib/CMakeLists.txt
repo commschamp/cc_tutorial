@@ -17,8 +17,5 @@ endfunction ()
 
 #######################################################
 
-find_package(Boost REQUIRED
-    COMPONENTS system)
-    
 lib_server()
 

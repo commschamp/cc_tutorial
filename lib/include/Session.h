@@ -23,9 +23,11 @@ public:
     }
 
     // Needs to be implemented inside every tutorial
-    static Ptr create(boost::asio::io_service& io);
+    static Ptr createServer(boost::asio::io_service& io);
+    static Ptr createClient(boost::asio::io_service& io);
 
     bool startServer();
+    bool startClient();
 
     using TerminateCb = std::function<void ()>;
     template <typename TFunc>

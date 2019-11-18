@@ -62,7 +62,7 @@ void TcpServer::doAccept()
 
                 std::cout << "INFO: New connection from " << sessionId << std::endl;
 
-                auto session = Session::create(m_acceptor.get_io_service());
+                auto session = Session::createServer(m_acceptor.get_io_service());
 
                 session->setTerminateCb(
                     [this, sessionId]()

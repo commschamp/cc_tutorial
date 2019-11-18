@@ -46,7 +46,35 @@ if ((UNIX) AND (UNIX_USE_CCACHE))
     endif()
 endif () 
 
+include(GNUInstallDirs)
+
+find_package(Boost REQUIRED
+    COMPONENTS system)
+    
+find_package(Threads REQUIRED)    
+
 set (COMMON_SERVER_LIB "common_server")
 set (COMMON_CLIENT_LIB "common_client")
 
 add_subdirectory (lib)
+
+#######################################################
+
+function (bin_server name)
+    set (bin_name ${name}_server)
+    add_executable(${bin_name} ${ARGN})
+    target_link_libraries(
+        ${bin_name} PRIVATE ${COMMON_SERVER_LIB} Boost::system Boost::boost ${CMAKE_THREAD_LIBS_INIT})
+        
+    target_include_directories(
+        ${bin_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/${name}/include)        
+        
+    install(TARGETS ${bin_name}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )        
+endfunction ()
+
+#######################################################
+
+add_subdirectory (tutorial1)
+
