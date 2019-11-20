@@ -6,7 +6,7 @@
 namespace cc_tutorial
 {
 
-bool Session::startServer()
+bool Session::start()
 {
     assert(m_socket.is_open());
 

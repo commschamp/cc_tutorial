@@ -26,14 +26,18 @@ public:
     static Ptr createServer(boost::asio::io_service& io);
     static Ptr createClient(boost::asio::io_service& io);
 
-    bool startServer();
-    bool startClient();
+    bool start();
 
     using TerminateCb = std::function<void ()>;
     template <typename TFunc>
     void setTerminateCb(TFunc&& func)
     {
         m_terminateCb = std::forward<TFunc>(func);
+    }
+
+    boost::asio::io_service& getIoService()
+    {
+        return m_socket.get_io_service();
     }
 
 protected:

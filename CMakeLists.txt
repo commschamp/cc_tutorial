@@ -236,5 +236,27 @@ endfunction ()
 
 #######################################################
 
+function (bin_client name)
+    set (bin_name ${name}_client)
+    add_executable(${bin_name} ${ARGN})
+    target_link_libraries(
+        ${bin_name} PRIVATE ${COMMON_CLIENT_LIB} cc::comms Boost::system Boost::boost ${CMAKE_THREAD_LIBS_INIT})
+        
+    add_dependencies(${bin_name} ${name}_dsl)
+        
+    if (TARGET ${CC_EXTERNAL_TGT})
+        add_dependencies(${bin_name} ${CC_EXTERNAL_TGT})
+    endif ()        
+    
+    target_include_directories(
+        ${bin_name} PRIVATE ${CMAKE_SOURCE_DIR}/${name}/include)        
+        
+    install(TARGETS ${bin_name}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )        
+endfunction ()
+
+#######################################################
+
 add_subdirectory (tutorial1)
 

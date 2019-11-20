@@ -12,7 +12,7 @@ TcpServer::TcpServer(boost::asio::io_service& io)
 {
 }
 
-bool TcpServer::start()
+bool TcpServer::start(PortType port)
 {
     boost::system::error_code ec;
     m_acceptor.open(boost::asio::ip::tcp::v4(), ec);
@@ -21,9 +21,9 @@ bool TcpServer::start()
         return false;
     }
 
-    m_acceptor.bind(boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), m_port), ec);
+    m_acceptor.bind(boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port), ec);
     if (ec) {
-        std::cerr << "ERROR: Failed to bind port " << m_port << " with error: " << ec.message() << std::endl;
+        std::cerr << "ERROR: Failed to bind port " << port << " with error: " << ec.message() << std::endl;
         m_acceptor.close(ec);
         return false;
     }
@@ -77,7 +77,7 @@ void TcpServer::doAccept()
                     });
 
                 session->setSocket(std::move(m_socket));
-                if (!session->startServer()) {
+                if (!session->start()) {
                     std::cerr << "ERROR: Failed to start session for " << sessionId << std::endl;
                     break;
                 }

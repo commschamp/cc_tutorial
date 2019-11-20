@@ -17,12 +17,7 @@ public:
     using PortType = unsigned short;
 
     explicit TcpServer(boost::asio::io_service& io);
-    bool start();
-
-    void setPort(PortType value)
-    {
-        m_port = value;
-    }
+    bool start(PortType port = 20000);
 
 private:
 
@@ -32,7 +27,6 @@ private:
 
     Acceptor m_acceptor;
     Socket m_socket;
-    PortType m_port = 20000;
     SessionsMap m_sessions;
 };
 

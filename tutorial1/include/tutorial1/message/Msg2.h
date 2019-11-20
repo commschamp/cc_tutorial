@@ -1,5 +1,5 @@
 /// @file
-/// @brief Contains definition of <b>"Msg2"</b> message and its fields.
+/// @brief Contains definition of <b>"Message 2"</b> message and its fields.
 
 #pragma once
 
@@ -26,7 +26,7 @@ struct Msg2Fields
     >;
 };
 
-/// @brief Definition of <b>"Msg2"</b> message class.
+/// @brief Definition of <b>"Message 2"</b> message class.
 /// @details
 ///     See @ref Msg2Fields for definition of the fields this message contains.
 /// @tparam TMsgBase Base (interface) class.
@@ -62,7 +62,7 @@ public:
     /// @brief Name of the message.
     static const char* doName()
     {
-        return "Msg2";
+        return "Message 2";
     }
     
     

@@ -11,8 +11,8 @@ namespace cc_tutorial
 
 void Tutorial1ServerSession::handle(Message& msg)
 {
-    // The statement below uses polymorphic message ID retrieval.
-    std::cout << "Received message with ID=" << msg.getId() << std::endl;
+    // The statement below uses polymorphic message name and ID retrievals.
+    std::cout << "Received message \"" << msg.name() << "\" with ID=" << msg.getId() << std::endl;
 
     std::vector<std::uint8_t> output;
 
@@ -20,6 +20,8 @@ void Tutorial1ServerSession::handle(Message& msg)
     // buffer of the requires size
     output.resize(m_frame.length(msg));
 
+    // Serialize message into the buffer (including framing)
+    // The serialization uses polymorphic write functionality.
     auto writeIter = &output[0];
     auto es = m_frame.write(msg, writeIter, output.size());
     if (es != comms::ErrorStatus::Success) {
