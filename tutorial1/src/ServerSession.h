@@ -8,7 +8,7 @@
 namespace cc_tutorial
 {
 
-class Tutorial1ServerSession : public Session
+class ServerSession : public Session
 {
     using Base = Session;
 public:
@@ -22,7 +22,7 @@ public:
             comms::option::LengthInfoInterface, // Polymorphic length calculation
             comms::option::IdInfoInterface, // Polymorphic message ID retrieval
             comms::option::NameInterface, // Polymorphic message name retrieval
-            comms::option::Handler<Tutorial1ServerSession> // Polymorphic dispatch
+            comms::option::Handler<ServerSession> // Polymorphic dispatch
         >;
 
     // Handle all the received messages in a single function

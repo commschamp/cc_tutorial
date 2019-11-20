@@ -5,11 +5,11 @@ set (schema_files
 )
 
 set (server_src
-    src/Tutorial1ServerSession.cpp
+    src/ServerSession.cpp
 )
 
 set (client_src
-    src/Tutorial1ClientSession.cpp
+    src/ClientSession.cpp
 )
 
 

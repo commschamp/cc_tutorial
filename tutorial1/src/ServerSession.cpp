@@ -1,4 +1,4 @@
-#include "Tutorial1ServerSession.h"
+#include "ServerSession.h"
 
 #include <iostream>
 #include <cassert>
@@ -9,7 +9,7 @@
 namespace cc_tutorial
 {
 
-void Tutorial1ServerSession::handle(Message& msg)
+void ServerSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
     std::cout << "Received message \"" << msg.name() << "\" with ID=" << msg.getId() << std::endl;
@@ -36,7 +36,7 @@ void Tutorial1ServerSession::handle(Message& msg)
     sendOutput(&output[0], output.size());
 }
 
-std::size_t Tutorial1ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
+std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
 {
     // Process reported input, create relevant message objects and
     // dispatch all the created messages
@@ -46,7 +46,7 @@ std::size_t Tutorial1ServerSession::processInputImpl(const std::uint8_t* buf, st
 
 SessionPtr Session::createServer(boost::asio::io_service& io)
 {
-    return SessionPtr(new Tutorial1ServerSession(io));
+    return SessionPtr(new ServerSession(io));
 }
 
 } // namespace cc_tutorial

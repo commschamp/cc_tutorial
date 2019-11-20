@@ -1,4 +1,4 @@
-#include "Tutorial1ClientSession.h"
+#include "ClientSession.h"
 
 #include <iostream>
 #include <cassert>
@@ -9,7 +9,7 @@
 namespace cc_tutorial
 {
 
-void Tutorial1ClientSession::handle(Msg1& msg)
+void ClientSession::handle(Msg1& msg)
 {
     // The report below uses NON-polymorphic name and ID retrievals
     std::cout << "Received " << msg.doName() << " with ID=" << msg.doGetId() << std::endl;
@@ -22,7 +22,7 @@ void Tutorial1ClientSession::handle(Msg1& msg)
     doNextStage();
 }
 
-void Tutorial1ClientSession::handle(Msg2& msg)
+void ClientSession::handle(Msg2& msg)
 {
     // The report below uses NON-polymorphic name and ID retrievals
     std::cout << "Received " << msg.doName() << " with ID=" << msg.doGetId() << std::endl;
@@ -35,20 +35,20 @@ void Tutorial1ClientSession::handle(Msg2& msg)
     doNextStage();
 }
 
-void Tutorial1ClientSession::handle(Message& msg)
+void ClientSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
     std::cout << "ERROR: Received unexpected message \"" << msg.name() << "\" with ID=" <<
                  msg.getId() << std::endl;
 }
 
-bool Tutorial1ClientSession::startImpl()
+bool ClientSession::startImpl()
 {
     doNextStage();
     return true;
 }
 
-std::size_t Tutorial1ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
+std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
 {
     // Process reported input, create relevant message objects and
     // dispatch all the created messages
@@ -56,7 +56,7 @@ std::size_t Tutorial1ClientSession::processInputImpl(const std::uint8_t* buf, st
     return comms::processAllWithDispatch(buf, bufLen, m_frame, *this);
 }
 
-void Tutorial1ClientSession::sendMessage(const Message& msg)
+void ClientSession::sendMessage(const Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
     std::cout << "Sending message \"" << msg.name() << "\" with ID=" << msg.getId() << std::endl;
@@ -81,7 +81,7 @@ void Tutorial1ClientSession::sendMessage(const Message& msg)
     sendOutput(&output[0], output.size());
 }
 
-void Tutorial1ClientSession::doNextStage()
+void ClientSession::doNextStage()
 {
     do {
         if (CommsStage_NumOfValues <= m_currentStage) {
@@ -110,10 +110,10 @@ void Tutorial1ClientSession::doNextStage()
         m_currentStage = static_cast<decltype(m_currentStage)>(0);
     } while (false);
 
-    using NextSendFunc = void (Tutorial1ClientSession::*)();
+    using NextSendFunc = void (ClientSession::*)();
     static const NextSendFunc Map[] = {
-        /* CommsStage_Msg1 */ &Tutorial1ClientSession::sendMsg1,
-        /* CommsStage_Msg2 */ &Tutorial1ClientSession::sendMsg2
+        /* CommsStage_Msg1 */ &ClientSession::sendMsg1,
+        /* CommsStage_Msg2 */ &ClientSession::sendMsg2
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -122,13 +122,13 @@ void Tutorial1ClientSession::doNextStage()
     (this->*func)(); // Call appropriate sending function
 }
 
-void Tutorial1ClientSession::sendMsg1()
+void ClientSession::sendMsg1()
 {
     Msg1 msg;
     sendMessage(msg);
 }
 
-void Tutorial1ClientSession::sendMsg2()
+void ClientSession::sendMsg2()
 {
     Msg2 msg;
     sendMessage(msg);
@@ -137,7 +137,7 @@ void Tutorial1ClientSession::sendMsg2()
 
 SessionPtr Session::createClient(boost::asio::io_service& io)
 {
-    return SessionPtr(new Tutorial1ClientSession(io));
+    return SessionPtr(new ClientSession(io));
 }
 
 } // namespace cc_tutorial

@@ -11,7 +11,7 @@
 namespace cc_tutorial
 {
 
-class Tutorial1ClientSession : public Session
+class ClientSession : public Session
 {
     using Base = Session;
 public:
@@ -25,7 +25,7 @@ public:
             comms::option::LengthInfoInterface, // Polymorphic length calculation
             comms::option::IdInfoInterface, // Polymorphic message ID retrieval
             comms::option::NameInterface, // Polymorphic message name retrieval
-            comms::option::Handler<Tutorial1ClientSession> // Polymorphic dispatch
+            comms::option::Handler<ClientSession> // Polymorphic dispatch
         >;
 
     // Definition of all the used message classes
