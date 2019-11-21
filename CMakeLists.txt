@@ -8,8 +8,8 @@ option (UNIX_USE_CCACHE "Treat warnings as error" ON)
 # ---------------------------
 # COMMSDSL2COMMS - Path to "commsdsl2comms" binary if such is already built.
 # CC_MAIN_INSTALL_DIR - Path to CommsChampion external install directory (if such already built).
-# COMMSDSL_TAG - Tag / branch of commsdsl project
-# CC_TAG - Tag / branch of comms_champion project
+# COMMSDSL_TAG - Tag / branch of commsdsl project (if built internally)
+# CC_TAG - Tag / branch of comms_champion project (if built internally)
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
     set (COMMSDSL_TAG "v3.1")
@@ -205,9 +205,9 @@ function (dsl_parse name)
 
     add_custom_target(${name}_dsl ALL
         COMMAND ${CMAKE_COMMAND}
-            -DGENERATED="${output_dir}/include" -DOUTPUT="${CMAKE_SOURCE_DIR}/${name}/include"
-            -P "${CMAKE_SOURCE_DIR}/CopyGenerated.cmake"
-        DEPENDS ${output_dir} "${CMAKE_SOURCE_DIR}/CopyGenerated.cmake" ${DSL_PARSE_SCHEMAS} ${src_files}
+            -DGENERATED="${output_dir}/include" -DOUTPUT="${PROJECT_SOURCE_DIR}/${name}/include"
+            -P "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake"
+        DEPENDS ${output_dir} "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake" ${DSL_PARSE_SCHEMAS} ${src_files}
     )
     
 endfunction ()
@@ -227,7 +227,7 @@ function (bin_server name)
     endif ()        
     
     target_include_directories(
-        ${bin_name} PRIVATE ${CMAKE_SOURCE_DIR}/${name}/include)        
+        ${bin_name} PRIVATE ${PROJECT_SOURCE_DIR}/${name}/include)        
         
     install(TARGETS ${bin_name}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -249,7 +249,7 @@ function (bin_client name)
     endif ()        
     
     target_include_directories(
-        ${bin_name} PRIVATE ${CMAKE_SOURCE_DIR}/${name}/include)        
+        ${bin_name} PRIVATE ${PROJECT_SOURCE_DIR}/${name}/include)        
         
     install(TARGETS ${bin_name}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
