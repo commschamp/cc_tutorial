@@ -48,3 +48,50 @@ in your terminal window. It is expected to run indefinitely until manually termi
 with CTRL+C. In the second terminal window run the **client** application. In most
 cases it will exchange several messages with the **server** and exit.
 
+# References
+The core component of the [CommsChampion Ecosystem](https://arobenko.github.io/cc) is
+[COMMS Library](https://github.com/arobenko/comms_champion#comms-library). Its full
+tutorial and API reference can be viewed [online](https://arobenko.github.io/comms_doc) or
+downloaded from latest [release artifacts](https://github.com/arobenko/comms_champion/releases).
+
+The **commsdsl2comms** code generator requires schema file(s) to be written in
+[CommsDSL](https://github.com/arobenko/CommsDSL-Specification). The full specification
+can be viewed [online](https://arobenko.gitbooks.io/commsdsl-specification/content/) or
+downloaded as PDF from latest [release artifacts](https://github.com/arobenko/CommsDSL-Specification/releases).
+
+# How to Build
+This project uses CMake as its build system. Please open main
+[CMakeLists.txt](CMakeLists.txt) file and review available options as well as
+mentioned available parameters, which can be used in addition to standard 
+ones provided by CMake itself, to modify the default build. 
+
+**NOTE**, that [Boost](https://www.boost.org) libraries are also required.
+In case Boost libraries are not installed in expected default location
+(mostly happens on Windows systems), use variables described in 
+[CMake documentation](https://cmake.org/cmake/help/v3.8/module/FindBoost.html) 
+to help CMake find required libraries and headers.
+It is recommended to use `-DBoost_USE_STATIC_LIBS=ON` parameter to force
+linkage with static Boost libraries.
+
+### Linux Build
+```
+$> cd /source/of/this/project
+$> mkdir build && cd build
+$> cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PWD/install ..
+$> make install
+```
+### Windows Build
+```
+$> cd C:\source\of\this\project
+$> mkdir build
+$> cd build
+$> cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release \ 
+    -DCMAKE_INSTALL_PREFIX=%cd%/install \
+    -DBOOST_ROOT="C:\Libraries\boost_1_65_1" -DBoost_USE_STATIC_LIBS=ON ..
+$> nmake install
+```
+
+# Tutorials
+
+- [tutorial1](../../tree/master/tutorial1) - Introducing basic protocol definition, polymorphic message interfaces, and dispatching message object into appropriate handling function.
+
