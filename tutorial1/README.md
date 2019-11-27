@@ -89,6 +89,24 @@ The generated **tutorial1::Message** common interface class is extended
 with multiple options, which create various function with **polymorphic**
 behavior.
 
+**SIDE NOTE**: **Polymorphic** behavior implies usage of `virtual` function(s).
+To implement it the **COMMS Library** uses 
+[Non-Virtual Interface Idiom](https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Non-Virtual_Interface). 
+Something like:
+```
+class Message 
+{
+public:
+    void someFunc()
+    {
+        someFuncImpl();
+    }
+    
+protected:
+    virtual void someFuncImpl() = 0;
+};
+```
+
 #### Polymorphic Read
 Usage of `comms::option::ReadIterator` option adds the following type and 
 function to the message interface.
@@ -219,12 +237,17 @@ parameter is reference to the handling object, which must implement
 this particular tutorial `ServerSession` implement one common function for
 all the messages `void ServerSession::handle(Message& msg)`.
 
-The handling function uses polymorphic interface to report what message was
-received, serialize it into output buffer and send (echo) the same message
-back.
+The handling function (`void ServerSession::handle(Message& msg)`) 
+uses **polymorphic** interface to report what message was
+received (using `msg.name()` and `msg.getId()` calls), 
+serialize it into output buffer and send the same message
+back. In other words it's an "echo" server.
 
 The serialization of the message uses polymorphic interface to determine
-size of the output buffer as well as write message payload.
+size of the output buffer (call to `m_frame.length(msg)` will result in
+call to polymorphic `msg.length()`) as well as write message payload
+(call to `m_frame.write(...)` will result in call to polymorphic
+`msg.write(...)`).
 
 ## Client
 The client side is implemented in [ClientSession.h](src/ClientSession.h) and
@@ -347,7 +370,51 @@ this option is not provided different dispatch method is used. Various dispatch
 methods will be covered in details in later tutorial(s).
 
 #### Non-Polymorphic Message Interface
-TODO
+As was mentioned earlier the 
+[comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
+class is used (inherited from) to define proper message definition class.
+As the result the latter automatically defines the following **NON-polymorphic** (non-virtual)
+member functions, which can be used when actual message type is known to
+avoid unnecessary redirection of polymorphic (virtual) functions.
+```cpp
+class Msg1 : public comms::MessageBase<...>
+{
+public:
+    // NON-polymorphic read of payload
+    template <typename TIter>
+    comms::ErrorStatus doRead(TIter& iter, std::size_t len);
+    
+    // NON-polymorphic write of payload
+    template <typename TIter>
+    comms::ErrorStatus doWrite(TIter& iter, std::size_t len) const;
+    
+    // NON-polymorphic message ID retrieval
+    MsgIdType doGetId() const;
+    
+    // NON-polymorphic payload serialization length calculation
+    std::size_t doLength() const
+    
+    // NON-polymorphic human readable name of the message
+    static const char* doName();
+    
+    // NON-polymorphic validity check
+    bool doValid() const;
+    
+    // NON-polymorphic bring message to consistent state 
+    // (will be covered in later tutorial(s).
+    bool doRefresh();
+}
+```
+The usage of these functions is demonstrated inside handling function(s):
+```cpp
+void ClientSession::handle(Msg1& msg)
+{
+    // The report below uses NON-polymorphic name and ID retrievals
+    std::cout << "Received " << msg.doName() << " with ID=" << msg.doGetId() << std::endl;
+
+    ... // Irrelevant code
+}
+```
 
 ## Summary
 
