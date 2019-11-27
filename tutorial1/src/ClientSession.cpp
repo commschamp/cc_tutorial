@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cassert>
+#include <iterator>
 
 #include "comms/process.h"
 #include "comms/iterator.h"
@@ -50,10 +51,46 @@ bool ClientSession::startImpl()
 
 std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
 {
-    // Process reported input, create relevant message objects and
-    // dispatch all the created messages
-    // to this object for handling (appropriate handle() member function will be called)
-    return comms::processAllWithDispatch(buf, bufLen, m_frame, *this);
+    // Similar to server's code comms::processAllWithDispatch can also be
+    // called with the same effect. The code below is there for
+    // the demonstration purposes of what comms::processAllWithDispatch()
+    // is actually doing.
+    // return comms::processAllWithDispatch(buf, bufLen, m_frame, *this);
+
+    std::size_t consumed = 0U;
+    while (consumed < bufLen) {
+        auto begIter = buf + consumed;
+        auto remLen = bufLen - consumed;
+        auto iter = begIter;
+
+        // Frame class defines smart pointer (std::unique_ptr) to
+        // dynamically allocated message object.
+        Frame::MsgPtr msg;
+
+        auto es = m_frame.read(msg, iter, remLen);
+        if (es == comms::ErrorStatus::NotEnoughData) {
+            // Some more data needs to be received
+            break;
+        }
+
+        if (es == comms::ErrorStatus::ProtocolError) {
+            // Framing is wrong, skip one byte and try again
+            ++consumed;
+            continue;
+        }
+
+        if (es == comms::ErrorStatus::Success) {
+            assert(msg); // Message object must be allocated
+
+            msg->dispatch(*this); // Uses polymorphic dispatch, appropriate
+                                  // handle() member function will be called.
+        }
+
+        // Iterator has been advanced, updated consumed counter
+        consumed += static_cast<std::size_t>(std::distance(begIter, iter));
+    }
+
+    return consumed;
 }
 
 void ClientSession::sendMessage(const Message& msg)
@@ -71,6 +108,8 @@ void ClientSession::sendMessage(const Message& msg)
     // The serialization uses polymorphic write functionality.
     auto writeIter = std::back_inserter(output);
 
+    // The frame will use polymorphic message ID retrieval to
+    // prefix message payload with message ID
     auto es = m_frame.write(msg, writeIter, output.max_size());
     if (es != comms::ErrorStatus::Success) {
         assert(!"Write operation failed unexpectedly");

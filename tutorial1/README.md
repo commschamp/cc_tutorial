@@ -41,7 +41,7 @@ All the defined message classes (`Msg1` and `Msg2`) reside in
 [Every](include/tutorial1/message/Msg1.h) message definition class
 receives its common interface (base) class as the **first** template parameter.
 ```cpp
-template <typename TMsgBase, ... /* irrelevan for now */>
+template <typename TMsgBase, ... /* irrelevant for now */>
 class Msg1 : public
     comms::MessageBase<
         TMsgBase,
@@ -82,8 +82,7 @@ using Message =
         comms::option::WriteIterator<std::uint8_t*>, // Polymorphic write
         comms::option::LengthInfoInterface, // Polymorphic length calculation
         comms::option::IdInfoInterface, // Polymorphic message ID retrieval
-        comms::option::NameInterface, // Polymorphic message name retrieval
-        comms::option::Handler<ServerSession> // Polymorphic dispatch
+        comms::option::NameInterface // Polymorphic message name retrieval
     >;
 ```
 The generated **tutorial1::Message** common interface class is extended
@@ -174,7 +173,7 @@ public:
 The polymorphic message ID retrieval can be used in transport framing operation.
 There is a need to get the message ID when prefixing serialized message payload.
 
-# Polymorphic Message Name Retrieval
+#### Polymorphic Message Name Retrieval
 Usage of `comms::option::NameInterface` option adds the following 
 function to the message interface.
 ```cpp
@@ -193,8 +192,180 @@ is provided as `displayName` property of the message definition inside
 <message name="Msg1" id="MsgId.M1" displayName="Message 1"/>
 ```
 
-# Polymorphic Dispatch For Handling
-When raw data is received by any endpoint, it is processed and the proper
-message object is created. Such message object is held by the pointer / reference
-to its interface class / type (`tutorial1::Message`). There is also a need to
-dispatch it to appropriate handling function.
+Fore more details on message interface extensions please read
+[How to Use Defined Custom Protocol](https://arobenko.github.io/comms_doc/page_use_prot.html)
+page of the **COMMS Library** docuementation.
+
+
+#### Processing I/O Input
+The `turorial1::ServerSession::processInputImpl()` virtual function is invoked
+by the driving common I/O library to report unprocessed input. The arguments are 
+pointer to the input buffer and its size. The function is expected to 
+return number of consumed bytes. To help with such task **COMMS Library** provides
+`comms::processAllWithDispatch()` function (requires 
+"[comms/process.h](https://arobenko.github.io/comms_doc/process_8h.html)" to be 
+included). 
+```cpp
+std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
+{
+    return comms::processAllWithDispatch(buf, bufLen, m_frame, *this);
+}
+```
+The **first** parameter to the function is pointer to input buffer. The **second**
+one is the size of the buffer. The **third** is the frame object that is
+responsible to wrap / unwrap the transport information. The last (**fourth**)
+parameter is reference to the handling object, which must implement
+**handle()** member function for every message type it needs to handle. In
+this particular tutorial `ServerSession` implement one common function for
+all the messages `void ServerSession::handle(Message& msg)`.
+
+The handling function uses polymorphic interface to report what message was
+received, serialize it into output buffer and send (echo) the same message
+back.
+
+The serialization of the message uses polymorphic interface to determine
+size of the output buffer as well as write message payload.
+
+## Client
+The client side is implemented in [ClientSession.h](src/ClientSession.h) and
+[ClientSession.cpp](src/ClientSession.cpp). The common interface class the
+**client** side has chosen is a bit different to the **server**.
+```cpp
+using Message =
+    tutorial1::Message<
+        comms::option::ReadIterator<const std::uint8_t*>, // Polymorphic read
+        comms::option::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
+        comms::option::LengthInfoInterface, // Polymorphic length calculation
+        comms::option::IdInfoInterface, // Polymorphic message ID retrieval
+        comms::option::NameInterface, // Polymorphic message name retrieval
+        comms::option::Handler<ClientSession> // Polymorphic dispatch
+    >;
+```
+
+#### Polymorphic Write
+The **client** side also uses polymorphic write similar to the **server**. However
+the iterator used for writing is `std::back_insert_iterator<std::vector<std::uint8_t> >`.
+It results in a bit different serialization code for the message that needs
+to be sent out:
+```cpp
+void ClientSession::sendMessage(const Message& msg)
+{
+    ... // Printing what is being sent
+
+    std::vector<std::uint8_t> output;
+
+    // Use polymorphic serialization length calculation to reserve
+    // needed capacity
+    output.reserve(m_frame.length(msg));
+
+    // Serialize message into the buffer (including framing)
+    // The serialization uses polymorphic write functionality.
+    auto writeIter = std::back_inserter(output);
+
+    // The frame will use polymorphic message ID retrieval to
+    // prefix message payload with message ID
+    auto es = m_frame.write(msg, writeIter, output.max_size());
+    if (es != comms::ErrorStatus::Success) {
+        assert(!"Write operation failed unexpectedly");
+        return;
+    }
+
+    ... // Sending serialized buffer
+}
+```
+The capacity of the output buffer is **reserved** rather than the buffer
+being **resized** (compared to the **server**). The chosen iterator will
+result in usage of `push_back()` member function of the used output vector
+when message being serialized into it.
+
+#### Polymorphic Dispatch
+Another difference is that **client** side chose to add polymorphic
+dispatch functionality to the message interface by using `comms::option::Handler`
+option. The template parameter specifies type of the handling object. Usage
+of this object results in adding the following type and polymorphic member
+function to the message interface class.
+```cpp
+class Message 
+{
+public: 
+    // Handler class (parameter passed to comms::option::Handler)
+    using Handler = tutorial1::ClientSession;
+    
+    // Polymorphic dispatch
+    void dispatch(Handler& handler);
+};
+```
+The handler class (`tutorial::ClientSession`) is expected to define
+`handle()` member function for any message type it is expected to handle. 
+It also needs to define `handle()` member function for the common interface class
+which is going to be called when there is no appropriate `handle()` member
+function being defined for the real message type.
+```cpp
+class ClientSession : public Session
+{
+public:
+
+    // Common interface class for all the messages
+    using Message = tutorial1::Message<...>;
+
+    // Definition of all the used message classes
+    using Msg1 = tutorial1::message::Msg1<Message>;
+    using Msg2 = tutorial1::message::Msg2<Message>;
+
+    // Handling functions for all the dispatched message objects
+    void handle(Msg1& msg);
+    void handle(Msg2& msg);
+    void handle(Message& msg);
+    
+    ... // Irrelevant code
+};
+```
+
+#### Processing I/O Input
+The `turorial1::ClientSession::processInputImpl()` virtual function is invoked
+by the driving common I/O library to report unprocessed input. The arguments are 
+pointer to the input buffer and its size. The function is expected to 
+return number of consumed bytes. It is possible to invoke `comms::processAllWithDispatch()`
+function provided by the **COMMS Library**, which will strip off the transport
+framing, create appropriate message object and will dispatch it to appropriate
+handling function. However, just to show the usage of `dispatch()` member function
+of the message object, the manual processing code (similar to one
+inside the `comms::processAllWithDispatch()` has been written. Please
+pay closer attention on the dispatch statement:
+```cpp
+if (es == comms::ErrorStatus::Success) {
+    assert(msg); // Message object must be allocated
+
+    msg->dispatch(*this); // Uses polymorphic dispatch, appropriate
+                          // handle() member function will be called.
+}
+```
+The internals of `comms::processAllWithDispatch()` (when used) perform **compile time**
+evaluation of the message interface class options and perform similar polymorphic
+dispatch if it is supported (`comms::option::Handler` option is used). In case
+this option is not provided different dispatch method is used. Various dispatch
+methods will be covered in details in later tutorial(s).
+
+#### Non-Polymorphic Message Interface
+TODO
+
+## Summary
+
+- **COMMS Library** allows creation of common protocol definition code which
+is customized (what features are compiled in) by the end application.
+- One of the application customizations is extending common interface
+class with multiple options, which define polymorphic interface for every message.
+- The **CommsDSL** allows definition of various transport frames and generates
+appropriate code the wrap / unwrap message payload with relevant fields.
+- The **COMMS Library** provides `comms::processAllWithDispatch()` helper
+function that can be used to unwrap transport framing and dispatch
+detected messages to relevant handling functions.
+- The input / output buffers are responsibility of the end application. The
+**COMMS Library** as well as generated code use only provided iterators to the
+input / output data.
+- By default the message object is dynamically allocated and held by `std::unique_ptr`.
+How to modify this default behavior will be explained in one of the later
+tutorials.
+- Every message object has also non-polymorphic interface functions named
+`doX()`, which should be used when real message type is known to avoid
+unnecessary indirection of polymorphic calls.
