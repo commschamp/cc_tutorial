@@ -63,15 +63,15 @@ The transport framing of the message payload is defined inside
 of the message payload with extra transport fields (just prefixing it with message ID in this 
 tutorial).
 
-## Clint / Server Sessions
+## Client / Server Sessions
 Every tutorial (not just this one) uses common I/O management code, which operates on 
 [Session](../lib/include/Session.h) object(s). Every **tutorialX** / **howtoX** is expected
 to extend it and implement all the relevant virtual functions to make the common code function
 properly. The sessions are split into **server** and **client** ones. The **server**
-side code is implemented in [SeverSession.h](src/ServerSession.h) and 
-[ServerSession.cpp](src/ServerSession.cpp). The **client**
-side code is implemented in [ClientSession.h](src/ClientSession.h) and 
-[ClientSession.cpp](src/ClientSession.cpp) respectively. 
+side code is implemented in [src/SeverSession.h](src/ServerSession.h) and 
+[src/ServerSession.cpp](src/ServerSession.cpp). The **client**
+side code is implemented in [src/ClientSession.h](src/ClientSession.h) and 
+[src/ClientSession.cpp](src/ClientSession.cpp) respectively. 
 
 ## Server
 Let's take a look at definition of the message interface class inside [SeverSession.h](src/ServerSession.h)
@@ -343,6 +343,9 @@ public:
     ... // Irrelevant code
 };
 ```
+**SIDE NOTE**: The **COMMS Library** provides an ability to return values
+from message handling (`handle()`) member functions, but this is subject
+for another tutorial.
 
 #### Processing I/O Input
 The `turorial1::ClientSession::processInputImpl()` virtual function is invoked
