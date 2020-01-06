@@ -27,6 +27,10 @@ public:
             comms::option::NameInterface, // Polymorphic message name retrieval
             comms::option::Handler<ClientSession> // Polymorphic dispatch
         >;
+        
+    // Verify that destructor is virtual
+    static_assert(std::has_virtual_destructor<Message>::value, "Destructor is not virtual");
+        
 
     // Definition of all the used message classes
     using Msg1 = tutorial1::message::Msg1<Message>;

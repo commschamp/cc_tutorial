@@ -23,6 +23,9 @@ public:
             comms::option::IdInfoInterface, // Polymorphic message ID retrieval
             comms::option::NameInterface // Polymorphic message name retrieval
         >;
+        
+    // Verify that destructor is virtual
+    static_assert(std::has_virtual_destructor<Message>::value, "Destructor is not virtual");
 
     // Handle all the received messages in a single function
     void handle(Message& msg);

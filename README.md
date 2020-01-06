@@ -20,7 +20,7 @@ intended to be made available for online reading by the repository hosting servi
 - **dsl** - Folder containing [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
 schema file(s) relevant for the tutorial / how-to.
 - **include** - Folder that contains protocol definition code 
-**generated** (by the [commsdsl2comms](https://github.com/arobenko/commsdsl)
+**generated** by the [commsdsl2comms](https://github.com/arobenko/commsdsl)
 tool and relevant for the tutorial.
 - **src** - Folder containing code relevant to the tutorial / how-to.
 - **dsl_src** - Optional folder containing extra code snippets which are 

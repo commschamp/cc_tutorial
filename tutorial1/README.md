@@ -210,6 +210,14 @@ is provided as `displayName` property of the message definition inside
 <message name="Msg1" id="MsgId.M1" displayName="Message 1"/>
 ```
 
+#### Virtual Destructor
+Existence of polymorphic (virtual) functions in the common interface
+class definition also implies existence of the virtual destructor. It
+can be checked using standard type traits:
+```
+static_assert(std::has_virtual_destructor<Message>::value, "Destructor is not virtual");
+```
+
 Fore more details on message interface extensions please read
 [How to Use Defined Custom Protocol](https://arobenko.github.io/comms_doc/page_use_prot.html)
 page of the **COMMS Library** docuementation.
