@@ -28,6 +28,15 @@ public:
             comms::option::Handler<ClientSession> // Polymorphic dispatch
         >;
         
+    // Verify presence of polymorphic functionality
+    static_assert(Message::hasRead(), "Missing polymorphic read");
+    static_assert(Message::hasWrite(), "Missing polymorphic write");
+    static_assert(Message::hasLength(), "Missing polymorphic length");
+    static_assert(Message::hasGetId(), "Missing polymorphic getId");
+    static_assert(Message::hasName(), "Missing polymorphic name");
+    static_assert(Message::hasDispatch(), "Missing polymorphic dispatch");
+        
+        
     // Verify that destructor is virtual
     static_assert(std::has_virtual_destructor<Message>::value, "Destructor is not virtual");
         

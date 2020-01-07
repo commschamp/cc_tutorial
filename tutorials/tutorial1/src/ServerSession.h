@@ -24,6 +24,13 @@ public:
             comms::option::NameInterface // Polymorphic message name retrieval
         >;
         
+    // Verify presence of polymorphic functionality
+    static_assert(Message::hasRead(), "Missing polymorphic read");
+    static_assert(Message::hasWrite(), "Missing polymorphic write");
+    static_assert(Message::hasLength(), "Missing polymorphic length");
+    static_assert(Message::hasGetId(), "Missing polymorphic getId");
+    static_assert(Message::hasName(), "Missing polymorphic name");
+        
     // Verify that destructor is virtual
     static_assert(std::has_virtual_destructor<Message>::value, "Destructor is not virtual");
 

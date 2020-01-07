@@ -2,17 +2,20 @@
 This repository is a combination of tutorials and various how-to(s) for
 [CommsChampion Ecosystem](https://arobenko.github.io/cc). 
 
-The tutorials are organized as a combination **tutorialX** folders. They 
-gradually introduce various concepts and expected to be read sequentially 
-one by one. 
+The tutorials are organized as a combination **tutorials/tutorialX** folders. They 
+gradually introduce various concepts as well as explain various nuances for specific
+use cases. The tutorials are expected to be read **sequentially**
+one by one. Be patient and try to follow them through.
 
 The how-to(s) on the other hand, do not have any particular organization. They
-reside in **howtoX** folders and can be read independently. The howto(s) are
+reside in **howtos/howtoX** folders and can be read independently. **HOWEVER**, it is
+paramount to understand the core ideas explained in tutorials before attempting
+to understand a particular howto example. The howto(s) are
 there to provide some extra examples or cover some specific nuances which are
 not explained properly in the tutorials. 
 
 # Repository Organization
-Every **tutorialX** and **howtoX** folder may contain the following files / directories:
+Every **tutorials/tutorialX** and **howotos/howtoX** folder may contain the following files / directories:
 
 - **README.md** - Actual tutorial / how-to explanation markdown text that is 
 intended to be made available for online reading by the repository hosting service
@@ -27,8 +30,8 @@ tool and relevant for the tutorial.
 picked up by the [commsdsl2comms](https://github.com/arobenko/commsdsl) tool
 and find their way into the generated protocol definition code.
 
-**IMPORTANT EMPHASIS**: The **include** folder of each and every **tutorialX**
-and **howtoX** is the **generated** code produced by the **commsdsl2comms** code
+**IMPORTANT EMPHASIS**: The **include** folder of each and every **tutorials/tutorialX**
+and **howtows/howtoX** is the **generated** code produced by the **commsdsl2comms** code
 generation tool during the build process. Note, that it is a bad practice to
 keep generated code as sources of the repository and should not be done in 
 real life projects. It was done here to allow easy generated code demonstration and
@@ -53,6 +56,10 @@ The core component of the [CommsChampion Ecosystem](https://arobenko.github.io/c
 [COMMS Library](https://github.com/arobenko/comms_champion#comms-library). Its full
 tutorial and API reference can be viewed [online](https://arobenko.github.io/comms_doc) or
 downloaded from latest [release artifacts](https://github.com/arobenko/comms_champion/releases).
+The full tutorial on how to use the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+resides in
+[How to Use Defined Custom Protocol](https://arobenko.github.io/comms_doc/page_use_prot.html)
+page of the documentation.
 
 The **commsdsl2comms** code generator requires schema file(s) to be written in
 [CommsDSL](https://github.com/arobenko/CommsDSL-Specification). The full specification
@@ -93,5 +100,5 @@ $> nmake install
 
 # Tutorials
 
-- [tutorial1](../../tree/master/tutorial1) - Introducing basic protocol definition, polymorphic message interfaces, and dispatching message object into appropriate handling function.
+- [tutorial1](../../tree/master/tutorials/tutorial1) - Introducing basic protocol definition, polymorphic message interfaces, and dispatching message object into appropriate handling function.
 
