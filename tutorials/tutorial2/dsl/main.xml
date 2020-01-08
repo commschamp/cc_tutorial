@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="tutorial2" endian="big">
+    <fields>
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M1" val="1" />
+            <validValue name="M2" val="2" />
+        </enum>
+    </fields>
+    
+    <frame name="Frame">
+        <id name="ID">
+            <field>
+                <ref field="MsgId" />
+            </field>
+        </id>
+        <payload name="Data" />
+    </frame>
+</schema>

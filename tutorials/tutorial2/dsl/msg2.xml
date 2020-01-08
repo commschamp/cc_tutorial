@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <message name="Msg2" id="MsgId.M2" displayName="Message 2"/>    
+</schema>

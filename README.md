@@ -101,4 +101,5 @@ $> nmake install
 # Tutorials
 
 - [tutorial1](../../tree/master/tutorials/tutorial1) - Introducing basic protocol definition, polymorphic message interfaces, and dispatching message object into appropriate handling function.
+- [tutorial2](../../tree/master/tutorials/tutorial2) - Introduction to message fields definitions and their usage.
 

@@ -170,7 +170,7 @@ endif ()
 
 #######################################################
 
-function (dsl_parse name)
+function (dsl_parse type name)
     set (prefix DSL_PARSE)
     set (options)
     set (oneValueArgs SRC_DIR)
@@ -205,7 +205,7 @@ function (dsl_parse name)
 
     add_custom_target(${name}_dsl ALL
         COMMAND ${CMAKE_COMMAND}
-            -DGENERATED="${output_dir}/include" -DOUTPUT="${PROJECT_SOURCE_DIR}/${name}/include"
+            -DGENERATED="${output_dir}/include" -DOUTPUT="${PROJECT_SOURCE_DIR}/${type}/${name}/include"
             -P "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake"
         DEPENDS ${output_dir} "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake" ${DSL_PARSE_SCHEMAS} ${src_files}
     )
@@ -214,7 +214,7 @@ endfunction ()
 
 #######################################################
 
-function (bin_server name)
+function (bin_server type name)
     set (bin_name ${name}_server)
     add_executable(${bin_name} ${ARGN})
     target_link_libraries(
@@ -227,7 +227,7 @@ function (bin_server name)
     endif ()        
     
     target_include_directories(
-        ${bin_name} PRIVATE ${PROJECT_SOURCE_DIR}/${name}/include)        
+        ${bin_name} PRIVATE ${PROJECT_SOURCE_DIR}/${type}/${name}/include)        
         
     install(TARGETS ${bin_name}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -236,7 +236,7 @@ endfunction ()
 
 #######################################################
 
-function (bin_client name)
+function (bin_client type name)
     set (bin_name ${name}_client)
     add_executable(${bin_name} ${ARGN})
     target_link_libraries(
@@ -249,7 +249,7 @@ function (bin_client name)
     endif ()        
     
     target_include_directories(
-        ${bin_name} PRIVATE ${PROJECT_SOURCE_DIR}/${name}/include)        
+        ${bin_name} PRIVATE ${PROJECT_SOURCE_DIR}/${type}/${name}/include)        
         
     install(TARGETS ${bin_name}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
