@@ -2,6 +2,7 @@
 <schema>
     <fields>
         <int name="I1" type="uint8" />
+        <int name="Dummy" type="uint8" description="Not referenced anywhere" />
     </fields>
     
     <message name="Msg1" id="MsgId.M1" displayName="Message 1">

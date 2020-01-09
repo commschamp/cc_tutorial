@@ -10,6 +10,9 @@ numeric message ID.
 
 Several highlights:
 
+- The **name** property of the **&lt;schema&gt;** XML node will be
+a default main namespace of the protocol code. The code generated has a
+command line option to overwrite it.
 - The protocol endian is defined as **endian="big"** property of
 the main **&lt;schema&gt;** XML node.
 - The global fields (that can be references by messages and/or other 
@@ -60,7 +63,7 @@ options. In this specific tutorial they are going to be used to introduce
 polymorphic interface (virtual functions) for protocol message objects.
 
 All the defined message classes (`Msg1` and `Msg2`) reside in 
-[include/tutorial1/message](include/tutorial1/message) folder.
+**message** namespace and in [include/tutorial1/message](include/tutorial1/message) folder.
 Every [MsgX.h](include/tutorial1/message/Msg1.h) file contains class definition of 
 the relevant message and its fields. The corresponding
 [MsgXCommon.h](https://github.com/arobenko/cc_tutorial/blob/master/tutorial1/include/tutorial1/message/Msg1Common.h)
