@@ -31,9 +31,8 @@ struct Msg1Fields
 {
     /// @brief Definition of <b>"F1"</b> field.
     struct F1 : public
-        comms::field::IntValue<
-            tutorial2::field::FieldBase<>,
-            std::uint16_t
+        tutorial2::field::I1<
+            TOpt
         >
     {
         /// @brief Name of the field.
@@ -46,8 +45,9 @@ struct Msg1Fields
     
     /// @brief Definition of <b>"F2"</b> field.
     struct F2 : public
-        tutorial2::field::I1<
-            TOpt
+        comms::field::IntValue<
+            tutorial2::field::FieldBase<>,
+            std::int16_t
         >
     {
         /// @brief Name of the field.

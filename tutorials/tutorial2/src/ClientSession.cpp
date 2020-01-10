@@ -12,8 +12,9 @@ namespace cc_tutorial
 
 void ClientSession::handle(Msg1& msg)
 {
-    // The report below uses NON-polymorphic name and ID retrievals
-    std::cout << "Received " << msg.doName() << " with ID=" << msg.doGetId() << std::endl;
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+        "\tf1 = " << (unsigned)msg.field_f1().value() << '\n' <<
+        "\tf2 = " << msg.field_f2().value() << '\n' << std::endl;
 
     if (m_currentStage != CommsStage_Msg1) {
         std::cerr << "ERROR: Unexpected message received: " << std::endl;
@@ -128,6 +129,8 @@ void ClientSession::doNextStage()
 void ClientSession::sendMsg1()
 {
     Msg1 msg;
+    msg.field_f1().value() = 1;
+    msg.field_f2().value() = 100;
     sendMessage(msg);
 }
 

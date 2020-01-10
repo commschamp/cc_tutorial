@@ -6,7 +6,7 @@
     </fields>
     
     <message name="Msg1" id="MsgId.M1" displayName="Message 1">
-        <ref field="I1" name="12" />
-        <int name="F1" type="int16" />
+        <ref field="I1" name="F1" />
+        <int name="F2" type="int16" />
     </message>
 </schema>
