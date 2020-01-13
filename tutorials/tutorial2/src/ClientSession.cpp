@@ -6,6 +6,7 @@
 
 #include "comms/process.h"
 #include "comms/iterator.h"
+#include "comms/cast.h"
 
 namespace cc_tutorial
 {
@@ -26,8 +27,11 @@ void ClientSession::handle(Msg1& msg)
 
 void ClientSession::handle(Msg2& msg)
 {
-    // The report below uses NON-polymorphic name and ID retrievals
-    std::cout << "Received " << msg.doName() << " with ID=" << msg.doGetId() << std::endl;
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+        "\tf1 = " << (unsigned)msg.field_f1().value() << " (" << msg.field_f1().valueName()  << ")\n" <<
+        "\tf2 = " << (unsigned)msg.field_f2().value() << " (" << msg.field_f2().valueName()  << ")\n" <<
+        "\tf3 = " << (int)msg.field_f3().value() << " (" << msg.field_f3().valueName()  << ")\n" <<
+        "\tf4 = " << (int)msg.field_f4().value() << " (" << msg.field_f4().valueName()  << ")\n" << std::endl;
 
     if (m_currentStage != CommsStage_Msg2) {
         std::cerr << "ERROR: Unexpected message received" << std::endl;
@@ -137,6 +141,10 @@ void ClientSession::sendMsg1()
 void ClientSession::sendMsg2()
 {
     Msg2 msg;
+    msg.field_f1().value() = tutorial2::field::E2_1Val::V2;
+    msg.field_f2().value() = tutorial2::field::E2_2Common::ValueType::V3;
+    msg.field_f3().value() = Msg2::Field_f3::ValueType::V1;
+    comms::cast_assign(msg.field_f4().value()) = -200;
     sendMessage(msg);
 }
 

@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema>
-    <message name="Msg2" id="MsgId.M2" displayName="Message 2"/>    
+    <fields>
+        <enum name="E2_1" type="uint8">
+            <validValue name="V1" val="0" description="Some value" />
+            <validValue name="V2" val="1" />
+            <validValue name="V3" val="2" />
+        </enum>
+        
+        <enum name="E2_2" type="uint16" defaultValue="V2">
+            <validValue name="V1" val="0" />
+            <validValue name="V2" val="100" />
+            <validValue name="V3" val="0x10f" />
+        </enum>        
+    </fields>
+    
+    <message name="Msg2" id="MsgId.M2" displayName="Message 2">
+        <ref name="F1" field="E2_1" />
+        <ref name="F2" field="E2_2" />
+        <enum name="F3" type="int8" description="Some Inner enum" defaultValue="V3">
+            <validValue name="V1" val="-100" />
+            <validValue name="V2" val="0" />
+            <validValue name="V3" val="10" />
+        </enum>
+        <enum name="F4" type="int16" description="Inner enum">
+            <validValue name="V1" val="-200" />
+            <validValue name="V2" val="0" />
+            <validValue name="V3" val="0xff" />
+            <validValue name="V4" val="0x2ff" />
+        </enum>
+    </message>    
 </schema>

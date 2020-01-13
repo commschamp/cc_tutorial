@@ -38,7 +38,7 @@ processed file must properly define protocol name and endian (see
 </schema>
 ```
 All the subsequent files **may** (but don't have to) omit such definition (
-see [dsl/msg1.xml](dsl/msg1.xml).
+see [dsl/msg1.xml](dsl/msg1.xml)).
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <schema>
@@ -47,7 +47,7 @@ see [dsl/msg1.xml](dsl/msg1.xml).
 ```
 
 ## Defining Fields
-Every message may define internal fields. Let's take a look at [dsl/msg1.xml](dsl/msg1.xml).
+Every message may define internal fields. Let's take a look inside [dsl/msg1.xml](dsl/msg1.xml).
 ```
 <message name="Msg1" id="MsgId.M1" displayName="Message 1">
     <ref field="I1" name="F1" />
@@ -56,11 +56,11 @@ Every message may define internal fields. Let's take a look at [dsl/msg1.xml](ds
 ```
 The message can define its field internally:
 ```
-<int name="F1" type="int16" />
+<int name="F2" type="int16" />
 ```
 or reference the previously defined global field (using **&lt;ref&gt;** node):
 ```
-<ref field="I1" name="12" />
+<ref field="I1" name="F1" />
 ```
 The globally defined fields need to reside inside **&lt;fields&gt;** XML node:
 ```
@@ -265,7 +265,7 @@ field name by either capitalizing or making it a lower case. That's what happens
 with `Msg1` member fields. When their class is defined the first letter is capitalized,
 while the access names changed to start with lower case.
 - The provided names ('f1', 'f2') find their way to `FieldIdx_X` enum values, inner
-`Field_X` alias types and `field_X()` access member functions.
+`Field_X` alias types and `field_x()` access member functions.
 
 Usage of the access member functions can be demonstrated in the function that prepares and
 sends the `Msg1` into the server:
@@ -289,6 +289,107 @@ void ClientSession::handle(Msg1& msg)
 }
 
 ```
+
+## Supported Field Types
+The [CommsChampion Ecosystem](https://arobenko.github.io/cc) has multiple 
+supported field types which are covered below one by one.
+
+### Enum Fields
+The `Msg2` message (defined inside [dsl/msg2.xml](dsl/msg2.xml)) is there to
+demonstrate usage of enum fields. Let's take a look inside. There is definition
+of external field `E2_1` which is referenced by the `Msg1` definition:
+```
+<fields>
+    <enum name="E2_1" type="uint8">
+        <validValue name="V1" val="0" description="Some value" />
+        <validValue name="V2" val="1" />
+        <validValue name="V3" val="2" />
+    </enum>
+
+...
+</fields>
+
+<message name="Msg2" id="MsgId.M2" displayName="Message 2">
+    <ref name="F1" field="E2_1" />
+    ...
+</message>    
+```
+As the result the field definition will reside in 
+[include/tutorial2/field/E2_1.h](include/tutorial2/field/E2_1.h) with its
+common, template parameter's independent types and functions in
+[include/tutorial2/field/E2_1Common.h](include/tutorial2/field/E2_1Common.h)
+
+Please note the following:
+
+- Internal `ValueType` of the field is defined to be `tutorial2::field::E2_1Val`,
+which in turn is alias to `tutorial2::field::E2_1Common::ValueType`. Both defined
+in [include/tutorial2/field/E2_1Common.h](include/tutorial2/field/E2_1Common.h).
+- The value of **type** property in XML definition (`uint8`) is an underlying type of the
+generated `enum` and is also used to determine serialization length of the field.
+```cpp
+struct E2_1Common
+{
+    ...
+    enum class ValueType : std::uint8_t
+    {
+        ...        
+    };
+    ...
+};
+
+```
+- Many elements in [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
+schema have **description** property, which finds its way to element's doxygen
+documentation.
+- There are extra `enum` values added by the code generator for convenience:
+```cpp
+struct E2_1Common
+{
+    ...
+    enum class ValueType : std::uint8_t
+    {
+        ...  
+        // --- Extra values generated for convenience ---
+        FirstValue = 0, ///< First defined value.
+        LastValue = 2, ///< Last defined value.
+        ValuesLimit = 3, ///< Upper limit for defined values.
+    };
+    ...
+};
+
+```
+
+There is also a definition
+of external `enum` field `E2_2` which is referenced by the `Msg1` definition:
+```
+<fields>
+    <enum name="E2_2" type="uint16" defaultValue="V2">
+        <validValue name="V1" val="0" />
+        <validValue name="V2" val="100" />
+        <validValue name="V3" val="0x10f" />
+    </enum>        
+
+
+...
+</fields>
+
+<message name="Msg2" id="MsgId.M2" displayName="Message 2">
+    ...
+    <ref name="F2" field="E2_2" />
+    ...
+</message>    
+This field definition will reside in 
+[include/tutorial2/field/E2_2.h](include/tutorial2/field/E2_2.h) with its
+common, template parameter's independent types and functions in
+[include/tutorial2/field/E2_2Common.h](include/tutorial2/field/E2_2Common.h)
+
+Please note the following:
+
+- By default the value of the default-constructed `enum` field object is `0`. It
+is possible to change it using **defaultValue** property of the field, which can
+have either numeric value of reference one of its **&lt;valueValue&gt;**-es. In
+case of `E2_2` it is `V2`.
+
 
 ## Summary
 
