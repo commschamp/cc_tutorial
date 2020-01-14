@@ -22,11 +22,11 @@
             <validValue name="V2" val="0" />
             <validValue name="V3" val="10" />
         </enum>
-        <enum name="F4" type="int16" description="Inner enum">
-            <validValue name="V1" val="-200" />
-            <validValue name="V2" val="0" />
-            <validValue name="V3" val="0xff" />
-            <validValue name="V4" val="0x2ff" />
+        <enum name="F4" type="uint16" hexAssign="true">
+            <validValue name="V1" val="0" displayName="Value 1"/>
+            <validValue name="V2" val="0xff"  displayName="Value 2"/>
+            <validValue name="V3" val="0x2ff" displayName="Value 3"/>
+            <validValue name="V4" val="0xfff" displayName="Value 4"/>
         </enum>
     </message>    
 </schema>

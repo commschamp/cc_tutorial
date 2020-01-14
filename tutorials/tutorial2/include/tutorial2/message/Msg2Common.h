@@ -109,17 +109,17 @@ struct Msg2FieldsCommon
     {
         /// @brief Values enumerator for
         ///     @ref tutorial2::message::Msg2Fields::F4 field.
-        enum class ValueType : std::int16_t
+        enum class ValueType : std::uint16_t
         {
-            V1 = -200, ///< value @b V1
-            V2 = 0, ///< value @b V2
-            V3 = 255, ///< value @b V3
-            V4 = 767, ///< value @b V4
+            V1 = 0x0000U, ///< value <b>Value 1</b>.
+            V2 = 0x00FFU, ///< value <b>Value 2</b>.
+            V3 = 0x02FFU, ///< value <b>Value 3</b>.
+            V4 = 0x0FFFU, ///< value <b>Value 4</b>.
             
             // --- Extra values generated for convenience ---
-            FirstValue = -200, ///< First defined value.
-            LastValue = 767, ///< Last defined value.
-            ValuesLimit = 768, ///< Upper limit for defined values.
+            FirstValue = 0x0000U, ///< First defined value.
+            LastValue = 0x0FFFU, ///< Last defined value.
+            ValuesLimit = 0x1000U, ///< Upper limit for defined values.
             
         };
         
@@ -134,10 +134,10 @@ struct Msg2FieldsCommon
         {
             using NameInfo = std::pair<ValueType, const char*>;
             static const NameInfo Map[] = {
-                std::make_pair(ValueType::V1, "V1"),
-                std::make_pair(ValueType::V2, "V2"),
-                std::make_pair(ValueType::V3, "V3"),
-                std::make_pair(ValueType::V4, "V4")
+                std::make_pair(ValueType::V1, "Value 1"),
+                std::make_pair(ValueType::V2, "Value 2"),
+                std::make_pair(ValueType::V3, "Value 3"),
+                std::make_pair(ValueType::V4, "Value 4")
             };
             
             auto iter = std::lower_bound(

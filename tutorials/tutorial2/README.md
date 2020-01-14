@@ -50,7 +50,7 @@ see [dsl/msg1.xml](dsl/msg1.xml)).
 Every message may define internal fields. Let's take a look inside [dsl/msg1.xml](dsl/msg1.xml).
 ```
 <message name="Msg1" id="MsgId.M1" displayName="Message 1">
-    <ref field="I1" name="F1" />
+    <ref name="F1" field="I1" />
     <int name="F2" type="int16" />
 </message>
 ```
@@ -60,7 +60,7 @@ The message can define its field internally:
 ```
 or reference the previously defined global field (using **&lt;ref&gt;** node):
 ```
-<ref field="I1" name="F1" />
+<ref name="F1" field="I1" />
 ```
 The globally defined fields need to reside inside **&lt;fields&gt;** XML node:
 ```
@@ -125,7 +125,7 @@ client side session code. In the real life application working with fields on
 the sever side is no different than on the client.
 
 ## Working With Field Classes
-In general, every field is an abstracting wrapper around value storage in
+In general, every field is an abstraction wrapper around value storage in
 order to provide common interface for all the fields. All the presented later
 supported field types will have the following public member types and functions:
 ```
@@ -226,8 +226,8 @@ f1.value() = 1;
 f2.value() = 100;
 ```
 However, accessing the fields by hard-coded numeric indices is quite
-inconvenient, not to mention being a bad practice. That what
-usage of `COMMS_MSG_FIELDS_NAMES()` macro comes to resolve. It receives the
+inconvenient, not to mention being a bad practice. That's what
+usage of `COMMS_MSG_FIELDS_NAMES()` macro comes to resolve. It receives 
 arguments, which are names of the fields (**f1** and **f2**) and results in generating the 
 following types and member functions:
 ```cpp
@@ -241,7 +241,7 @@ public:
     {
         FieldIdx_f1,
         FieldIdx_f2,
-        NumOfValues
+        FieldIdx_numOfValues
     };
     
     // Alias types to member fields
@@ -264,11 +264,11 @@ the code generator (**commsdsl2comms**) is allowed to change the first latter of
 field name by either capitalizing or making it a lower case. That's what happens
 with `Msg1` member fields. When their class is defined the first letter is capitalized,
 while the access names changed to start with lower case.
-- The provided names ('f1', 'f2') find their way to `FieldIdx_X` enum values, inner
-`Field_X` alias types and `field_x()` access member functions.
+- The provided names ('f1', 'f2') find their way to `FieldIdx_x` enum values, inner
+`Field_x` alias types and `field_x()` access member functions.
 
 Usage of the access member functions can be demonstrated in the function that prepares and
-sends the `Msg1` into the server:
+sends the `Msg1` to the server:
 ```cpp
 void ClientSession::sendMsg1()
 {
@@ -292,7 +292,11 @@ void ClientSession::handle(Msg1& msg)
 
 ## Supported Field Types
 The [CommsChampion Ecosystem](https://arobenko.github.io/cc) has multiple 
-supported field types which are covered below one by one.
+supported field types which are covered below one by one. Due to the nature of
+these tutorial it is not possible to cover **all** aspects (properties) of all
+the available fields, it is highly recommended to read 
+[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification in
+full after this tutorial.
 
 ### Enum Fields
 The `Msg2` message (defined inside [dsl/msg2.xml](dsl/msg2.xml)) is there to
@@ -338,6 +342,8 @@ struct E2_1Common
 };
 
 ```
+- Supported values of underlying type are: **int8**, **uint8**, **int16**,
+**uint16**, **int32**, **uint32**, **int64**, **uint64**, **intvar**, **uintvar**.
 - Many elements in [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
 schema have **description** property, which finds its way to element's doxygen
 documentation.
@@ -358,6 +364,21 @@ struct E2_1Common
 };
 
 ```
+- The field's value is considered to be valid (determined by the call to the
+`valid()` member function) if it is equal to one of
+the **&lt;validValue&gt;**-es. It is implemented by using `comms::option::def::ValidNumValueRange`
+option provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+```cpp
+template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
+class E2_1 : public
+    comms::field::EnumValue<
+        ...
+        comms::option::def::ValidNumValueRange<0, 2>
+    >
+{
+    ...
+};
+```
 
 There is also a definition
 of external `enum` field `E2_2` which is referenced by the `Msg1` definition:
@@ -377,7 +398,8 @@ of external `enum` field `E2_2` which is referenced by the `Msg1` definition:
     ...
     <ref name="F2" field="E2_2" />
     ...
-</message>    
+</message>
+```    
 This field definition will reside in 
 [include/tutorial2/field/E2_2.h](include/tutorial2/field/E2_2.h) with its
 common, template parameter's independent types and functions in
@@ -388,8 +410,123 @@ Please note the following:
 - By default the value of the default-constructed `enum` field object is `0`. It
 is possible to change it using **defaultValue** property of the field, which can
 have either numeric value of reference one of its **&lt;valueValue&gt;**-es. In
-case of `E2_2` it is `V2`.
+case of `E2_2` it is `V2`. It is implemented using `comms::option::def::DefaultNumValue`
+option passed to the class definition.
+- Any numeric value can be assigned as decimal or or as hexadecimal value prefixed
+with `0x`.
+- When the **&lt;valueValue&gt;**-es cannot be unified into one range, the 
+[COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+allows usage of multiple `comms::option::def::ValidNumValue` options:
+```cpp
+template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
+class E2_2 : public
+    comms::field::EnumValue<
+        ...
+        comms::option::def::ValidNumValue<0>,
+        comms::option::def::ValidNumValue<100>,
+        comms::option::def::ValidNumValue<271>
+    >
+{
+    ...
+};
+```
 
+The `Msg2` message defines its third field internally:
+```cpp
+<message name="Msg2" id="MsgId.M2" displayName="Message 2">
+    ...
+    <enum name="F3" type="int8" description="Some Inner enum" defaultValue="V3">
+        <validValue name="V1" val="-100" />
+        <validValue name="V2" val="0" />
+        <validValue name="V3" val="10" />
+    </enum>
+    ...
+</message> 
+```
+In this case, the field itself is defined as member of 
+[tutorial2::message::Msg2Fields](include/tutorial2/message/Msg2.h) and its
+common, template parameters independent definition is a member of
+[tutorial2::message::Msg2FieldsCommon](include/tutorial2/message/Msg2Common.h)
+
+The fourth `enum` field of the `Msg2` is also defined internally:
+The `Msg2` message defines its third field internally:
+```cpp
+<message name="Msg2" id="MsgId.M2" displayName="Message 2">
+    ...
+    <enum name="F4" type="uint16" hexAssign="true">
+        <validValue name="V1" val="0" displayName="Value 1"/>
+        <validValue name="V2" val="0xff"  displayName="Value 2"/>
+        <validValue name="V3" val="0x2ff" displayName="Value 3"/>
+        <validValue name="V4" val="0xfff" displayName="Value 4"/>
+    </enum>
+    ...
+</message> 
+```
+
+Please note the setting of **hexAssign** boolean property to **true**. It results
+in having hexadecimal values assigned (instead of usual decimals) in the generated
+code. It can improve the generated code clarity in in some cases.
+```cpp
+struct Msg2FieldsCommon
+{
+    ...
+    struct F4Common
+    {
+        enum class ValueType : std::uint16_t
+        {
+            V1 = 0x0000U, ///< value @b V1
+            V2 = 0x00FFU, ///< value @b V2
+            V3 = 0x02FFU, ///< value @b V3
+            V4 = 0x0FFFU, ///< value @b V4
+            ...
+        };
+    };    
+};
+```
+
+Now, let's take a look on the code that prepares `Msg2` to be sent out
+to the server. It demonstrates usage of several ways to reference the actual
+enumeration value to be assigned to the field.
+```cpp
+void ClientSession::sendMsg2()
+{
+    Msg2 msg;
+    msg.field_f1().value() = tutorial2::field::E2_1Val::V2;
+    msg.field_f2().value() = tutorial2::field::E2_2Common::ValueType::V3;
+    msg.field_f3().value() = Msg2::Field_f3::ValueType::V1;
+    comms::cast_assign(msg.field_f4().value()) = -200;
+    sendMessage(msg);
+}
+```
+Note, that sometimes there may be a need to assign value of different type
+with a cast. The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+provides `comms::cast_assign()` helper function which automatically casts the value
+on the right side of the assignment operation to appropriate type and assigns it
+to the value specified on the left side. To use the function it is necessary to
+include [comms/cast.h](https://arobenko.github.io/comms_doc/cast_8h.html).
+```
+#include "comms/cast.h"
+```
+
+The definition of the enum fields also provides `valueName()` member function
+which allows retrieval human readable name of the current value. Note, that
+by default the value's name is the value of **name** property of the **&lt;validValue&gt;**
+XML note, unless **displayName** property is set, which takes over. 
+The usage of the `valueName()` member function is demonstrated inside 
+message handling function when the received message content is printed:
+```cpp
+void ClientSession::handle(Msg2& msg)
+{
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+        "\tf1 = " << (unsigned)msg.field_f1().value() << " (" << msg.field_f1().valueName()  << ")\n" <<
+        "\tf2 = " << (unsigned)msg.field_f2().value() << " (" << msg.field_f2().valueName()  << ")\n" <<
+        "\tf3 = " << (int)msg.field_f3().value() << " (" << msg.field_f3().valueName()  << ")\n" <<
+        "\tf4 = " << (unsigned)msg.field_f4().value() << " (" << msg.field_f4().valueName()  << ")\n" << std::endl;
+
+    ...
+}
+
+```
 
 ## Summary
 
@@ -399,6 +536,8 @@ order.
 - There fields can be defined as member nodes of the **&lt;message&gt;**
 definition or global ones (members of global **&lt;fields&gt;** XML node) and
 then referenced by other message member fields.
+- The code for global field which is not referenced by other field or message definition
+won't be generated.
 - The fields are abstractions around actual value storage to provide common
 interface for all field types. 
 - The primary and most frequently used member function of the field objects
@@ -407,3 +546,4 @@ is **value()**. It is used to access the storage **by-reference**.
 **COMMS_MSG_FIELDS_NAMES()** macro (provided by the 
 [COMMS Library](https://github.com/arobenko/comms_champion#comms-library))
 to create convenience access member functions for member fields.
+

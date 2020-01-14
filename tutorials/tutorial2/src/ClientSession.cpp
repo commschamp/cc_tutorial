@@ -31,7 +31,7 @@ void ClientSession::handle(Msg2& msg)
         "\tf1 = " << (unsigned)msg.field_f1().value() << " (" << msg.field_f1().valueName()  << ")\n" <<
         "\tf2 = " << (unsigned)msg.field_f2().value() << " (" << msg.field_f2().valueName()  << ")\n" <<
         "\tf3 = " << (int)msg.field_f3().value() << " (" << msg.field_f3().valueName()  << ")\n" <<
-        "\tf4 = " << (int)msg.field_f4().value() << " (" << msg.field_f4().valueName()  << ")\n" << std::endl;
+        "\tf4 = " << (unsigned)msg.field_f4().value() << " (" << msg.field_f4().valueName()  << ")\n" << std::endl;
 
     if (m_currentStage != CommsStage_Msg2) {
         std::cerr << "ERROR: Unexpected message received" << std::endl;

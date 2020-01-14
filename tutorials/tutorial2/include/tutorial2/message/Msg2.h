@@ -109,27 +109,25 @@ struct Msg2Fields
     };
     
     /// @brief Definition of <b>"F4"</b> field.
-    /// @details
-    ///     Inner enum
     /// @see @ref tutorial2::message::Msg2FieldsCommon::F4Val
     class F4 : public
         comms::field::EnumValue<
             tutorial2::field::FieldBase<>,
             tutorial2::message::Msg2FieldsCommon::F4Val,
-            comms::option::def::ValidNumValue<-200>,
             comms::option::def::ValidNumValue<0>,
             comms::option::def::ValidNumValue<255>,
-            comms::option::def::ValidNumValue<767>
+            comms::option::def::ValidNumValue<767>,
+            comms::option::def::ValidNumValue<4095>
         >
     {
         using Base = 
             comms::field::EnumValue<
                 tutorial2::field::FieldBase<>,
                 tutorial2::message::Msg2FieldsCommon::F4Val,
-                comms::option::def::ValidNumValue<-200>,
                 comms::option::def::ValidNumValue<0>,
                 comms::option::def::ValidNumValue<255>,
-                comms::option::def::ValidNumValue<767>
+                comms::option::def::ValidNumValue<767>,
+                comms::option::def::ValidNumValue<4095>
             >;
     public:
         /// @brief Re-definition of the value type.
