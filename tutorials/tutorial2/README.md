@@ -293,7 +293,7 @@ void ClientSession::handle(Msg1& msg)
 ## Supported Field Types
 The [CommsChampion Ecosystem](https://arobenko.github.io/cc) has multiple 
 supported field types which are covered below one by one. Due to the nature of
-these tutorial it is not possible to cover **all** aspects (properties) of all
+these tutorials it is not possible to cover **all** aspects (properties) of all
 the available fields, it is highly recommended to read 
 [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification in
 full after this tutorial.
@@ -320,7 +320,7 @@ of external field `E2_1` which is referenced by the `Msg1` definition:
 ```
 As the result the field definition will reside in 
 [include/tutorial2/field/E2_1.h](include/tutorial2/field/E2_1.h) with its
-common, template parameter's independent types and functions in
+common, template parameters independent types and functions in
 [include/tutorial2/field/E2_1Common.h](include/tutorial2/field/E2_1Common.h)
 
 Please note the following:
@@ -484,7 +484,7 @@ struct Msg2FieldsCommon
 };
 ```
 
-Now, let's take a look on the code that prepares `Msg2` to be sent out
+Now, let's take a look at the code that prepares `Msg2` to be sent out
 to the server. It demonstrates usage of several ways to reference the actual
 enumeration value to be assigned to the field.
 ```cpp
@@ -500,16 +500,17 @@ void ClientSession::sendMsg2()
 ```
 Note, that sometimes there may be a need to assign value of different type
 with a cast. The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
-provides `comms::cast_assign()` helper function which automatically casts the value
+provides `comms::cast_assign()` stand-alone helper function which automatically casts the value
 on the right side of the assignment operation to appropriate type and assigns it
-to the value specified on the left side. To use the function it is necessary to
-include [comms/cast.h](https://arobenko.github.io/comms_doc/cast_8h.html).
+to the value specified on the left side. It eliminates the necessity to explicitly specify
+cast type. To use the `comms::cast_assign()` function it is necessary to
+include [comms/cast.h](https://arobenko.github.io/comms_doc/cast_8h.html) header file.
 ```
 #include "comms/cast.h"
 ```
 
 The definition of the enum fields also provides `valueName()` member function
-which allows retrieval human readable name of the current value. Note, that
+which allows retrieval of the human readable name of the current value. Note, that
 by default the value's name is the value of **name** property of the **&lt;validValue&gt;**
 XML note, unless **displayName** property is set, which takes over. 
 The usage of the `valueName()` member function is demonstrated inside 
@@ -533,7 +534,7 @@ void ClientSession::handle(Msg2& msg)
 - The protocol definition does not necessarily need to be defined in a single
 schema files, it can be split into multiple ones and being processed in specified
 order.
-- There fields can be defined as member nodes of the **&lt;message&gt;**
+- The fields can be defined as member nodes of the **&lt;message&gt;**
 definition or global ones (members of global **&lt;fields&gt;** XML node) and
 then referenced by other message member fields.
 - The code for global field which is not referenced by other field or message definition
