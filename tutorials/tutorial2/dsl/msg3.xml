@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <fields>
+        <int name="I3_1" type="int32" defaultValue="10" />
+        <int name="I3_2" type="uint32" length="3" />
+        <int name="I3_3" type="uintvar" length="4" />
+        <int name="I3_4" type="uint8" defaultValue="S1">
+            <special name="S1" val="1" />
+            <special name="S2" val="5" />
+        </int>
+        <int name="I3_5" type="int16" length="1" defaultValue="2020" serOffset="-2000">
+            <description value="Year as offset since 2000" />
+        </int>
+    </fields>
+    
+    <message name="Msg3" id="MsgId.M3" displayName="Message 3">
+        <ref name="F1" field="I3_1" />
+        <ref name="F2" field="I3_2" />
+        <ref name="F3" field="I3_3" />
+        <ref name="F4" field="I3_4" />
+        <ref name="F5" field="I3_5" />
+    </message>
+</schema>

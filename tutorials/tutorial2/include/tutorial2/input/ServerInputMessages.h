@@ -8,6 +8,7 @@
 #include <tuple>
 #include "tutorial2/message/Msg1.h"
 #include "tutorial2/message/Msg2.h"
+#include "tutorial2/message/Msg3.h"
 #include "tutorial2/options/DefaultOptions.h"
 
 namespace tutorial2
@@ -23,7 +24,8 @@ template <typename TBase, typename TOpt = tutorial2::options::DefaultOptions>
 using ServerInputMessages =
     std::tuple<
         tutorial2::message::Msg1<TBase, TOpt>,
-        tutorial2::message::Msg2<TBase, TOpt>
+        tutorial2::message::Msg2<TBase, TOpt>,
+        tutorial2::message::Msg3<TBase, TOpt>
     >;
 
 } // namespace input

@@ -150,6 +150,10 @@ public:
     // Get the serialization length of the stored value
     std::size_t length() const
     
+    // Get compile time known min and max serialization length of the field
+    static constexpr std::size_t minLength();
+    static constexpr std::size_t maxLength();
+    
     // Check that field has the valid value
     bool valid() const;
     
@@ -298,6 +302,50 @@ the available fields, it is highly recommended to read
 [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification in
 full after this tutorial.
 
+In general, the fields are defined as XML node. Available field types are:
+
+- **&lt;enum&gt;** - Enumeration type.
+- **&lt;int&gt;** - Integral value type.
+- **&lt;set&gt;** - Bitset where every bit has different meaning (up to 64 bits).
+- **&lt;bundle&gt;** - Bundling of multiple fields into a single composite field.
+- **&lt;bitfield&gt;** - Similar to **&lt;bundle&gt;**, but allows member fields
+having length in bits (not bytes), up to max of 64 bits.
+- **&lt;string&gt;** - Strings.
+- **&lt;data&gt;** - Raw binary data.
+- **&lt;list&gt;** - List of fields.
+- **&lt;variant&gt;** - Union of possible fields, containing one value of any
+time, suitable for creation of heterogeneous lists.
+
+Every field type has its own set of properties. However, there are also properties
+which are common for **all** the fields. Here are some of them:
+
+- **name** - Name of the field, will end up being a class name when appropriate
+field type is being defined.
+- **displayName** - Specifies a human readable name of the field. If not specified
+defaults to be the same as **name**.
+- **description** - Description of the field, will find its way into the field's
+doxygen documentation.
+
+**SIDE NOTE**: The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
+supports multiple ways to set the field's property value with the same end result:
+
+- As attribute's value:
+```
+<int name="F1" ... />
+```
+- As child node with **value** property:
+```
+<int ...>
+    <name value="F1" />
+</int>
+```
+- As child node text:
+```
+<int ...>
+    <name>F1</name>
+</int>
+```
+
 ### Enum Fields
 The `Msg2` message (defined inside [dsl/msg2.xml](dsl/msg2.xml)) is there to
 demonstrate usage of enum fields. Let's take a look inside. There is definition
@@ -342,6 +390,7 @@ struct E2_1Common
 };
 
 ```
+- Underlying type is specified using **type** property.
 - Supported values of underlying type are: **int8**, **uint8**, **int16**,
 **uint16**, **int32**, **uint32**, **int64**, **uint64**, **intvar**, **uintvar**.
 - Many elements in [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
@@ -494,7 +543,7 @@ void ClientSession::sendMsg2()
     msg.field_f1().value() = tutorial2::field::E2_1Val::V2;
     msg.field_f2().value() = tutorial2::field::E2_2Common::ValueType::V3;
     msg.field_f3().value() = Msg2::Field_f3::ValueType::V1;
-    comms::cast_assign(msg.field_f4().value()) = -200;
+    comms::cast_assign(msg.field_f4().value()) = 0xff;
     sendMessage(msg);
 }
 ```
@@ -527,6 +576,127 @@ void ClientSession::handle(Msg2& msg)
     ...
 }
 
+```
+
+### Int Fields
+The `Msg3` message (defined inside [dsl/msg3.xml](dsl/msg3.xml)) is there to
+demonstrate basic usage of integral fields. The previous section showed that
+the fields can be defined as global ones or internally as members of 
+**&lt;message&gt;** XML node. For reference and demonstration convenience, the
+explained fields in this and most of subsequent section will be defined as
+global ones and referenced using **&lt;ref&gt;** XML node.
+
+The first defined **&lt;int&gt;** field is:
+```
+<fields>
+    <int name="I3_1" type="int32" defaultValue="10" />
+    ...
+</fields>
+
+<message name="Msg3" id="MsgId.M3" displayName="Message 3">
+    <ref name="F1" field="I3_1" />
+    ...
+</message>
+```
+
+Please note the following:
+
+- The storage type of the field is specified using **type** property. The
+supported types are the same as for `enum` field: **int8**, **uint8**, 
+**int16**, **uint16**, **int32**, **uint32**, **int64**, **uint64**, 
+**intvar**, and **uintvar**.
+- The numeric value of the default constructed field specified using
+**defaultValue** property.
+
+In this particular example, the field's value is not updated when message is
+prepared for sending and assert statement checks that the field has assumed
+default value (**10**).
+```cpp
+void ClientSession::sendMsg3()
+{
+    Msg3 msg;
+    assert(msg.field_f1().value() == 10); // Keep default value of f1
+    ...
+}
+
+```
+
+The second defined **&lt;int&gt;** field is:
+```
+<fields>
+    <int name="I3_2" type="uint32" length="3" />
+</fields>
+
+<message name="Msg3" id="MsgId.M3" displayName="Message 3">
+    ...
+    <ref name="F2" field="I3_2" />
+    ...
+</message>
+```
+
+Please note the usage of **length** property. It can be used to limit
+serialization length of the specified field to lower number of bytes. In the
+example above, it is limited to be **3** bytes instead of default **4** (due
+to **uint32** storage type). In this case the 
+[COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+will serialize the field using correct number of bytes.
+```cpp
+void ClientSession::sendMsg3()
+{
+    ...
+    msg.field_f2().value() = 0xabcdef;
+    assert(msg.field_f2().length() == 3U); // the f2 has fixed length of 3 bytes
+    static_assert(Msg3::Field_f2::minLength() == 3U, "Invalid assumption");
+    static_assert(Msg3::Field_f2::maxLength() == 3U, "Invalid assumption");
+    ...
+}
+```
+Let's take a closer look at the code snippet above. The `f2` field object has
+a member function `length()` that can be used at runtime to determine current
+serialization length of the field and `minLength()` as well as `maxLength()`
+static member functions that can be used at compile time to verify minimal and
+maximal serialization lengths of the field.
+
+The third defined **&lt;int&gt;** field uses variable length encoding:
+```
+<fields>
+    <int name="I3_3" type="uintvar" length="4" />
+</fields>
+
+<message name="Msg3" id="MsgId.M3" displayName="Message 3">
+    ...
+    <ref name="F3" field="I3_3" />
+    ...
+</message>
+```
+The variable length **type** uses [Base-128]()
+encoding by default and no other encoding is **currently** implemented / supported.
+The value of the **length** property in such case means **maximal** 
+allowed serialization length of the field. The generated code
+uses `comms::option::VarLength` option to provide the required information to
+the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+```cpp
+template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
+struct I3_3 : public
+    comms::field::IntValue<
+        ...,
+        comms::option::def::VarLength<1U, 4U>
+    >
+{
+    ...
+};
+```
+
+The preparation before being sent looks like this:
+```cpp
+void ClientSession::sendMsg3()
+{
+    ...
+    assert(msg.field_f3().length() == 1U); // It takes 1 byte to serialize default value 0
+    msg.field_f3().value() = 128;
+    assert(msg.field_f3().length() == 2U); // the f3 is encoded with base-128
+    ...
+}
 ```
 
 ## Summary

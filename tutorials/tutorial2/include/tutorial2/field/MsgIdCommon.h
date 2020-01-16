@@ -36,7 +36,8 @@ struct MsgIdCommon
         static const char* Map[] = {
             nullptr,
             "M1",
-            "M2"
+            "M2",
+            "M3"
         };
         static const std::size_t MapSize = std::extent<decltype(Map)>::value;
         

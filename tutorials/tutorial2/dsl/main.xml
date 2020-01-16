@@ -4,6 +4,7 @@
         <enum name="MsgId" type="uint8" semanticType="messageId">
             <validValue name="M1" val="1" />
             <validValue name="M2" val="2" />
+            <validValue name="M3" val="3" />
         </enum>
     </fields>
     
