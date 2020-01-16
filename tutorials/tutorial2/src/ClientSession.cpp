@@ -49,6 +49,7 @@ void ClientSession::handle(Msg3& msg)
         "\tf2 = " << msg.field_f2().value() << '\n' <<
         "\tf3 = " << msg.field_f3().value() << '\n' <<
         "\tf4 = " << (unsigned)msg.field_f4().value() << '\n' <<
+        "\tf5 = " << msg.field_f5().value() << '\n' <<
         std::endl;
 
     if (m_currentStage != CommsStage_Msg3) {
@@ -74,10 +75,18 @@ bool ClientSession::startImpl()
 
 std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
 {
+    std::cout << "Processing input: " << std::hex;
+    std::copy_n(buf, bufLen, std::ostream_iterator<unsigned>(std::cout, " "));
+    std::cout << std::dec << std::endl;
+
     // Process reported input, create relevant message objects and
     // dispatch all the created messages
     // to this object for handling (appropriate handle() member function will be called)
-    return comms::processAllWithDispatch(buf, bufLen, m_frame, *this);
+    auto result = comms::processAllWithDispatch(buf, bufLen, m_frame, *this);
+    if (result < bufLen) {
+        std::cout << "Processed only " << result << " bytes." << std::endl;
+    }
+    return result;
 }
 
 void ClientSession::sendMessage(const Message& msg)
@@ -182,9 +191,17 @@ void ClientSession::sendMsg3()
     assert(msg.field_f3().length() == 1U); // It takes 1 byte to serialize default value 0
     msg.field_f3().value() = 128;
     assert(msg.field_f3().length() == 2U); // the f3 is encoded with base-128
+    static_assert(Msg3::Field_f3::minLength() == 1U, "Invalid assumption");
+    static_assert(Msg3::Field_f3::maxLength() == 4U, "Invalid assumption");
 
-    assert(msg.field_f4().isS1());
+    assert(msg.field_f4().isS1()); // Check default value
     msg.field_f4().setS2();
+
+    assert(msg.field_f5().value() == 2020); // Check default value
+    msg.field_f5().value() = 2021;
+    assert(msg.field_f5().length() == 1U); // the f5 has fixed length of 1 bytes
+    static_assert(Msg3::Field_f5::minLength() == 1U, "Invalid assumption");
+    static_assert(Msg3::Field_f5::maxLength() == 1U, "Invalid assumption");
 
     sendMessage(msg);
 }

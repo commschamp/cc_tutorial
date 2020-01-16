@@ -695,9 +695,109 @@ void ClientSession::sendMsg3()
     assert(msg.field_f3().length() == 1U); // It takes 1 byte to serialize default value 0
     msg.field_f3().value() = 128;
     assert(msg.field_f3().length() == 2U); // the f3 is encoded with base-128
+    static_assert(Msg3::Field_f3::minLength() == 1U, "Invalid assumption");
+    static_assert(Msg3::Field_f3::maxLength() == 4U, "Invalid assumption");
     ...
 }
 ```
+
+In some protocols values of some fields may have special meaning. In order
+to prevent boilerplate code the 
+[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification
+provides and ability to specify names for some values, while 
+[commsdsl2comms](https://github.com/arobenko/commsdsl) code generator creates
+necessary helper functions to get/set special values.
+
+The fourth defined **&lt;int&gt;** field demonstrates usage of such special values.
+```
+<fields>
+    <int name="I3_4" type="uint8" defaultValue="S1">
+        <special name="S1" val="1" />
+        <special name="S2" val="5" />
+    </int>
+</fields>
+
+<message name="Msg3" id="MsgId.M3" displayName="Message 3">
+    ...
+    <ref name="F4" field="I3_4" />
+</message>
+```
+Also note that **defaultValue** property can reference one of the special
+values. The [I3_4](include/tutorial2/field/I3_4.h)
+field definition contains the following helper member functions:
+```
+template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
+class I3_4 : public
+    comms::field::IntValue<
+        tutorial2::field::FieldBase<>,
+        std::uint8_t,
+        TExtraOpts...,
+        comms::option::def::DefaultNumValue<1>
+    >
+{
+    using Base = 
+        comms::field::IntValue<
+            tutorial2::field::FieldBase<>,
+            std::uint8_t,
+            TExtraOpts...,
+            comms::option::def::DefaultNumValue<1>
+        >;
+public:
+    static constexpr ValueType valueS1();
+    bool isS1() const;
+    void setS1();
+    
+    static constexpr ValueType valueS2();
+    bool isS2() const;
+    void setS2();
+    
+    ...
+};
+
+```
+The preparation before being sent looks like this:
+```cpp
+void ClientSession::sendMsg3()
+{
+    ...
+    assert(msg.field_f4().isS1()); // Check default value
+    msg.field_f4().setS2();
+    ...
+}
+```
+
+The fifth defined **&lt;int&gt;** field demonstrates usage of **serOffset**
+property. It is used to automatically add / subtract predefined value before / after
+field value serialization. The classic example is having a year number to be serialized
+as offset from year **2000** as single byte.
+```
+<fields>
+    ...
+    <int name="I3_5" type="int16" length="1" defaultValue="2020" serOffset="-2000">
+        <description value="Year as offset since 2000" />
+    </int>
+</fields>
+
+<message name="Msg3" id="MsgId.M3" displayName="Message 3">
+    ...
+    <ref name="F5" field="I3_5" />
+</message>
+```
+The preparation before being sent looks like this:
+```cpp
+void ClientSession::sendMsg3()
+{
+    ...
+    assert(msg.field_f5().value() == 2020); // Check default value
+    msg.field_f5().value() = 2021;
+    assert(msg.field_f5().length() == 1U); // the f5 has fixed length of 1 bytes
+    static_assert(Msg3::Field_f5::minLength() == 1U, "Invalid assumption");
+    static_assert(Msg3::Field_f5::maxLength() == 1U, "Invalid assumption");
+    ...
+}
+```
+Note that the field's value contains proper year number and the integration code does
+not need to know or care about applied serialization offset.
 
 ## Summary
 
@@ -717,4 +817,8 @@ is **value()**. It is used to access the storage **by-reference**.
 **COMMS_MSG_FIELDS_NAMES()** macro (provided by the 
 [COMMS Library](https://github.com/arobenko/comms_champion#comms-library))
 to create convenience access member functions for member fields.
-
+- Due to the nature of
+these tutorials it is not possible to cover **all** aspects (properties) of all
+the available fields, it is highly recommended to read 
+[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification in
+full after this tutorial.
