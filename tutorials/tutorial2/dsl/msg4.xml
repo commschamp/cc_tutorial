@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <fields>
+        <set name="S4_1" length="1">
+            <bit name="B0" idx="0" />
+            <bit name="B1" idx="1" />
+            <bit name="B2" idx="2" />
+        </set>
+        
+        <set name="S4_2" type="uint16" defaultValue="true">
+            <bit name="B0" idx="0" defaultValue="false" />
+            <bit name="B5" idx="5" />
+            <bit name="B15" idx="15" />
+        </set> 
+        
+        <set name="S4_3" length="3" reservedValue="true">
+            <bit name="B0" idx="0" defaultValue="true" />
+            <bit name="B1" idx="1" reserved="true" reservedValue="false" />
+            <bit name="B5" idx="5" />
+            <bit name="B20" idx="20" />
+        </set>                
+    </fields>
+    
+    <message name="Msg4" id="MsgId.M4" displayName="Message 4">
+        <ref name="F1" field="S4_1" />
+        <ref name="F2" field="S4_2" />
+        <ref name="F3" field="S4_3" />
+    </message>
+</schema>

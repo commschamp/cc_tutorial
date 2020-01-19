@@ -5,6 +5,7 @@
             <validValue name="M1" val="1" />
             <validValue name="M2" val="2" />
             <validValue name="M3" val="3" />
+            <validValue name="M4" val="4" />
         </enum>
     </fields>
     
