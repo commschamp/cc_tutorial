@@ -12,6 +12,29 @@
 namespace cc_tutorial
 {
 
+namespace
+{
+
+template <typename TField>
+void printSetField(const TField& field)
+{
+    std::cout << '\t' << field.name() << ": 0x" <<
+        std::setfill('0') << std::setw(field.length() * 2) <<
+        std::hex << (std::uintmax_t)field.value() << std::dec << '\n';
+
+   for (auto idx = 0U; idx < field.length() * 8; ++idx) {
+        auto bitIdx = static_cast<typename TField::BitIdx>(idx);
+        const char* bitName = field.bitName(bitIdx);
+        if (bitName == nullptr) {
+            continue;
+        }
+
+        std::cout << "\t\t" << bitName << ": " << std::boolalpha << field.getBitValue(bitIdx) << '\n';
+    }
+}
+
+} // namespace
+
 void ClientSession::handle(Msg1& msg)
 {
     std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
@@ -63,24 +86,11 @@ void ClientSession::handle(Msg3& msg)
 
 void ClientSession::handle(Msg4& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' << std::hex <<
-        "\tf1 = 0x" << std::setfill('0') << std::setw(msg.field_f1().length() * 2) <<
-                 (unsigned)msg.field_f1().value() << '\n' <<
-            "\t\tB0 = " << std::boolalpha << msg.field_f1().getBitValue_B0() << '\n' <<
-            "\t\tB1 = " << std::boolalpha << msg.field_f1().getBitValue_B1() << '\n' <<
-            "\t\tB2 = " << std::boolalpha << msg.field_f1().getBitValue_B2() << '\n' <<
-        "\tf2 = 0x" << std::setfill('0') << std::setw(msg.field_f2().length() * 2) <<
-                 (unsigned)msg.field_f2().value() << '\n' <<
-            "\t\tB0 = " << std::boolalpha << msg.field_f2().getBitValue_B0() << '\n' <<
-            "\t\tB5 = " << std::boolalpha << msg.field_f2().getBitValue_B5() << '\n' <<
-            "\t\tB15 = " << std::boolalpha << msg.field_f2().getBitValue_B15() << '\n' <<
-        "\tf3 = 0x" << std::setfill('0') << std::setw(msg.field_f3().length() * 2) <<
-                 (unsigned)msg.field_f3().value() << '\n' <<
-            "\t\tB0 = " << std::boolalpha << msg.field_f3().getBitValue_B0() << '\n' <<
-            "\t\tB1 = " << std::boolalpha << msg.field_f3().getBitValue_B1() << '\n' <<
-            "\t\tB5 = " << std::boolalpha << msg.field_f3().getBitValue_B5() << '\n' <<
-            "\t\tB20 = " << std::boolalpha << msg.field_f3().getBitValue_B20() << '\n' <<
-        std::dec << std::endl;
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n';
+    printSetField(msg.field_f1());
+    printSetField(msg.field_f2());
+    printSetField(msg.field_f3());
+    std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg4) {
         std::cerr << "ERROR: Unexpected message received" << std::endl;
@@ -248,6 +258,8 @@ void ClientSession::sendMsg4()
 
     msg.field_f3().value() = 0xff;
     assert(msg.field_f3().length() == 3U);
+    static_assert(Msg4::Field_f3::minLength() == 3U, "Invalid assumption");
+    static_assert(Msg4::Field_f3::maxLength() == 3U, "Invalid assumption");
     assert(!msg.field_f3().valid());
     sendMessage(msg);
 }
