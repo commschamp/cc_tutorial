@@ -100,6 +100,22 @@ void ClientSession::handle(Msg4& msg)
     doNextStage();
 }
 
+void ClientSession::handle(Msg5& msg)
+{
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+        "\tf1 = " << msg.field_f1().value() << '\n' <<
+        "\tf2 = " << msg.field_f2().value() << '\n' <<
+        std::endl;
+
+    if (m_currentStage != CommsStage_Msg5) {
+        std::cerr << "ERROR: Unexpected message received" << std::endl;
+        return;
+    }
+
+    doNextStage();
+}
+
+
 void ClientSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
@@ -193,6 +209,7 @@ void ClientSession::doNextStage()
         /* CommsStage_Msg2 */ &ClientSession::sendMsg2,
         /* CommsStage_Msg3 */ &ClientSession::sendMsg3,
         /* CommsStage_Msg4 */ &ClientSession::sendMsg4,
+        /* CommsStage_Msg5 */ &ClientSession::sendMsg5,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -264,6 +281,15 @@ void ClientSession::sendMsg4()
     sendMessage(msg);
 }
 
+void ClientSession::sendMsg5()
+{
+    Msg5 msg;
+    msg.field_f1().value() = 1.2345;
+
+    assert(msg.field_f2().isS1());
+    msg.field_f2().setS3();
+    sendMessage(msg);
+}
 
 SessionPtr Session::createClient(boost::asio::io_service& io)
 {

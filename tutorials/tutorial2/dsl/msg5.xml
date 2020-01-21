@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <fields>
+        <float name="F5_1" type="float" />
+        
+        <float name="F5_2" type="double" defaultValue="S1">
+            <special name="S1" val="nan" />
+            <special name="S2" val="inf" />
+            <special name="S3" val="-inf" />
+            <special name="S4" val="5.123" />
+        </float>
+        
+    </fields>
+    
+    <message name="Msg5" id="MsgId.M5" displayName="Message 5">
+        <ref name="F1" field="F5_1" />
+        <ref name="F2" field="F5_2" />
+    </message>
+</schema>

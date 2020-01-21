@@ -304,14 +304,15 @@ full after this tutorial.
 
 In general, the fields are defined as XML node. Available field types are:
 
-- [&lt;enum&gt;](#enum-fields) - Enumeration type.
-- [&lt;int&gt;](#int-fields) - Integral value type.
+- [&lt;enum&gt;](#enum-fields) - Enumeration values.
+- [&lt;int&gt;](#int-fields) - Integral values.
 - [&lt;set&gt;](#set-fields) - Bitset where every bit has different meaning (up to 64 bits).
+- [&lt;float&gt;](#float-fields) - Floating point values.
+- **&lt;string&gt;** - Strings.
+- **&lt;data&gt;** - Raw binary data.
 - **&lt;bundle&gt;** - Bundling of multiple fields into a single composite field.
 - **&lt;bitfield&gt;** - Similar to **&lt;bundle&gt;**, but allows member fields
 having length in bits (not bytes), up to max of 64 bits.
-- **&lt;string&gt;** - Strings.
-- **&lt;data&gt;** - Raw binary data.
 - **&lt;list&gt;** - List of fields.
 - **&lt;variant&gt;** - Union of possible fields, containing one value of any
 time, suitable for creation of heterogeneous lists.
@@ -1056,6 +1057,13 @@ void ClientSession::handle(Msg4& msg)
 }
 
 ```
+
+### &lt;float&gt; Fields
+The **&lt;float&gt;** stores and abstracts away value of floating point type 
+with IEEE 754 encoding. The `Msg5` message 
+(defined inside [dsl/msg5.xml](dsl/msg5.xml)) demonstrates usage of such fields.
+
+The first defined **&lt;float&gt;** field is:
 
 ## Summary
 
