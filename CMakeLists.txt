@@ -12,7 +12,7 @@ option (UNIX_USE_CCACHE "Treat warnings as error" ON)
 # CC_TAG - Tag / branch of comms_champion project (if built internally)
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
-    set (COMMSDSL_TAG "v3.3")
+    set (COMMSDSL_TAG "v3.3.1")
 endif ()
 
 if ("${CC_TAG}" STREQUAL "")
