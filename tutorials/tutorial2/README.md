@@ -1064,6 +1064,61 @@ with IEEE 754 encoding. The `Msg5` message
 (defined inside [dsl/msg5.xml](dsl/msg5.xml)) demonstrates usage of such fields.
 
 The first defined **&lt;float&gt;** field is:
+```
+<fields>
+    <float name="F5_1" type="float" />
+    ...
+</fields>
+
+<message name="Msg5" id="MsgId.M5" displayName="Message 5">
+    <ref name="F1" field="F5_1" />
+    ...
+</message>
+```
+Similar to [&lt;int&gt;](#int-fields) fields, **type** property needs to be
+used to specify underlying storage type of the field. The available values are
+**float** (with 4 bytes serialization length) and **double** (with 8 bytes
+serialization length).
+
+The defined defined **&lt;float&gt;** field demonstrates usage of values with
+special meaning (similar to special values that can be defined for 
+[&lt;int&gt;](#int-fields) fields).
+```
+<fields>
+    ...    
+    <float name="F5_2" type="double" defaultValue="S1">
+        <special name="S1" val="nan" />
+        <special name="S2" val="inf" />
+        <special name="S3" val="-inf" />
+        <special name="S4" val="5.123" />
+    </float>
+</fields>
+
+<message name="Msg5" id="MsgId.M5" displayName="Message 5">
+    ...
+    <ref name="F2" field="F5_2" />
+</message>
+```
+Please note the following:
+
+- In addition to normal floating point values, the definition of the field
+can use case-insensitive **nan**, **inf**, and **-inf** strings. They stand for
+**NaN**, **infinity** and **-infinity** respectively.
+- The **defaultValue** property can reference one of the special values by
+name.
+
+The preparation of `Msg5` for sending looks like this:
+```cpp
+void ClientSession::sendMsg5()
+{
+    Msg5 msg;
+    msg.field_f1().value() = 1.2345;
+
+    assert(msg.field_f2().isS1());
+    msg.field_f2().setS3();
+    sendMessage(msg);
+}
+```
 
 ## Summary
 
