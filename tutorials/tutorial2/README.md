@@ -1123,7 +1123,7 @@ void ClientSession::sendMsg5()
 ```
 
 ### &lt;string&gt; Fields
-The **&lt;string&gt;** fields abstract away simple strings. The `Msg6` message 
+The **&lt;string&gt;** fields abstract away string values. The `Msg6` message 
 (defined inside [dsl/msg6.xml](dsl/msg6.xml)) demonstrates usage of such fields.
 
 The first defined **&lt;string&gt;** field shows usage of fixed size string field:
@@ -1145,7 +1145,8 @@ developed using one of the extension options. One of the later tutorials will co
 
 The **length** property can be used to specified **fixed** length. Note, that
 this property insures required number of bytes **on-the-wire**, not size of the
-inner `std::string` (or some other string storage type being used).
+inner `std::string` (or some other string storage type being used) when field is
+default constructed.
 ```cpp
 void ClientSession::sendMsg6()
 {
@@ -1216,7 +1217,7 @@ its serialization length, but this time of variable length.
     ...
 </message>
 ```
-Note that this type **lengthPrefix** is used as field's property and
+Note that this time **lengthPrefix** is used as field's property and
 it's value references already defined external **&lt;int&gt;** field.
 
 Also note that the length prefix has variable length of 1 or 2 bytes
