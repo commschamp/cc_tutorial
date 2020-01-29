@@ -308,14 +308,16 @@ In general, the fields are defined as XML node. Available field types are:
 - [&lt;int&gt;](#int-fields) - Integral values.
 - [&lt;set&gt;](#set-fields) - Bitset where every bit has different meaning (up to 64 bits).
 - [&lt;float&gt;](#float-fields) - Floating point values.
-- **&lt;string&gt;** - Strings.
-- **&lt;data&gt;** - Raw binary data.
+- [&lt;string&gt;](#string-fields) - Strings.
+- [&lt;data&gt;](#data-fields) - Raw binary data.
 - **&lt;bundle&gt;** - Bundling of multiple fields into a single composite field.
 - **&lt;bitfield&gt;** - Similar to **&lt;bundle&gt;**, but allows member fields
 having length in bits (not bytes), up to max of 64 bits.
 - **&lt;list&gt;** - List of fields.
 - **&lt;variant&gt;** - Union of possible fields, containing one value of any
 time, suitable for creation of heterogeneous lists.
+- **&lt;ref&gt;** - Reference (alias) to any other field.
+- **&lt;optional&gt;** - Wrapper around any other field to make the latter optional.
 
 Every field type has its own set of properties. However, there are also properties
 which are common for **all** the fields. Here are some of them:
@@ -670,7 +672,7 @@ The third defined **&lt;int&gt;** field uses variable length encoding:
     ...
 </message>
 ```
-The variable length **type** uses [Base-128]()
+The variable length **type** uses [Base-128](https://en.wikipedia.org/wiki/LEB128)
 encoding by default and no other encoding is **currently** implemented / supported.
 The value of the **length** property in such case means **maximal** 
 allowed serialization length of the field. The generated code
@@ -1080,7 +1082,7 @@ used to specify underlying storage type of the field. The available values are
 **float** (with 4 bytes serialization length) and **double** (with 8 bytes
 serialization length).
 
-The defined defined **&lt;float&gt;** field demonstrates usage of values with
+The defined **&lt;float&gt;** field demonstrates usage of values with
 special meaning (similar to special values that can be defined for 
 [&lt;int&gt;](#int-fields) fields).
 ```
@@ -1119,6 +1121,138 @@ void ClientSession::sendMsg5()
     sendMessage(msg);
 }
 ```
+
+### &lt;string&gt; Fields
+The **&lt;string&gt;** fields abstract away simple strings. The `Msg6` message 
+(defined inside [dsl/msg6.xml](dsl/msg6.xml)) demonstrates usage of such fields.
+
+The first defined **&lt;string&gt;** field shows usage of fixed size string field:
+```
+<fields>
+    <string name="S6_1" length="5" />
+    ...
+</fields>
+
+<message name="Msg6" id="MsgId.M6" displayName="Message 6">
+    <ref name="F1" field="S6_1" />
+    ...
+</message>
+```
+
+The **default** storage type of any **&lt;string&gt;** field is `std::string`.
+It can be replaced with interface compatible other type at compile time by the application being
+developed using one of the extension options. One of the later tutorials will cover this topic in detail.
+
+The **length** property can be used to specified **fixed** length. Note, that
+this property insures required number of bytes **on-the-wire**, not size of the
+inner `std::string` (or some other string storage type being used).
+```cpp
+void ClientSession::sendMsg6()
+{
+    ...
+    std::string& f1Str = msg.field_f1().value();
+    assert(f1Str.empty()); // Empty string on construction
+    assert(msg.field_f1().length() == 5U); // but the reported length is as expected
+    f1Str = "abc";
+    assert(msg.field_f1().length() == 5U);
+    ...
+}
+```
+When such **&lt;string&gt;** field is serialized, the
+[COMMS Library](https://github.com/arobenko/comms_champion#comms-library) makes
+sure that correct number of bytes is written to the output buffer. In case the
+stored string value has shorter length, the output is padded with correct number
+of zeroes (**0**). In case the stored string value is longer than allowed, the
+serialization output will just be truncated without exceeding maximum allowed 
+number of bytes.
+
+The second defined **&lt;string&gt;** field demonstrates string prefixed with
+1 byte of its serialization length:
+```
+<fields>
+    <string name="S6_2" defaultValue="hello">
+        <lengthPrefix>
+            <int name="Length" type="uint8" />
+        </lengthPrefix>
+    </string>
+    ...
+</fields>
+
+<message name="Msg6" id="MsgId.M6" displayName="Message 6">
+    ...
+    <ref name="F2" field="S6_2" />
+    ...
+</message>
+```
+Similar to other fields, it is possible to use **defaultValue** property to
+set default value for the default-constructed field.
+
+The preparation of such field for sending looks like this:
+```cpp
+void ClientSession::sendMsg6()
+{
+    ...
+    assert(msg.field_f2().value() == "hello");
+    assert(msg.field_f2().length() == 6U);
+    msg.field_f2().value() = "bye";
+    assert(msg.field_f2().length() == 4U);
+    ...
+}
+```
+
+The third defined **&lt;string&gt;** field also demonstrates string prefixed with
+its serialization length, but this time of variable length.
+```
+<fields>
+    ...
+    <int name="L6_3" type="uintvar" length="2" />
+    <string name="S6_3" lengthPrefix="L6_3" />
+    ...
+</fields>
+
+<message name="Msg6" id="MsgId.M6" displayName="Message 6">
+    ...
+    <ref name="F3" field="S6_3" />
+    ...
+</message>
+```
+Note that this type **lengthPrefix** is used as field's property and
+it's value references already defined external **&lt;int&gt;** field.
+
+Also note that the length prefix has variable length of 1 or 2 bytes
+with [Base-128](https://en.wikipedia.org/wiki/LEB128) encoding. In case the
+stored string value has more than 127 characters, the length prefix will occupy 2 bytes 
+when string field is serialized.
+
+The fourth defined **&lt;string&gt;** field demonstrates zero (**0**) terminating 
+string fields. Such fields are not prefixed with their length, their length is
+determined by the presence of zero (**0**) byte.
+```
+<fields>
+    ...
+    <string name="S6_4" zeroTermSuffix="true" />
+</fields>
+
+<message name="Msg6" id="MsgId.M6" displayName="Message 6">
+    ...
+    <ref name="F4" field="S6_4" />
+</message>
+```
+Usage of zero (**0**) termination suffix is determined by having **zeroTermSuffix**
+field property.
+
+The preparation of such field for sending looks like this:
+```cpp
+void ClientSession::sendMsg6()
+{
+    ...
+    assert(msg.field_f4().length() == 1U); 
+    msg.field_f4().value() = "blablabla";
+    assert(msg.field_f4().length() == 10U);
+    ...
+}
+```
+
 
 ## Summary
 

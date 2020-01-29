@@ -11,6 +11,7 @@
 #include "tutorial2/message/Msg3.h"
 #include "tutorial2/message/Msg4.h"
 #include "tutorial2/message/Msg5.h"
+#include "tutorial2/message/Msg6.h"
 #include "tutorial2/options/DefaultOptions.h"
 
 namespace tutorial2
@@ -29,7 +30,8 @@ using AllMessages =
         tutorial2::message::Msg2<TBase, TOpt>,
         tutorial2::message::Msg3<TBase, TOpt>,
         tutorial2::message::Msg4<TBase, TOpt>,
-        tutorial2::message::Msg5<TBase, TOpt>
+        tutorial2::message::Msg5<TBase, TOpt>,
+        tutorial2::message::Msg6<TBase, TOpt>
     >;
 
 } // namespace input

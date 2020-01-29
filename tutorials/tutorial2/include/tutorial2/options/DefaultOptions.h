@@ -16,6 +16,27 @@ namespace options
 /// @brief Default (empty) options of the protocol.
 struct DefaultOptions
 {
+    /// @brief Extra options for fields.
+    struct field
+    {
+        /// @brief Extra options for @ref
+        ///     tutorial2::field::S6_1 field.
+        using S6_1 = comms::option::app::EmptyOption;
+        
+        /// @brief Extra options for @ref
+        ///     tutorial2::field::S6_2 field.
+        using S6_2 = comms::option::app::EmptyOption;
+        
+        /// @brief Extra options for @ref
+        ///     tutorial2::field::S6_3 field.
+        using S6_3 = comms::option::app::EmptyOption;
+        
+        /// @brief Extra options for @ref
+        ///     tutorial2::field::S6_4 field.
+        using S6_4 = comms::option::app::EmptyOption;
+        
+    }; // struct field
+    
     /// @brief Extra options for frames.
     struct frame
     {

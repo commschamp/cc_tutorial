@@ -115,6 +115,22 @@ void ClientSession::handle(Msg5& msg)
     doNextStage();
 }
 
+void ClientSession::handle(Msg6& msg)
+{
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+        "\tf1 = " << msg.field_f1().value() << '\n' <<
+        "\tf2 = " << msg.field_f2().value() << '\n' <<
+        "\tf3 = " << msg.field_f3().value() << '\n' <<
+        "\tf4 = " << msg.field_f4().value() << '\n' <<
+        std::endl;
+
+    if (m_currentStage != CommsStage_Msg6) {
+        std::cerr << "ERROR: Unexpected message received" << std::endl;
+        return;
+    }
+
+    doNextStage();
+}
 
 void ClientSession::handle(Message& msg)
 {
@@ -210,6 +226,7 @@ void ClientSession::doNextStage()
         /* CommsStage_Msg3 */ &ClientSession::sendMsg3,
         /* CommsStage_Msg4 */ &ClientSession::sendMsg4,
         /* CommsStage_Msg5 */ &ClientSession::sendMsg5,
+        /* CommsStage_Msg6 */ &ClientSession::sendMsg6,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -288,6 +305,30 @@ void ClientSession::sendMsg5()
 
     assert(msg.field_f2().isS1());
     msg.field_f2().setS3();
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg6()
+{
+    Msg6 msg;
+
+    std::string& f1Str = msg.field_f1().value();
+    assert(f1Str.empty()); // Empty string on construction
+    assert(msg.field_f1().length() == 5U); // but the reported length is as expected
+    f1Str = "abc";
+    assert(msg.field_f1().length() == 5U);
+
+    assert(msg.field_f2().value() == "hello");
+    assert(msg.field_f2().length() == 6U);
+    msg.field_f2().value() = "bye";
+    assert(msg.field_f2().length() == 4U);
+
+    msg.field_f3().value() = "deadbeef";
+
+    assert(msg.field_f4().length() == 1U);
+    msg.field_f4().value() = "blablabla";
+    assert(msg.field_f4().length() == 10U);
+
     sendMessage(msg);
 }
 

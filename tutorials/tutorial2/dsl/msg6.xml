@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <fields>
+        <string name="S6_1" length="5" />
+        
+        <string name="S6_2" defaultValue="hello">
+            <lengthPrefix>
+                <int name="Length" type="uint8" />
+            </lengthPrefix>
+        </string>
+        
+        <int name="L6_3" type="uintvar" length="2" />
+        <string name="S6_3" lengthPrefix="L6_3" />
+        
+        <string name="S6_4" zeroTermSuffix="true" />
+    </fields>
+    
+    <message name="Msg6" id="MsgId.M6" displayName="Message 6">
+        <ref name="F1" field="S6_1" />
+        <ref name="F2" field="S6_2" />
+        <ref name="F3" field="S6_3" />
+        <ref name="F4" field="S6_4" />
+    </message>
+</schema>
