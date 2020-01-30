@@ -20,6 +20,14 @@ struct DefaultOptions
     struct field
     {
         /// @brief Extra options for @ref
+        ///     tutorial2::field::D6_1 field.
+        using D6_1 = comms::option::app::EmptyOption;
+        
+        /// @brief Extra options for @ref
+        ///     tutorial2::field::D6_2 field.
+        using D6_2 = comms::option::app::EmptyOption;
+        
+        /// @brief Extra options for @ref
         ///     tutorial2::field::S6_1 field.
         using S6_1 = comms::option::app::EmptyOption;
         
@@ -36,6 +44,35 @@ struct DefaultOptions
         using S6_4 = comms::option::app::EmptyOption;
         
     }; // struct field
+    
+    /// @brief Extra options for messages.
+    struct message
+    {
+        /// @brief Extra options for fields of
+        ///     @ref tutorial2::message::Msg6 message.
+        struct Msg6Fields
+        {
+            /// @brief Extra options for @ref
+            ///     tutorial2::message::Msg6Fields::F5
+            ///     field.
+            using F5 = comms::option::app::EmptyOption;
+            
+        }; // struct Msg6Fields
+        
+        
+        /// @brief Extra options for fields of
+        ///     @ref tutorial2::message::Msg7 message.
+        struct Msg7Fields
+        {
+            /// @brief Extra options for @ref
+            ///     tutorial2::message::Msg7Fields::F3
+            ///     field.
+            using F3 = comms::option::app::EmptyOption;
+            
+        }; // struct Msg7Fields
+        
+        
+    }; // struct message
     
     /// @brief Extra options for frames.
     struct frame

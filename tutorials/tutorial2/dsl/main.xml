@@ -13,6 +13,9 @@
     </fields>
     
     <frame name="Frame">
+        <size name="Size">
+            <int name="SizeField" type="uint16" />
+        </size>
         <id name="ID">
             <field>
                 <ref field="MsgId" />

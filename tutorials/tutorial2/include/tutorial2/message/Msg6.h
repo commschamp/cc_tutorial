@@ -7,6 +7,7 @@
 
 #include <tuple>
 #include "comms/MessageBase.h"
+#include "comms/field/String.h"
 #include "comms/options.h"
 #include "tutorial2/MsgId.h"
 #include "tutorial2/field/FieldBase.h"
@@ -86,12 +87,28 @@ struct Msg6Fields
         
     };
     
+    /// @brief Definition of <b>"F5"</b> field.
+    struct F5 : public
+        comms::field::String<
+            tutorial2::field::FieldBase<>,
+            typename TOpt::message::Msg6Fields::F5
+        >
+    {
+        /// @brief Name of the field.
+        static const char* name()
+        {
+            return tutorial2::message::Msg6FieldsCommon::F5Common::name();
+        }
+        
+    };
+    
     /// @brief All the fields bundled in std::tuple.
     using All = std::tuple<
         F1,
         F2,
         F3,
-        F4
+        F4,
+        F5
     >;
 };
 
@@ -136,11 +153,14 @@ public:
     ///         for @ref Msg6Fields::F3 field.
     ///     @li @b Field_f4 type and @b field_f4() fuction
     ///         for @ref Msg6Fields::F4 field.
+    ///     @li @b Field_f5 type and @b field_f5() fuction
+    ///         for @ref Msg6Fields::F5 field.
     COMMS_MSG_FIELDS_NAMES(
         f1,
         f2,
         f3,
-        f4
+        f4,
+        f5
     );
     
     // Compile time check for serialisation length.

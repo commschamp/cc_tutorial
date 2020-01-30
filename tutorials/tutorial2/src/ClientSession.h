@@ -35,6 +35,7 @@ public:
     using Msg4 = tutorial2::message::Msg4<Message>;
     using Msg5 = tutorial2::message::Msg5<Message>;
     using Msg6 = tutorial2::message::Msg6<Message>;
+    using Msg7 = tutorial2::message::Msg7<Message>;
 
     // Handling functions for all the dispatched message objects
     void handle(Msg1& msg);
@@ -43,6 +44,7 @@ public:
     void handle(Msg4& msg);
     void handle(Msg5& msg);
     void handle(Msg6& msg);
+    void handle(Msg7& msg);
     void handle(Message& msg);
 
 protected:
@@ -58,6 +60,7 @@ private:
         CommsStage_Msg4,
         CommsStage_Msg5,
         CommsStage_Msg6,
+        CommsStage_Msg7,
         CommsStage_NumOfValues
     };
 
@@ -69,6 +72,7 @@ private:
     void sendMsg4();
     void sendMsg5();
     void sendMsg6();
+    void sendMsg7();
 
     using Frame = tutorial2::frame::Frame<Message>;
     Frame m_frame;

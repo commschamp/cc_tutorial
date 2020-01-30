@@ -70,6 +70,19 @@ struct Msg6FieldsCommon
         
     };
     
+    /// @brief Scope for all the common definitions of the
+    ///     @ref tutorial2::message::Msg6Fields::F5 field.
+    struct F5Common
+    {
+        /// @brief Name of the @ref tutorial2::message::Msg6Fields::F5 field.
+        static const char* name()
+        {
+            return "F5";
+        }
+        
+    };
+    
+    
 };
 
 /// @brief Common types and functions of 

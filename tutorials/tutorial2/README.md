@@ -46,6 +46,27 @@ see [dsl/msg1.xml](dsl/msg1.xml)).
 </schema>
 ```
 
+## Framing
+This tutorial uses the following framing for all the messages:
+```
+<frame name="Frame">
+    <size name="Size">
+        <int name="SizeField" type="uint16" />
+    </size>
+    <id name="ID">
+        <field>
+            <ref field="MsgId" />
+        </field>
+    </id>
+    <payload name="Data" />
+</frame>
+```
+In other words it is:
+
+- 2 bytes of remaining length (ID + PAYLOAD), not including the length field itself.
+- 1 byte of numeric message ID.
+- N bytes of payload itself.
+
 ## Defining Fields
 Every message may define internal fields. Let's take a look inside [dsl/msg1.xml](dsl/msg1.xml).
 ```
@@ -416,6 +437,9 @@ struct E2_1Common
 };
 
 ```
+- The field is defined using 
+[comms::field::EnumValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1EnumValue.html) 
+class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
 - The field's value is considered to be valid (determined by the call to the
 `valid()` member function) if it is equal to one of
 the **&lt;validValue&gt;**-es. It is implemented by using `comms::option::def::ValidNumValueRange`
@@ -610,6 +634,9 @@ supported types are the same as for `enum` field: **int8**, **uint8**,
 **intvar**, and **uintvar**.
 - The numeric value of the default constructed field specified using
 **defaultValue** property.
+- The field is defined using 
+[comms::field::IntValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) 
+class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
 
 In this particular example, the field's value is not updated when message is
 prepared for sending and assert statement checks that the field has assumed
@@ -1082,7 +1109,11 @@ used to specify underlying storage type of the field. The available values are
 **float** (with 4 bytes serialization length) and **double** (with 8 bytes
 serialization length).
 
-The defined **&lt;float&gt;** field demonstrates usage of values with
+The **&lt;float&gt;** field is defined using 
+[comms::field::FloatValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1FloatValue.html) 
+class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+
+The defined second **&lt;float&gt;** field demonstrates usage of values with
 special meaning (similar to special values that can be defined for 
 [&lt;int&gt;](#int-fields) fields).
 ```
@@ -1138,6 +1169,9 @@ The first defined **&lt;string&gt;** field shows usage of fixed size string fiel
     ...
 </message>
 ```
+The **&lt;string&gt;** field is defined using 
+[comms::field::String](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1String.html) 
+class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
 
 The **default** storage type of any **&lt;string&gt;** field is `std::string`.
 It can be replaced with interface compatible other type at compile time by the application being
@@ -1237,6 +1271,7 @@ determined by the presence of zero (**0**) byte.
 <message name="Msg6" id="MsgId.M6" displayName="Message 6">
     ...
     <ref name="F4" field="S6_4" />
+    ...
 </message>
 ```
 Usage of zero (**0**) termination suffix is determined by having **zeroTermSuffix**
@@ -1253,6 +1288,116 @@ void ClientSession::sendMsg6()
     ...
 }
 ```
+
+The fifth defined **&lt;string&gt;** field demonstrates string field without
+any size limitations and/or termination character.
+```
+<message name="Msg6" id="MsgId.M6" displayName="Message 6">
+    ...
+    <string name="F5" />
+</message>
+```
+Such field writes all its contents during serialization stage and consumes
+all the available remaining data (bound by the total message length controlled
+by the framing).
+
+### &lt;data&gt; Fields
+The **&lt;data&gt;** fields abstract away lists of raw binary bytes. The `Msg7` message 
+(defined inside [dsl/msg7.xml](dsl/msg7.xml)) demonstrates usage of such fields.
+
+The **&lt;data&gt;** fields are very similar to **&lt;string&gt;** ones. 
+The first defined **&lt;data&gt;** field shows usage of fixed size raw binary data
+sequence:
+```
+<fields>
+    <data name="D6_1" length="5" />
+    ...
+</fields>
+
+<message name="Msg7" id="MsgId.M7" displayName="Message 7">
+    <ref name="F1" field="D6_1" />
+    ...
+</message>
+```
+The **&lt;data&gt;** field is defined using 
+[comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.htmll) 
+class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+
+The **default** storage type of any **&lt;data&gt;** field is `std::vector<std::uint8_t>`.
+It can be replaced with interface compatible other type at compile time by the application being
+developed using one of the extension options. One of the later tutorials will cover this topic in detail.
+
+The **length** property can be used to specified **fixed** length. Note, that
+this property insures required number of bytes **on-the-wire**, not size of the
+inner `std::vector` (or some other data storage type being used) when field is
+default constructed.
+```cpp
+void ClientSession::sendMsg7()
+{
+    ...
+    std::vector<std::uint8_t>& f1Vec = msg.field_f1().value();
+    assert(f1Vec.empty()); // Empty vector on construction
+    assert(msg.field_f1().length() == 5U); // but the reported length is as expected
+    f1Vec = {0xde, 0xad, 0xbe, 0xef};
+    assert(msg.field_f1().length() == 5U);
+    ...
+}
+```
+Just like with **&lt;string&gt;** fields, when such **&lt;data&gt;** field is serialized, the
+[COMMS Library](https://github.com/arobenko/comms_champion#comms-library) makes
+sure that correct number of bytes is written to the output buffer. In case the
+stored string value has shorter length, the output is padded with correct number
+of zeroes (**0**). In case the stored string value is longer than allowed, the
+serialization output will just be truncated without exceeding maximum allowed 
+number of bytes.
+
+The second defined **&lt;data&gt;** field demonstrates raw data prefixed with
+1 byte of its serialization length:
+```
+<fields>
+    ...
+    <data name="D6_2" defaultValue="ab cd ef 012345">
+        <lengthPrefix>
+            <int name="Length" type="uint8" />
+        </lengthPrefix>
+    </dataf>
+</fields>
+
+<message name="Msg7" id="MsgId.M7" displayName="Message 7">
+    ...
+    <ref name="F2" field="D6_2" />
+    ...
+</message>
+```
+Similar to other fields, it is possible to use **defaultValue** property to
+set default value for the default-constructed field. The **defaultValue** must
+specify hexadecimal value of each byte. Spaces are allowed 
+(just for readability) and ignored when the value is parsed by the code generator.
+
+When preparing the `Msg7` message to be sent, the value of the `F2` field is
+not changed in this tutorial.
+```cpp
+void ClientSession::sendMsg7()
+{
+    ...
+    // msg.field_f2().value() is unchanged
+    assert(msg.field_f2().value().size() == 6U); // The vector has 6 bytes
+    assert(msg.field_f2().length() == 7U); // The total serialization length is 7
+    ...
+}
+```
+
+The third defined **&lt;data&gt;** field demonstrates raw data field without
+any size limitations.
+```
+<message name="Msg7" id="MsgId.M7" displayName="Message 7">
+    ...
+    <data name="F3" />
+</message>
+```
+Such field writes all its contents during serialization stage and consumes
+all the available remaining data (bound by the total message length controlled
+by the framing).
 
 
 ## Summary
@@ -1278,3 +1423,7 @@ these tutorials it is not possible to cover **all** aspects (properties) of all
 the available fields, it is highly recommended to read 
 [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification in
 full after this tutorial.
+- All the field classes are implemented by extending one of the field definition
+classes provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+and residing in [comms::field](https://arobenko.github.io/comms_doc/namespacecomms_1_1field.html)
+namespace.

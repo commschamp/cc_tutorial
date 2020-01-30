@@ -33,6 +33,16 @@ void printSetField(const TField& field)
     }
 }
 
+template <typename TField>
+void printDataField(const TField& field)
+{
+    std::cout << '\t' << field.name() << ": " << std::hex;
+    for (auto byte : field.value()) {
+        std::cout << std::setfill('0') << std::setw(2) << static_cast<unsigned>(byte) << ' ';
+    }
+    std::cout << std::dec << '\n';
+}
+
 } // namespace
 
 void ClientSession::handle(Msg1& msg)
@@ -122,9 +132,26 @@ void ClientSession::handle(Msg6& msg)
         "\tf2 = " << msg.field_f2().value() << '\n' <<
         "\tf3 = " << msg.field_f3().value() << '\n' <<
         "\tf4 = " << msg.field_f4().value() << '\n' <<
+        "\tf5 = " << msg.field_f5().value() << '\n' <<
         std::endl;
 
     if (m_currentStage != CommsStage_Msg6) {
+        std::cerr << "ERROR: Unexpected message received" << std::endl;
+        return;
+    }
+
+    doNextStage();
+}
+
+void ClientSession::handle(Msg7& msg)
+{
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n';
+    printDataField(msg.field_f1());
+    printDataField(msg.field_f2());
+    printDataField(msg.field_f3());
+    std::cout << std::endl;
+
+    if (m_currentStage != CommsStage_Msg7) {
         std::cerr << "ERROR: Unexpected message received" << std::endl;
         return;
     }
@@ -227,6 +254,7 @@ void ClientSession::doNextStage()
         /* CommsStage_Msg4 */ &ClientSession::sendMsg4,
         /* CommsStage_Msg5 */ &ClientSession::sendMsg5,
         /* CommsStage_Msg6 */ &ClientSession::sendMsg6,
+        /* CommsStage_Msg7 */ &ClientSession::sendMsg7,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -328,6 +356,28 @@ void ClientSession::sendMsg6()
     assert(msg.field_f4().length() == 1U);
     msg.field_f4().value() = "blablabla";
     assert(msg.field_f4().length() == 10U);
+
+    msg.field_f5().value() = "foobar";
+
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg7()
+{
+    Msg7 msg;
+
+    std::vector<std::uint8_t>& f1Vec = msg.field_f1().value();
+    assert(f1Vec.empty()); // Empty vector on construction
+    assert(msg.field_f1().length() == 5U); // but the reported length is as expected
+    f1Vec = {0xde, 0xad, 0xbe, 0xef};
+    assert(msg.field_f1().length() == 5U);
+
+    // msg.field_f2().value() is unchanged
+    assert(msg.field_f2().value().size() == 6U); // The vector has 6 bytes
+    assert(msg.field_f2().length() == 7U); // The total serialization length is 7
+
+    msg.field_f3().value() = {0xaa, 0xbb};
+    assert(msg.field_f3().length() == 2U);
 
     sendMessage(msg);
 }

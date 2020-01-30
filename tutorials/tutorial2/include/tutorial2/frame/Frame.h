@@ -5,9 +5,12 @@
 
 #pragma once
 
+#include <cstdint>
+#include "comms/field/IntValue.h"
 #include "comms/options.h"
 #include "comms/protocol/MsgDataLayer.h"
 #include "comms/protocol/MsgIdLayer.h"
+#include "comms/protocol/MsgSizeLayer.h"
 #include "tutorial2/field/FieldBase.h"
 #include "tutorial2/field/MsgId.h"
 #include "tutorial2/frame/FrameCommon.h"
@@ -55,9 +58,37 @@ struct FrameLayers
             typename TOpt::frame::FrameLayers::ID
         >;
     
+    /// @brief Scope for field(s) of @ref Size layer.
+    struct SizeMembers
+    {
+        /// @brief Definition of <b>"SizeField"</b> field.
+        struct SizeField : public
+            comms::field::IntValue<
+                tutorial2::field::FieldBase<>,
+                std::uint16_t
+            >
+        {
+            /// @brief Name of the field.
+            static const char* name()
+            {
+                return tutorial2::frame::FrameLayersCommon::SizeMembersCommon::SizeFieldCommon::name();
+            }
+            
+        };
+        
+    };
+    
+    /// @brief Definition of layer "Size".
+    template <typename TMessage, typename TAllMessages>
+    using Size =
+        comms::protocol::MsgSizeLayer<
+            typename SizeMembers::SizeField,
+            ID<TMessage, TAllMessages>
+        >;
+    
     /// @brief Final protocol stack definition.
     template<typename TMessage, typename TAllMessages>
-    using Stack = ID<TMessage, TAllMessages>;
+    using Stack = Size<TMessage, TAllMessages>;
     
 };
 
@@ -84,9 +115,11 @@ public:
     ///     The generated functions are:
     ///     @li layer_data() for @ref FrameLayers::Data layer.
     ///     @li layer_iD() for @ref FrameLayers::ID layer.
+    ///     @li layer_size() for @ref FrameLayers::Size layer.
     COMMS_PROTOCOL_LAYERS_ACCESS(
         data,
-        iD
+        iD,
+        size
     );
 };
 

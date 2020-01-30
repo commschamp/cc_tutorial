@@ -20,5 +20,6 @@
         <ref name="F2" field="S6_2" />
         <ref name="F3" field="S6_3" />
         <ref name="F4" field="S6_4" />
+        <string name="F5" />
     </message>
 </schema>
