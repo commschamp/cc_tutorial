@@ -606,7 +606,8 @@ void ClientSession::handle(Msg2& msg)
 ```
 
 ### &lt;int&gt; Fields
-The `Msg3` message (defined inside [dsl/msg3.xml](dsl/msg3.xml)) is there to
+The `Msg3` message (defined inside [dsl/msg3.xml](dsl/msg3.xml) and implemented
+in [include/tutorial2/message/Msg3.h](include/tutorial2/message/Msg3.h)) is there to
 demonstrate basic usage of integral fields. The previous section showed that
 the fields can be defined as global ones or internally as members of 
 **&lt;message&gt;** XML node. For reference and demonstration convenience, the
@@ -637,6 +638,8 @@ supported types are the same as for `enum` field: **int8**, **uint8**,
 - The field is defined using 
 [comms::field::IntValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) 
 class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+- The generated code resides in [include/tutorial2/field/I3_1.h](include/tutorial2/field/I3_1.h)
+file.
 
 In this particular example, the field's value is not updated when message is
 prepared for sending and assert statement checks that the field has assumed
@@ -663,6 +666,7 @@ The second defined **&lt;int&gt;** field is:
     ...
 </message>
 ```
+The generated code resides in [include/tutorial2/field/I3_2.h](include/tutorial2/field/I3_2.h).
 
 Please note the usage of **length** property. It can be used to limit
 serialization length of the specified field to lower number of bytes. In the
@@ -702,7 +706,8 @@ The third defined **&lt;int&gt;** field uses variable length encoding:
 The variable length **type** uses [Base-128](https://en.wikipedia.org/wiki/LEB128)
 encoding by default and no other encoding is **currently** implemented / supported.
 The value of the **length** property in such case means **maximal** 
-allowed serialization length of the field. The generated code
+allowed serialization length of the field. The 
+[generated code](include/tutorial2/field/I3_3.h)
 uses `comms::option::VarLength` option to provide the required information to
 the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
 ```cpp
@@ -796,7 +801,8 @@ void ClientSession::sendMsg3()
 }
 ```
 
-The fifth defined **&lt;int&gt;** field demonstrates usage of **serOffset**
+The fifth (The [I3_5](include/tutorial2/field/I3_5.h)) defined 
+**&lt;int&gt;** field demonstrates usage of **serOffset**
 property. It is used to automatically add / subtract predefined value before / after
 field value serialization. The classic example is having a year number to be serialized
 as offset from year **2000** as single byte.
@@ -832,9 +838,10 @@ not need to know or care about applied serialization offset.
 ### &lt;set&gt; Fields
 The **&lt;set&gt;** field allows creation of bitset / bitmask fields where
 every bit has independent meaning. The `Msg4` message 
-(defined inside [dsl/msg4.xml](dsl/msg4.xml)) demonstrates usage of such fields.
+(defined inside [dsl/msg4.xml](dsl/msg4.xml) and implemented
+in [include/tutorial2/message/Msg4.h](include/tutorial2/message/Msg4.h)) demonstrates usage of such fields.
 
-The first defined **&lt;set&gt;** field is:
+The first ([S4_1](include/tutorial2/field/S4_1.h)) defined **&lt;set&gt;** field is:
 ```
 <fields>
     <set name="S4_1" length="1">
@@ -952,7 +959,7 @@ void ClientSession::sendMsg4()
 }
 ```
 
-The second defined **&lt;set&gt;** field is:
+The second ([S4_2](include/tutorial2/field/S4_2.h)) defined **&lt;set&gt;** field is:
 ```
 <fields>
     ...
@@ -999,7 +1006,7 @@ public:
 };
 ```
 
-The third defined **&lt;set&gt;** field demonstrates better control of reserved fields:
+The third ([S4_3](include/tutorial2/field/S4_3.h)) defined **&lt;set&gt;** field demonstrates better control of reserved fields:
 ```
 <fields>
     ...
@@ -1090,9 +1097,11 @@ void ClientSession::handle(Msg4& msg)
 ### &lt;float&gt; Fields
 The **&lt;float&gt;** stores and abstracts away value of floating point type 
 with IEEE 754 encoding. The `Msg5` message 
-(defined inside [dsl/msg5.xml](dsl/msg5.xml)) demonstrates usage of such fields.
+(defined inside [dsl/msg5.xml](dsl/msg5.xml) and implemented in 
+[include/tutorial2/message/Msg5.h](include/tutorial2/message/Msg5.h)) 
+demonstrates usage of such fields.
 
-The first defined **&lt;float&gt;** field is:
+The first ([F5_1](include/tutorial2/field/F5_1.h)) defined **&lt;float&gt;** field is:
 ```
 <fields>
     <float name="F5_1" type="float" />
@@ -1113,7 +1122,8 @@ The **&lt;float&gt;** field is defined using
 [comms::field::FloatValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1FloatValue.html) 
 class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
 
-The defined second **&lt;float&gt;** field demonstrates usage of values with
+The second ([F5_2](include/tutorial2/field/F5_2.h)) defined 
+**&lt;float&gt;** field demonstrates usage of values with
 special meaning (similar to special values that can be defined for 
 [&lt;int&gt;](#int-fields) fields).
 ```
@@ -1155,9 +1165,12 @@ void ClientSession::sendMsg5()
 
 ### &lt;string&gt; Fields
 The **&lt;string&gt;** fields abstract away string values. The `Msg6` message 
-(defined inside [dsl/msg6.xml](dsl/msg6.xml)) demonstrates usage of such fields.
+(defined inside [dsl/msg6.xml](dsl/msg6.xml) and implemented in
+[include/tutorial2/message/Msg6.h](include/tutorial2/message/Msg6.h)) 
+demonstrates usage of such fields.
 
-The first defined **&lt;string&gt;** field shows usage of fixed size string field:
+The first ([S6_1](include/tutorial2/field/S6_1.h)) 
+defined **&lt;string&gt;** field shows usage of fixed size string field:
 ```
 <fields>
     <string name="S6_1" length="5" />
@@ -1201,7 +1214,8 @@ of zeroes (**0**). In case the stored string value is longer than allowed, the
 serialization output will just be truncated without exceeding maximum allowed 
 number of bytes.
 
-The second defined **&lt;string&gt;** field demonstrates string prefixed with
+The second ([S6_2](include/tutorial2/field/S6_2.h)) 
+defined **&lt;string&gt;** field demonstrates string prefixed with
 1 byte of its serialization length:
 ```
 <fields>
@@ -1235,7 +1249,8 @@ void ClientSession::sendMsg6()
 }
 ```
 
-The third defined **&lt;string&gt;** field also demonstrates string prefixed with
+The third ([S6_3](include/tutorial2/field/S6_3.h)) 
+defined **&lt;string&gt;** field also demonstrates string prefixed with
 its serialization length, but this time of variable length.
 ```
 <fields>
@@ -1259,7 +1274,8 @@ with [Base-128](https://en.wikipedia.org/wiki/LEB128) encoding. In case the
 stored string value has more than 127 characters, the length prefix will occupy 2 bytes 
 when string field is serialized.
 
-The fourth defined **&lt;string&gt;** field demonstrates zero (**0**) terminating 
+The fourth ([S6_4](include/tutorial2/field/S6_4.h)) 
+defined **&lt;string&gt;** field demonstrates zero (**0**) terminating 
 string fields. Such fields are not prefixed with their length, their length is
 determined by the presence of zero (**0**) byte.
 ```
@@ -1303,19 +1319,22 @@ by the framing).
 
 ### &lt;data&gt; Fields
 The **&lt;data&gt;** fields abstract away lists of raw binary bytes. The `Msg7` message 
-(defined inside [dsl/msg7.xml](dsl/msg7.xml)) demonstrates usage of such fields.
+(defined inside [dsl/msg7.xml](dsl/msg7.xml) and implemented in
+[include/tutorial2/message/Msg7.h](include/tutorial2/message/Msg7.h)) 
+demonstrates usage of such fields.
 
 The **&lt;data&gt;** fields are very similar to **&lt;string&gt;** ones. 
-The first defined **&lt;data&gt;** field shows usage of fixed size raw binary data
+The first ([D7_1](include/tutorial2/field/D7_1.h)) defined 
+**&lt;data&gt;** field shows usage of fixed size raw binary data
 sequence:
 ```
 <fields>
-    <data name="D6_1" length="5" />
+    <data name="D7_1" length="5" />
     ...
 </fields>
 
 <message name="Msg7" id="MsgId.M7" displayName="Message 7">
-    <ref name="F1" field="D6_1" />
+    <ref name="F1" field="D7_1" />
     ...
 </message>
 ```
@@ -1351,12 +1370,13 @@ of zeroes (**0**). In case the stored string value is longer than allowed, the
 serialization output will just be truncated without exceeding maximum allowed 
 number of bytes.
 
-The second defined **&lt;data&gt;** field demonstrates raw data prefixed with
+The second ([D7_2](include/tutorial2/field/D7_2.h)) 
+defined **&lt;data&gt;** field demonstrates raw data prefixed with
 1 byte of its serialization length:
 ```
 <fields>
     ...
-    <data name="D6_2" defaultValue="ab cd ef 012345">
+    <data name="D7_2" defaultValue="ab cd ef 012345">
         <lengthPrefix>
             <int name="Length" type="uint8" />
         </lengthPrefix>
@@ -1365,7 +1385,7 @@ The second defined **&lt;data&gt;** field demonstrates raw data prefixed with
 
 <message name="Msg7" id="MsgId.M7" displayName="Message 7">
     ...
-    <ref name="F2" field="D6_2" />
+    <ref name="F2" field="D7_2" />
     ...
 </message>
 ```

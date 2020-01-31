@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include "tutorial2/field/D6_1Common.h"
-#include "tutorial2/field/D6_2Common.h"
+#include "tutorial2/field/D7_1Common.h"
+#include "tutorial2/field/D7_2Common.h"
 
 namespace tutorial2
 {
@@ -22,7 +22,7 @@ struct Msg7FieldsCommon
 {
     /// @brief Common types and functions for
     ///     @ref tutorial2::message::Msg7Fields::F1 field.
-    struct F1Common : public tutorial2::field::D6_1Common
+    struct F1Common : public tutorial2::field::D7_1Common
     {
         /// @brief Name of the @ref tutorial2::message::Msg7Fields::F1 field.
         static const char* name()
@@ -34,7 +34,7 @@ struct Msg7FieldsCommon
     
     /// @brief Common types and functions for
     ///     @ref tutorial2::message::Msg7Fields::F2 field.
-    struct F2Common : public tutorial2::field::D6_2Common
+    struct F2Common : public tutorial2::field::D7_2Common
     {
         /// @brief Name of the @ref tutorial2::message::Msg7Fields::F2 field.
         static const char* name()

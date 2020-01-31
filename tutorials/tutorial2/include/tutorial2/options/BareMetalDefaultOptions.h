@@ -26,12 +26,12 @@ struct BareMetalDefaultOptions
     struct field
     {
         /// @brief Extra options for @ref
-        ///     tutorial2::field::D6_1 field.
-        using D6_1 = comms::option::app::SequenceFixedSizeUseFixedSizeStorage;
+        ///     tutorial2::field::D7_1 field.
+        using D7_1 = comms::option::app::SequenceFixedSizeUseFixedSizeStorage;
         
         /// @brief Extra options for @ref
-        ///     tutorial2::field::D6_2 field.
-        using D6_2 = comms::option::app::FixedSizeStorage<DEFAULT_SEQ_FIXED_STORAGE_SIZE>;
+        ///     tutorial2::field::D7_2 field.
+        using D7_2 = comms::option::app::FixedSizeStorage<DEFAULT_SEQ_FIXED_STORAGE_SIZE>;
         
         /// @brief Extra options for @ref
         ///     tutorial2::field::S6_1 field.

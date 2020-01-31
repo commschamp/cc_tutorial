@@ -11,8 +11,8 @@
 #include "comms/field/ArrayList.h"
 #include "comms/options.h"
 #include "tutorial2/MsgId.h"
-#include "tutorial2/field/D6_1.h"
-#include "tutorial2/field/D6_2.h"
+#include "tutorial2/field/D7_1.h"
+#include "tutorial2/field/D7_2.h"
 #include "tutorial2/field/FieldBase.h"
 #include "tutorial2/message/Msg7Common.h"
 #include "tutorial2/options/DefaultOptions.h"
@@ -32,7 +32,7 @@ struct Msg7Fields
 {
     /// @brief Definition of <b>"F1"</b> field.
     struct F1 : public
-        tutorial2::field::D6_1<
+        tutorial2::field::D7_1<
             TOpt
         >
     {
@@ -46,7 +46,7 @@ struct Msg7Fields
     
     /// @brief Definition of <b>"F2"</b> field.
     struct F2 : public
-        tutorial2::field::D6_2<
+        tutorial2::field::D7_2<
             TOpt
         >
     {

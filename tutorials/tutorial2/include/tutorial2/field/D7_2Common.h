@@ -2,7 +2,7 @@
 
 /// @file
 /// @brief Contains common template parameters independent functionality of
-///    @ref tutorial2::field::D6_2 field.
+///    @ref tutorial2::field::D7_2 field.
 
 #pragma once
 
@@ -15,18 +15,18 @@ namespace field
 {
 
 /// @brief Scope for all the common definitions of the member fields of
-///     @ref tutorial2::field::D6_2 field.
-struct D6_2MembersCommon
+///     @ref tutorial2::field::D7_2 field.
+struct D7_2MembersCommon
 {
     /// @brief Common types and functions for
-    ///     @ref tutorial2::field::D6_2Members::Length field.
+    ///     @ref tutorial2::field::D7_2Members::Length field.
     struct LengthCommon
     {
         /// @brief Re-definition of the value type used by
-        ///     tutorial2::field::D6_2Members::Length field.
+        ///     tutorial2::field::D7_2Members::Length field.
         using ValueType = std::uint8_t;
     
-        /// @brief Name of the @ref tutorial2::field::D6_2Members::Length field.
+        /// @brief Name of the @ref tutorial2::field::D7_2Members::Length field.
         static const char* name()
         {
             return "Length";
@@ -37,13 +37,13 @@ struct D6_2MembersCommon
 };
 
 /// @brief Scope for all the common definitions of the
-///     @ref tutorial2::field::D6_2 field.
-struct D6_2Common
+///     @ref tutorial2::field::D7_2 field.
+struct D7_2Common
 {
-    /// @brief Name of the @ref tutorial2::field::D6_2 field.
+    /// @brief Name of the @ref tutorial2::field::D7_2 field.
     static const char* name()
     {
-        return "D6_2";
+        return "D7_2";
     }
     
 };

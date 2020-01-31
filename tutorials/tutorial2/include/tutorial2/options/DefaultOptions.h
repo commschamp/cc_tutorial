@@ -20,12 +20,12 @@ struct DefaultOptions
     struct field
     {
         /// @brief Extra options for @ref
-        ///     tutorial2::field::D6_1 field.
-        using D6_1 = comms::option::app::EmptyOption;
+        ///     tutorial2::field::D7_1 field.
+        using D7_1 = comms::option::app::EmptyOption;
         
         /// @brief Extra options for @ref
-        ///     tutorial2::field::D6_2 field.
-        using D6_2 = comms::option::app::EmptyOption;
+        ///     tutorial2::field::D7_2 field.
+        using D7_2 = comms::option::app::EmptyOption;
         
         /// @brief Extra options for @ref
         ///     tutorial2::field::S6_1 field.

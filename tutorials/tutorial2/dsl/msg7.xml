@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema>
     <fields>
-        <data name="D6_1" length="5" />
+        <data name="D7_1" length="5" />
         
-        <data name="D6_2" defaultValue="ab cd ef 012345">
+        <data name="D7_2" defaultValue="ab cd ef 012345">
             <lengthPrefix>
                 <int name="Length" type="uint8" />
             </lengthPrefix>
@@ -11,8 +11,8 @@
     </fields>
     
     <message name="Msg7" id="MsgId.M7" displayName="Message 7">
-        <ref name="F1" field="D6_1" />
-        <ref name="F2" field="D6_2" />
+        <ref name="F1" field="D7_1" />
+        <ref name="F2" field="D7_2" />
         <data name="F3" />
     </message>
 </schema>
