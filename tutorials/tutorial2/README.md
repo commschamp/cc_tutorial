@@ -90,7 +90,7 @@ The globally defined fields need to reside inside **&lt;fields&gt;** XML node:
     ...
 </fields>
 ```
-The code generated for every message and its fields resides in inside the 
+The code generated for every message and its fields resides inside the 
 [include/tutorial2/message](include/tutorial2/message) folder. The primary
 file containing definition of `Msg1` message class is
 [include/tutorial2/message/Msg1.h](include/tutorial2/message/Msg1.h). 
@@ -308,8 +308,8 @@ also when the message is received back from the server and its contents are prin
 void ClientSession::handle(Msg1& msg)
 {
     std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
-        "\tf1 = " << (unsigned)msg.field_f1().value() << '\n' <<
-        "\tf2 = " << msg.field_f2().value() << '\n' << std::endl;
+        '\t' << msg.field_f1().name() << " = " << (unsigned)msg.field_f1().value() << '\n' <<
+        '\t' << msg.field_f2().name() << " = " << msg.field_f2().value() << '\n' << std::endl;
     ...
 }
 
@@ -346,7 +346,8 @@ which are common for **all** the fields. Here are some of them:
 - **name** - Name of the field, will end up being a class name when appropriate
 field type is being defined.
 - **displayName** - Specifies a human readable name of the field. If not specified
-defaults to be the same as **name**.
+defaults to be the same as **name**. The value of this property finds its way to
+be returned of the **name()** member function of the field.
 - **description** - Description of the field, will find its way into the field's
 doxygen documentation.
 
@@ -525,7 +526,6 @@ common, template parameters independent definition is a member of
 [tutorial2::message::Msg2FieldsCommon](include/tutorial2/message/Msg2Common.h)
 
 The fourth `enum` field of the `Msg2` is also defined internally:
-The `Msg2` message defines its third field internally:
 ```cpp
 <message name="Msg2" id="MsgId.M2" displayName="Message 2">
     ...
@@ -595,10 +595,11 @@ message handling function when the received message content is printed:
 void ClientSession::handle(Msg2& msg)
 {
     std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
-        "\tf1 = " << (unsigned)msg.field_f1().value() << " (" << msg.field_f1().valueName()  << ")\n" <<
-        "\tf2 = " << (unsigned)msg.field_f2().value() << " (" << msg.field_f2().valueName()  << ")\n" <<
-        "\tf3 = " << (int)msg.field_f3().value() << " (" << msg.field_f3().valueName()  << ")\n" <<
-        "\tf4 = " << (unsigned)msg.field_f4().value() << " (" << msg.field_f4().valueName()  << ")\n" << std::endl;
+        '\t' << msg.field_f1().name() << " = " << (unsigned)msg.field_f1().value() << " (" << msg.field_f1().valueName()  << ")\n" <<
+        '\t' << msg.field_f2().name() << " = " << (unsigned)msg.field_f2().value() << " (" << msg.field_f2().valueName()  << ")\n" <<
+        '\t' << msg.field_f3().name() << " = " << " (" << msg.field_f3().valueName()  << ")\n" <<
+        '\t' << msg.field_f4().name() << " = " << (unsigned)msg.field_f4().value() << " (" << msg.field_f4().valueName()  << ")\n" <<
+        std::endl;
 
     ...
 }
@@ -705,7 +706,11 @@ The third defined **&lt;int&gt;** field uses variable length encoding:
 ```
 The variable length **type** uses [Base-128](https://en.wikipedia.org/wiki/LEB128)
 encoding by default and no other encoding is **currently** implemented / supported.
-The value of the **length** property in such case means **maximal** 
+
+**SIDE NOTE**: In case there is a need for any other standard encoding please create a request
+issue for [commsdsl](https://github.com/arobenko/commsdsl) project.
+
+The value of the **length** property in the case above means **maximal** 
 allowed serialization length of the field. The 
 [generated code](include/tutorial2/field/I3_3.h)
 uses `comms::option::VarLength` option to provide the required information to
@@ -763,20 +768,9 @@ field definition contains the following helper member functions:
 ```
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
 class I3_4 : public
-    comms::field::IntValue<
-        tutorial2::field::FieldBase<>,
-        std::uint8_t,
-        TExtraOpts...,
-        comms::option::def::DefaultNumValue<1>
-    >
+    comms::field::IntValue<...>
 {
-    using Base = 
-        comms::field::IntValue<
-            tutorial2::field::FieldBase<>,
-            std::uint8_t,
-            TExtraOpts...,
-            comms::option::def::DefaultNumValue<1>
-        >;
+    ...
 public:
     static constexpr ValueType valueS1();
     bool isS1() const;
@@ -1063,9 +1057,9 @@ The usage of the `bitName()` member function is demonstrated by the
 following function:
 ```cpp
 template <typename TField>
-void printSetField(const TField& field)
+void printSetField(const TField& field, const std::string& prefix = std::string())
 {
-    std::cout << '\t' << field.name() << ": 0x" <<
+    std::cout << '\t' << prefix << field.name() << " = 0x" <<
         std::setfill('0') << std::setw(field.length() * 2) <<
         std::hex << (std::uintmax_t)field.value() << std::dec << '\n';
 
@@ -1313,7 +1307,8 @@ any size limitations and/or termination character.
     <string name="F5" />
 </message>
 ```
-Such field writes all its contents during serialization stage and consumes
+Such field usually resides at the end of the message. It 
+writes all its contents during serialization stage and consumes
 all the available remaining data (bound by the total message length controlled
 by the framing).
 
@@ -1415,11 +1410,38 @@ any size limitations.
     <data name="F3" />
 </message>
 ```
-Such field writes all its contents during serialization stage and consumes
+Such field usually resides at the end of the message. It writes all its 
+contents during serialization stage and consumes
 all the available remaining data (bound by the total message length controlled
 by the framing).
 
 ### &lt;bundle&gt; Fields
+The **&lt;bundle&gt;** fields are composite fields that bundle multiple other
+fields into a single one. The `Msg8` message 
+(defined inside [dsl/msg8.xml](dsl/msg8.xml) and implemented in
+[include/tutorial2/message/Msg8.h](include/tutorial2/message/Msg8.h)) 
+demonstrates usage of such fields.
+
+The first ([B8_1](include/tutorial2/field/B8_1.h)) defined **&lt;bundle&gt;** field is:
+```
+<fields>
+    <bundle name="B8_1">
+        <int name="M1" type="uint16" />
+        <enum name="M2" type="uint8">
+            <validValue name="V1" val="0" />
+            <validValue name="V2" val="1" />
+        </enum>
+        <string name="M3" length="3" />
+    </bundle>
+    ...
+</fields>
+
+<message name="Msg8" id="MsgId.M8" displayName="Message 8">
+    <ref name="F1" field="B8_1" />
+    ...
+</message>
+```
+The member fields can be listed as child XML elements of the **&lt;bundle&gt;** node.
 
 
 ## Summary
