@@ -12,11 +12,11 @@ option (UNIX_USE_CCACHE "Treat warnings as error" ON)
 # CC_TAG - Tag / branch of comms_champion project (if built internally)
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
-    set (COMMSDSL_TAG "v3.3.1")
+    set (COMMSDSL_TAG "v3.3.3")
 endif ()
 
 if ("${CC_TAG}" STREQUAL "")
-    set (CC_TAG "v2.3.1")
+    set (CC_TAG "v2.3.3")
 endif ()
 
 if ((CMAKE_COMPILER_IS_GNUCC) OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))

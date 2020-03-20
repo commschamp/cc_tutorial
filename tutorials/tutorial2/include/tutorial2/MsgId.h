@@ -21,11 +21,14 @@ enum MsgId : std::uint8_t
     MsgId_M5 = 5, ///< message id of @b M5 message.
     MsgId_M6 = 6, ///< message id of @b M6 message.
     MsgId_M7 = 7, ///< message id of @b M7 message.
+    MsgId_M8 = 8, ///< message id of @b M8 message.
+    MsgId_M9 = 9, ///< message id of @b M9 message.
+    MsgId_M10 = 10, ///< message id of @b M10 message.
     
     // --- Extra values generated for convenience ---
     MsgId_FirstValue = 1, ///< First defined value.
-    MsgId_LastValue = 7, ///< Last defined value.
-    MsgId_ValuesLimit = 8, ///< Upper limit for defined values.
+    MsgId_LastValue = 10, ///< Last defined value.
+    MsgId_ValuesLimit = 11, ///< Upper limit for defined values.
     
 };
 

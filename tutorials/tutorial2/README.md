@@ -331,7 +331,7 @@ In general, the fields are defined as XML node. Available field types are:
 - [&lt;float&gt;](#float-fields) - Floating point values.
 - [&lt;string&gt;](#string-fields) - Strings.
 - [&lt;data&gt;](#data-fields) - Raw binary data.
-- **&lt;bundle&gt;** - Bundling of multiple fields into a single composite field.
+- [&lt;bundle&gt;](#bundle-fields) - Bundling of multiple fields into a single composite field.
 - **&lt;bitfield&gt;** - Similar to **&lt;bundle&gt;**, but allows member fields
 having length in bits (not bytes), up to max of 64 bits.
 - **&lt;list&gt;** - List of fields.
@@ -1418,6 +1418,8 @@ any size limitations.
 Such field writes all its contents during serialization stage and consumes
 all the available remaining data (bound by the total message length controlled
 by the framing).
+
+### &lt;bundle&gt; Fields
 
 
 ## Summary

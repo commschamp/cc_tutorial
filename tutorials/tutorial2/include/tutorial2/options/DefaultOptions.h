@@ -19,6 +19,26 @@ struct DefaultOptions
     /// @brief Extra options for fields.
     struct field
     {
+        /// @brief Extra options for all the member fields of
+        ///     @ref tutorial2::field::B8_1 bundle.
+        struct B8_1Members
+        {
+            /// @brief Extra options for @ref
+            ///     tutorial2::field::B8_1Members::M3 field.
+            using M3 = comms::option::app::EmptyOption;
+            
+        };
+        
+        /// @brief Extra options for all the member fields of
+        ///     @ref tutorial2::field::B8_2 bundle.
+        struct B8_2Members
+        {
+            /// @brief Extra options for @ref
+            ///     tutorial2::field::B8_2Members::M3 field.
+            using M3 = comms::option::app::EmptyOption;
+            
+        };
+        
         /// @brief Extra options for @ref
         ///     tutorial2::field::D7_1 field.
         using D7_1 = comms::option::app::EmptyOption;

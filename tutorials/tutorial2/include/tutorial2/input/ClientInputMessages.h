@@ -13,6 +13,7 @@
 #include "tutorial2/message/Msg5.h"
 #include "tutorial2/message/Msg6.h"
 #include "tutorial2/message/Msg7.h"
+#include "tutorial2/message/Msg8.h"
 #include "tutorial2/options/DefaultOptions.h"
 
 namespace tutorial2
@@ -33,7 +34,8 @@ using ClientInputMessages =
         tutorial2::message::Msg4<TBase, TOpt>,
         tutorial2::message::Msg5<TBase, TOpt>,
         tutorial2::message::Msg6<TBase, TOpt>,
-        tutorial2::message::Msg7<TBase, TOpt>
+        tutorial2::message::Msg7<TBase, TOpt>,
+        tutorial2::message::Msg8<TBase, TOpt>
     >;
 
 } // namespace input

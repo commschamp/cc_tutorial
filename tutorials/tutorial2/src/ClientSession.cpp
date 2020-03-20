@@ -16,9 +16,9 @@ namespace
 {
 
 template <typename TField>
-void printSetField(const TField& field)
+void printSetField(const TField& field, const std::string& prefix = std::string())
 {
-    std::cout << '\t' << field.name() << ": 0x" <<
+    std::cout << '\t' << prefix << field.name() << " = 0x" <<
         std::setfill('0') << std::setw(field.length() * 2) <<
         std::hex << (std::uintmax_t)field.value() << std::dec << '\n';
 
@@ -34,9 +34,9 @@ void printSetField(const TField& field)
 }
 
 template <typename TField>
-void printDataField(const TField& field)
+void printDataField(const TField& field, const std::string& prefix = std::string())
 {
-    std::cout << '\t' << field.name() << ": " << std::hex;
+    std::cout << '\t' << prefix << field.name() << " = " << std::hex;
     for (auto byte : field.value()) {
         std::cout << std::setfill('0') << std::setw(2) << static_cast<unsigned>(byte) << ' ';
     }
@@ -48,8 +48,8 @@ void printDataField(const TField& field)
 void ClientSession::handle(Msg1& msg)
 {
     std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
-        "\tf1 = " << (unsigned)msg.field_f1().value() << '\n' <<
-        "\tf2 = " << msg.field_f2().value() << '\n' << std::endl;
+        '\t' << msg.field_f1().name() << " = " << (unsigned)msg.field_f1().value() << '\n' <<
+        '\t' << msg.field_f2().name() << " = " << msg.field_f2().value() << '\n' << std::endl;
 
     if (m_currentStage != CommsStage_Msg1) {
         std::cerr << "ERROR: Unexpected message received: " << std::endl;
@@ -62,10 +62,10 @@ void ClientSession::handle(Msg1& msg)
 void ClientSession::handle(Msg2& msg)
 {
     std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
-        "\tf1 = " << (unsigned)msg.field_f1().value() << " (" << msg.field_f1().valueName()  << ")\n" <<
-        "\tf2 = " << (unsigned)msg.field_f2().value() << " (" << msg.field_f2().valueName()  << ")\n" <<
-        "\tf3 = " << (int)msg.field_f3().value() << " (" << msg.field_f3().valueName()  << ")\n" <<
-        "\tf4 = " << (unsigned)msg.field_f4().value() << " (" << msg.field_f4().valueName()  << ")\n" <<
+        '\t' << msg.field_f1().name() << " = " << (unsigned)msg.field_f1().value() << " (" << msg.field_f1().valueName()  << ")\n" <<
+        '\t' << msg.field_f2().name() << " = " << (unsigned)msg.field_f2().value() << " (" << msg.field_f2().valueName()  << ")\n" <<
+        '\t' << msg.field_f3().name() << " = " << " (" << msg.field_f3().valueName()  << ")\n" <<
+        '\t' << msg.field_f4().name() << " = " << (unsigned)msg.field_f4().value() << " (" << msg.field_f4().valueName()  << ")\n" <<
         std::endl;
 
     if (m_currentStage != CommsStage_Msg2) {
@@ -79,11 +79,11 @@ void ClientSession::handle(Msg2& msg)
 void ClientSession::handle(Msg3& msg)
 {
     std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
-        "\tf1 = " << msg.field_f1().value() << '\n' <<
-        "\tf2 = " << msg.field_f2().value() << '\n' <<
-        "\tf3 = " << msg.field_f3().value() << '\n' <<
-        "\tf4 = " << (unsigned)msg.field_f4().value() << '\n' <<
-        "\tf5 = " << msg.field_f5().value() << '\n' <<
+        '\t' << msg.field_f1().name() << " = " << msg.field_f1().value() << '\n' <<
+        '\t' << msg.field_f2().name() << " = " << msg.field_f2().value() << '\n' <<
+        '\t' << msg.field_f3().name() << " = " << msg.field_f3().value() << '\n' <<
+        '\t' << msg.field_f4().name() << " = " << (unsigned)msg.field_f4().value() << '\n' <<
+        '\t' << msg.field_f5().name() << " = " << msg.field_f5().value() << '\n' <<
         std::endl;
 
     if (m_currentStage != CommsStage_Msg3) {
@@ -113,8 +113,8 @@ void ClientSession::handle(Msg4& msg)
 void ClientSession::handle(Msg5& msg)
 {
     std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
-        "\tf1 = " << msg.field_f1().value() << '\n' <<
-        "\tf2 = " << msg.field_f2().value() << '\n' <<
+        '\t' << msg.field_f1().name() << " = " << msg.field_f1().value() << '\n' <<
+        '\t' << msg.field_f2().name() << " = " << msg.field_f2().value() << '\n' <<
         std::endl;
 
     if (m_currentStage != CommsStage_Msg5) {
@@ -128,11 +128,11 @@ void ClientSession::handle(Msg5& msg)
 void ClientSession::handle(Msg6& msg)
 {
     std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
-        "\tf1 = " << msg.field_f1().value() << '\n' <<
-        "\tf2 = " << msg.field_f2().value() << '\n' <<
-        "\tf3 = " << msg.field_f3().value() << '\n' <<
-        "\tf4 = " << msg.field_f4().value() << '\n' <<
-        "\tf5 = " << msg.field_f5().value() << '\n' <<
+        '\t' << msg.field_f1().name() << " = " << msg.field_f1().value() << '\n' <<
+        '\t' << msg.field_f2().name() << " = " << msg.field_f2().value() << '\n' <<
+        '\t' << msg.field_f3().name() << " = " << msg.field_f3().value() << '\n' <<
+        '\t' << msg.field_f4().name() << " = " << msg.field_f4().value() << '\n' <<
+        '\t' << msg.field_f5().name() << " = " << msg.field_f5().value() << '\n' <<
         std::endl;
 
     if (m_currentStage != CommsStage_Msg6) {
@@ -152,6 +152,31 @@ void ClientSession::handle(Msg7& msg)
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg7) {
+        std::cerr << "ERROR: Unexpected message received" << std::endl;
+        return;
+    }
+
+    doNextStage();
+}
+
+void ClientSession::handle(Msg8& msg)
+{
+    auto* f1Name = msg.field_f1().name();
+    auto* f2Name = msg.field_f2().name();
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+        '\t' << f1Name << '.' << msg.field_f1().field_m1().name() << " = " <<
+            msg.field_f1().field_m1().value() << '\n' <<
+        '\t' << f1Name << '.' << msg.field_f1().field_m2().name() << " = " <<
+            (unsigned)msg.field_f1().field_m2().value() << " (" << msg.field_f1().field_m2().valueName()  << ")\n" <<
+        '\t' << f1Name << '.' << msg.field_f1().field_m3().name() << " = " <<
+            msg.field_f1().field_m3().value() << '\n' <<
+        '\t' << f2Name << '.' << msg.field_f2().field_m1().name() << " = " <<
+            msg.field_f2().field_m1().value() << '\n';
+    printSetField(msg.field_f2().field_m2(), std::string(f2Name) + '.');
+    printDataField(msg.field_f2().field_m3(), std::string(f2Name) + '.');
+    std::cout << std::endl;
+
+    if (m_currentStage != CommsStage_Msg8) {
         std::cerr << "ERROR: Unexpected message received" << std::endl;
         return;
     }
@@ -255,6 +280,7 @@ void ClientSession::doNextStage()
         /* CommsStage_Msg5 */ &ClientSession::sendMsg5,
         /* CommsStage_Msg6 */ &ClientSession::sendMsg6,
         /* CommsStage_Msg7 */ &ClientSession::sendMsg7,
+        /* CommsStage_Msg8 */ &ClientSession::sendMsg8,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -378,6 +404,23 @@ void ClientSession::sendMsg7()
 
     msg.field_f3().value() = {0xaa, 0xbb};
     assert(msg.field_f3().length() == 2U);
+
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg8()
+{
+    Msg8 msg;
+
+    auto& f1 = msg.field_f1();
+    f1.field_m1().value() = 1234;
+    f1.field_m2().value() = Msg8::Field_f1::Field_m2::ValueType::V1;
+    f1.field_m3().value() = "hello";
+
+    auto& f2 = msg.field_f2();
+    f2.field_m1().value() = 1.25;
+    f2.field_m2().setBitValue_SomeBit(true);
+    f2.field_m3().value() = {0xab, 0xcd};
 
     sendMessage(msg);
 }

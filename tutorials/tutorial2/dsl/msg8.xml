@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <fields>
+        <bundle name="B8_1">
+            <int name="M1" type="uint16" />
+            <enum name="M2" type="uint8">
+                <validValue name="V1" val="0" />
+                <validValue name="V2" val="1" />
+            </enum>
+            <string name="M3" length="3" />
+        </bundle>
+        
+        <bundle name="B8_2">
+            <description>Some Field Description</description>
+            <members>
+                <float name="M1" type="float" defaultValue="nan" />
+                <set name="M2" length="1">
+                    <bit name="SomeBit" idx="0" />
+                    <bit name="SomeOtherbit" idx="5" />
+                </set>
+                <data name="M3">
+                    <lengthPrefix>
+                        <int name="Length" type="uint8" />
+                    </lengthPrefix>
+                </data>
+            </members>
+        </bundle>
+    </fields>
+    
+    <message name="Msg8" id="MsgId.M8" displayName="Message 8">
+        <ref name="F1" field="B8_1" />
+        <ref name="F2" field="B8_2" />
+    </message>
+</schema>
