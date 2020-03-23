@@ -1441,8 +1441,128 @@ The first ([B8_1](include/tutorial2/field/B8_1.h)) defined **&lt;bundle&gt;** fi
     ...
 </message>
 ```
-The member fields can be listed as child XML elements of the **&lt;bundle&gt;** node.
+The member fields are listed as child XML elements of the **&lt;bundle&gt;** node.
 
+Let's take a closer look at the generated code of the field class definition 
+inside [include/tutorial2/field/B8_1.h](include/tutorial2/field/B8_1.h).
+```cpp
+template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
+class B8_1 : public
+    comms::field::Bundle<...>
+{
+public:
+    ...
+    COMMS_FIELD_MEMBERS_NAMES(
+        m1,
+        m2,
+        m3
+    );
+    ...
+};
+```
+The class is defined using 
+[comms::field::Bundle](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Bundle.html).
+The names of the member fields are provided using **COMMS_FIELD_MEMBERS_NAMES()**
+macro. It is quite similar to **COMMS_MSG_FIELDS_NAMES()** (used to define member
+fields of the messages), but applicable to composite fields, such as bundles.
+
+The inner `ValueType` type of `comms::field::Budndle` (or its extended type) 
+is `std::tuple` of all the member fields.
+
+Having **COMMS_FIELD_MEMBERS_NAMES()** macro inside class definition is equivalent
+to having the following types and functions defined:
+```cpp
+template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
+class B8_1 : public
+    comms::field::Bundle<...>
+{
+public:
+    // Access index to the member fields
+    enum FieldIdx
+    {
+        FieldIdx_m1,
+        FieldIdx_m2,
+        FieldIdx_m3,
+        FieldIdx_numOfValues
+    };
+
+    // Aliases to member field types
+    using Field_m1 = B8_1Members<TOpt>::M1;
+    using Field_m2 = B8_1Members<TOpt>::M2;
+    using Field_m3 = B8_1Members<TOpt>::M3;
+
+    // Convenience access to member fields:
+    Field_m1& field_m1();
+    const Field_m1& field_m1() const;
+
+    Field_m2& field_m2();
+    const Field_m2& field_m2() const;
+
+    Field_m3& field_m3();
+    const Field_m3& field_m3() const;
+};
+```
+Please note that names provided to **COMMS_FIELD_MEMBERS_NAMES()** macro 
+('m1', 'm2', 'm3') find their way to `FieldIdx_x` enum values, inner
+`Field_x` alias types and `field_x()` access member functions.
+
+The preparation of the field before being sent looks like this:
+```cpp
+void ClientSession::sendMsg8()
+{
+    Msg8 msg;
+
+    auto& f1 = msg.field_f1(); // Access to f1 field
+    
+    // Assign values to f1 members
+    f1.field_m1().value() = 1234;
+    f1.field_m2().value() = Msg8::Field_f1::Field_m2::ValueType::V1;
+    f1.field_m3().value() = "hello";
+
+    ...
+}
+```
+Please take a closer look at assignment of `m2` value.
+
+- `Msg8::Field_f1` is full type ([tutorial2::field::B8_1](include/tutorial2/field/B8_1.h)) 
+of `Msg8.F1` field.
+- `Msg8::Filed_f1::Field_m2` is a full type ([tutorial2::field::B8_1Members::M2](include/tutorial2/field/B8_1.h)) of 
+`Msg8.F1.M2` field.
+- `Msg8::Filed_f1::Field_m2::ValueType` is an enumeration type
+([comms::field::B8_1MembersCommon::M2Common::ValueType](include/tutorial2/field/B8_1Common.h)) 
+used by `Msg8.F1.M2` field.
+
+The second ([B8_2](include/tutorial2/field/B8_2.h)) defined **&lt;bundle&gt;** 
+field is defined to be:
+```
+<fields>
+    ...
+    <bundle name="B8_2">
+        <description>Some Field Description</description>
+        <members>
+            <float name="M1" type="float" defaultValue="nan" />
+            <set name="M2" length="1">
+                <bit name="SomeBit" idx="0" />
+                <bit name="SomeOtherbit" idx="5" />
+            </set>
+            <data name="M3">
+              <lengthPrefix>
+                    <int name="Length" type="uint8" />
+                </lengthPrefix>
+            </data>
+        </members>
+    </bundle> 
+</fields>
+
+<message name="Msg8" id="MsgId.M8" displayName="Message 8">
+    ...
+    <ref name="F2" field="B8_2" />
+</message>
+```
+Please note that the field definition contains its **description** property defined
+as **&lt;descrption&gt;** XML child node. As the result the member fields definition
+needs to be wrapped in **&lt;members&gt;** XML node instead of being direct
+children of **&lt;bundle&gt;**.
 
 ## Summary
 
@@ -1471,3 +1591,4 @@ full after this tutorial.
 classes provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
 and residing in [comms::field](https://arobenko.github.io/comms_doc/namespacecomms_1_1field.html)
 namespace.
+

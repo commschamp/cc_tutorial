@@ -412,12 +412,16 @@ void ClientSession::sendMsg8()
 {
     Msg8 msg;
 
-    auto& f1 = msg.field_f1();
+    auto& f1 = msg.field_f1(); // Access to f1 field
+
+    // Assign values to f1 members
     f1.field_m1().value() = 1234;
     f1.field_m2().value() = Msg8::Field_f1::Field_m2::ValueType::V1;
     f1.field_m3().value() = "hello";
 
-    auto& f2 = msg.field_f2();
+    auto& f2 = msg.field_f2(); // Access to f2 field
+
+    // Assign values to f2 members
     f2.field_m1().value() = 1.25;
     f2.field_m2().setBitValue_SomeBit(true);
     f2.field_m3().value() = {0xab, 0xcd};
