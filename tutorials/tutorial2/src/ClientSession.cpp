@@ -184,6 +184,31 @@ void ClientSession::handle(Msg8& msg)
     doNextStage();
 }
 
+void ClientSession::handle(Msg9& msg)
+{
+    auto* f1Name = msg.field_f1().name();
+    auto* f2Name = msg.field_f2().name();
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+        '\t' << f1Name << '.' << msg.field_f1().field_m1().name() << " = " <<
+            msg.field_f1().field_m1().value() << '\n' <<
+        '\t' << f1Name << '.' << msg.field_f1().field_m2().name() << " = " <<
+            (unsigned)msg.field_f1().field_m2().value() << " (" << msg.field_f1().field_m2().valueName()  << ")\n";
+    printSetField(msg.field_f1().field_m3(), std::string(f1Name) + '.');
+    std::cout <<
+        '\t' << f2Name << '.' << msg.field_f2().field_m1().name() << " = " <<
+            msg.field_f2().field_m1().value() << '\n' <<
+        '\t' << f2Name << '.' << msg.field_f2().field_m2().name() << " = " <<
+            (unsigned)msg.field_f2().field_m2().value() << " (" << msg.field_f2().field_m2().valueName()  << ")\n";
+    printSetField(msg.field_f2().field_m3(), std::string(f2Name) + '.');
+
+    if (m_currentStage != CommsStage_Msg9) {
+        std::cerr << "ERROR: Unexpected message received" << std::endl;
+        return;
+    }
+
+    doNextStage();
+}
+
 void ClientSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
@@ -281,6 +306,7 @@ void ClientSession::doNextStage()
         /* CommsStage_Msg6 */ &ClientSession::sendMsg6,
         /* CommsStage_Msg7 */ &ClientSession::sendMsg7,
         /* CommsStage_Msg8 */ &ClientSession::sendMsg8,
+        /* CommsStage_Msg9 */ &ClientSession::sendMsg9,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -426,6 +452,25 @@ void ClientSession::sendMsg8()
     f2.field_m2().setBitValue_SomeBit(true);
     f2.field_m3().value() = {0xab, 0xcd};
 
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg9()
+{
+    Msg9 msg;
+
+    static_assert(Msg9::Field_f1::minLength() == 2U, "Invalid length of F1");
+    static_assert(Msg9::Field_f2::minLength() == 3U, "Invalid length of F2");
+
+    // Assign values to f1 members
+    msg.field_f1().field_m1().value() = 55;
+    msg.field_f1().field_m2().value() = Msg9::Field_f1::Field_m2::ValueType::V2;
+    msg.field_f1().field_m3().setBitValue_B5(true);
+    assert(msg.field_f1().length() == 2U); // Runtime verification of serialization length
+
+    // Keeping values of f2 as default constructed
+
+    assert(msg.doLength() == 5U); // Verification of message serialization length (non-polymorphic).
     sendMessage(msg);
 }
 

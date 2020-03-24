@@ -2,7 +2,7 @@
 
 /// @file
 /// @brief Contains common template parameters independent functionality of
-///    @ref tutorial2::field::B8_1 field.
+///    @ref tutorial2::field::B9_1 field.
 
 #pragma once
 
@@ -16,18 +16,18 @@ namespace field
 {
 
 /// @brief Scope for all the common definitions of the member fields of
-///     @ref tutorial2::field::B8_1 field.
-struct B8_1MembersCommon
+///     @ref tutorial2::field::B9_1 field.
+struct B9_1MembersCommon
 {
     /// @brief Common types and functions for
-    ///     @ref tutorial2::field::B8_1Members::M1 field.
+    ///     @ref tutorial2::field::B9_1Members::M1 field.
     struct M1Common
     {
         /// @brief Re-definition of the value type used by
-        ///     tutorial2::field::B8_1Members::M1 field.
-        using ValueType = std::uint16_t;
+        ///     tutorial2::field::B9_1Members::M1 field.
+        using ValueType = std::uint8_t;
     
-        /// @brief Name of the @ref tutorial2::field::B8_1Members::M1 field.
+        /// @brief Name of the @ref tutorial2::field::B9_1Members::M1 field.
         static const char* name()
         {
             return "M1";
@@ -36,11 +36,11 @@ struct B8_1MembersCommon
     };
     
     /// @brief Common types and functions for
-    ///     @ref tutorial2::field::B8_1Members::M2 field.
+    ///     @ref tutorial2::field::B9_1Members::M2 field.
     struct M2Common
     {
         /// @brief Values enumerator for
-        ///     @ref tutorial2::field::B8_1Members::M2 field.
+        ///     @ref tutorial2::field::B9_1Members::M2 field.
         enum class ValueType : std::uint8_t
         {
             V1 = 0, ///< value @b V1
@@ -53,7 +53,7 @@ struct B8_1MembersCommon
             
         };
         
-        /// @brief Name of the @ref tutorial2::field::B8_1Members::M2 field.
+        /// @brief Name of the @ref tutorial2::field::B9_1Members::M2 field.
         static const char* name()
         {
             return "M2";
@@ -78,32 +78,52 @@ struct B8_1MembersCommon
     };
     
     /// @brief Values enumerator for
-    ///     @ref tutorial2::field::B8_1Members::M2 field.
+    ///     @ref tutorial2::field::B9_1Members::M2 field.
     using M2Val = M2Common::ValueType;
     
-    /// @brief Scope for all the common definitions of the
-    ///     @ref tutorial2::field::B8_1Members::M3 field.
+    /// @brief Common functions for
+    ///     @ref tutorial2::field::B9_1Members::M3 field.
     struct M3Common
     {
-        /// @brief Name of the @ref tutorial2::field::B8_1Members::M3 field.
+        /// @brief Name of the @ref tutorial2::field::B9_1Members::M3 field.
         static const char* name()
         {
             return "M3";
         }
         
+        /// @brief Retrieve name of the bit of
+        ///     @ref tutorial2::field::B9_1Members::M3 field.
+        static const char* bitName(std::size_t idx)
+        {
+            static const char* Map[] = {
+                "B0",
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                "B5"
+            };
+        
+            static const std::size_t MapSize = std::extent<decltype(Map)>::value;
+            if (MapSize <= idx) {
+                return nullptr;
+            }
+        
+            return Map[idx];
+        }
+        
     };
-    
     
 };
 
 /// @brief Scope for all the common definitions of the
-///     @ref tutorial2::field::B8_1 field.
-struct B8_1Common
+///     @ref tutorial2::field::B9_1 field.
+struct B9_1Common
 {
-    /// @brief Name of the @ref tutorial2::field::B8_1 field.
+    /// @brief Name of the @ref tutorial2::field::B9_1 field.
     static const char* name()
     {
-        return "B8_1";
+        return "B9_1";
     }
     
 };

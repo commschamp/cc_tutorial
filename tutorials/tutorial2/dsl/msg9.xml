@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <fields>
+        <bitfield name="B9_1">
+            <int name="M1" type="uint8" bitLength="6"/>
+            <enum name="M2" type="uint8" bitLength="4">
+                <validValue name="V1" val="0" />
+                <validValue name="V2" val="1" />
+            </enum>
+            <set name="M3" bitLength="6">
+                <bit name="B0" idx="0" />
+                <bit name="B5" idx="5" />
+            </set>
+        </bitfield>
+        
+        <bitfield name="B9_2">
+            <description>Some Field Description</description>
+            <members>
+                <int name="M1" type="uint16" bitLength="12" defaultValue="16" />
+                <enum name="M2" type="uint8" bitLength="4" defaultValue="V1">
+                    <validValue name="V1" val="2" />
+                    <validValue name="V2" val="5" />
+                </enum>
+                <set name="M3" length="1">
+                    <bit name="B0" idx="0" defaultValue="true" />
+                    <bit name="B5" idx="5" />
+                    <bit name="B7" idx="7" defaultValue="true" />
+                </set>
+            </members>
+        </bitfield>
+    </fields>
+    
+    <message name="Msg9" id="MsgId.M9" displayName="Message 9">
+        <ref name="F1" field="B9_1" />
+        <ref name="F2" field="B9_2" />
+    </message>
+</schema>

@@ -332,7 +332,7 @@ In general, the fields are defined as XML node. Available field types are:
 - [&lt;string&gt;](#string-fields) - Strings.
 - [&lt;data&gt;](#data-fields) - Raw binary data.
 - [&lt;bundle&gt;](#bundle-fields) - Bundling of multiple fields into a single composite field.
-- **&lt;bitfield&gt;** - Similar to **&lt;bundle&gt;**, but allows member fields
+- [&lt;bitfield&gt;](#bitfield-fields) - Similar to **&lt;bundle&gt;**, but allows member fields
 having length in bits (not bytes), up to max of 64 bits.
 - **&lt;list&gt;** - List of fields.
 - **&lt;variant&gt;** - Union of possible fields, containing one value of any
@@ -795,8 +795,8 @@ void ClientSession::sendMsg3()
 }
 ```
 
-The fifth (The [I3_5](include/tutorial2/field/I3_5.h)) defined 
-**&lt;int&gt;** field demonstrates usage of **serOffset**
+The fifth defined **&lt;int&gt;** field 
+([I3_5](include/tutorial2/field/I3_5.h)) demonstrates usage of **serOffset**
 property. It is used to automatically add / subtract predefined value before / after
 field value serialization. The classic example is having a year number to be serialized
 as offset from year **2000** as single byte.
@@ -835,7 +835,7 @@ every bit has independent meaning. The `Msg4` message
 (defined inside [dsl/msg4.xml](dsl/msg4.xml) and implemented
 in [include/tutorial2/message/Msg4.h](include/tutorial2/message/Msg4.h)) demonstrates usage of such fields.
 
-The first ([S4_1](include/tutorial2/field/S4_1.h)) defined **&lt;set&gt;** field is:
+The first defined **&lt;set&gt;** field is ([S4_1](include/tutorial2/field/S4_1.h)):
 ```
 <fields>
     <set name="S4_1" length="1">
@@ -953,7 +953,7 @@ void ClientSession::sendMsg4()
 }
 ```
 
-The second ([S4_2](include/tutorial2/field/S4_2.h)) defined **&lt;set&gt;** field is:
+The second defined **&lt;set&gt;** field is ([S4_2](include/tutorial2/field/S4_2.h)):
 ```
 <fields>
     ...
@@ -1000,7 +1000,8 @@ public:
 };
 ```
 
-The third ([S4_3](include/tutorial2/field/S4_3.h)) defined **&lt;set&gt;** field demonstrates better control of reserved fields:
+The third defined **&lt;set&gt;** field ([S4_3](include/tutorial2/field/S4_3.h))
+demonstrates better control of reserved fields:
 ```
 <fields>
     ...
@@ -1095,7 +1096,7 @@ with IEEE 754 encoding. The `Msg5` message
 [include/tutorial2/message/Msg5.h](include/tutorial2/message/Msg5.h)) 
 demonstrates usage of such fields.
 
-The first ([F5_1](include/tutorial2/field/F5_1.h)) defined **&lt;float&gt;** field is:
+The first defined **&lt;float&gt;** field is ([F5_1](include/tutorial2/field/F5_1.h)):
 ```
 <fields>
     <float name="F5_1" type="float" />
@@ -1116,8 +1117,8 @@ The **&lt;float&gt;** field is defined using
 [comms::field::FloatValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1FloatValue.html) 
 class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
 
-The second ([F5_2](include/tutorial2/field/F5_2.h)) defined 
-**&lt;float&gt;** field demonstrates usage of values with
+The second defined **&lt;float&gt;** field 
+([F5_2](include/tutorial2/field/F5_2.h)) demonstrates usage of values with
 special meaning (similar to special values that can be defined for 
 [&lt;int&gt;](#int-fields) fields).
 ```
@@ -1163,8 +1164,8 @@ The **&lt;string&gt;** fields abstract away string values. The `Msg6` message
 [include/tutorial2/message/Msg6.h](include/tutorial2/message/Msg6.h)) 
 demonstrates usage of such fields.
 
-The first ([S6_1](include/tutorial2/field/S6_1.h)) 
-defined **&lt;string&gt;** field shows usage of fixed size string field:
+The first defined **&lt;string&gt;** field ([S6_1](include/tutorial2/field/S6_1.h)) 
+shows usage of fixed size string field:
 ```
 <fields>
     <string name="S6_1" length="5" />
@@ -1208,8 +1209,8 @@ of zeroes (**0**). In case the stored string value is longer than allowed, the
 serialization output will just be truncated without exceeding maximum allowed 
 number of bytes.
 
-The second ([S6_2](include/tutorial2/field/S6_2.h)) 
-defined **&lt;string&gt;** field demonstrates string prefixed with
+The second defined **&lt;string&gt;** field ([S6_2](include/tutorial2/field/S6_2.h))
+demonstrates string prefixed with
 1 byte of its serialization length:
 ```
 <fields>
@@ -1243,8 +1244,8 @@ void ClientSession::sendMsg6()
 }
 ```
 
-The third ([S6_3](include/tutorial2/field/S6_3.h)) 
-defined **&lt;string&gt;** field also demonstrates string prefixed with
+The third defined **&lt;string&gt;** field ([S6_3](include/tutorial2/field/S6_3.h)) 
+also demonstrates string prefixed with
 its serialization length, but this time of variable length.
 ```
 <fields>
@@ -1268,8 +1269,8 @@ with [Base-128](https://en.wikipedia.org/wiki/LEB128) encoding. In case the
 stored string value has more than 127 characters, the length prefix will occupy 2 bytes 
 when string field is serialized.
 
-The fourth ([S6_4](include/tutorial2/field/S6_4.h)) 
-defined **&lt;string&gt;** field demonstrates zero (**0**) terminating 
+The fourth defined **&lt;string&gt;** field ([S6_4](include/tutorial2/field/S6_4.h))
+demonstrates zero (**0**) terminating 
 string fields. Such fields are not prefixed with their length, their length is
 determined by the presence of zero (**0**) byte.
 ```
@@ -1319,9 +1320,8 @@ The **&lt;data&gt;** fields abstract away lists of raw binary bytes. The `Msg7` 
 demonstrates usage of such fields.
 
 The **&lt;data&gt;** fields are very similar to **&lt;string&gt;** ones. 
-The first ([D7_1](include/tutorial2/field/D7_1.h)) defined 
-**&lt;data&gt;** field shows usage of fixed size raw binary data
-sequence:
+The first defined **&lt;data&gt;** field ([D7_1](include/tutorial2/field/D7_1.h))
+shows usage of fixed size raw binary data sequence:
 ```
 <fields>
     <data name="D7_1" length="5" />
@@ -1365,8 +1365,8 @@ of zeroes (**0**). In case the stored string value is longer than allowed, the
 serialization output will just be truncated without exceeding maximum allowed 
 number of bytes.
 
-The second ([D7_2](include/tutorial2/field/D7_2.h)) 
-defined **&lt;data&gt;** field demonstrates raw data prefixed with
+The second defined **&lt;data&gt;** field ([D7_2](include/tutorial2/field/D7_2.h)) 
+demonstrates raw data prefixed with
 1 byte of its serialization length:
 ```
 <fields>
@@ -1422,7 +1422,7 @@ fields into a single one. The `Msg8` message
 [include/tutorial2/message/Msg8.h](include/tutorial2/message/Msg8.h)) 
 demonstrates usage of such fields.
 
-The first ([B8_1](include/tutorial2/field/B8_1.h)) defined **&lt;bundle&gt;** field is:
+The first defined **&lt;bundle&gt;** field is ([B8_1](include/tutorial2/field/B8_1.h)):
 ```
 <fields>
     <bundle name="B8_1">
@@ -1466,7 +1466,7 @@ The names of the member fields are provided using **COMMS_FIELD_MEMBERS_NAMES()*
 macro. It is quite similar to **COMMS_MSG_FIELDS_NAMES()** (used to define member
 fields of the messages), but applicable to composite fields, such as bundles.
 
-The inner `ValueType` type of `comms::field::Budndle` (or its extended type) 
+The inner `ValueType` type of `comms::field::Bundle` (or its extended type) 
 is `std::tuple` of all the member fields.
 
 Having **COMMS_FIELD_MEMBERS_NAMES()** macro inside class definition is equivalent
@@ -1532,8 +1532,17 @@ of `Msg8.F1` field.
 ([comms::field::B8_1MembersCommon::M2Common::ValueType](include/tutorial2/field/B8_1Common.h)) 
 used by `Msg8.F1.M2` field.
 
-The second ([B8_2](include/tutorial2/field/B8_2.h)) defined **&lt;bundle&gt;** 
-field is defined to be:
+It is worth mentioning that it is possible to access member fields by index 
+instead of name:
+```cpp
+auto& tupleOfMembers = msg.field_f1().value(); // ValueType of bundle field is tuple of members
+auto& m1 = std::get<Msg8::Field_f1::FieldIdx_m1>(tupleOfMembers);
+auto& m2 = std::get<Msg8::Field_f1::FieldIdx_m2>(tupleOfMembers);
+auto& m3 = std::get<Msg8::Field_f1::FieldIdx_m3>(tupleOfMembers);
+```
+
+The second defined **&lt;bundle&gt;** 
+field ([B8_2](include/tutorial2/field/B8_2.h)) is defined to be:
 ```
 <fields>
     ...
@@ -1563,6 +1572,154 @@ Please note that the field definition contains its **description** property defi
 as **&lt;descrption&gt;** XML child node. As the result the member fields definition
 needs to be wrapped in **&lt;members&gt;** XML node instead of being direct
 children of **&lt;bundle&gt;**.
+
+### &lt;bitfield&gt; Fields
+The **&lt;bitfield&gt;** fields are also composite ones, members of which limit
+their serialization lengths in **bits** (not bytes), with total sum of bits not
+exceeding **64** and being a multiplication of **8** (to properly fit into 
+serialization bytes). The `Msg9` message 
+(defined inside [dsl/msg9.xml](dsl/msg9.xml) and implemented in
+[include/tutorial2/message/Msg9.h](include/tutorial2/message/Msg9.h)) 
+demonstrates usage of such fields.
+
+The first defined **&lt;bitfield&gt;** field is ([B9_1](include/tutorial2/field/B9_1.h)):
+```
+<fields>
+    <bitfield name="B9_1">
+        <int name="M1" type="uint8" bitLength="6"/>
+        <enum name="M2" type="uint8" bitLength="4">
+            <validValue name="V1" val="0" />
+            <validValue name="V2" val="1" />
+        </enum>
+        <set name="M3" bitLength="6">
+            <bit name="B0" idx="0" />
+            <bit name="B5" idx="5" />
+        </set>
+    </bitfield>
+    ...
+</fields>
+
+<message name="Msg9" id="MsgId.M9" displayName="Message 9">
+    <ref name="F1" field="B9_1" />
+    ...
+</message>
+```
+Similar to [&lt;bundle&gt;](#bundle-fields) field, the member fields 
+can be listed as child XML elements of the **&lt;bitfield&gt;** node.
+
+Let's take a closer look at the generated code of the field class definition 
+inside [include/tutorial2/field/B9_1.h](include/tutorial2/field/B9_1.h).
+```cpp
+template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
+class B9_1 : public
+    comms::field::Bitfield<...>
+{
+public:
+    COMMS_FIELD_MEMBERS_NAMES(
+        m1,
+        m2,
+        m3
+    );
+    ...
+};
+```
+The class is defined using 
+[comms::field::Bitfield](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Bitfield.html).
+Similar to [&lt;bundle&gt;](#bundle-fields) the names of the member fields are 
+provided using the same **COMMS_FIELD_MEMBERS_NAMES()**
+macro. 
+
+The inner `ValueType` type of `comms::field::Bitfield` (or its extended type) 
+is `std::tuple` of all the member fields.
+
+Just like with [&lt;bundle&gt;](#bundle-fields) fields, having 
+**COMMS_FIELD_MEMBERS_NAMES()** macro inside class definition is equivalent
+to having the following types and functions defined:
+```cpp
+template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
+class B9_1 : public
+    comms::field::Bitfield<...>
+{
+public:
+    // Access index to the member fields
+    enum FieldIdx
+    {
+        FieldIdx_m1,
+        FieldIdx_m2,
+        FieldIdx_m3,
+        FieldIdx_numOfValues
+    };
+
+    // Aliases to member field types
+    using Field_m1 = B9_1Members<TOpt>::M1;
+    using Field_m2 = B9_1Members<TOpt>::M2;
+    using Field_m3 = B9_1Members<TOpt>::M3;
+
+    // Convenience access to member fields:
+    Field_m1& field_m1();
+    const Field_m1& field_m1() const;
+
+    Field_m2& field_m2();
+    const Field_m2& field_m2() const;
+
+    Field_m3& field_m3();
+    const Field_m3& field_m3() const;
+};
+```
+
+The preparation of the field before being sent looks like this:
+```cpp
+void ClientSession::sendMsg8()
+{
+    Msg9 msg;
+
+    ...
+
+    // Assign values to f1 members
+    msg.field_f1().field_m1().value() = 55;
+    msg.field_f1().field_m2().value() = Msg9::Field_f1::Field_m2::ValueType::V2;
+    msg.field_f1().field_m3().setBitValue_B5(true);
+    assert(msg.field_f1().length() == 2U); // Runtime verification of serialization length
+
+    ...
+}
+```
+
+The second defined **&lt;bitfield&gt;** 
+field ([B9_2](include/tutorial2/field/B9_2.h)) is defined to be:
+```
+<fields>
+    ...
+    <bitfield name="B9_2">
+        <description>Some Field Description</description>
+        <members>
+            <int name="M1" type="uint16" bitLength="12" defaultValue="16" />
+            <enum name="M2" type="uint8" bitLength="4" defaultValue="V1">
+                <validValue name="V1" val="2" />
+                <validValue name="V2" val="5" />
+            </enum>
+            <set name="M3" length="1">
+                <bit name="B0" idx="0" defaultValue="true" />
+                <bit name="B5" idx="5" />
+                <bit name="B7" idx="7" defaultValue="true" />
+            </set>
+        </members>
+    </bitfield>
+</fields>
+
+<message name="Msg9" id="MsgId.M9" displayName="Message 9">
+    ...
+    <ref name="F2" field="B9_2" />
+</message>
+```
+Just like with [&lt;bundle&gt;](#bundle-fields) fields, in case some property
+of the **&lt;bitfield&gt;** is defined as XML child element (like **lt;description&gt;**
+in the example above), the member fields must be wrapped in **lt;members&gt;**
+XML element. 
+
+Please also note, that only [&lt;int&gt;](#int-fields), [&lt;enum&gt;](#enum-fields),
+and [&lt;set&gt;](#set-fields) fields can be members of [&lt;bitfield&gt;](#bitfield-fields)
+
 
 ## Summary
 
