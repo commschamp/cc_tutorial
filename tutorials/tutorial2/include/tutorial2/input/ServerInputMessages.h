@@ -7,6 +7,7 @@
 
 #include <tuple>
 #include "tutorial2/message/Msg1.h"
+#include "tutorial2/message/Msg10.h"
 #include "tutorial2/message/Msg2.h"
 #include "tutorial2/message/Msg3.h"
 #include "tutorial2/message/Msg4.h"
@@ -37,7 +38,8 @@ using ServerInputMessages =
         tutorial2::message::Msg6<TBase, TOpt>,
         tutorial2::message::Msg7<TBase, TOpt>,
         tutorial2::message::Msg8<TBase, TOpt>,
-        tutorial2::message::Msg9<TBase, TOpt>
+        tutorial2::message::Msg9<TBase, TOpt>,
+        tutorial2::message::Msg10<TBase, TOpt>
     >;
 
 } // namespace input

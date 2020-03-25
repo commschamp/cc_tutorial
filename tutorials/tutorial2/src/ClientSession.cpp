@@ -209,6 +209,52 @@ void ClientSession::handle(Msg9& msg)
     doNextStage();
 }
 
+void ClientSession::handle(Msg10& msg)
+{
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n';
+
+    auto& f1Vec = msg.field_f1().value();
+    std::cout << '\t' << msg.field_f1().name() << " (" << f1Vec.size() << " elements)\n";
+    for (auto idx = 0U; idx < f1Vec.size(); ++idx) {
+        auto& elem = f1Vec[idx];
+        std::cout << "\t\t" << elem.name() << ' ' << idx << " = " << elem.value() << '\n';
+    }
+
+    auto& f2Vec = msg.field_f2().value();
+    std::cout << '\t' << msg.field_f2().name() << " (" << f2Vec.size() << " elements)\n";
+    for (auto idx = 0U; idx < f2Vec.size(); ++idx) {
+        auto& elem = f2Vec[idx];
+        std::cout << "\t\t" << elem.name() << ' ' << idx << " = " << elem.value() << '\n';
+    }
+
+    auto& f3Vec = msg.field_f3().value();
+    std::cout << '\t' << msg.field_f3().name() << " (" << f3Vec.size() << " elements)\n";
+    for (auto idx = 0U; idx < f3Vec.size(); ++idx) {
+        auto& elem = f3Vec[idx];
+        std::cout << "\t\t" << elem.name() << ' ' << idx << '\n' <<
+            "\t\t\t" << elem.field_m1().name() << " = " << (unsigned)elem.field_m1().value() << '\n' <<
+            "\t\t\t" << elem.field_m2().name() << " = " << elem.field_m2().value() << '\n';
+    }
+
+    auto& f4Vec = msg.field_f4().value();
+    std::cout << '\t' << msg.field_f4().name() << " (" << f4Vec.size() << " elements)\n";
+    for (auto idx = 0U; idx < f4Vec.size(); ++idx) {
+        auto& elem = f4Vec[idx];
+        std::cout << "\t\t" << elem.name() << ' ' << idx << '\n' <<
+            "\t\t\t" << elem.field_m1().name() << " = " << (unsigned)elem.field_m1().value() << '\n' <<
+            "\t\t\t" << elem.field_m2().name() << " = " << (unsigned)elem.field_m2().value() <<
+                     " (" << elem.field_m2().valueName() << ")\n" <<
+            "\t\t\t" << elem.field_m3().name() << " = " << elem.field_m3().value() << '\n';
+    }
+
+    if (m_currentStage != CommsStage_Msg10) {
+        std::cerr << "ERROR: Unexpected message received" << std::endl;
+        return;
+    }
+
+    doNextStage();
+}
+
 void ClientSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
@@ -307,6 +353,7 @@ void ClientSession::doNextStage()
         /* CommsStage_Msg7 */ &ClientSession::sendMsg7,
         /* CommsStage_Msg8 */ &ClientSession::sendMsg8,
         /* CommsStage_Msg9 */ &ClientSession::sendMsg9,
+        /* CommsStage_Msg10 */ &ClientSession::sendMsg10,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -471,6 +518,40 @@ void ClientSession::sendMsg9()
     // Keeping values of f2 as default constructed
 
     assert(msg.doLength() == 5U); // Verification of message serialization length (non-polymorphic).
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg10()
+{
+    Msg10 msg;
+
+    auto& f1Vec = msg.field_f1().value(); // Access to F1 storage vector
+    assert(f1Vec.empty()); // The default constructed vector is empty
+    f1Vec.resize(3); // Resizing to lesser than required size on purpose
+    f1Vec[0].value() = 12345;
+    f1Vec[1].value() = 54321;
+    f1Vec[2].value() = 33333;
+
+    auto& f2Vec = msg.field_f2().value(); // Access to F2 storage vector
+    assert(f2Vec.empty()); // The default constructed vector is empty
+    f2Vec.resize(2);
+    f2Vec[0].value() = -125;
+    f2Vec[1].value() = 123;
+
+    auto& f3Vec = msg.field_f3().value(); // Access to F3 storage vector
+    assert(f3Vec.empty()); // The default constructed vector is empty
+    f3Vec.resize(2);
+    f3Vec[0].field_m1().value() = 125;
+    f3Vec[0].field_m2().value() = "abcd"; // Last character is expected to be truncated
+    f3Vec[1].field_m1().value() = 111;
+    f3Vec[1].field_m2().value() = "aa";
+
+    auto& f4Vec = msg.field_f4().value(); // Access to F4 storage vector
+    assert(f4Vec.empty()); // The default constructed vector is empty
+    f4Vec.resize(1);
+    f4Vec[0].field_m1().value() = 99;
+    f4Vec[0].field_m2().value() = Msg10::Field_f4::ValueType::value_type::Field_m2::ValueType::V2;
+    f4Vec[0].field_m3().value() = "hello"; // Last character is expected to be truncated
     sendMessage(msg);
 }
 

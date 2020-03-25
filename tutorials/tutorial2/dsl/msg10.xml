@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <fields>
+        <list name="L10_1" count="5">
+            <int name="Element" type="uint32" />
+        </list>
+
+        <list name="L10_2">
+            <countPrefix>
+                <int name="Size" type="uintvar" length="4" />
+            </countPrefix>
+            <element>
+                <int name="Element" type="int16" />
+            </element>
+        </list>
+
+        <list name="L10_3">
+            <lengthPrefix>
+                <int name="Length" type="uint16" />
+            </lengthPrefix>
+            <element>
+                <bundle name="Element">
+                    <int name="M1" type="uint8" />
+                    <string name="M2" length="3" />
+                </bundle>
+            </element>
+        </list>
+
+        <list name="L10_4">
+            <countPrefix>
+                <int name="Size" type="uint16" />
+            </countPrefix>
+            <elemLengthPrefix>
+                <int name="Length" type="uint8" />
+            </elemLengthPrefix>
+            <element>
+                <bundle name="Element">
+                    <int name="M1" type="uint8" />
+                    <enum name="M2" type="uint8">
+                        <validValue name="V1" val="5" />
+                        <validValue name="V2" val="15" />
+                    </enum>
+                    <string name="M3" />
+                </bundle>
+            </element>
+        </list>
+
+    </fields>
+    
+    <message name="Msg10" id="MsgId.M10" displayName="Message 10">
+        <ref name="F1" field="L10_1" />
+        <ref name="F2" field="L10_2" />
+        <ref name="F3" field="L10_3" />
+        <ref name="F4" field="L10_4" />
+    </message>
+</schema>

@@ -48,6 +48,56 @@ struct DefaultOptions
         using D7_2 = comms::option::app::EmptyOption;
         
         /// @brief Extra options for @ref
+        ///     tutorial2::field::L10_1 field.
+        using L10_1 = comms::option::app::EmptyOption;
+        
+        /// @brief Extra options for @ref
+        ///     tutorial2::field::L10_2 field.
+        using L10_2 = comms::option::app::EmptyOption;
+        
+        /// @brief Extra options for all the member fields of
+        ///     @ref tutorial2::field::L10_3 list.
+        struct L10_3Members
+        {
+            /// @brief Extra options for all the member fields of
+            ///     @ref tutorial2::field::L10_3Members::Element bundle.
+            struct ElementMembers
+            {
+                /// @brief Extra options for @ref
+                ///     tutorial2::field::L10_3Members::ElementMembers::M2
+                ///     field.
+                using M2 = comms::option::app::EmptyOption;
+                
+            };
+            
+        };
+        
+        /// @brief Extra options for @ref
+        ///     tutorial2::field::L10_3 field.
+        using L10_3 = comms::option::app::EmptyOption;
+        
+        /// @brief Extra options for all the member fields of
+        ///     @ref tutorial2::field::L10_4 list.
+        struct L10_4Members
+        {
+            /// @brief Extra options for all the member fields of
+            ///     @ref tutorial2::field::L10_4Members::Element bundle.
+            struct ElementMembers
+            {
+                /// @brief Extra options for @ref
+                ///     tutorial2::field::L10_4Members::ElementMembers::M3
+                ///     field.
+                using M3 = comms::option::app::EmptyOption;
+                
+            };
+            
+        };
+        
+        /// @brief Extra options for @ref
+        ///     tutorial2::field::L10_4 field.
+        using L10_4 = comms::option::app::EmptyOption;
+        
+        /// @brief Extra options for @ref
         ///     tutorial2::field::S6_1 field.
         using S6_1 = comms::option::app::EmptyOption;
         

@@ -1541,7 +1541,7 @@ auto& m2 = std::get<Msg8::Field_f1::FieldIdx_m2>(tupleOfMembers);
 auto& m3 = std::get<Msg8::Field_f1::FieldIdx_m3>(tupleOfMembers);
 ```
 
-The second defined **&lt;bundle&gt;** 
+The second **&lt;bundle&gt;** 
 field ([B8_2](include/tutorial2/field/B8_2.h)) is defined to be:
 ```
 <fields>
@@ -1685,7 +1685,7 @@ void ClientSession::sendMsg8()
 }
 ```
 
-The second defined **&lt;bitfield&gt;** 
+The second **&lt;bitfield&gt;** 
 field ([B9_2](include/tutorial2/field/B9_2.h)) is defined to be:
 ```
 <fields>
@@ -1713,12 +1713,13 @@ field ([B9_2](include/tutorial2/field/B9_2.h)) is defined to be:
 </message>
 ```
 Just like with [&lt;bundle&gt;](#bundle-fields) fields, in case some property
-of the **&lt;bitfield&gt;** is defined as XML child element (like **lt;description&gt;**
-in the example above), the member fields must be wrapped in **lt;members&gt;**
+of the **&lt;bitfield&gt;** is defined as XML child element (like **&lt;description&gt;**
+in the example above), the member fields must be wrapped in **&lt;members&gt;**
 XML element. 
 
 Please also note, that only [&lt;int&gt;](#int-fields), [&lt;enum&gt;](#enum-fields),
-and [&lt;set&gt;](#set-fields) fields can be members of [&lt;bitfield&gt;](#bitfield-fields)
+and [&lt;set&gt;](#set-fields) fields can be members of [&lt;bitfield&gt;](#bitfield-fields),
+value of any other field cannot limit its length to number of bits.
 
 
 ## Summary
