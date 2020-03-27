@@ -334,7 +334,7 @@ In general, the fields are defined as XML node. Available field types are:
 - [&lt;bundle&gt;](#bundle-fields) - Bundling of multiple fields into a single composite field.
 - [&lt;bitfield&gt;](#bitfield-fields) - Similar to **&lt;bundle&gt;**, but allows member fields
 having length in bits (not bytes), up to max of 64 bits.
-- **&lt;list&gt;** - List of fields.
+- [&lt;list&gt;](#list-fields) - List of fields.
 - **&lt;variant&gt;** - Union of possible fields, containing one value of any
 time, suitable for creation of heterogeneous lists.
 - **&lt;ref&gt;** - Reference (alias) to any other field.
@@ -1721,11 +1721,194 @@ Please also note, that only [&lt;int&gt;](#int-fields), [&lt;enum&gt;](#enum-fie
 and [&lt;set&gt;](#set-fields) fields can be members of [&lt;bitfield&gt;](#bitfield-fields),
 value of any other field cannot limit its length to number of bits.
 
+### &lt;list&gt; Fields
+The **&lt;list&gt;** fields abstract away sequences of other fields. 
+The `Msg10` message  (defined inside [dsl/msg10.xml](dsl/msg10.xml) and implemented in
+[include/tutorial2/message/Msg10.h](include/tutorial2/message/Msg10.h)) 
+demonstrates usage of such fields.
+
+The first defined **&lt;list&gt;** field is ([L10_1](include/tutorial2/field/L10_1.h)):
+```
+<fields>
+    <list name="L10_1" count="5">
+        <int name="Element" type="uint32" />
+    </list>
+    ...
+</fields>
+
+<message name="Msg10" id="MsgId.M10" displayName="Message 10">
+    <ref name="F1" field="L10_1" />
+    ...
+</message>
+```
+
+The list element field can be defined as child XML elements of the **&lt;list&gt;** node.
+
+The definition above specifies list of **fixed** size of 5 elements (using **count**
+property). Each element is 32 bit unsigned integer. Let's take a look at 
+generated code inside [include/tutoridal2/field/L10_1.h](include/tutoridal2/field/L10_1.h).
+```cpp
+template <typename TOpt = tutorial2::options::DefaultOptions>
+struct L10_1Members
+{
+    struct Element : public
+        comms::field::IntValue<...>
+    {
+        ...
+    };
+    
+};
+
+template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
+struct L10_1 : public
+    comms::field::ArrayList<
+        tutorial2::field::FieldBase<>,
+        typename L10_1Members<TOpt>::Element,
+        TExtraOpts...,
+        typename TOpt::field::L10_1,
+        comms::option::def::SequenceFixedSize<5U>
+    >
+{
+    ...
+};
+```
+The definition of the list field uses 
+[comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)
+to define the field (the same as [&lt;data&gt;](#data-fields) field), but as
+its element type uses field (`typename L10_1Members<TOpt>::Element`) definition
+instead of raw binary data (`std::uint8_t`). It means that the **default** value storage
+type of such field is `std::vector<typename L10_1Members<TOpt>::Element>`. Just 
+like with [&lt;data&gt;](#data-fields) fields, such default storage value may
+be customized to be something else, more suitable for bare-metal development 
+for example, but it's a subject for another a bit later tutorial.
+
+Let's also take a look at the example code that prepares such field to be sent
+over:
+```cpp
+void ClientSession::sendMsg10()
+{
+    Msg10 msg;
+
+    auto& f1Vec = msg.field_f1().value(); // Access to F1 storage vector
+    assert(f1Vec.empty()); // The default constructed vector is empty
+    f1Vec.resize(3); // Resizing to lesser than required size on purpose
+    f1Vec[0].value() = 12345;
+    f1Vec[1].value() = 54321;
+    f1Vec[2].value() = 33333;
+
+    ...
+}
+```
+Note that `msg.field_f1()` gives an access to the list field. To access its storage
+additional call to `.value()` needs to be performed. As the result the `f1Vec` is
+a reference to vector of fields (`std::vector<tutorial2::field::L10_1Members<tutorial2::options::DefaultOptions>::Element>`).
+
+Also note that usage of **count="5"** property in the 
+[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) schema as well
+as reflected in the generated code usage of `comms::option::def::SequenceFixedSize<5U>`
+option ensures requested number of element in the serialized output buffer, and
+does **NOT** influence the size of the storage vector upon construction of the
+field. The default constructed vector is empty. The code above creates and populates only
+3 elements of it. The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+does the rest to ensure correct number of elements is serialized. The missing
+elements will be default constructed and their value is properly serialized.
+
+Also note, that accessing the vector element (`f1Vec[0]`) gives a reference to
+the **field** object, not its storage value. To access the storage, there is a 
+need to use additional `.value()` call.
+
+The second defined **&lt;list&gt;** field is ([L10_2](include/tutorial2/field/L10_2.h)):
+```
+<fields>
+    <list name="L10_2">
+        <countPrefix>
+            <int name="Size" type="uintvar" length="4" />
+        </countPrefix>
+        <element>
+            <int name="Element" type="int16" />
+        </element>
+    </list>
+    ...
+</fields>
+
+<message name="Msg10" id="MsgId.M10" displayName="Message 10">
+    ...
+    <ref name="F2" field="L10_2" />
+    ...
+</message>
+```
+Such field defines a list prefixed with number of its elements (the 
+**&lt;countPrefix&gt;** XML child contains definition of the prefix field). 
+The `Size` field is of variable length and has `Base-128` encoding. Just a reminder,
+usage of the **length** property for variable length integral field (**type="uintvar"**)
+specifies **maximal** allowed length.
+
+Also note that due to existence of other, non-element XML nodes as child of the
+**&lt;list&gt;** (**&lt;countPrefix&gt;** for example), it is required to 
+define the element inside the **&lt;element&gt;**
+XML node.
+
+The third defined **&lt;list&gt;** field is ([L10_3](include/tutorial2/field/L10_3.h)):
+```
+<fields>
+    <list name="L10_3">
+        <lengthPrefix>
+            <int name="Length" type="uint16" />
+        </lengthPrefix>
+        <element>
+            <bundle name="Element">
+                <int name="M1" type="uint8" />
+                <string name="M2" length="3" />
+            </bundle>
+        </element>
+    </list>
+    ...
+</fields>
+
+<message name="Msg10" id="MsgId.M10" displayName="Message 10">
+    ...
+    <ref name="F3" field="L10_3" />
+    ...
+</message>
+```
+It defines a list prefixed with 2 bytes of total serialization length of the whole list (the 
+**&lt;lengthPrefix&gt;** XML child contains definition of the prefix field). 
+
+Note, that **&lt;list&gt;** allows only single field as its element. In order to
+have multiple fields inside, they need to be bundled together as a single field
+using [&lt;bundle&gt;](#bundle-fields) field.
+
+Let's take closer look at the preparation of such field before being sent.
+```cpp
+void ClientSession::sendMsg10()
+{
+    ...
+    auto& f3Vec = msg.field_f3().value(); // Access to F3 storage vector
+    assert(f3Vec.empty()); // The default constructed vector is empty
+    f3Vec.resize(2);
+    f3Vec[0].field_m1().value() = 125;
+    f3Vec[0].field_m2().value() = "abcd"; // Last character is expected to be truncated
+    f3Vec[1].field_m1().value() = 111;
+    f3Vec[1].field_m2().value() = "aa";
+    ...
+}
+```
+There are couple of things to pay attention to:
+
+- Access to the storage vector element (`f3Vec[0]`) gives a reference the the **&lt;bundle&gt;**
+field. To access the member field additional call to `field_X()` needs to be
+performed (`.field_m1()`), which in turn gives a reference to the member field
+object, not its value storage. To access the storage additional call to `.value()`
+needs to be performed.
+- The `m2` member of the bundle is defined to be a fixed size string of 3 characters.
+Extra character assigned to the value will be ignored during serialization and
+any missing characters will be padded with `0`.
+
 
 ## Summary
 
 - The protocol definition does not necessarily need to be defined in a single
-schema files, it can be split into multiple ones and being processed in specified
+schema file, it can be split into multiple ones and being processed in specified
 order.
 - The fields can be defined as member nodes of the **&lt;message&gt;**
 definition or global ones (members of global **&lt;fields&gt;** XML node) and
