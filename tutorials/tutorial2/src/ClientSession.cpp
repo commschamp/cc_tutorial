@@ -551,7 +551,7 @@ void ClientSession::sendMsg10()
     f4Vec.resize(1);
     f4Vec[0].field_m1().value() = 99;
     f4Vec[0].field_m2().value() = Msg10::Field_f4::ValueType::value_type::Field_m2::ValueType::V2;
-    f4Vec[0].field_m3().value() = "hello"; // Last character is expected to be truncated
+    f4Vec[0].field_m3().value() = "hello"; 
     sendMessage(msg);
 }
 

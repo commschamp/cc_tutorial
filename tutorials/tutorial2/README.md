@@ -1777,7 +1777,7 @@ The definition of the list field uses
 to define the field (the same as [&lt;data&gt;](#data-fields) field), but as
 its element type uses field (`typename L10_1Members<TOpt>::Element`) definition
 instead of raw binary data (`std::uint8_t`). It means that the **default** value storage
-type of such field is `std::vector<typename L10_1Members<TOpt>::Element>`. Just 
+type (inner `ValueType`) of such field is `std::vector<typename L10_1Members<TOpt>::Element>`. Just 
 like with [&lt;data&gt;](#data-fields) fields, such default storage value may
 be customized to be something else, more suitable for bare-metal development 
 for example, but it's a subject for another a bit later tutorial.
@@ -1904,6 +1904,79 @@ needs to be performed.
 Extra character assigned to the value will be ignored during serialization and
 any missing characters will be padded with `0`.
 
+The fourth defined **&lt;list&gt;** field is ([L10_4](include/tutorial2/field/L10_4.h)):
+```
+<fields>
+    <list name="L10_4">
+        <countPrefix>
+            <int name="Size" type="uint16" />
+        </countPrefix>
+        <elemLengthPrefix>
+            <int name="Length" type="uint8" />
+        </elemLengthPrefix>
+        <element>
+            <bundle name="Element">
+                <int name="M1" type="uint8" />
+                <enum name="M2" type="uint8">
+                    <validValue name="V1" val="5" />
+                    <validValue name="V2" val="15" />
+                </enum>
+                <string name="M3" />
+            </bundle>
+        </element>
+    </list>
+    ...
+</fields>
+
+<message name="Msg10" id="MsgId.M10" displayName="Message 10">
+    ...
+    <ref name="F4" field="L10_4" />
+</message>
+```
+In addition to **&lt;countPrefix&gt;** node that defines number of element prefix
+of the list, there is **&lt;elemLengthPrefix&gt;** node which defines serialization
+length prefix for **every** element that follows. Some protocols use this 
+feature to allow forward-compatibility of the protocol. For example if in the
+future some new fields are going to be added to the element, the element length
+information allows older version of the protocol, which is not aware of the 
+newly added fields to skip extra bytes before reading the next element.
+
+In the example above, the last **&lt;string&gt;** member field of the **&lt;bundle&gt;**
+element doesn't have any length bound. Its length will be limited by the 
+element length prefix value.
+
+The preparation of the field looks like this:
+```cpp
+void ClientSession::sendMsg10()
+{
+    ...
+
+    auto& f4Vec = msg.field_f4().value(); // Access to F4 storage vector
+    assert(f4Vec.empty()); // The default constructed vector is empty
+    f4Vec.resize(1);
+    f4Vec[0].field_m1().value() = 99;
+    f4Vec[0].field_m2().value() = Msg10::Field_f4::ValueType::value_type::Field_m2::ValueType::V2;
+    f4Vec[0].field_m3().value() = "hello"; 
+    sendMessage(msg);
+}
+```
+The assignment for of the **m2** member field value requires a bit of explanation.
+
+- `Msg10::Field_f4` is an alias to the `F4` field, which in turn extends the 
+[L10_4](include/tutorial2/field/L10_4.h) list class.
+- Access to inner `ValueType` (`Msg10::Field_f4::ValueType`) provides a storage 
+type, i.e. std::vector of stored bundle field.
+- Access to inner `value_type` of the storage vector (`Msg10::Field_f4::ValueType::value_type`)
+provides a type of the stored bundle element.
+- As was already mentioned in [&lt;bundle&gt; Fields](#bundle-fields) section, every
+bundle field creates alias types for its members, so 
+`Msg10::Field_f4::ValueType::value_type::Field_m2` is accessing the type of the 
+**M2** member field, which is **&lt;enum&gt;** field.
+- The inner `ValueType` type of the enum field definition
+(`Msg10::Field_f4::ValueType::value_type::Field_m2::ValueType`) is an alias to actual
+enumeration type.
+- Once the actual enumeration type is known, the actual value is selected
+(`Msg10::Field_f4::ValueType::value_type::Field_m2::ValueType::V2`).
 
 ## Summary
 
@@ -1919,6 +1992,10 @@ won't be generated.
 interface for all field types. 
 - The primary and most frequently used member function of the field objects
 is **value()**. It is used to access the storage **by-reference**.
+- Every field has inner `ValueType` type, which defines type of the inner value storage.
+  - `ValueType` of [&lt;enum&gt;](#enum-fields) is appropriate C++ enum class.
+  - `ValueType` of [&lt;int&gt;](#int-fields) is appropriate integral type 
+(std::int8_t, std::uint8_t, std::int16_t, etc...)
 - Every message definition class containing inner fields uses 
 **COMMS_MSG_FIELDS_NAMES()** macro (provided by the 
 [COMMS Library](https://github.com/arobenko/comms_champion#comms-library))
