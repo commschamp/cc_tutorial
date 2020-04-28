@@ -2,8 +2,6 @@
 
 #include <map>
 
-#include <boost/asio.hpp>
-
 #include "Session.h"
 
 namespace cc_tutorial
@@ -15,10 +13,11 @@ public:
     using Socket = Session::Socket;
     using PortType = unsigned short;
 
-    explicit TcpClient(boost::asio::io_service& io);
+    explicit TcpClient(boost_wrap::io& io);
     bool start(PortType port = 20000);
 
 private:
+    boost_wrap::io& m_io;
     SessionPtr m_session;
 };
 

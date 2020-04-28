@@ -6,14 +6,15 @@
 namespace cc_tutorial
 {
 
-TcpClient::TcpClient(boost::asio::io_service& io)
-  : m_session(Session::createClient(io))
+TcpClient::TcpClient(boost_wrap::io& io)
+  : m_io(io),
+    m_session(Session::createClient(io))
 {
 }
 
 bool TcpClient::start(PortType port)
 {
-    Socket socket(m_session->getIoService());
+    Socket socket(m_io);
     boost::system::error_code ec;
     socket.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port), ec);
     if (ec) {

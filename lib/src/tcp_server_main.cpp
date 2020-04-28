@@ -4,8 +4,7 @@
 
 #include <cassert>
 
-#include <boost/asio.hpp>
-
+#include "boost_wrap.h"
 #include "TcpServer.h"
 
 int main(int argc, const char* argv[])
@@ -13,8 +12,7 @@ int main(int argc, const char* argv[])
     static_cast<void>(argc);
     static_cast<void>(argv);
     try {
-        boost::asio::io_service io;
-
+        cc_tutorial::boost_wrap::io io;
         cc_tutorial::TcpServer server(io);
 
         if (!server.start()) {

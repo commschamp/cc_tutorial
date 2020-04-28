@@ -4,7 +4,7 @@
 #include <vector>
 #include <array>
 
-#include <boost/asio.hpp>
+#include "boost_wrap.h"
 
 namespace cc_tutorial
 {
@@ -23,8 +23,8 @@ public:
     }
 
     // Needs to be implemented inside every tutorial
-    static Ptr createServer(boost::asio::io_service& io);
-    static Ptr createClient(boost::asio::io_service& io);
+    static Ptr createServer(boost_wrap::io& io);
+    static Ptr createClient(boost_wrap::io& io);
 
     bool start();
 
@@ -34,14 +34,16 @@ public:
     {
         m_terminateCb = std::forward<TFunc>(func);
     }
-
-    boost::asio::io_service& getIoService()
+    
+    boost_wrap::io& getIo()
     {
-        return m_socket.get_io_service();
+        return m_io;
     }
 
+
 protected:
-    explicit Session(boost::asio::io_service& io) :
+    explicit Session(boost_wrap::io& io) :
+        m_io(io),
         m_socket(io)
     {
     }
@@ -55,6 +57,7 @@ protected:
 private:
     void doRead();
 
+    boost_wrap::io& m_io;
     Socket m_socket;
     std::array<std::uint8_t, 1024> m_inBuf;
     std::vector<std::uint8_t> m_inData;

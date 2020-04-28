@@ -6,8 +6,9 @@
 namespace cc_tutorial
 {
 
-TcpServer::TcpServer(boost::asio::io_service& io)
-  : m_acceptor(io),
+TcpServer::TcpServer(boost_wrap::io& io)
+  : m_io(io),
+    m_acceptor(io),
     m_socket(io)
 {
 }
@@ -62,7 +63,7 @@ void TcpServer::doAccept()
 
                 std::cout << "INFO: New connection from " << sessionId << std::endl;
 
-                auto session = Session::createServer(m_acceptor.get_io_service());
+                auto session = Session::createServer(m_io);
 
                 session->setTerminateCb(
                     [this, sessionId]()

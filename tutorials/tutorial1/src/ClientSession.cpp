@@ -141,7 +141,7 @@ void ClientSession::doNextStage()
         static const std::size_t MaxCycles = 3U;
         if (MaxCycles <= m_completedCycles) {
             // Client execution is complete
-            getIoService().stop();
+            getIo().stop();
             return;
         }
 
@@ -174,7 +174,7 @@ void ClientSession::sendMsg2()
 }
 
 
-SessionPtr Session::createClient(boost::asio::io_service& io)
+SessionPtr Session::createClient(boost_wrap::io& io)
 {
     return SessionPtr(new ClientSession(io));
 }

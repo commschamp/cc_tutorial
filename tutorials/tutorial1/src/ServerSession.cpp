@@ -44,7 +44,7 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
     return comms::processAllWithDispatch(buf, bufLen, m_frame, *this);
 }
 
-SessionPtr Session::createServer(boost::asio::io_service& io)
+SessionPtr Session::createServer(boost_wrap::io& io)
 {
     return SessionPtr(new ServerSession(io));
 }

@@ -16,7 +16,7 @@ public:
     using Socket = boost::asio::ip::tcp::socket;
     using PortType = unsigned short;
 
-    explicit TcpServer(boost::asio::io_service& io);
+    explicit TcpServer(boost_wrap::io& io);
     bool start(PortType port = 20000);
 
 private:
@@ -25,6 +25,7 @@ private:
 
     void doAccept();
 
+    boost_wrap::io& m_io;
     Acceptor m_acceptor;
     Socket m_socket;
     SessionsMap m_sessions;
