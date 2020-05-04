@@ -1984,36 +1984,42 @@ can initialize and hold only one instance of any member member fields at a time.
 **&lt;variant&gt;** fields can be used to create a heterogeneous list of some properties, 
 such as **key-value** pairs or **TLV** (type-length-value) triplets.
 Note, that working with **&lt;variant&gt;** fields is not simple and requires a bit deeper
-understanding. It's a bit out of "introductory" scope of this tutorial. The **lt;variant&gt;**
+understanding. It's a bit out of "introductory" scope of this tutorial. The **&lt;variant&gt;**
 field will be covered in depth in one of the later tutorials.
 
 ## Summary
 
 - The protocol definition does not necessarily need to be defined in a single
-schema file, it can be split into multiple ones and being processed in specified
-order.
+  schema file, it can be split into multiple ones and being processed in specified
+  order.
 - The fields can be defined as member nodes of the **&lt;message&gt;**
-definition or global ones (members of global **&lt;fields&gt;** XML node) and
-then referenced by other message member fields.
+  definition or global ones (members of global **&lt;fields&gt;** XML node) and
+  then referenced by other message member fields.
 - The code for global field which is not referenced by other field or message definition
-won't be generated.
+  won't be generated.
 - The fields are abstractions around actual value storage to provide common
-interface for all field types. 
+  interface for all field types. 
 - The primary and most frequently used member function of the field objects
-is **value()**. It is used to access the storage **by-reference**.
+  is **value()**. It is used to access the storage **by-reference**.
 - Every field has inner `ValueType` type, which defines type of the inner value storage.
   - `ValueType` of [&lt;enum&gt;](#enum-fields) is appropriate C++ enum class.
-  - `ValueType` of [&lt;int&gt;](#int-fields) is an appropriate integral type (`std::int8_t`, `std::uint8_t`, etc ...) 
-  - `ValueType` of [&lt;set&gt;](#set-fields) is an appropriate **unsigned** integral type (`std::uint8_t`, `std::uint16_t`, etc...).
-  - `ValueType` of [&lt;float&gt;](#float-fields) is an approprate floating point type (`float` or `double`).
-  - **Default** `ValueType` of [&lt;string&gt;](#string-fields) is `std::string`, but it can be changed to better suit the application's needs.
-  - **Default** `ValueType` of [&lt;data&gt;](#data-fields) is `std::vector&lt;std::uint8_t&gt;`, but it can be changed to better suit the application's needs.
+  - `ValueType` of [&lt;int&gt;](#int-fields) is an appropriate integral type (`std::int8_t`,     
+    `std::uint8_t`, etc ...) 
+  - `ValueType` of [&lt;set&gt;](#set-fields) is an appropriate **unsigned** integral type 
+    (`std::uint8_t`, `std::uint16_t`, etc...).
+  - `ValueType` of [&lt;float&gt;](#float-fields) is an approprate floating point type (`float` or 
+    `double`).
+  - **Default** `ValueType` of [&lt;string&gt;](#string-fields) is `std::string`, but it can be changed 
+    to better suit the application's needs.
+  - **Default** `ValueType` of [&lt;data&gt;](#data-fields) is `std::vector&lt;std::uint8_t&gt;`, but it 
+    can be changed to better suit the application's needs.
   - `ValueType` of [&lt;bundle&gt;](#bundle-fields) is `std::tuple` of all its member fields.
   - `ValueType` of [&lt;bitfield&gt;](#bitfield-fields) is `std::tuple` of all its member fields.
-  - **Default** `ValueType` of [&lt;list&gt;](#list-fields) is `std::vector` of the element field, but it can be changed to better suit the application's needs.
-  - `ValueType` of [&lt;variant&gt;](#variant-fields) is a variant of [std::aligned_storage](https://en.cppreference.com/w/cpp/types/aligned_storage) and should not be accessed directly via **value()** member function.
+  - **Default** `ValueType` of [&lt;list&gt;](#list-fields) is `std::vector` of the element field, but it 
+    can be changed to better suit the application's needs.
+  - `ValueType` of [&lt;variant&gt;](#variant-fields) is a variant of [std::aligned_storage](https://en.
+    cppreference.com/w/cpp/types/aligned_storage) and should not be accessed directly via **value()** member function.
   - `ValueType` of [&lt;optional&gt;](#optional-fields) is a type of the field being wrapped.
-(std::int8_t, std::uint8_t, std::int16_t, etc...)
 - Every message definition class containing inner fields uses 
   **COMMS_MSG_FIELDS_NAMES()** macro (provided by the 
   [COMMS Library](https://github.com/arobenko/comms_champion#comms-library))
@@ -2022,16 +2028,16 @@ is **value()**. It is used to access the storage **by-reference**.
   as well as **field_x()** member function to provide an access to the contained member field 
   object.
 - Generated classes of both [&lt;bundle&gt;](#bundle-fields) and [&lt;bitfield&gt;](#bitfield-fields)
-  fields use `COMMS_MSG_FIELDS_NAMES()` macro to provide names for their member fields. For every field name **x** mentioned in the macro, there is **Field_x** member alias type to specify type of the field
+  fields use **COMMS_MSG_FIELDS_NAMES()** macro to provide names for their member fields. For every field 
+  name **x** mentioned in the macro, there is **Field_x** member alias type to specify type of the field
   as well as **field_x()** member function to provide an access to the contained member field 
   object.
-- Due to the nature of
-these tutorials it is not possible to cover **all** aspects (properties) of all
-the available fields, it is highly recommended to read 
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification in
-full after this tutorial.
+- Due to the nature of these tutorials it is not possible to cover **all** aspects (properties) of all
+  the available fields, it is highly recommended to read 
+  [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification in
+  full after this tutorial.
 - All the field classes are implemented by extending one of the field definition
-classes provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
-and residing in [comms::field](https://arobenko.github.io/comms_doc/namespacecomms_1_1field.html)
-namespace.
+  classes provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+  and residing in [comms::field](https://arobenko.github.io/comms_doc/namespacecomms_1_1field.html)
+  namespace.
 
