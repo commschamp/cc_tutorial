@@ -335,7 +335,7 @@ In general, the fields are defined as XML node. Available field types are:
 - [&lt;bitfield&gt;](#bitfield-fields) - Similar to **&lt;bundle&gt;**, but allows member fields
 having length in bits (not bytes), up to max of 64 bits.
 - [&lt;list&gt;](#list-fields) - List of fields.
-- **&lt;variant&gt;** - Union of possible fields, containing one value of any
+- [&lt;variant&gt;](#variant-fields) - Union of possible fields, containing one value of any
 time, suitable for creation of heterogeneous lists.
 - **&lt;ref&gt;** - Reference (alias) to any other field.
 - **&lt;optional&gt;** - Wrapper around any other field to make the latter optional.
@@ -1978,6 +1978,15 @@ enumeration type.
 - Once the actual enumeration type is known, the actual value is selected
 (`Msg10::Field_f4::ValueType::value_type::Field_m2::ValueType::V2`).
 
+### &lt;variant&gt; Fields
+The **&lt;variant&gt;** fields abstract away a "union" of multiple other fields. They
+can initialize and hold only one instance of any member member fields at a time. The
+**&lt;variant&gt;** fields can be used to create a heterogeneous list of some properties, 
+such as **key-value** pairs or **TLV** (type-length-value) triplets.
+Note, that working with **&lt;variant&gt;** fields is not simple and requires a bit deeper
+understanding. It's a bit out of "introductory" scope of this tutorial. The **lt;variant&gt;**
+field will be covered in depth in one of the later tutorials.
+
 ## Summary
 
 - The protocol definition does not necessarily need to be defined in a single
@@ -1994,12 +2003,28 @@ interface for all field types.
 is **value()**. It is used to access the storage **by-reference**.
 - Every field has inner `ValueType` type, which defines type of the inner value storage.
   - `ValueType` of [&lt;enum&gt;](#enum-fields) is appropriate C++ enum class.
-  - `ValueType` of [&lt;int&gt;](#int-fields) is appropriate integral type 
+  - `ValueType` of [&lt;int&gt;](#int-fields) is an appropriate integral type (`std::int8_t`, `std::uint8_t`, etc ...) 
+  - `ValueType` of [&lt;set&gt;](#set-fields) is an appropriate **unsigned** integral type (`std::uint8_t`, `std::uint16_t`, etc...).
+  - `ValueType` of [&lt;float&gt;](#float-fields) is an approprate floating point type (`float` or `double`).
+  - **Default** `ValueType` of [&lt;string&gt;](#string-fields) is `std::string`, but it can be changed to better suit the application's needs.
+  - **Default** `ValueType` of [&lt;data&gt;](#data-fields) is `std::vector&lt;std::uint8_t&gt;`, but it can be changed to better suit the application's needs.
+  - `ValueType` of [&lt;bundle&gt;](#bundle-fields) is `std::tuple` of all its member fields.
+  - `ValueType` of [&lt;bitfield&gt;](#bitfield-fields) is `std::tuple` of all its member fields.
+  - **Default** `ValueType` of [&lt;list&gt;](#list-fields) is `std::vector` of the element field, but it can be changed to better suit the application's needs.
+  - `ValueType` of [&lt;variant&gt;](#variant-fields) is a variant of [std::aligned_storage](https://en.cppreference.com/w/cpp/types/aligned_storage) and should not be accessed directly via **value()** member function.
+  - `ValueType` of [&lt;optional&gt;](#optional-fields) is a type of the field being wrapped.
 (std::int8_t, std::uint8_t, std::int16_t, etc...)
 - Every message definition class containing inner fields uses 
-**COMMS_MSG_FIELDS_NAMES()** macro (provided by the 
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library))
-to create convenience access member functions for member fields.
+  **COMMS_MSG_FIELDS_NAMES()** macro (provided by the 
+  [COMMS Library](https://github.com/arobenko/comms_champion#comms-library))
+  to create convenience access member functions for member fields. For every field name **x** 
+  mentioned in the macro, there is **Field_x** member alias type to specify type of the field
+  as well as **field_x()** member function to provide an access to the contained member field 
+  object.
+- Generated classes of both [&lt;bundle&gt;](#bundle-fields) and [&lt;bitfield&gt;](#bitfield-fields)
+  fields use `COMMS_MSG_FIELDS_NAMES()` macro to provide names for their member fields. For every field name **x** mentioned in the macro, there is **Field_x** member alias type to specify type of the field
+  as well as **field_x()** member function to provide an access to the contained member field 
+  object.
 - Due to the nature of
 these tutorials it is not possible to cover **all** aspects (properties) of all
 the available fields, it is highly recommended to read 

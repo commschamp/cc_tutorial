@@ -44,7 +44,9 @@ binary executables (where **X** is the name of the tutorial / how-to).
 The I/O handling framework used for all the applications is 
 **Boost.Asio** and TCP/IP communication was chosen for all the built client / server
 applications. The relevant code is common for all the applications and is abstracted away into the
-common static library (residing in the [lib](../../tree/master/lib) folder).
+common static library (residing in the [lib](../../tree/master/lib) folder). Note, that
+protocol handling and management code is completely I/O link independent and can
+be used in the same way with any I/O link type.
 
 To test the binaries of the specific tutorial, first run the **server** application
 in your terminal window. It is expected to run indefinitely until manually terminated
