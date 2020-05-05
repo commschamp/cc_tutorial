@@ -200,6 +200,7 @@ void ClientSession::handle(Msg9& msg)
         '\t' << f2Name << '.' << msg.field_f2().field_m2().name() << " = " <<
             (unsigned)msg.field_f2().field_m2().value() << " (" << msg.field_f2().field_m2().valueName()  << ")\n";
     printSetField(msg.field_f2().field_m3(), std::string(f2Name) + '.');
+    std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg9) {
         std::cerr << "ERROR: Unexpected message received" << std::endl;
@@ -246,6 +247,7 @@ void ClientSession::handle(Msg10& msg)
                      " (" << elem.field_m2().valueName() << ")\n" <<
             "\t\t\t" << elem.field_m3().name() << " = " << elem.field_m3().value() << '\n';
     }
+    std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg10) {
         std::cerr << "ERROR: Unexpected message received" << std::endl;
@@ -253,6 +255,21 @@ void ClientSession::handle(Msg10& msg)
     }
 
     doNextStage();
+}
+
+void ClientSession::handle(Msg11& msg)
+{
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+        '\t' << msg.field_f11_1().name() << " = " << (unsigned)msg.field_f11_1().value() << '\n' <<
+        '\t' << msg.field_f2().name() << " = " <<
+            (unsigned)msg.field_f2().value() << " (" << msg.field_f2().valueName()  << ")\n" <<
+        '\t' << msg.field_f3().name() << '.' << msg.field_f3().field_m1().name() << " = " <<
+            (unsigned)msg.field_f3().field_m1().value() << '\n' <<
+        '\t' << msg.field_f3().name() << '.' << msg.field_f3().field_m2().name() << " = " <<
+            (unsigned)msg.field_f3().field_m2().value() << " (" << msg.field_f3().field_m2().valueName()  << ")\n" <<
+        std::endl;
+
+    doNextStage();        
 }
 
 void ClientSession::handle(Message& msg)
@@ -354,6 +371,7 @@ void ClientSession::doNextStage()
         /* CommsStage_Msg8 */ &ClientSession::sendMsg8,
         /* CommsStage_Msg9 */ &ClientSession::sendMsg9,
         /* CommsStage_Msg10 */ &ClientSession::sendMsg10,
+        /* CommsStage_Msg11 */ &ClientSession::sendMsg11,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -552,6 +570,17 @@ void ClientSession::sendMsg10()
     f4Vec[0].field_m1().value() = 99;
     f4Vec[0].field_m2().value() = Msg10::Field_f4::ValueType::value_type::Field_m2::ValueType::V2;
     f4Vec[0].field_m3().value() = "hello"; 
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg11()
+{
+    Msg11 msg;
+
+    msg.field_f11_1().value() = 0xff;
+    msg.field_f2().value() = Msg11::Field_f2::ValueType::V1;
+    msg.field_f3().field_m1().value() = 0x11;
+    msg.field_f3().field_m2().value() = Msg11::Field_f3::Field_m2::ValueType::V2;
     sendMessage(msg);
 }
 

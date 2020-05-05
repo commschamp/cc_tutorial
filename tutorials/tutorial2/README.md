@@ -337,7 +337,7 @@ having length in bits (not bytes), up to max of 64 bits.
 - [&lt;list&gt;](#list-fields) - List of fields.
 - [&lt;variant&gt;](#variant-fields) - Union of possible fields, containing one value of any
 time, suitable for creation of heterogeneous lists.
-- **&lt;ref&gt;** - Reference (alias) to any other field.
+- [&lt;ref&gt;](#ref-fields) - Reference (alias) to any other field.
 - **&lt;optional&gt;** - Wrapper around any other field to make the latter optional.
 
 Every field type has its own set of properties. However, there are also properties
@@ -1987,6 +1987,86 @@ Note, that working with **&lt;variant&gt;** fields is not simple and requires a 
 understanding. It's a bit out of "introductory" scope of this tutorial. The **&lt;variant&gt;**
 field will be covered in depth in one of the later tutorials.
 
+### &lt;ref&gt; Fields
+The **&lt;ref&gt;** fields are there to define a reference to other fields in order to avoid
+code duplication in the [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
+schema as well as in the generated code. The **&lt;ref&gt;** fields have been used
+throughout this tutorial as fields of the **&lt;message&gt;**-s and referenced
+ones in the global space. 
+
+NOTE, that **&lt;ref&gt;** field can only reference freestanding fields (not members
+of other **&lt;message&gt;**, **&lt;bundle&gt;**, or **&lt;bitfield&gt;**).
+
+There are a couple of extra aspects about **&lt;ref&gt;** that a worth emphasizing.
+The `Msg11` message  (defined inside [dsl/msg11.xml](dsl/msg11.xml) and implemented in
+[include/tutorial2/message/Msg11.h](include/tutorial2/message/Msg11.h)) 
+is there to demonstrate them.
+
+The **&lt;ref&gt;** field uses **field** property to reference
+other fields. It also inherits the **name** and **displayName**
+properties of the referenced field.
+```
+<fields>
+    <int name="F11_1" type="uint8" displayName="Field 11_1" />
+    ...
+</fields>
+
+<message name="Msg11" id="MsgId.M11" displayName="Message 11">
+    <ref field="F11_1" />
+    ...
+</message>
+```
+In the example above the first **&lt;ref&gt;** member field of the `Msg11` inherits the
+`F11_1` as **name** and `Field 11_1` as **displayName**. It result in the
+following definition of the member field names inside 
+[include/tutorial2/message/Msg11.h](include/tutorial2/message/Msg11.h)
+```cpp
+template <typename TMsgBase, typename TOpt = tutorial2::options::DefaultOptions>
+class Msg11 : public
+    comms::MessageBase<...>
+{
+public:
+    COMMS_MSG_FIELDS_NAMES(
+        f11_1,
+        ...
+    );
+    
+    ...
+};
+```
+The code that prepares this field before being sent is:
+```cpp
+void ClientSession::sendMsg11()
+{
+    ...
+    msg.field_f11_1().value() = 0xff;
+    ...
+}
+```
+When the field's value is printed upon reception back from the server inside
+`void ClientSession::handle(Msg11& msg)` its output looks like this:
+```
+Received "Message 11" with ID=11
+    Field 11_1 = 255
+    ...
+```
+It's because the value of the **displayName** property of the `F11_1` field was
+inherited by the message field member as well.
+
+If we take a closer look at the generated C++ code of the described `Msg11` member field,
+we'll see that it is implemented as simple alias type to the defined external field
+```cpp
+template <typename TOpt = tutorial2::options::DefaultOptions>
+struct Msg11Fields
+{
+    using F11_1 =
+        tutorial2::field::F11_1<
+            TOpt
+        >;
+    ...
+};
+```
+
 ## Summary
 
 - The protocol definition does not necessarily need to be defined in a single
@@ -2028,9 +2108,9 @@ field will be covered in depth in one of the later tutorials.
   as well as **field_x()** member function to provide an access to the contained member field 
   object.
 - Generated classes of both [&lt;bundle&gt;](#bundle-fields) and [&lt;bitfield&gt;](#bitfield-fields)
-  fields use **COMMS_MSG_FIELDS_NAMES()** macro to provide names for their member fields. For every field 
-  name **x** mentioned in the macro, there is **Field_x** member alias type to specify type of the field
-  as well as **field_x()** member function to provide an access to the contained member field 
+  fields use **COMMS_FIELD_MEMBERS_NAMES()** macro to provide names for their member fields. For every 
+  field name **x** mentioned in the macro, there is **Field_x** member alias type to specify type of the 
+  field as well as **field_x()** member function to provide an access to the contained member field 
   object.
 - Due to the nature of these tutorials it is not possible to cover **all** aspects (properties) of all
   the available fields, it is highly recommended to read 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <fields>
+        <int name="F11_1" type="uint8" displayName="Field 11_1" /> 
+        <enum name="F11_2" type="uint8" displayName="Field 11_2">
+            <validValue name="V0" val="0" />
+            <validValue name="V1" val="1" />
+            <validValue name="V2" val="2" />
+        </enum>
+
+        <bitfield name="F11_3">
+            <ref name="M1" field="F11_1" bitLength="5" />
+            <ref name="M2" field="F11_2" bitLength="3" displayName="M2"/>
+        </bitfield>
+    </fields>
+    
+    <message name="Msg11" id="MsgId.M11" displayName="Message 11">
+        <ref field="F11_1" />
+        <ref name="F2" field="F11_2" />
+        <ref name="F3" field="F11_3" />
+    </message>
+</schema>
