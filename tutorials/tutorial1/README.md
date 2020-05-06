@@ -273,7 +273,7 @@ The polymorphic name retrieval can be used in application when there is a
 need to print human readable name of the message. Note that such name
 is provided as `displayName` property of the message definition inside
 [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) schema.
-```
+```xml
 <message name="Msg1" id="MsgId.M1" displayName="Message 1"/>
 ```
 
@@ -288,7 +288,7 @@ static_assert(Message::hasName(), "Missing polymorphic name");
 Existence of polymorphic (virtual) functions in the common interface
 class definition also implies existence of the virtual destructor. It
 can be checked using standard type traits:
-```
+```cpp
 static_assert(std::has_virtual_destructor<Message>::value, "Destructor is not virtual");
 ```
 

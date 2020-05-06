@@ -31,7 +31,7 @@ set (schema_files
 NOTE, that when splitting schema into multiple files, the **first**
 processed file must properly define protocol name and endian (see 
 [dsl/main.xml](dsl/main.xml)).
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <schema name="tutorial2" endian="big">
     ...
@@ -39,7 +39,7 @@ processed file must properly define protocol name and endian (see
 ```
 All the subsequent files **may** (but don't have to) omit such definition (
 see [dsl/msg1.xml](dsl/msg1.xml)).
-```
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <schema>
     ...
@@ -48,7 +48,7 @@ see [dsl/msg1.xml](dsl/msg1.xml)).
 
 ## Framing
 This tutorial uses the following framing for all the messages:
-```
+```xml
 <frame name="Frame">
     <size name="Size">
         <int name="SizeField" type="uint16" />
@@ -69,22 +69,22 @@ In other words it is:
 
 ## Defining Fields
 Every message may define internal fields. Let's take a look inside [dsl/msg1.xml](dsl/msg1.xml).
-```
+```xml
 <message name="Msg1" id="MsgId.M1" displayName="Message 1">
     <ref name="F1" field="I1" />
     <int name="F2" type="int16" />
 </message>
 ```
 The message can define its field internally:
-```
+```xml
 <int name="F2" type="int16" />
 ```
 or reference the previously defined global field (using **&lt;ref&gt;** node):
-```
+```xml
 <ref name="F1" field="I1" />
 ```
 The globally defined fields need to reside inside **&lt;fields&gt;** XML node:
-```
+```xml
 <fields>
     <int name="I1" type="uint8" />
     ...
@@ -128,7 +128,7 @@ template parameters independent definitions reside in
 
 Note, that [dsl/msg1.xml](dsl/msg1.xml) file also contains definition of
 a dummy field, which is not referenced anywhere.
-```
+```xml
 <int name="Dummy" type="uint8" description="Not referenced anywhere" />
 ```
 If the field is not referenced anywhere the 
@@ -355,17 +355,17 @@ doxygen documentation.
 supports multiple ways to set the field's property value with the same end result:
 
 - As attribute's value:
-```
+```xml
 <int name="F1" ... />
 ```
 - As child node with **value** property:
-```
+```xml
 <int ...>
     <name value="F1" />
 </int>
 ```
 - As child node text:
-```
+```xml
 <int ...>
     <name>F1</name>
 </int>
@@ -375,7 +375,7 @@ supports multiple ways to set the field's property value with the same end resul
 The `Msg2` message (defined inside [dsl/msg2.xml](dsl/msg2.xml)) is there to
 demonstrate usage of enum fields. Let's take a look inside. There is definition
 of external field `E2_1` which is referenced by the `Msg1` definition:
-```
+```xml
 <fields>
     <enum name="E2_1" type="uint8">
         <validValue name="V1" val="0" description="Some value" />
@@ -459,7 +459,7 @@ class E2_1 : public
 
 There is also a definition
 of external `enum` field `E2_2` which is referenced by the `Msg1` definition:
-```
+```xml
 <fields>
     <enum name="E2_2" type="uint16" defaultValue="V2">
         <validValue name="V1" val="0" />
@@ -616,7 +616,7 @@ explained fields in this and most of subsequent section will be defined as
 global ones and referenced using **&lt;ref&gt;** XML node.
 
 The first defined **&lt;int&gt;** field is:
-```
+```xml
 <fields>
     <int name="I3_1" type="int32" defaultValue="10" />
     ...
@@ -656,7 +656,7 @@ void ClientSession::sendMsg3()
 ```
 
 The second defined **&lt;int&gt;** field is:
-```
+```xml
 <fields>
     <int name="I3_2" type="uint32" length="3" />
 </fields>
@@ -693,7 +693,7 @@ static member functions that can be used at compile time to verify minimal and
 maximal serialization lengths of the field.
 
 The third defined **&lt;int&gt;** field uses variable length encoding:
-```
+```xml
 <fields>
     <int name="I3_3" type="uintvar" length="4" />
 </fields>
@@ -749,7 +749,7 @@ provides and ability to specify names for some values, while
 necessary helper functions to get/set special values.
 
 The fourth defined **&lt;int&gt;** field demonstrates usage of such special values.
-```
+```xml
 <fields>
     <int name="I3_4" type="uint8" defaultValue="S1">
         <special name="S1" val="1" />
@@ -800,7 +800,7 @@ The fifth defined **&lt;int&gt;** field
 property. It is used to automatically add / subtract predefined value before / after
 field value serialization. The classic example is having a year number to be serialized
 as offset from year **2000** as single byte.
-```
+```xml
 <fields>
     ...
     <int name="I3_5" type="int16" length="1" defaultValue="2020" serOffset="-2000">
@@ -836,7 +836,7 @@ every bit has independent meaning. The `Msg4` message
 in [include/tutorial2/message/Msg4.h](include/tutorial2/message/Msg4.h)) demonstrates usage of such fields.
 
 The first defined **&lt;set&gt;** field is ([S4_1](include/tutorial2/field/S4_1.h)):
-```
+```xml
 <fields>
     <set name="S4_1" length="1">
         <bit name="B0" idx="0" />
@@ -954,7 +954,7 @@ void ClientSession::sendMsg4()
 ```
 
 The second defined **&lt;set&gt;** field is ([S4_2](include/tutorial2/field/S4_2.h)):
-```
+```xml
 <fields>
     ...
     <set name="S4_2" type="uint16" defaultValue="true">
@@ -1002,7 +1002,7 @@ public:
 
 The third defined **&lt;set&gt;** field ([S4_3](include/tutorial2/field/S4_3.h))
 demonstrates better control of reserved fields:
-```
+```xml
 <fields>
     ...
     <set name="S4_3" length="3" reservedValue="true">
@@ -1097,7 +1097,7 @@ with IEEE 754 encoding. The `Msg5` message
 demonstrates usage of such fields.
 
 The first defined **&lt;float&gt;** field is ([F5_1](include/tutorial2/field/F5_1.h)):
-```
+```xml
 <fields>
     <float name="F5_1" type="float" />
     ...
@@ -1121,7 +1121,7 @@ The second defined **&lt;float&gt;** field
 ([F5_2](include/tutorial2/field/F5_2.h)) demonstrates usage of values with
 special meaning (similar to special values that can be defined for 
 [&lt;int&gt;](#int-fields) fields).
-```
+```xml
 <fields>
     ...    
     <float name="F5_2" type="double" defaultValue="S1">
@@ -1166,7 +1166,7 @@ demonstrates usage of such fields.
 
 The first defined **&lt;string&gt;** field ([S6_1](include/tutorial2/field/S6_1.h)) 
 shows usage of fixed size string field:
-```
+```xml
 <fields>
     <string name="S6_1" length="5" />
     ...
@@ -1212,7 +1212,7 @@ number of bytes.
 The second defined **&lt;string&gt;** field ([S6_2](include/tutorial2/field/S6_2.h))
 demonstrates string prefixed with
 1 byte of its serialization length:
-```
+```xml
 <fields>
     <string name="S6_2" defaultValue="hello">
         <lengthPrefix>
@@ -1247,7 +1247,7 @@ void ClientSession::sendMsg6()
 The third defined **&lt;string&gt;** field ([S6_3](include/tutorial2/field/S6_3.h)) 
 also demonstrates string prefixed with
 its serialization length, but this time of variable length.
-```
+```xml
 <fields>
     ...
     <int name="L6_3" type="uintvar" length="2" />
@@ -1273,7 +1273,7 @@ The fourth defined **&lt;string&gt;** field ([S6_4](include/tutorial2/field/S6_4
 demonstrates zero (**0**) terminating 
 string fields. Such fields are not prefixed with their length, their length is
 determined by the presence of zero (**0**) byte.
-```
+```xml
 <fields>
     ...
     <string name="S6_4" zeroTermSuffix="true" />
@@ -1302,7 +1302,7 @@ void ClientSession::sendMsg6()
 
 The fifth defined **&lt;string&gt;** field demonstrates string field without
 any size limitations and/or termination character.
-```
+```xml
 <message name="Msg6" id="MsgId.M6" displayName="Message 6">
     ...
     <string name="F5" />
@@ -1322,7 +1322,7 @@ demonstrates usage of such fields.
 The **&lt;data&gt;** fields are very similar to **&lt;string&gt;** ones. 
 The first defined **&lt;data&gt;** field ([D7_1](include/tutorial2/field/D7_1.h))
 shows usage of fixed size raw binary data sequence:
-```
+```xml
 <fields>
     <data name="D7_1" length="5" />
     ...
@@ -1368,7 +1368,7 @@ number of bytes.
 The second defined **&lt;data&gt;** field ([D7_2](include/tutorial2/field/D7_2.h)) 
 demonstrates raw data prefixed with
 1 byte of its serialization length:
-```
+```xml
 <fields>
     ...
     <data name="D7_2" defaultValue="ab cd ef 012345">
@@ -1404,7 +1404,7 @@ void ClientSession::sendMsg7()
 
 The third defined **&lt;data&gt;** field demonstrates raw data field without
 any size limitations.
-```
+```xml
 <message name="Msg7" id="MsgId.M7" displayName="Message 7">
     ...
     <data name="F3" />
@@ -1423,7 +1423,7 @@ fields into a single one. The `Msg8` message
 demonstrates usage of such fields.
 
 The first defined **&lt;bundle&gt;** field is ([B8_1](include/tutorial2/field/B8_1.h)):
-```
+```xml
 <fields>
     <bundle name="B8_1">
         <int name="M1" type="uint16" />
@@ -1543,7 +1543,7 @@ auto& m3 = std::get<Msg8::Field_f1::FieldIdx_m3>(tupleOfMembers);
 
 The second **&lt;bundle&gt;** 
 field ([B8_2](include/tutorial2/field/B8_2.h)) is defined to be:
-```
+```xml
 <fields>
     ...
     <bundle name="B8_2">
@@ -1583,7 +1583,7 @@ serialization bytes). The `Msg9` message
 demonstrates usage of such fields.
 
 The first defined **&lt;bitfield&gt;** field is ([B9_1](include/tutorial2/field/B9_1.h)):
-```
+```xml
 <fields>
     <bitfield name="B9_1">
         <int name="M1" type="uint8" bitLength="6"/>
@@ -1687,7 +1687,7 @@ void ClientSession::sendMsg8()
 
 The second **&lt;bitfield&gt;** 
 field ([B9_2](include/tutorial2/field/B9_2.h)) is defined to be:
-```
+```xml
 <fields>
     ...
     <bitfield name="B9_2">
@@ -1728,7 +1728,7 @@ The `Msg10` message  (defined inside [dsl/msg10.xml](dsl/msg10.xml) and implemen
 demonstrates usage of such fields.
 
 The first defined **&lt;list&gt;** field is ([L10_1](include/tutorial2/field/L10_1.h)):
-```
+```xml
 <fields>
     <list name="L10_1" count="5">
         <int name="Element" type="uint32" />
@@ -1818,7 +1818,7 @@ the **field** object, not its storage value. To access the storage, there is a
 need to use additional `.value()` call.
 
 The second defined **&lt;list&gt;** field is ([L10_2](include/tutorial2/field/L10_2.h)):
-```
+```xml
 <fields>
     <list name="L10_2">
         <countPrefix>
@@ -1849,7 +1849,7 @@ define the element inside the **&lt;element&gt;**
 XML node.
 
 The third defined **&lt;list&gt;** field is ([L10_3](include/tutorial2/field/L10_3.h)):
-```
+```xml
 <fields>
     <list name="L10_3">
         <lengthPrefix>
@@ -1905,7 +1905,7 @@ Extra character assigned to the value will be ignored during serialization and
 any missing characters will be padded with `0`.
 
 The fourth defined **&lt;list&gt;** field is ([L10_4](include/tutorial2/field/L10_4.h)):
-```
+```xml
 <fields>
     <list name="L10_4">
         <countPrefix>
@@ -1997,7 +1997,7 @@ ones in the global space.
 NOTE, that **&lt;ref&gt;** field can only reference freestanding fields (not members
 of other **&lt;message&gt;**, **&lt;bundle&gt;**, or **&lt;bitfield&gt;**).
 
-There are a couple of extra aspects about **&lt;ref&gt;** that a worth emphasizing.
+There are a couple of extra aspects about **&lt;ref&gt;** that are worth emphasizing.
 The `Msg11` message  (defined inside [dsl/msg11.xml](dsl/msg11.xml) and implemented in
 [include/tutorial2/message/Msg11.h](include/tutorial2/message/Msg11.h)) 
 is there to demonstrate them.
@@ -2005,7 +2005,7 @@ is there to demonstrate them.
 The **&lt;ref&gt;** field uses **field** property to reference
 other fields. It also inherits the **name** and **displayName**
 properties of the referenced field.
-```
+```xml
 <fields>
     <int name="F11_1" type="uint8" displayName="Field 11_1" />
     ...
@@ -2017,7 +2017,7 @@ properties of the referenced field.
 </message>
 ```
 In the example above the first **&lt;ref&gt;** member field of the `Msg11` inherits the
-`F11_1` as **name** and `Field 11_1` as **displayName**. It result in the
+`F11_1` as **name** and `Field 11_1` as **displayName**. It results in the
 following definition of the member field names inside 
 [include/tutorial2/message/Msg11.h](include/tutorial2/message/Msg11.h)
 ```cpp
@@ -2067,6 +2067,87 @@ struct Msg11Fields
 };
 ```
 
+The second used **&lt;ref&gt;** field overrides the **name** property while
+still inheriting **displayName** one.
+```xml
+<fields>
+    ...
+    <enum name="F11_2" type="uint8" displayName="Field 11_2">
+        <validValue name="V0" val="0" />
+        <validValue name="V1" val="1" />
+        <validValue name="V2" val="2" />
+    </enum>
+    ...
+</fields>
+
+<message name="Msg11" id="MsgId.M11" displayName="Message 11">
+    ...
+    <ref name="F2" field="F11_2" />
+    ...
+</message>
+```
+
+It results in the following definition of the member field names inside 
+[include/tutorial2/message/Msg11.h](include/tutorial2/message/Msg11.h)
+```cpp
+template <typename TMsgBase, typename TOpt = tutorial2::options::DefaultOptions>
+class Msg11 : public
+    comms::MessageBase<...>
+{
+public:
+    COMMS_MSG_FIELDS_NAMES(
+        ...
+        f2,
+        ...
+    );
+    
+    ...
+};
+```
+
+The field definition in the generated code looks like this:
+```cpp
+template <typename TOpt = tutorial2::options::DefaultOptions>
+struct Msg11Fields
+{
+    using F2 =
+        tutorial2::field::F11_2<
+            TOpt
+        >;
+    ...
+};
+```
+
+The code that prepares this field before being sent is:
+```cpp
+void ClientSession::sendMsg11()
+{
+    ...
+    msg.field_f2().value() = Msg11::Field_f2::ValueType::V1;
+    ...
+}
+```
+
+When the field's value is printed upon reception back from the server inside
+`void ClientSession::handle(Msg11& msg)` its output looks like this:
+```
+Received "Message 11" with ID=11
+    ...
+    Field 11_2 = 1 (V1)
+    ...
+```
+
+Another important aspect of **&lt;ref&gt;** fields is that it can be used 
+as member of [&lt;bitfield&gt;](#bitfield-fields).
+```xml
+<bitfield name="F11_3">
+    <ref name="M1" field="F11_1" bitLength="5" />
+    <ref name="M2" field="F11_2" bitLength="3" displayName="M2"/>
+</bitfield>
+```
+Note that usage of **bitLength** property to limit the length of the
+referenced field in bits.
+
 ## Summary
 
 - The protocol definition does not necessarily need to be defined in a single
@@ -2099,6 +2180,7 @@ struct Msg11Fields
     can be changed to better suit the application's needs.
   - `ValueType` of [&lt;variant&gt;](#variant-fields) is a variant of [std::aligned_storage](https://en.
     cppreference.com/w/cpp/types/aligned_storage) and should not be accessed directly via **value()** member function.
+  - `ValueType` of [&lt;ref&gt;](#ref-fields) is a the same as `ValueType` of the referenced field.    
   - `ValueType` of [&lt;optional&gt;](#optional-fields) is a type of the field being wrapped.
 - Every message definition class containing inner fields uses 
   **COMMS_MSG_FIELDS_NAMES()** macro (provided by the 
