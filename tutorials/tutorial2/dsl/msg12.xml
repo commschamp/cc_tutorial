@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <message name="Msg12" id="MsgId.M12" displayName="Message 12">
+        <optional name="F1">
+            <int name="ActF1" type="uint16" />
+        </optional>
+    </message>
+</schema>

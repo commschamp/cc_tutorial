@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <message name="Msg14" id="MsgId.M14" displayName="Message 14">
+        <int name="F1" type="int8" />
+        <int name="F2" type="int8" />
+        <optional name="F3" defaultMode="missing">
+            <field>
+                <int name="ActF3" type="uint16" />
+            </field>
+            <or>
+                <cond value="$F1 &gt; 0" />
+                <and>
+                    <cond value="$F1 = 0" />
+                    <cond value="$F2 != 0" />
+                </and>
+            </or>
+        </optional>
+    </message>
+</schema>

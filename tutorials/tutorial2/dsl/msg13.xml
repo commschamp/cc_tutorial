@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <message name="Msg13" id="MsgId.M13" displayName="Message 13">
+        <set name="Flags" length="1">
+            <bit name="F2Present" idx="0" />
+            <bit name="F3Missing" idx="1" />
+        </set>
+        <optional name="F2" cond="$Flags.F2Present" defaultMode="missing">
+            <int name="ActF2" type="uint16" />
+        </optional>
+        <optional name="F3" cond="!$Flags.F3Missing" defaultMode="exists">
+            <int name="ActF3" type="uint8" />
+        </optional>
+    </message>
+</schema>

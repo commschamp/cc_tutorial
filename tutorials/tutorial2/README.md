@@ -178,8 +178,7 @@ public:
     // Check that field has the valid value
     bool valid() const;
     
-    // Bring field into a consistent state, will be explained in one
-    // of the later tutorials
+    // Bring field into a consistent state
     bool refresh();
     
     // Get human readable name of the field 
@@ -338,7 +337,7 @@ having length in bits (not bytes), up to max of 64 bits.
 - [&lt;variant&gt;](#variant-fields) - Union of possible fields, containing one value of any
 time, suitable for creation of heterogeneous lists.
 - [&lt;ref&gt;](#ref-fields) - Reference (alias) to any other field.
-- **&lt;optional&gt;** - Wrapper around any other field to make the latter optional.
+- [&lt;optional&gt;](#optional-fields) - Wrapper around any other field to make the latter optional.
 
 Every field type has its own set of properties. However, there are also properties
 which are common for **all** the fields. Here are some of them:

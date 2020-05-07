@@ -43,6 +43,30 @@ void printDataField(const TField& field, const std::string& prefix = std::string
     std::cout << std::dec << '\n';
 }
 
+template <typename TField>
+bool printOptionalField(const TField& field, const std::string& prefix = std::string())
+{
+    std::cout << '\t' << prefix << field.name();
+
+    static const std::string ModeMap[] = {
+        /* comms::field::OptionalMode::Tentative */ "tentative",
+        /* comms::field::OptionalMode::Exists */ "exists",
+        /* comms::field::OptionalMode::Missing */ "missing",
+    };
+    static const std::size_t ModeMapSize = std::extent<decltype(ModeMap)>::value;
+    static_assert(ModeMapSize == (unsigned)comms::field::OptionalMode::NumOfModes, "Invalid Map");
+
+    auto mapIdx = static_cast<unsigned>(field.getMode());
+    if (ModeMapSize <= mapIdx) {
+        assert(!"Unexpected mode value, should not happen");
+        std::cout << " (unknown)" << std::endl;
+        return false;
+    }
+
+    std::cout << " (" << ModeMap[mapIdx] << ")" << std::endl;
+    return field.doesExist(); // Print the rest only if field is present
+}
+
 } // namespace
 
 void ClientSession::handle(Msg1& msg)
@@ -272,6 +296,49 @@ void ClientSession::handle(Msg11& msg)
     doNextStage();        
 }
 
+void ClientSession::handle(Msg12& msg)
+{
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n';
+    if (printOptionalField(msg.field_f1())) {
+        std::cout << "\t\t" << msg.field_f1().field().name() << " = " << msg.field_f1().field().value() << '\n';
+    }
+    std::cout << std::endl;
+
+    doNextStage();        
+}
+
+void ClientSession::handle(Msg13& msg)
+{
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n';
+    printSetField(msg.field_flags());
+    if (printOptionalField(msg.field_f2())) {
+        std::cout << "\t\t" << msg.field_f2().field().name() << " = " << msg.field_f2().field().value() << '\n';
+    }
+
+    if (printOptionalField(msg.field_f3())) {
+        std::cout << "\t\t" << msg.field_f3().field().name() << " = " << (unsigned)msg.field_f3().field().value() << '\n';
+    }    
+    std::cout << std::endl;
+
+    doNextStage();        
+}
+
+void ClientSession::handle(Msg14& msg)
+{
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+         '\t' << msg.field_f1().name() << " = " << (int)msg.field_f1().value() << '\n' <<
+         '\t' << msg.field_f2().name() << " = " << (int)msg.field_f2().value() << '\n';
+
+    if (printOptionalField(msg.field_f3())) {
+        std::cout << "\t\t" << msg.field_f3().field().name() << " = " << msg.field_f3().field().value() << '\n';
+    }
+
+    std::cout << std::endl;
+
+    doNextStage();
+}
+
+
 void ClientSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
@@ -372,6 +439,9 @@ void ClientSession::doNextStage()
         /* CommsStage_Msg9 */ &ClientSession::sendMsg9,
         /* CommsStage_Msg10 */ &ClientSession::sendMsg10,
         /* CommsStage_Msg11 */ &ClientSession::sendMsg11,
+        /* CommsStage_Msg12 */ &ClientSession::sendMsg12,
+        /* CommsStage_Msg13 */ &ClientSession::sendMsg13,
+        /* CommsStage_Msg14 */ &ClientSession::sendMsg14,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -581,6 +651,55 @@ void ClientSession::sendMsg11()
     msg.field_f2().value() = Msg11::Field_f2::ValueType::V1;
     msg.field_f3().field_m1().value() = 0x11;
     msg.field_f3().field_m2().value() = Msg11::Field_f3::Field_m2::ValueType::V2;
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg12()
+{
+    Msg12 msg;
+
+    assert(msg.field_f1().isTentative());
+    assert(msg.field_f1().length() == 0U); // Tentative mode does not produce any output
+
+    msg.field_f1().field().value() = 0xabcd;
+    msg.field_f1().setExists();
+
+    assert(msg.field_f1().length() == 2U); // Now when exists, the output is expected
+
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg13()
+{
+    Msg13 msg;
+
+    assert(msg.field_f2().isMissing());
+    assert(msg.field_f3().doesExist());
+
+    msg.field_f2().field().value() = 0xabcd;
+    msg.field_flags().setBitValue_F2Present(true);
+    msg.field_flags().setBitValue_F3Missing(true);
+
+    msg.doRefresh(); // Bring message contents into consistent state
+    assert(msg.field_f2().doesExist());
+    assert(msg.field_f3().isMissing());
+
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg14()
+{
+    Msg14 msg;
+
+    assert(msg.field_f3().isMissing());
+
+    msg.field_f1().value() = 5;
+    msg.field_f2().value() = -5;
+    msg.field_f3().field().value() = 0xaaaa;
+
+    msg.doRefresh(); // Bring message contents into consistent state
+    assert(msg.field_f3().doesExist());
+
     sendMessage(msg);
 }
 

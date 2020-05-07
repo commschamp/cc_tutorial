@@ -102,6 +102,21 @@ auto dispatchServerInputMessage(
         using MsgType = tutorial2::message::Msg11<InterfaceType, TProtOptions>;
         return handler.handle(static_cast<MsgType&>(msg));
     }
+    case tutorial2::MsgId_M12:
+    {
+        using MsgType = tutorial2::message::Msg12<InterfaceType, TProtOptions>;
+        return handler.handle(static_cast<MsgType&>(msg));
+    }
+    case tutorial2::MsgId_M13:
+    {
+        using MsgType = tutorial2::message::Msg13<InterfaceType, TProtOptions>;
+        return handler.handle(static_cast<MsgType&>(msg));
+    }
+    case tutorial2::MsgId_M14:
+    {
+        using MsgType = tutorial2::message::Msg14<InterfaceType, TProtOptions>;
+        return handler.handle(static_cast<MsgType&>(msg));
+    }
     default:
         break;
     };

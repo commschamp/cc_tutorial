@@ -9,6 +9,9 @@
 #include "tutorial2/message/Msg1.h"
 #include "tutorial2/message/Msg10.h"
 #include "tutorial2/message/Msg11.h"
+#include "tutorial2/message/Msg12.h"
+#include "tutorial2/message/Msg13.h"
+#include "tutorial2/message/Msg14.h"
 #include "tutorial2/message/Msg2.h"
 #include "tutorial2/message/Msg3.h"
 #include "tutorial2/message/Msg4.h"
@@ -41,7 +44,10 @@ using ServerInputMessages =
         tutorial2::message::Msg8<TBase, TOpt>,
         tutorial2::message::Msg9<TBase, TOpt>,
         tutorial2::message::Msg10<TBase, TOpt>,
-        tutorial2::message::Msg11<TBase, TOpt>
+        tutorial2::message::Msg11<TBase, TOpt>,
+        tutorial2::message::Msg12<TBase, TOpt>,
+        tutorial2::message::Msg13<TBase, TOpt>,
+        tutorial2::message::Msg14<TBase, TOpt>
     >;
 
 } // namespace input

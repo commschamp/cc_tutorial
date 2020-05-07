@@ -13,6 +13,9 @@ set (schema_files
     ${CMAKE_CURRENT_SOURCE_DIR}/dsl/msg9.xml
     ${CMAKE_CURRENT_SOURCE_DIR}/dsl/msg10.xml
     ${CMAKE_CURRENT_SOURCE_DIR}/dsl/msg11.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/dsl/msg12.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/dsl/msg13.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/dsl/msg14.xml
 )
 
 set (server_src
