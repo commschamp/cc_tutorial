@@ -712,7 +712,7 @@ issue for [commsdsl](https://github.com/arobenko/commsdsl) project.
 The value of the **length** property in the case above means **maximal** 
 allowed serialization length of the field. The 
 [generated code](include/tutorial2/field/I3_3.h)
-uses `comms::option::VarLength` option to provide the required information to
+uses `comms::option::def::VarLength` option to provide the required information to
 the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
@@ -2147,6 +2147,331 @@ as member of [&lt;bitfield&gt;](#bitfield-fields).
 Note that usage of **bitLength** property to limit the length of the
 referenced field in bits.
 
+### &lt;optional&gt; Fields
+Many binary protocols introduce some kind of optional field, which gets (or doesn't get)
+serialized based on some conditions, usually based on values of other fields. The
+[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) allows definition
+of such optional fields by using **&lt;optional&gt;** wrapping around it. 
+
+The `Msg12` message  (defined inside [dsl/msg12.xml](dsl/msg12.xml) and implemented in
+[include/tutorial2/message/Msg12.h](include/tutorial2/message/Msg12.h)) demonstrates
+basic usage of such field.
+```xml
+<message name="Msg12" id="MsgId.M12" displayName="Message 12">
+    <optional name="F1">
+        <int name="ActF1" type="uint16" />
+    </optional>
+</message>
+```
+Every **&lt;optional&gt;** field has the following modes:
+
+- **exists** - The read / write operations on the contained field are performed as normal.
+- **missing** - The read / write operations do nothing.
+- **tentative** (default) - The write operation does nothing, but the read is forwarded to the contained field only if there is data available in the input buffer.
+
+The **tentative** mode is a default one, it can be updated using **defaultMode** property of the **&lt;optional&gt;** field (will be demonstrated a bit later).
+
+In the example above the field is constructed with **tentative** mode. If such field (without any further updates) is serialized 
+(during write operation) no output is going to be produced. In case such field is deserialized (in read operation), then if there are some bytes left 
+in the input buffer to be read the contained field is going to be deserialized, data in input buffer is going to be consumed and the mode with be changed to
+**exists**. If during the read operation the input buffer is empty, then the mode of such field is changed to be **missing** and no deserialization attempt
+for the contained field is going to be performed.
+
+Such optional field is implemented (in the generated code) using 
+[comms::field::Optional](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
+class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library), which also wraps the contained field.
+
+The modes described above are implemented as [comms::field::OptionalMode](https://arobenko.github.io/comms_doc/namespacecomms_1_1field.html)
+enumeration type. To [comms::field::Optional](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
+class provides the following essential member types and functions:
+```cpp
+template<typename TField, typename... TOptions>
+class comms::field::Optional
+{
+public:
+    using ValueType = TField; // ValueType is the type of the contained field
+    using Field = ValueType; // Alias to ValueType
+    using Mode = comms::field::OptionalMode;
+    
+    // Access to the contained field
+    ValueType& value() { return m_field; }
+    const ValueType& value() const  { return m_field; }
+    
+    // Same as value()
+    Field& field()  { return m_field; }
+    const Field& field() { return m_field; }
+    
+    void setMode(Mode mode) { m_mode = mode; }
+    Mode getMode() const { return m_mode; }
+    
+private:
+    Field m_field; // The contained field
+    Mode m_mode = Mode::Tentative;
+};
+```
+Note, that `ValueType` member type provided by any field abstraction is a type of the contained field. The access to the contained field
+get be acquired by calling either `value()` or `field()` member functions.
+
+There are also convenience wrapper member functions for all the available modes:
+```cpp
+template<typename TField, typename... TOptions>
+class comms::field::Optional
+{
+public:
+    void setTentative();
+    void setExists();
+    void setMissing();
+    
+    bool isTentative() const;
+    bool doesExist() const;
+    bool isMissing() const;
+};
+```
+
+Let's get back to our `Msg12` example. The defined optional field is implemented in the generated code like this:
+```cpp
+template <typename TOpt = tutorial2::options::DefaultOptions>
+struct Msg12Fields
+{
+    struct F1Members
+    {
+        struct ActF1 : public comms::field::IntValue<...>
+        {
+            ...
+        };
+        
+    };
+    
+    struct F1 : public
+        comms::field::Optional<
+            typename F1Members::ActF1
+        >
+    {
+        ...
+    };
+    
+    ...
+};
+```
+The preparation of the message being sent looks like this:
+```cpp
+void ClientSession::sendMsg12()
+{
+    Msg12 msg;
+
+    assert(msg.field_f1().isTentative());
+    assert(msg.field_f1().length() == 0U); // Tentative mode does not produce any output
+
+    msg.field_f1().field().value() = 0xabcd;
+    msg.field_f1().setExists();
+
+    assert(msg.field_f1().length() == 2U); // Now when exists, the output is expected
+
+    sendMessage(msg);
+}
+```
+Note that contained field object can be accessed regardless of the optional field mode. The latter only determines whether the contained
+field is serialized during write operation and either the contained field has a valid value after read operation takes place.
+
+Also please pay attention to existence of `.field()` call (to access the contained field) before call to `.value()` for value assignment.
+
+When the same message is received back from the server the following logic is executed.
+
+- The message ID is read and the right message object (`Msg12`) is default constructed.
+- When `Msg12` is default constructed its optional field has **tentative** mode.
+- The read request is forwarded contained (`ActF1`) field because there are additional 2 bytes in the input buffer.
+- The mode of the `F1` optional field is changed to be **exists**.
+
+As the result the output printed by the `void ClientSession::handle(Msg12& msg)` is:
+```
+Received "Message 12" with ID=12
+    F1 (exists)
+        ActF1 = 43981
+```
+
+In many cases the existence of the optional field depends on the value of other fields. The classical example
+would be a presence of value fields based on some kind of flags **&lt;set&gt;** field where single bit marks presence 
+or absence of other field(s) that follow. Such example is demonstrated by the 
+The `Msg13` message  (defined inside [dsl/msg13.xml](dsl/msg13.xml) and implemented in
+[include/tutorial2/message/Msg13.h](include/tutorial2/message/Msg13.h)).
+```xml
+<message name="Msg13" id="MsgId.M13" displayName="Message 13">
+    <set name="Flags" length="1">
+        <bit name="F2Present" idx="0" />
+        <bit name="F3Missing" idx="1" />
+    </set>
+    <optional name="F2" cond="$Flags.F2Present" defaultMode="missing">
+        <int name="ActF2" type="uint16" />
+    </optional>
+    <optional name="F3" cond="!$Flags.F3Missing" defaultMode="exists">
+        <int name="ActF3" type="uint8" />
+    </optional>
+</message>
+```
+In the example above the `Msg13.Flags.F2Present` bit indicates that `Msg13.F2` field is present (exists), 
+while `Msg13.Flags.F3Missing` bit indicates that `Msg13.F3` field is missing (reverse condition).
+
+The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) allows specifying conditions 
+(using **cond** property) of when the optional field must have **exists** mode.
+
+Please note the usage of `$` before referencing the bits in the condition statements. According to
+[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) it indicates that
+the referenced field is a **sibling** of the field being processed rather then a global reference.
+
+Another thing to note is usage of `!` to negate the condition, i.e. the `F3` field exists when `Flags.F3Missing` is
+**NOT** set.
+
+The preparation of such message before being sent looks like this:
+```cpp
+void ClientSession::sendMsg13()
+{
+    Msg13 msg;
+
+    assert(msg.field_f2().isMissing());
+    assert(msg.field_f3().doesExist());
+
+    msg.field_f2().field().value() = 0xabcd;
+    msg.field_flags().setBitValue_F2Present(true);
+    msg.field_flags().setBitValue_F3Missing(true);
+
+    msg.doRefresh(); // Bring message contents into consistent state
+    assert(msg.field_f2().doesExist());
+    assert(msg.field_f3().isMissing());
+
+    sendMessage(msg);
+}
+```
+Please pay attention to the following details:
+
+- When the `Msg13` is default constructed the `F2` is **missing** while `F3` **exists**. The code above reverses it. 
+- The contained field of the `F2` (`ActF2`) is accessed using additional `.field()` call before call to `.value()`.
+- After the `flags` are modified the message contents are in an **inconsistent** state, i.e. the modes of `F2` and `F3` 
+haven't been modified yet, while the `flags` have already been updated.
+- If such message with **inconsistent** state is sent, the decoding on the other side is going to be incorrect (if possible at all).
+- To bring message to the consistent state the `doRefresh()` **non-virtual** member function of the message is called.
+- After the call to `doRefresh()` the modes of `F2` and `F3` should be correct and are checked with `assert()` statements.
+
+Note, that it is possible to update the modes of `F2` and `F3` explicitly like code below, but such code is boilerplate and error-prone.
+```cpp
+msg.field_f2().setExists();
+msg.field_f3().setMissing();
+```
+
+Let's take a closer look at implementation of `doRefresh()` member function of `Msg13`.
+```cpp
+bool doRefresh()
+{
+    bool updated = Base::doRefresh();
+    updated = refresh_f2() || updated;
+    updated = refresh_f3() || updated;
+    return updated;
+}
+```
+The API requirement imposed by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) is that
+`doRefresh()` member function (which is responsible to bring message contents into a consistent state) 
+must return `bool` with value `true` when message contents and/or state has been updated and `false` when nothing
+has been changed.
+
+The code above calls to the `doRefresh()` member function of the base class 
+([comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)), which is 
+responsible to call `refresh()` member function of **every** member field of the message. It allows having
+similar conditional constructs in composite fields like [&lt;bundle&gt;](#bundle-fields).
+
+The code above also calls `refresh_f2()` and `refresh_f3()` generated private member functions which are
+responsible to update modes of `f2` and `f3` member fields respectively based on the value of the `flags` bits.
+
+---
+SIDE NOTE: The [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) class used to define
+base interface class for all the messages supports introduction of **polymorphic** (i.e. virtual) refresh functionality
+by using `comms::option::app::RefreshInterface` compile time option.
+```cpp
+using MyMessage =
+    comms::Message<
+        ...
+        comms::option::app::RefreshInterface // Polymorphic message name retrieval
+    >;
+```
+When `comms::option::app::RefreshInterface` option is added to the interface definition it is 
+equivalent to having the following interface member functions:
+```cpp
+class MyMessage
+{
+public:
+    bool refresh()
+    {
+        return refreshImpl();
+    }
+    
+protected:
+    virtual refreshImpl()
+    {
+        return false;
+    }
+};
+```
+Note, that [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) provides a default 
+implementation of virtual `refreshImpl()` which constantly return false.
+
+The [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html) is expected
+to implement **non-virtual** `doRefresh()` member function, which calls `refresh()` of every contained field.
+and override **virtual** `refreshImpl()` when polymorphic refresh functionality is requested by the interface:
+```cpp
+class comms::MessageBase<...>
+{
+public:
+    bool doRefresh() { ... /* call .refresh() of every member field */};
+    
+protected:    
+    virtual bool refreshImpl() override
+    {
+        return doRefresh();
+    }
+}
+```
+**HOWEVER**, In many cases the `refresh()` member function of all the fields in the message don't do anything (i.e. 
+unconditionally report `false` without doing anything else). In such case (determined at **compile-time** using 
+multiple meta-programming techniques), the [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
+does **NOT** override `refreshImpl()` and as the result inherits the default implementation provided by the
+[comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html). It allows to avoid a lot of 
+unnecessary code generation.
+
+Unfortunately the [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html) is not 
+aware of any extra **refreshing** functionality that might be needed by the actual message, like with `Msg13` in
+our recent example. That's why the definition of `Msg13` passes extra `comms::option::def::HasCustomRefresh` option
+to let the [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html) know that
+overriding of `refreshImpl()` might still be needed (if polymorphic refresh functionality is requested by the interface).
+```cpp
+template <typename TMsgBase, typename TOpt = tutorial2::options::DefaultOptions>
+class Msg13 : public
+    comms::MessageBase<
+        ...,
+        comms::option::def::MsgType<Msg13<TMsgBase, TOpt> >
+        ...,
+        comms::option::def::HasCustomRefresh
+    >
+{
+    ...
+};
+```
+Also note the usage of `comms::option::def::MsgType` option, it just uses the 
+[CRTP](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
+idiom to let the [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html) know
+real derived class type to do appropriate casting in its `refreshImpl()` implementation:
+```cpp
+class comms::MessageBase<...>
+{
+protected:    
+    virtual bool refreshImpl() override
+    {
+        return static_cast<RealMessageType&>(*this).doRefresh();
+    }
+}
+```
+As a general rule, every **generated** message and/or field class with custom **refresh** functionality will
+use `comms::option::def::HasCustomRefresh` option to let the [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
+know that previously described optimization of skipping `refreshImpl()` generation must be avoided.
+---
+
 ## Summary
 
 - The protocol definition does not necessarily need to be defined in a single
@@ -2162,12 +2487,12 @@ referenced field in bits.
 - The primary and most frequently used member function of the field objects
   is **value()**. It is used to access the storage **by-reference**.
 - Every field has inner `ValueType` type, which defines type of the inner value storage.
-  - `ValueType` of [&lt;enum&gt;](#enum-fields) is appropriate C++ enum class.
+  - `ValueType` of [&lt;enum&gt;](#enum-fields) is a relevant C++ enum class.
   - `ValueType` of [&lt;int&gt;](#int-fields) is an appropriate integral type (`std::int8_t`,     
     `std::uint8_t`, etc ...) 
   - `ValueType` of [&lt;set&gt;](#set-fields) is an appropriate **unsigned** integral type 
     (`std::uint8_t`, `std::uint16_t`, etc...).
-  - `ValueType` of [&lt;float&gt;](#float-fields) is an approprate floating point type (`float` or 
+  - `ValueType` of [&lt;float&gt;](#float-fields) is an appropriate floating point type (`float` or 
     `double`).
   - **Default** `ValueType` of [&lt;string&gt;](#string-fields) is `std::string`, but it can be changed 
     to better suit the application's needs.

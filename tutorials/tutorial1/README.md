@@ -117,11 +117,11 @@ Let's take a look at definition of the message interface class inside [SeverSess
 ```cpp
 using Message =
     tutorial1::Message<
-        comms::option::ReadIterator<const std::uint8_t*>, // Polymorphic read
-        comms::option::WriteIterator<std::uint8_t*>, // Polymorphic write
-        comms::option::LengthInfoInterface, // Polymorphic length calculation
-        comms::option::IdInfoInterface, // Polymorphic message ID retrieval
-        comms::option::NameInterface // Polymorphic message name retrieval
+        comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
+        comms::option::app::WriteIterator<std::uint8_t*>, // Polymorphic write
+        comms::option::app::LengthInfoInterface, // Polymorphic length calculation
+        comms::option::app::IdInfoInterface, // Polymorphic message ID retrieval
+        comms::option::app::NameInterface // Polymorphic message name retrieval
     >;
 ```
 The generated **tutorial1::Message** common interface class is extended
@@ -147,7 +147,7 @@ protected:
 ```
 
 #### Polymorphic Read
-Usage of `comms::option::ReadIterator` option adds the following type and 
+Usage of `comms::option::app::ReadIterator` option adds the following type and 
 function to the message interface.
 ```cpp
 class Message 
@@ -182,7 +182,7 @@ static_assert(Message::hasRead(), "Missing polymorphic read");
 ```
 
 #### Polymorphic Write
-Usage of `comms::option::WriteIterator` option adds the following type and 
+Usage of `comms::option::app::WriteIterator` option adds the following type and 
 function to the message interface.
 ```cpp
 class Message 
@@ -213,7 +213,7 @@ static_assert(Message::hasWrite(), "Missing polymorphic write");
 ```
 
 #### Polymorphic Serialization Length Calculation.
-Usage of `comms::option::LengthInfoInterface` option adds the following interface
+Usage of `comms::option::app::LengthInfoInterface` option adds the following interface
 function to the defined class.
 ```cpp
 class Message 
@@ -235,7 +235,7 @@ static_assert(Message::hasLength(), "Missing polymorphic length");
 ```
 
 #### Polymorphic Message ID Retrieval
-Usage of `comms::option::IdInfoInterface` option adds the following type and interface
+Usage of `comms::option::app::IdInfoInterface` option adds the following type and interface
 function to the defined class.
 ```cpp
 class Message 
@@ -259,7 +259,7 @@ static_assert(Message::hasGetId(), "Missing polymorphic getId");
 ```
 
 #### Polymorphic Message Name Retrieval
-Usage of `comms::option::NameInterface` option adds the following 
+Usage of `comms::option::app::NameInterface` option adds the following 
 function to the message interface.
 ```cpp
 class Message 
@@ -291,6 +291,11 @@ can be checked using standard type traits:
 ```cpp
 static_assert(std::has_virtual_destructor<Message>::value, "Destructor is not virtual");
 ```
+
+#### Other Polymorphic Functions
+The [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) supports other
+polymorphic functions that are not covered by this particular tutorial. They will be covered one by one
+along the way buy other tutorials when needed.
 
 #### Processing I/O Input
 The `turorial1::ServerSession::processInputImpl()` virtual function is invoked
@@ -333,12 +338,12 @@ The client side is implemented in [ClientSession.h](src/ClientSession.h) and
 ```cpp
 using Message =
     tutorial1::Message<
-        comms::option::ReadIterator<const std::uint8_t*>, // Polymorphic read
-        comms::option::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
-        comms::option::LengthInfoInterface, // Polymorphic length calculation
-        comms::option::IdInfoInterface, // Polymorphic message ID retrieval
-        comms::option::NameInterface, // Polymorphic message name retrieval
-        comms::option::Handler<ClientSession> // Polymorphic dispatch
+        comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
+        comms::option::app::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
+        comms::option::app::LengthInfoInterface, // Polymorphic length calculation
+        comms::option::app::IdInfoInterface, // Polymorphic message ID retrieval
+        comms::option::app::NameInterface, // Polymorphic message name retrieval
+        comms::option::app::Handler<ClientSession> // Polymorphic dispatch
     >;
 ```
 
@@ -380,7 +385,7 @@ when message being serialized into it.
 
 #### Polymorphic Dispatch
 Another difference is that **client** side chose to add polymorphic
-dispatch functionality to the message interface by using `comms::option::Handler`
+dispatch functionality to the message interface by using `comms::option::app::Handler`
 option. The template parameter specifies type of the handling object. Usage
 of this object results in adding the following type and polymorphic member
 function to the message interface class.
@@ -388,7 +393,7 @@ function to the message interface class.
 class Message 
 {
 public: 
-    // Handler class (parameter passed to comms::option::Handler)
+    // Handler class (parameter passed to comms::option::app::Handler)
     using Handler = tutorial1::ClientSession;
     
     // Polymorphic dispatch
@@ -453,7 +458,7 @@ if (es == comms::ErrorStatus::Success) {
 ```
 The internals of `comms::processAllWithDispatch()` (when used) perform **compile time**
 evaluation of the message interface class options and perform similar polymorphic
-dispatch if it is supported (`comms::option::Handler` option is used). In case
+dispatch if it is supported (`comms::option::app::Handler` option is used). In case
 this option is not provided different dispatch method is used. Various dispatch
 methods will be covered in details in later tutorial(s).
 

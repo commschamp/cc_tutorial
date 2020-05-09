@@ -20,12 +20,12 @@ public:
     // Common interface class for all the messages
     using Message =
         tutorial1::Message<
-            comms::option::ReadIterator<const std::uint8_t*>, // Polymorphic read
-            comms::option::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
-            comms::option::LengthInfoInterface, // Polymorphic length calculation
-            comms::option::IdInfoInterface, // Polymorphic message ID retrieval
-            comms::option::NameInterface, // Polymorphic message name retrieval
-            comms::option::Handler<ClientSession> // Polymorphic dispatch
+            comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
+            comms::option::app::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
+            comms::option::app::LengthInfoInterface, // Polymorphic length calculation
+            comms::option::app::IdInfoInterface, // Polymorphic message ID retrieval
+            comms::option::app::NameInterface, // Polymorphic message name retrieval
+            comms::option::app::Handler<ClientSession> // Polymorphic dispatch
         >;
         
     // Verify presence of polymorphic functionality
