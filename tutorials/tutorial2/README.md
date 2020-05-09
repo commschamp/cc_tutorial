@@ -2569,8 +2569,9 @@ void ClientSession::sendMsg14()
   - `ValueType` of [&lt;bitfield&gt;](#bitfield-fields) is `std::tuple` of all its member fields.
   - **Default** `ValueType` of [&lt;list&gt;](#list-fields) is `std::vector` of the element field, but it 
     can be changed to better suit the application's needs.
-  - `ValueType` of [&lt;variant&gt;](#variant-fields) is a variant of [std::aligned_storage](https://en.
-    cppreference.com/w/cpp/types/aligned_storage) and should **NOT** be accessed directly via **value()** member function.
+  - `ValueType` of [&lt;variant&gt;](#variant-fields) is a variant of 
+    [std::aligned_storage](https://en.cppreference.com/w/cpp/types/aligned_storage) and should 
+    **NOT** be accessed directly via **value()** member function.
   - `ValueType` of [&lt;ref&gt;](#ref-fields) is a the same as `ValueType` of the referenced field.    
   - `ValueType` of [&lt;optional&gt;](#optional-fields) is a type of the field being wrapped.
 - All the member functions of all the fields are **non**-virtual.
@@ -2595,5 +2596,4 @@ void ClientSession::sendMsg14()
   and residing in [comms::field](https://arobenko.github.io/comms_doc/namespacecomms_1_1field.html)
   namespace.
 
-|:---|---:|
-|[Read Previous Tutorial](../tutorial1) | [Read Next Tutorial](../tutorial3) |
+[Read Previous Tutorial](../tutorial1) ---------- | ---------- [Read Next Tutorial](../tutorial3) 
