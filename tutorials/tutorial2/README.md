@@ -2292,7 +2292,7 @@ Received "Message 12" with ID=12
 In many cases the existence of the optional field depends on the value of other fields. The classical example
 would be a presence of value fields based on some kind of flags **&lt;set&gt;** field where single bit marks presence 
 or absence of other field(s) that follow. Such example is demonstrated by the 
-The `Msg13` message  (defined inside [dsl/msg13.xml](dsl/msg13.xml) and implemented in
+the `Msg13` message  (defined inside [dsl/msg13.xml](dsl/msg13.xml) and implemented in
 [include/tutorial2/message/Msg13.h](include/tutorial2/message/Msg13.h)).
 ```xml
 <message name="Msg13" id="MsgId.M13" displayName="Message 13">
@@ -2475,6 +2475,70 @@ know that previously described optimization of skipping `refreshImpl()` generati
 
 ---
 
+Another thing to pay attention to is when message object is default constructed the 
+**refreshing** functionality (bringing message to a consistent state) is **NOT** called automatically.
+Hence, it is highly recommended to define a message in already consistent state, like with
+`Msg13` described above, the default modes of `f2` as well as `f3` fields were set in accordance
+with default value of the `flags` field.
+
+The optional existence conditions (**cond**) can also contain value comparisons as well as involve
+multiple fields and contain logical **or** and **and** statements. The 
+`Msg14` message  (defined inside [dsl/msg14.xml](dsl/msg14.xml) and implemented in
+[include/tutorial2/message/Msg14.h](include/tutorial2/message/Msg14.h)) demonstrates exactly that.
+```xml
+<message name="Msg14" id="MsgId.M14" displayName="Message 14">
+    <int name="F1" type="int8" />
+    <int name="F2" type="int8" />
+    <optional name="F3" defaultMode="missing">
+        <field>
+            <int name="ActF3" type="uint16" />
+        </field>
+        <or>
+            <cond value="$F1 &gt; 0" />
+            <and>
+                <cond value="$F1 = 0" />
+                <cond value="$F2 != 0" />
+            </and>
+        </or>
+    </optional>
+</message>
+```
+The message definition above has the following logic for having `F3` field being present (**exist**).
+```
+(F1 > 0) || 
+((F1 == 0) && (F2 != 0));
+```
+Please note the following aspects:
+
+- The `<` and `>` comparisons cannot be used "as-is" in XML attributes / values. They need to be replaced with `&lt;` and `&gt;` respectively.
+- The wrapped field definition needs to be wrapped in **&lt;field&gt;** XML node when there are other nodes present (like **&lt;or&gt;** in
+  the example above).
+- The logical **or** is represented by the **&lt;or&gt;** XML node while logical **and** is represented by the **&lt;and&gt;** XML
+  node.
+- The `Msg14` is defined in such a way that default constructed object is in a proper consistent state (`F3` is defined to be **missing**
+  by default).
+  
+When `Msg14` is prepared for being sent, the call to `doRefresh()` updates the mode of the `f3` member field in accordance
+with the values of other fields:
+```cpp
+void ClientSession::sendMsg14()
+{
+    Msg14 msg;
+
+    assert(msg.field_f3().isMissing());
+
+    msg.field_f1().value() = 5;
+    msg.field_f2().value() = -5;
+    msg.field_f3().field().value() = 0xaaaa;
+
+    msg.doRefresh(); // Bring message contents into consistent state
+    assert(msg.field_f3().doesExist());
+
+    sendMessage(msg);
+}
+```
+  
+
 ## Summary
 
 - The protocol definition does not necessarily need to be defined in a single
@@ -2506,9 +2570,10 @@ know that previously described optimization of skipping `refreshImpl()` generati
   - **Default** `ValueType` of [&lt;list&gt;](#list-fields) is `std::vector` of the element field, but it 
     can be changed to better suit the application's needs.
   - `ValueType` of [&lt;variant&gt;](#variant-fields) is a variant of [std::aligned_storage](https://en.
-    cppreference.com/w/cpp/types/aligned_storage) and should not be accessed directly via **value()** member function.
+    cppreference.com/w/cpp/types/aligned_storage) and should **NOT** be accessed directly via **value()** member function.
   - `ValueType` of [&lt;ref&gt;](#ref-fields) is a the same as `ValueType` of the referenced field.    
   - `ValueType` of [&lt;optional&gt;](#optional-fields) is a type of the field being wrapped.
+- All the member functions of all the fields are **non**-virtual.
 - Every message definition class containing inner fields uses 
   **COMMS_MSG_FIELDS_NAMES()** macro (provided by the 
   [COMMS Library](https://github.com/arobenko/comms_champion#comms-library))
@@ -2530,3 +2595,5 @@ know that previously described optimization of skipping `refreshImpl()` generati
   and residing in [comms::field](https://arobenko.github.io/comms_doc/namespacecomms_1_1field.html)
   namespace.
 
+|:---|---:|
+|[Read Previous Tutorial](../tutorial1) | [Read Next Tutorial](../tutorial3) |
