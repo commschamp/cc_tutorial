@@ -2210,7 +2210,7 @@ private:
 };
 ```
 Note, that `ValueType` member type provided by any field abstraction is a type of the contained field. The access to the contained field
-get be acquired by calling either `value()` or `field()` member functions.
+can be acquired by calling either `value()` or `field()` member functions.
 
 There are also convenience wrapper member functions for all the available modes:
 ```cpp
@@ -2381,14 +2381,15 @@ The code above also calls `refresh_f2()` and `refresh_f3()` generated private me
 responsible to update modes of `f2` and `f3` member fields respectively based on the value of the `flags` bits.
 
 ---
-SIDE NOTE: The [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) class used to define
+
+**SIDE NOTE**: The [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) class used to define
 base interface class for all the messages supports introduction of **polymorphic** (i.e. virtual) refresh functionality
 by using `comms::option::app::RefreshInterface` compile time option.
 ```cpp
 using MyMessage =
     comms::Message<
         ...
-        comms::option::app::RefreshInterface // Polymorphic message name retrieval
+        comms::option::app::RefreshInterface // Polymorphic refresh functionality
     >;
 ```
 When `comms::option::app::RefreshInterface` option is added to the interface definition it is 
@@ -2468,8 +2469,10 @@ protected:
 }
 ```
 As a general rule, every **generated** message and/or field class with custom **refresh** functionality will
-use `comms::option::def::HasCustomRefresh` option to let the [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
+use `comms::option::def::HasCustomRefresh` option to let the 
+[comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
 know that previously described optimization of skipping `refreshImpl()` generation must be avoided.
+
 ---
 
 ## Summary
