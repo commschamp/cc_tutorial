@@ -2596,4 +2596,4 @@ void ClientSession::sendMsg14()
   and residing in [comms::field](https://arobenko.github.io/comms_doc/namespacecomms_1_1field.html)
   namespace.
 
-[Read Previous Tutorial](../tutorial1) ---------- | ---------- [Read Next Tutorial](../tutorial3) 
+[Read Previous Tutorial](../tutorial1) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial3) 
