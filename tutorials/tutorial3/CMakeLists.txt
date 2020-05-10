@@ -1,7 +1,7 @@
 get_filename_component(name ${CMAKE_CURRENT_SOURCE_DIR} NAME)
 
 set (schema_files
-    ${CMAKE_CURRENT_SOURCE_DIR}/dsl/main.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/dsl/schema.xml
 )
 
 set (server_src
