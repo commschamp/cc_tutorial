@@ -215,7 +215,7 @@ There are multiple available libraries (like Boost.Units) for proper work with u
 
 In order to support usage of third party units libraries the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
 provides a **compile-time** check functions that the field contains an assumed units. If units are changed in the
-protocol definition the compile time checks introduced before the code that works with units should fail the compilation
+protocol definition, the compile time checks introduced before the boilerplate units conversion code should fail the compilation
 and help finding places that need to be updated.
 ```cpp
 void ClientSession::handle(Msg2& msg)
@@ -231,7 +231,7 @@ void ClientSession::handle(Msg2& msg)
 ## Combining Scaling and Units
 The [scaling](#scaling) and [units](#units) can easily be combined together as
 `Msg3` (defined in [dsl/schema.xml](dsl/schema.xml) 
-and implemented inside [include/tutorial3/message/Msg3.h](include/tutorial3/message/Msg3.h) demonstrates.
+and implemented inside [include/tutorial3/message/Msg3.h](include/tutorial3/message/Msg3.h)) demonstrates.
 ```xml
 <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name">
     <int name="F1" type="uint32" units="cm" scaling="1/100000" />
