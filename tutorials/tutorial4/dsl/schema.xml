@@ -80,6 +80,6 @@
     </message>
     
     <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
-        <list name="F1" element="TlvProp" />
+        <list name="F1" element="TlvProp" count="3" />
     </message>      
 </schema>
