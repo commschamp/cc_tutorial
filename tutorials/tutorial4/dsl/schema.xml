@@ -38,7 +38,7 @@
                         <int name="Length" type="uint8" />
                     </lengthPrefix>
                 </string>
-            </bundle>            
+            </bundle>    
         </variant>
         
         <variant name="TlvProp">
@@ -58,7 +58,13 @@
                 <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K6" validValue="PropKey.K6" />
                 <int name="Length" type="uint8" semanticType="length" />
                 <string name="Val" />
-            </bundle>            
+            </bundle>   
+            
+            <bundle name="Any">
+                <int reuse="PropKeyCommon" name="Key" />
+                <int name="Length" type="uint8" semanticType="length" />
+                <data name="Val" />
+            </bundle>              
         </variant>
         
     </fields>
