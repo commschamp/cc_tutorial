@@ -15,7 +15,7 @@ namespace cc_tutorial
 
 void ClientSession::handle(Msg1& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
         '\t' << msg.field_f1().name() << " = " << std::fixed << msg.field_f1().getScaled<float>() <<
             " (orig = " << msg.field_f1().value() << ")\n" <<
         '\t' << msg.field_f2().name() << " = " << std::fixed << msg.field_f2().getScaled<double>() <<
@@ -31,7 +31,7 @@ void ClientSession::handle(Msg2& msg)
     static_assert(comms::units::isSeconds<Msg2::Field_f1>(), "Unexpected units");
     static_assert(comms::units::isMillimeters<Msg2::Field_f2>(), "Unexpected units");
 
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
         '\t' << msg.field_f1().name() << " = " << msg.field_f1().value() << '\n' <<
             "\t\t= " << comms::units::getMicroseconds<std::uintmax_t>(msg.field_f1()) << " us\n" <<
             "\t\t= " << comms::units::getMilliseconds<unsigned>(msg.field_f1()) << " ms\n" <<
@@ -54,7 +54,7 @@ void ClientSession::handle(Msg2& msg)
 
 void ClientSession::handle(Msg3& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
         '\t' << msg.field_f1().name() << " = " << msg.field_f1().value() << '\n' <<
                "\t\t= " << std::fixed << comms::units::getMicrometers<double>(msg.field_f1()) << " um\n" <<
                "\t\t= " << std::fixed << comms::units::getMillimeters<double>(msg.field_f1()) << " mm\n" <<
@@ -74,7 +74,7 @@ void ClientSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
     std::cout << "ERROR: Received unexpected message \"" << msg.name() << "\" with ID=" <<
-                 msg.getId() << std::endl;
+                 (unsigned)msg.getId() << std::endl;
 }
 
 bool ClientSession::startImpl()
@@ -123,7 +123,7 @@ void ClientSession::sendMessage(const Message& msg)
     // Send serialized message back
     sendOutput(&output[0], output.size());
 
-    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << msg.getId() << ": " << std::hex;
+    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << ": " << std::hex;
     std::copy(output.begin(), output.end(), std::ostream_iterator<unsigned>(std::cout, " "));
     std::cout << std::dec << std::endl;
 }

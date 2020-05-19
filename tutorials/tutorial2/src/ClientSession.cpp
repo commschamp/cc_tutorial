@@ -71,7 +71,7 @@ bool printOptionalField(const TField& field, const std::string& prefix = std::st
 
 void ClientSession::handle(Msg1& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
         '\t' << msg.field_f1().name() << " = " << (unsigned)msg.field_f1().value() << '\n' <<
         '\t' << msg.field_f2().name() << " = " << msg.field_f2().value() << '\n' << std::endl;
 
@@ -85,7 +85,7 @@ void ClientSession::handle(Msg1& msg)
 
 void ClientSession::handle(Msg2& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
         '\t' << msg.field_f1().name() << " = " << (unsigned)msg.field_f1().value() << " (" << msg.field_f1().valueName()  << ")\n" <<
         '\t' << msg.field_f2().name() << " = " << (unsigned)msg.field_f2().value() << " (" << msg.field_f2().valueName()  << ")\n" <<
         '\t' << msg.field_f3().name() << " = " << " (" << msg.field_f3().valueName()  << ")\n" <<
@@ -102,7 +102,7 @@ void ClientSession::handle(Msg2& msg)
 
 void ClientSession::handle(Msg3& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
         '\t' << msg.field_f1().name() << " = " << msg.field_f1().value() << '\n' <<
         '\t' << msg.field_f2().name() << " = " << msg.field_f2().value() << '\n' <<
         '\t' << msg.field_f3().name() << " = " << msg.field_f3().value() << '\n' <<
@@ -120,7 +120,7 @@ void ClientSession::handle(Msg3& msg)
 
 void ClientSession::handle(Msg4& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n';
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
     printSetField(msg.field_f1());
     printSetField(msg.field_f2());
     printSetField(msg.field_f3());
@@ -136,7 +136,7 @@ void ClientSession::handle(Msg4& msg)
 
 void ClientSession::handle(Msg5& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
         '\t' << msg.field_f1().name() << " = " << msg.field_f1().value() << '\n' <<
         '\t' << msg.field_f2().name() << " = " << msg.field_f2().value() << '\n' <<
         std::endl;
@@ -151,7 +151,7 @@ void ClientSession::handle(Msg5& msg)
 
 void ClientSession::handle(Msg6& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
         '\t' << msg.field_f1().name() << " = " << msg.field_f1().value() << '\n' <<
         '\t' << msg.field_f2().name() << " = " << msg.field_f2().value() << '\n' <<
         '\t' << msg.field_f3().name() << " = " << msg.field_f3().value() << '\n' <<
@@ -169,7 +169,7 @@ void ClientSession::handle(Msg6& msg)
 
 void ClientSession::handle(Msg7& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n';
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
     printDataField(msg.field_f1());
     printDataField(msg.field_f2());
     printDataField(msg.field_f3());
@@ -187,7 +187,7 @@ void ClientSession::handle(Msg8& msg)
 {
     auto* f1Name = msg.field_f1().name();
     auto* f2Name = msg.field_f2().name();
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
         '\t' << f1Name << '.' << msg.field_f1().field_m1().name() << " = " <<
             msg.field_f1().field_m1().value() << '\n' <<
         '\t' << f1Name << '.' << msg.field_f1().field_m2().name() << " = " <<
@@ -212,7 +212,7 @@ void ClientSession::handle(Msg9& msg)
 {
     auto* f1Name = msg.field_f1().name();
     auto* f2Name = msg.field_f2().name();
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
         '\t' << f1Name << '.' << msg.field_f1().field_m1().name() << " = " <<
             msg.field_f1().field_m1().value() << '\n' <<
         '\t' << f1Name << '.' << msg.field_f1().field_m2().name() << " = " <<
@@ -236,7 +236,7 @@ void ClientSession::handle(Msg9& msg)
 
 void ClientSession::handle(Msg10& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n';
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
 
     auto& f1Vec = msg.field_f1().value();
     std::cout << '\t' << msg.field_f1().name() << " (" << f1Vec.size() << " elements)\n";
@@ -283,7 +283,7 @@ void ClientSession::handle(Msg10& msg)
 
 void ClientSession::handle(Msg11& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
         '\t' << msg.field_f11_1().name() << " = " << (unsigned)msg.field_f11_1().value() << '\n' <<
         '\t' << msg.field_f2().name() << " = " <<
             (unsigned)msg.field_f2().value() << " (" << msg.field_f2().valueName()  << ")\n" <<
@@ -298,7 +298,7 @@ void ClientSession::handle(Msg11& msg)
 
 void ClientSession::handle(Msg12& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n';
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
     if (printOptionalField(msg.field_f1())) {
         std::cout << "\t\t" << msg.field_f1().field().name() << " = " << msg.field_f1().field().value() << '\n';
     }
@@ -309,7 +309,7 @@ void ClientSession::handle(Msg12& msg)
 
 void ClientSession::handle(Msg13& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n';
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
     printSetField(msg.field_flags());
     if (printOptionalField(msg.field_f2())) {
         std::cout << "\t\t" << msg.field_f2().field().name() << " = " << msg.field_f2().field().value() << '\n';
@@ -325,7 +325,7 @@ void ClientSession::handle(Msg13& msg)
 
 void ClientSession::handle(Msg14& msg)
 {
-    std::cout << "Received \"" << msg.doName() << "\" with ID=" << msg.doGetId() << '\n' <<
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
          '\t' << msg.field_f1().name() << " = " << (int)msg.field_f1().value() << '\n' <<
          '\t' << msg.field_f2().name() << " = " << (int)msg.field_f2().value() << '\n';
 
@@ -343,7 +343,7 @@ void ClientSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
     std::cout << "ERROR: Received unexpected message \"" << msg.name() << "\" with ID=" <<
-                 msg.getId() << std::endl;
+                 (unsigned)msg.getId() << std::endl;
 }
 
 bool ClientSession::startImpl()
@@ -392,7 +392,7 @@ void ClientSession::sendMessage(const Message& msg)
     // Send serialized message back
     sendOutput(&output[0], output.size());
 
-    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << msg.getId() << ": " << std::hex;
+    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << ": " << std::hex;
     std::copy(output.begin(), output.end(), std::ostream_iterator<unsigned>(std::cout, " "));
     std::cout << std::dec << std::endl;
 }

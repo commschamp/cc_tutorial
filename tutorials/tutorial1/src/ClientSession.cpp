@@ -13,7 +13,7 @@ namespace cc_tutorial
 void ClientSession::handle(Msg1& msg)
 {
     // The report below uses NON-polymorphic name and ID retrievals
-    std::cout << "Received " << msg.doName() << " with ID=" << msg.doGetId() << std::endl;
+    std::cout << "Received " << msg.doName() << " with ID=" << (unsigned)msg.doGetId() << std::endl;
 
     if (m_currentStage != CommsStage_Msg1) {
         std::cerr << "ERROR: Unexpected message received: " << std::endl;
@@ -26,7 +26,7 @@ void ClientSession::handle(Msg1& msg)
 void ClientSession::handle(Msg2& msg)
 {
     // The report below uses NON-polymorphic name and ID retrievals
-    std::cout << "Received " << msg.doName() << " with ID=" << msg.doGetId() << std::endl;
+    std::cout << "Received " << msg.doName() << " with ID=" << (unsigned)msg.doGetId() << std::endl;
 
     if (m_currentStage != CommsStage_Msg2) {
         std::cerr << "ERROR: Unexpected message received" << std::endl;
@@ -40,7 +40,7 @@ void ClientSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
     std::cout << "ERROR: Received unexpected message \"" << msg.name() << "\" with ID=" <<
-                 msg.getId() << std::endl;
+                 (unsigned)msg.getId() << std::endl;
 }
 
 bool ClientSession::startImpl()
@@ -96,7 +96,7 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
 void ClientSession::sendMessage(const Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
-    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << msg.getId() << std::endl;
+    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << std::endl;
 
     std::vector<std::uint8_t> output;
 

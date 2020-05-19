@@ -216,6 +216,70 @@ struct TlvPropMembersCommon
     };
     
     
+    /// @brief Scope for all the common definitions of the member fields of
+    ///     @ref tutorial4::field::TlvPropMembers::Any field.
+    struct AnyMembersCommon
+    {
+        /// @brief Common types and functions for
+        ///     @ref tutorial4::field::TlvPropMembers::AnyMembers::Key field.
+        struct KeyCommon
+        {
+            /// @brief Re-definition of the value type used by
+            ///     tutorial4::field::TlvPropMembers::AnyMembers::Key field.
+            using ValueType = std::uint8_t;
+        
+            /// @brief Name of the @ref tutorial4::field::TlvPropMembers::AnyMembers::Key field.
+            static const char* name()
+            {
+                return "Key";
+            }
+            
+        };
+        
+        /// @brief Common types and functions for
+        ///     @ref tutorial4::field::TlvPropMembers::AnyMembers::Length field.
+        struct LengthCommon
+        {
+            /// @brief Re-definition of the value type used by
+            ///     tutorial4::field::TlvPropMembers::AnyMembers::Length field.
+            using ValueType = std::uint8_t;
+        
+            /// @brief Name of the @ref tutorial4::field::TlvPropMembers::AnyMembers::Length field.
+            static const char* name()
+            {
+                return "Length";
+            }
+            
+        };
+        
+        /// @brief Scope for all the common definitions of the
+        ///     @ref tutorial4::field::TlvPropMembers::AnyMembers::Val field.
+        struct ValCommon
+        {
+            /// @brief Name of the @ref tutorial4::field::TlvPropMembers::AnyMembers::Val field.
+            static const char* name()
+            {
+                return "Val";
+            }
+            
+        };
+        
+        
+    };
+    
+    /// @brief Scope for all the common definitions of the
+    ///     @ref tutorial4::field::TlvPropMembers::Any field.
+    struct AnyCommon
+    {
+        /// @brief Name of the @ref tutorial4::field::TlvPropMembers::Any field.
+        static const char* name()
+        {
+            return "Any";
+        }
+        
+    };
+    
+    
 };
 
 /// @brief Scope for all the common definitions of the

@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <limits>
 #include <tuple>
+#include "comms/field/ArrayList.h"
 #include "comms/field/Bundle.h"
 #include "comms/field/FloatValue.h"
 #include "comms/field/IntValue.h"
@@ -352,12 +353,114 @@ struct TlvPropMembers
         
     };
     
+    /// @brief Scope for all the member fields of
+    ///     @ref Any bundle.
+    struct AnyMembers
+    {
+        /// @brief Definition of <b>"Key"</b> field.
+        struct Key : public
+            comms::field::IntValue<
+                tutorial4::field::FieldBase<>,
+                std::uint8_t,
+                comms::option::def::FailOnInvalid<>
+            >
+        {
+            /// @brief Name of the field.
+            static const char* name()
+            {
+                return tutorial4::field::TlvPropMembersCommon::AnyMembersCommon::KeyCommon::name();
+            }
+            
+        };
+        
+        /// @brief Definition of <b>"Length"</b> field.
+        struct Length : public
+            comms::field::IntValue<
+                tutorial4::field::FieldBase<>,
+                std::uint8_t
+            >
+        {
+            /// @brief Name of the field.
+            static const char* name()
+            {
+                return tutorial4::field::TlvPropMembersCommon::AnyMembersCommon::LengthCommon::name();
+            }
+            
+        };
+        
+        /// @brief Definition of <b>"Val"</b> field.
+        struct Val : public
+            comms::field::ArrayList<
+                tutorial4::field::FieldBase<>,
+                std::uint8_t,
+                typename TOpt::field::TlvPropMembers::AnyMembers::Val
+            >
+        {
+            /// @brief Name of the field.
+            static const char* name()
+            {
+                return tutorial4::field::TlvPropMembersCommon::AnyMembersCommon::ValCommon::name();
+            }
+            
+        };
+        
+        /// @brief All members bundled in @b std::tuple.
+        using All =
+            std::tuple<
+               Key,
+               Length,
+               Val
+            >;
+    };
+    
+    /// @brief Definition of <b>"Any"</b> field.
+    class Any : public
+        comms::field::Bundle<
+            tutorial4::field::FieldBase<>,
+            typename AnyMembers::All,
+            comms::option::def::RemLengthMemberField<1U>
+        >
+    {
+        using Base = 
+            comms::field::Bundle<
+                tutorial4::field::FieldBase<>,
+                typename AnyMembers::All,
+                comms::option::def::RemLengthMemberField<1U>
+            >;
+    public:
+        /// @brief Allow access to internal fields.
+        /// @details See definition of @b COMMS_FIELD_MEMBERS_NAMES macro
+        ///     related to @b comms::field::Bundle class from COMMS library
+        ///     for details.
+        ///
+        ///     The generated access types and functions functions are:
+        ///     @li @b Field_keytype and @b field_key() access function -
+        ///         for AnyMembers::Key member field.
+        ///     @li @b Field_lengthtype and @b field_length() access function -
+        ///         for AnyMembers::Length member field.
+        ///     @li @b Field_valtype and @b field_val() access function -
+        ///         for AnyMembers::Val member field.
+        COMMS_FIELD_MEMBERS_NAMES(
+            key,
+            length,
+            val
+        );
+        
+        /// @brief Name of the field.
+        static const char* name()
+        {
+            return tutorial4::field::TlvPropMembersCommon::AnyCommon::name();
+        }
+        
+    };
+    
     /// @brief All members bundled in @b std::tuple.
     using All =
         std::tuple<
            Prop4,
            Prop5,
-           Prop6
+           Prop6,
+           Any
         >;
 };
 
@@ -393,10 +496,13 @@ public:
     ///     for TlvPropMembers::Prop5 member field.
     ///     @li @b Field_prop6 type, @b initField_prop6() and @b accessField_prop6() access functions -
     ///     for TlvPropMembers::Prop6 member field.
+    ///     @li @b Field_any type, @b initField_any() and @b accessField_any() access functions -
+    ///     for TlvPropMembers::Any member field.
     COMMS_VARIANT_MEMBERS_NAMES(
         prop4,
         prop5,
-        prop6
+        prop6,
+        any
     );
     
     /// @brief Name of the field.
@@ -446,7 +552,8 @@ public:
                 return field_prop6.template readFrom<1>(iter, len);
             }
         default:
-            break;
+            initField_any().field_key().value() = commonKeyField.value();
+            return accessField_any().template readFrom<1>(iter, len);
         };
         return comms::ErrorStatus::InvalidMsgData;
     }
@@ -466,6 +573,9 @@ public:
             break;
         case FieldIdx_prop6:
             memFieldDispatch<FieldIdx_prop6>(accessField_prop6(), std::forward<TFunc>(func));
+            break;
+        case FieldIdx_any:
+            memFieldDispatch<FieldIdx_any>(accessField_any(), std::forward<TFunc>(func));
             break;
         default:
             COMMS_ASSERT(!"Invalid field execution");
@@ -488,6 +598,9 @@ public:
             break;
         case FieldIdx_prop6:
             memFieldDispatch<FieldIdx_prop6>(accessField_prop6(), std::forward<TFunc>(func));
+            break;
+        case FieldIdx_any:
+            memFieldDispatch<FieldIdx_any>(accessField_any(), std::forward<TFunc>(func));
             break;
         default:
             COMMS_ASSERT(!"Invalid field execution");

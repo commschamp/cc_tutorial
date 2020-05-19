@@ -33,8 +33,7 @@ struct Msg2Fields
         comms::field::ArrayList<
             tutorial4::field::FieldBase<>,
             tutorial4::field::TlvProp<TOpt>,
-            typename TOpt::message::Msg2Fields::F1,
-            comms::option::def::SequenceFixedSize<3U>
+            typename TOpt::message::Msg2Fields::F1
         >
     {
         /// @brief Name of the field.

@@ -67,6 +67,20 @@ struct BareMetalDefaultOptionsT : public TBase
                     >;
             };
             
+            /// @brief Extra options for all the member fields of
+            ///     @ref tutorial4::field::TlvPropMembers::Any bundle.
+            struct AnyMembers : public TBase::field::TlvPropMembers::AnyMembers
+            {
+                /// @brief Extra options for @ref
+                ///     tutorial4::field::TlvPropMembers::AnyMembers::Val
+                ///     field.
+                using Val = 
+                    std::tuple<
+                        comms::option::app::FixedSizeStorage<DEFAULT_SEQ_FIXED_STORAGE_SIZE>,
+                        typename TBase::field::TlvPropMembers::AnyMembers::Val
+                    >;
+            };
+            
         };
         
     }; // struct field
@@ -98,7 +112,7 @@ struct BareMetalDefaultOptionsT : public TBase
             ///     field.
             using F1 = 
                 std::tuple<
-                    comms::option::app::SequenceFixedSizeUseFixedSizeStorage,
+                    comms::option::app::FixedSizeStorage<DEFAULT_SEQ_FIXED_STORAGE_SIZE>,
                     typename TBase::message::Msg2Fields::F1
                 >;
         }; // struct Msg2Fields

@@ -12,8 +12,8 @@ The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) supports such
 using **&lt;variant&gt;** fields. Let's take a look inside [dsl/schema.xml](dsl/schema.xml) 
 and see how the following table of properties is implemented.
 
-|ID (1 byte)|Type|
-|:---:|:---:|
+|ID (1 byte)|Value Type|
+|:---:|:---|
 |0|Property1 - 2 bytes unsigned integer (uint16)|
 |2|Property2 - 4 bytes floating point value (float)|
 |5|Property3 - string prefixed with 1 bytes of its length|
@@ -59,9 +59,12 @@ There are multiple important aspects that require a closer look and deeper under
 - Every property is a **key**-**value** pair, which are bundled together by the **&lt;bundle&gt;** 
   field definition to represent a **single** member field of the **&lt;variant&gt;**.
 - Every first (**key**) field inside such **&lt;bundle&gt;** must be of the same size and share
-  come common property. That's why external **PropKeyCommon** field was defined and all other
-  **key** ones reuse (using **reuse** property) the common definition and then apply extra changes / modifications
+  certain common properties. That's why external **PropKeyCommon** field was defined and all other
+  **key** ones inherit (using **reuse** property) the common definition and then apply extra changes / modifications
   on top.
+- The **&lt;variant&gt;** field can hold **any** of its listed **&lt;bundle&gt;** members, but only
+  single **one** at a time. Think of it as a [union](https://en.cppreference.com/w/cpp/language/union) of
+  **&lt;bundle&gt;** fields.
 - The **logical** (not necessarily actually implemented in the same way) code flow when
   reading such field is to attempt reading of the defined members (**&lt;bundle&gt;**-s) one
   by one **in order** of their definition and stop reading once the read operation of the 
@@ -75,6 +78,92 @@ There are multiple important aspects that require a closer look and deeper under
 - The definition of the key valid values as a separate **&lt;enum&gt;** (PropKey) allows referencing its
   values by a name (instead of hard-coded numeric value) in the **defaultValue** and **validValue** properties.
 
+Sometimes there is a need to combine such heterogeneous properties into a list. It is easy to do using
+a **&lt;list&gt;** covered in one of the earlier tutorials.
+```xml
+<message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
+    <list name="F1" element="KeyValueProp">
+        <countPrefix>
+            <int name="Count" type="uint8" />
+        </countPrefix>
+    </list>
+</message>
+```
+Note, that element field is defined in the global space in this example and hence can be 
+referenced by the **element** XML attribute rather than being defined inside **&lt;element&gt;** child.
 
+Before diving into the code that property handles such fields let's take a closer look at how the
+field is actually defined (in [include/tutorial4/field/KeyValueProp.h](include/tutorial4/field/KeyValueProp.h))
+```cpp
+template <typename TOpt = tutorial4::options::DefaultOptions, typename... TExtraOpts>
+class KeyValueProp : public
+    comms::field::Variant<...>
+{
+public:
+    COMMS_VARIANT_MEMBERS_NAMES(
+        prop1,
+        prop2,
+        prop3
+    );
+    
+    comms::ErrorStatus read(TIter& iter, std::size_t len)
+    {
+        ...
+    }
+    
+    ...
+};
+```
+The field is defined by extending [comms::field::Variant](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
+provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library). The 
+class definition uses `COMMS_VARIANT_MEMBERS_NAMES()` macro to provide names to all the member fields it
+might contain. For every such name **X** the following is defined:
+
+- `FieldIdx_X` - Numeric compile time known index of the member field **X** in order of members definition inside the schema.
+- `initField_X()` - Member function to (re)initialize the variant field to hold member **X**, returns reference to the initialized member.
+- `accessField_X()` - Member function to access (via cast to appropriate type) held member of known type.
+
+Note, that `ValueType` inner type defined by every field class is a variant of 
+[std::aligned_storage](https://en.cppreference.com/w/cpp/types/aligned_storage) and should not be
+accessed directly via usual `.value()` member function. Instead generated `initField_X()` and/or
+`accessField_X()` member functions need to be used to access the storage cast to an appropriate type.
+
+Another thing to pay attention to at this stage is an existence of custom `read()` member function which
+overrides a default one provided by the [comms::field::Variant](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
+itself. The default `read()` operation of the 
+[comms::field::Variant](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Variant.html) implements
+the logic mentioned earlier when definition of the **&lt;variant&gt;** field explained. It invokes `read()`
+operation of every member **in order** of their definition and stops when the operation is successful. It 
+is quite inefficient. The [commsdsl2comms](https://github.com/arobenko/commsdsl) code generation utility
+analyses the way how the **&lt;variant&gt;** field is defined and generates more efficient code for `read()` when
+appropriate. The generated code will read the first _key_ member and then will use `switch` statement to
+handle the rest of the read operation when actual type of the property is known. 
+```cpp
+switch (commonKeyField.value()) {
+case 0U:
+    {
+        auto& field_prop1 = initField_prop1();
+        COMMS_ASSERT(field_prop1.field_key().value() == commonKeyField.value());
+        return field_prop1.template readFrom<1>(iter, len);
+    }
+case 2U:
+    {
+        auto& field_prop2 = initField_prop2();
+        COMMS_ASSERT(field_prop2.field_key().value() == commonKeyField.value());
+        return field_prop2.template readFrom<1>(iter, len);
+    }
+case 5U:
+    {
+        auto& field_prop3 = initField_prop3();
+        COMMS_ASSERT(field_prop3.field_key().value() == commonKeyField.value());
+        return field_prop3.template readFrom<1>(iter, len);
+    }
+default:
+    break;
+};
+```
+Inside every case the `initField_X()` member is used to initialize the field to hold an appropriate
+member, and then redirect the rest of the `read()` operation to it to read rest of the value (because
+the key information was already consumed).
 
 [Read Previous Tutorial](../tutorial3) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial5) 

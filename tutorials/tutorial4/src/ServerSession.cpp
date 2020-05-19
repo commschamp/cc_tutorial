@@ -12,7 +12,7 @@ namespace cc_tutorial
 void ServerSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
-    std::cout << "Received message \"" << msg.name() << "\" with ID=" << msg.getId() << std::endl;
+    std::cout << "Received message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << std::endl;
 
     std::vector<std::uint8_t> output;
 
@@ -38,6 +38,10 @@ void ServerSession::handle(Message& msg)
 
 std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
 {
+    std::cout << "Processing input: " << std::hex;
+    std::copy_n(buf, bufLen, std::ostream_iterator<unsigned>(std::cout, " "));
+    std::cout << std::dec << std::endl;
+
     // Process reported input, create relevant message objects and
     // dispatch all the created messages
     // to this object for handling (handle() member function will be called)

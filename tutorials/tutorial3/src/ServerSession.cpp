@@ -12,7 +12,7 @@ namespace cc_tutorial
 void ServerSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
-    std::cout << "Received message \"" << msg.name() << "\" with ID=" << msg.getId() << std::endl;
+    std::cout << "Received message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << std::endl;
 
     std::vector<std::uint8_t> output;
 

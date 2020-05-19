@@ -51,6 +51,17 @@ struct DefaultOptions
                 
             };
             
+            /// @brief Extra options for all the member fields of
+            ///     @ref tutorial4::field::TlvPropMembers::Any bundle.
+            struct AnyMembers
+            {
+                /// @brief Extra options for @ref
+                ///     tutorial4::field::TlvPropMembers::AnyMembers::Val
+                ///     field.
+                using Val = comms::option::app::EmptyOption;
+                
+            };
+            
         };
         
     }; // struct field

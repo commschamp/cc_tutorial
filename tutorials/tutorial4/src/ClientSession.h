@@ -37,6 +37,22 @@ public:
     void handle(Msg2& msg);
     void handle(Message& msg);
 
+    using Prop1 = Msg1::Field_f1::ValueType::value_type::Field_prop1;
+    using Prop2 = Msg1::Field_f1::ValueType::value_type::Field_prop2;
+    using Prop3 = Msg1::Field_f1::ValueType::value_type::Field_prop3;
+    using Prop4 = Msg2::Field_f1::ValueType::value_type::Field_prop4;
+    using Prop5 = Msg2::Field_f1::ValueType::value_type::Field_prop5;
+    using Prop6 = Msg2::Field_f1::ValueType::value_type::Field_prop6;
+    using AnyProp = Msg2::Field_f1::ValueType::value_type::Field_any;
+
+    void handleProp(const Prop1& prop);
+    void handleProp(const Prop2& prop);
+    void handleProp(const Prop3& prop);
+    void handleProp(const Prop4& prop);
+    void handleProp(const Prop5& prop);
+    void handleProp(const Prop6& prop);
+    void handleProp(const AnyProp& prop);
+
 protected:
     virtual bool startImpl() override final;
     virtual std::size_t processInputImpl(const std::uint8_t* buf, std::size_t bufLen) override final;

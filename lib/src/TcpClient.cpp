@@ -10,6 +10,11 @@ TcpClient::TcpClient(boost_wrap::io& io)
   : m_io(io),
     m_session(Session::createClient(io))
 {
+    m_session->setTerminateCb(
+        [this]()
+        {
+            m_io.stop();
+        });
 }
 
 bool TcpClient::start(PortType port)

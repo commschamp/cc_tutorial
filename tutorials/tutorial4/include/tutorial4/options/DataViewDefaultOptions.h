@@ -61,6 +61,20 @@ struct DataViewDefaultOptionsT : public TBase
                     >;
             };
             
+            /// @brief Extra options for all the member fields of
+            ///     @ref tutorial4::field::TlvPropMembers::Any bundle.
+            struct AnyMembers : public TBase::field::TlvPropMembers::AnyMembers
+            {
+                /// @brief Extra options for @ref
+                ///     tutorial4::field::TlvPropMembers::AnyMembers::Val
+                ///     field.
+                using Val = 
+                    std::tuple<
+                        comms::option::app::OrigDataView,
+                        typename TBase::field::TlvPropMembers::AnyMembers::Val
+                    >;
+            };
+            
         };
         
     }; // struct field
