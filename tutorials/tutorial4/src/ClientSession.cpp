@@ -43,7 +43,7 @@ void ClientSession::handle(Msg1& msg)
     auto& f1Vec = msg.field_f1().value();
     std::cout << '\t' << msg.field_f1().name() << " (" << f1Vec.size() << " elements)\n";
     for (auto idx = 0U; idx < f1Vec.size(); ++idx) {
-        auto& elem = f1Vec[idx]; // access to the variant element
+        const auto& elem = f1Vec[idx]; // access to the variant element
         elem.currFieldExec(PropDispatchHelper(*this));
     }
 
@@ -234,7 +234,7 @@ void ClientSession::sendMsg1()
 
     auto& listOfProps = msg.field_f1().value(); // vector of variant fields
     listOfProps.resize(3);
-    assert(msg.doLength() == 1U);
+    assert(msg.doLength() == 1U); // just 1 byte prefix
     assert(!listOfProps[0].valid());
     assert(!listOfProps[1].valid());
     assert(!listOfProps[2].valid());
