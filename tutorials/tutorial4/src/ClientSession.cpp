@@ -262,7 +262,7 @@ void ClientSession::sendMsg2()
     listOfProps[1].initField_prop6().field_val().value() = "blabla";
     listOfProps[2].initField_prop5().field_val().value() = 1.234;
 
-    msg.doRefresh();
+    msg.doRefresh(); // Bring message to a consistent state
     sendMessage(msg);
 }
 
