@@ -465,6 +465,8 @@ struct TlvPropMembers
 };
 
 /// @brief Definition of <b>"TlvProp"</b> field.
+/// @details
+///     Type-Length-Value Property
 /// @tparam TOpt Protocol options.
 /// @tparam TExtraOpts Extra options.
 template <typename TOpt = tutorial4::options::DefaultOptions, typename... TExtraOpts>

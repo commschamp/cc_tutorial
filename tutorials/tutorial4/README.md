@@ -92,6 +92,20 @@ a **&lt;list&gt;** covered in one of the earlier tutorials.
 Note, that element field is defined in the global space in this example and hence can be 
 referenced by the **element** XML attribute rather than being defined inside **&lt;element&gt;** child.
 
+Another valid definition of such message could be like this:
+```xml
+<message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
+    <list name="F1">
+        <element>
+            <ref field="KeyValueProp" name="Element" />
+        </element>
+        <countPrefix>
+            <int name="Count" type="uint8" />
+        </countPrefix>
+    </list>
+</message>
+```
+
 Before diving into the code that property handles such fields let's take a closer look at how the
 field is actually defined (in [include/tutorial4/field/KeyValueProp.h](include/tutorial4/field/KeyValueProp.h))
 ```cpp
@@ -125,7 +139,7 @@ might contain. For every such name **X** the following is defined:
 
 Note, that `ValueType` inner type defined by every field class is a variant of 
 [std::aligned_storage](https://en.cppreference.com/w/cpp/types/aligned_storage) and should not be
-accessed directly via usual `.value()` member function. Instead generated `initField_X()` and/or
+accessed directly via usual `.value()` member function. Instead, generated `initField_X()` and/or
 `accessField_X()` member functions need to be used to access the storage cast to an appropriate type.
 
 Another thing to pay attention to at this stage is an existence of custom `read()` member function which
@@ -275,7 +289,7 @@ Note that `operator()` above in addition to actual type of the member receives a
 detected member as a template parameter, so the run-time information of the index becomes a compile-time
 one. In many cases the compile-time information about the detected member index is not really needed (like
 in this example) and can be safely ignored. What is used in this example is the actual type of the member. 
-Once the type of the held member is determined its handling is forwarded to appropriate `ClientSession::handleProp()`
+Once the type of the held member is determined, its handling is forwarded to appropriate `ClientSession::handleProp()`
 member function. The handling functions are defined like this:
 ```cpp
 class ClientSession
@@ -307,7 +321,7 @@ Received "Message 1" with ID=1
 ```
 The `currFieldExec()` member function provided by the 
 [comms::field::Variant](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Variant.html) field 
-implements static binary search (O(log(n)) complexity) with similar logic to the code below to determine 
+implements static binary search (**O(log(n)** complexity) with similar logic to the code below to determine 
 the real type to cast to.
 ```cpp
 auto totalCount = ...; // Total number of defined memebers
@@ -352,8 +366,8 @@ void currFieldExec(TFunc&& func)
     }
 }
 ```
-The modern compilers generate quite efficient dispatch tables based binary code for handling 
-such `switch` statements with O(1) run-time complexity. As the result the code above usually
+The modern compilers generate quite efficient binary code based on dispatch tables for handling 
+such `switch` statements with **O(1)** run-time complexity. As the result the code above usually
 gives a better performance.
 
 Note usage of `FieldIdx_X` compile time values as well as `accessField_X()` member functions. They
@@ -377,34 +391,48 @@ this tutorial.
 <int name="PropKeyCommon" type="uint8" failOnInvalid="true"/>
 
 <variant name="TlvProp">
-    <bundle name="Prop4">
-        <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K4" validValue="PropKey.K4" />
-        <int name="Length" type="uint8" semanticType="length" />
-        <int name="Val" type="uint32" />
-    </bundle>
-    
-    <bundle name="Prop5">
-        <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K5" validValue="PropKey.K5" />
-        <int name="Length" type="uint8" semanticType="length" />
-        <float name="Val" type="double" defaultValue="inf" />
-    </bundle>            
-    
-    <bundle name="Prop6">
-        <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K6" validValue="PropKey.K6" />
-        <int name="Length" type="uint8" semanticType="length" />
-        <string name="Val" />
-    </bundle>   
-    
-    <bundle name="Any">
-        <int reuse="PropKeyCommon" name="Key" />
-        <int name="Length" type="uint8" semanticType="length" />
-        <data name="Val" />
-    </bundle>              
+    <description>
+        Type-Length-Value Property
+    </description>
+    <members>
+        <bundle name="Prop4">
+            <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K4" validValue="PropKey.K4" />
+            <int name="Length" type="uint8" semanticType="length" />
+            <int name="Val" type="uint32" />
+        </bundle>
+        
+        <bundle name="Prop5">
+            <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K5" validValue="PropKey.K5" />
+            <int name="Length" type="uint8" semanticType="length" />
+            <float name="Val" type="double" defaultValue="inf" />
+        </bundle>            
+        
+        <bundle name="Prop6">
+            <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K6" validValue="PropKey.K6" />
+            <int name="Length" type="uint8" semanticType="length" />
+            <string name="Val" />
+        </bundle>   
+        
+        <bundle name="Any">
+            <int reuse="PropKeyCommon" name="Key" />
+            <int name="Length" type="uint8" semanticType="length" />
+            <data name="Val" />
+        </bundle>  
+    </members>
 </variant>
 ```
-It is very similar to [Key-Value Pairs](#key-value-pairs) explained earlier, but with additional
+
+----
+
+**SIDE NOTE**: In case the **&lt;variant&gt;** field contains other XML child nodes in addition to
+member fields definition (like **&lt;description&gt; in the example above), the member fields need to
+be defined as children of **&lt;members&gt;** XML node.
+----
+
+The definition of the **&lt;variant&gt;** field above very similar to [Key-Value Pairs](#key-value-pairs) 
+explained earlier, but with additional
 **&lt;int&gt;** field of `Length` between the *Key* and *Val*. Note usage of `semanticType="length"`
-property. It is very important to use in order to notify the code generator about special task of this field.
+property. It is very important to use in order to notify the code generator about special role of this field.
 
 **IMPORTANT**: The the value of the length field (the one with `semanticType="length"`) always contains
 the **remaining** length to consume until the end of the field **NOT** including the length of the field
@@ -425,7 +453,7 @@ you take a look at `Prop4` definition, the length will always be **4** bytes (be
 
 The primary reason to prefer **TLV** properties over **Key-Value** ones is to allow future **forward** compatibility
 of the protocol. Let's assume the future version of the protocol adds new property to the ones previously defined.
-The older client operating with **Key-Value** types of properties doesn't have any information on how long the unknown property i
+The older client operating with **Key-Value** types of properties doesn't have any information on how long the unknown property is
 when a message containing it is received. The client doesn't have any other choice, but to ignore the rest of the data 
 (in best case scenarios) and/or drop the whole message decoding (in most cases). When operating with **TLV** type
 of properties, the client has an information about received property length and can skip over and ignore unknown
@@ -444,7 +472,7 @@ The `Msg2` in this tutorial is defined to contain a list of **TLV** properties.
 
 ----
 
-SIDE NOTE: In this example the length of `F1` list is not bound by any means. It means that the read operation
+**SIDE NOTE**: In this example the length of `F1` list is not bound by any means. It means that the read operation
 of the list will continue until the end of the input buffer. As the result such message is not really extendable,
 it's impossible to add new fields after the list.
 
@@ -483,7 +511,7 @@ error-prone code.
 
 ----
 
-SIDE NOTE:
+**SIDE NOTE**:
 
 - The `doRefresh()` member function of the message object is a **non-virtual** one which iterates over all the member
   fields and calls their `refresh()` member function.
@@ -492,15 +520,16 @@ SIDE NOTE:
 - The `refresh()` member function of the **&lt;variant&gt;** field will call `refresh()` member function of the 
   actual member (**&lt;bundle&gt;**) it contains at the moment.
 - Every definition of such **&lt;bundle&gt;** member (inside [include/tutorial4/field/TlvProp.h](include/tutorial4/field/TlvProp.h))
-  uses `comms::option::def::RemLengthMemberField<>` option in their definition. It notifies the 
+  uses `comms::option::def::RemLengthMemberField<>` option in their definition (generated as the result of
+  `semanticType="length"` assignment). It notifies the 
   [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) about the existence of the
   `Length` field inside the [comms::field::Bundle](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Bundle.html)
   and allows implementation of the correct `refresh()` functionality.
 
 
-ANOTHER SIDE NOTE: As a reminder, all the message definitions (the ones that extend 
+**ANOTHER SIDE NOTE**: As a reminder, all the message definitions (the ones that extend 
 [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html))
-define multiple **non-virtual** `doX()` member functions (including `doRefresh()` mentioned earlier).
+define multiple **non-virtual** `do*()` member functions (including `doRefresh()` mentioned earlier).
 In order to call them the actual type of the message needs to be known. It is possible to implement
 automatic unconditional call to the **refresh** functionality for every message before being sent. To do 
 so there is a need to add support for polymorphic (**virtual**) refresh functionality in the message
@@ -542,7 +571,7 @@ dispatch held property into appropriate `ClientSession::handleProp()` member fun
 - The `Length` inside **TLV** always represents the **remaining** length of the value that follows **NOT**
   including its own length. If length of the `Length` field needs to be included, then **serOffset** 
   property needs to be used.
-- When **TLV** variant is prepared to be sent out, quite often it ends up being in in consistent state
+- When **TLV** variant is prepared to be sent out, quite often it ends up being in an inconsistent state
   (the `Length` information needs to be updated contain the right length of the value that follows). To
   do so the field/message contents need to be `refresh()`-ed.
 - When the actual message type is known it is recommended to call `doRefresh()` **non-virtual** member function
