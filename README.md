@@ -51,7 +51,10 @@ be used in the same way with any I/O link type.
 To test the binaries of the specific tutorial, first run the **server** application
 in your terminal window. It is expected to run indefinitely until manually terminated
 with CTRL+C. In the second terminal window run the **client** application. In most
-cases it will exchange several messages with the **server** and exit.
+cases it will exchange several messages with the **server** and exit. Also in most
+cases (unless specified explicitly in the tutorial/howto) is an **echo** server, it
+decodes the message, re-encodes it and sends it back to the client, which does the
+proper processing and display of the message contents.
 
 # References
 The core component of the [CommsChampion Ecosystem](https://arobenko.github.io/cc) is
@@ -108,3 +111,5 @@ $> nmake install
 - [tutorial3](../../tree/master/tutorials/tutorial3) - Working with scaling and units in numeric fields.
 - [tutorial4](../../tree/master/tutorials/tutorial4) - Working with **&lt;variant&gt;** fields and defining heterogeneous
   lists.
+- [tutorial5](../../tree/master/tutorials/tutorial5) - Deeper understanding of **&lt;frame&gt;**-ing and working 
+  with multiple **&lt;frame&gt;**-s.
