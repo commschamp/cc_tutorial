@@ -402,4 +402,25 @@ then this function will be called to handle `Msg1` message instead of common one
 when the code is recompiled.
 
 
+## Summary
+
+- The [CommsChampion Ecosystem](https://arobenko.github.io/cc/) allows clear separation of the protocol 
+  messages definition and the transport framing.
+- The transport framing is defined using **&lt;frame&gt;** XML node.
+- The protocol schema allows definition of multiple transport frames and the generated code
+  allows the end application to select required one at compile time.
+- Every **&lt;frame&gt;** uses internal layers to specify transport fields and their 
+  roles.
+- The generated C++ code uses classes from [comms::protocol](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html)
+  namespace to define the layers.
+- The defined framing layers wrap one another, as the result the outermost layer is used 
+  to handle the whole transport framing.
+- For available frame API reference open the documentation of the 
+  [outermost layer](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html) type.
+- The polymorphic behavior of the common interface class may influence the ability of the 
+  frame to perform its `write()` operation. 
+- When write operation returns [commms::ErrorStatus::UpdateRequired](https://arobenko.github.io/comms_doc/ErrorStatus_8h.html)
+  use [random access](https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator) iterator to 
+  perform `update()` operation.
+  
 [Read Previous Tutorial](../tutorial4) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial6) 
