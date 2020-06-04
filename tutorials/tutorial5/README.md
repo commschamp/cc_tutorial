@@ -2,7 +2,7 @@
 Deeper understanding of **&lt;frame&gt;**-ing and working with multiple **&lt;frame&gt;**-s.
 
 Many embedded systems have multiple I/O interfaces for communication with external world. It is also
-not uncommon for new I/O interfaces being added in the future versions of the hardware. Many developers
+not uncommon for new I/O interfaces been added in the future versions of the hardware. Many developers
 make a prudent choice and try to reuse the same communication protocol for multiple available I/O links.
 However, every type of I/O has different reliability built-in and may require different message framing.
 
@@ -22,8 +22,8 @@ SYNC (predefined header) | SIZE | ID | PAYLOAD | CHECKSUM
 
 The whole [CommsChampion Ecosystem](https://arobenko.github.io/cc/) was designed with clean separation
 of message definitions with their payloads and the actual framing. It also allows definition of multiple
-frames in the same protocol schema file(s) and allows the end application to pick one that is needed at
-compile time.
+frames in the same protocol schema file(s) and allows the end application to pick at compile time the one 
+that is needed.
 
 In this tutorial we will use two different frames: one for messages sent from **client** to **server** 
 and another for the opposite direction. In the process we'll get a deeper understanding of **&lt;frame&gt;**
@@ -74,9 +74,9 @@ and [include/tutorial5/frame/ClientToServerFrame.h](include/tutorial5/frame/Clie
 To properly understand the schema definition above and the implementation implications let's go through the
 important points one by one.
 
-First of all, all every **&lt;frame&gt;** must define internal so called **layers** (**&lt;sync&gt;**, 
+First of all, every **&lt;frame&gt;** must define internal so called **layers** (**&lt;sync&gt;**, 
 **&lt;size&gt;**, etc...). Every such layer handles only one specific value inside the message frame. To
-properly describe the length and type of such value, the **field** definition is used:
+properly describe the length and type of such value, the layer needs to define suitable inner **field**:
 ```xml
 <sync name="Sync">
     <int name="SyncField" type="uint16" defaultValue="0xabcd" />
@@ -171,14 +171,19 @@ types, while second (`TAllMessages`) is `std::tuple` of all the **input** messag
 (descendants of [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)), which 
 the `ID` layer is expected to recognize and create relevant object during **read** operation.
 
+----
+
 **SIDE NOTE**: The last template parameter passed to the [comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
 is actually a compile time configuration parameter that can be used by the end-application to configure the
 behavior of the layer, such as replace default dynamic memory allocation of message objects with in-place allocation more 
 suitable for bare-metal development. Such compile time configuration is a subject for another a bit later tutorial.
 
+----
+
 ## &lt;size&gt; Layer
-The **&lt;size&gt;** layer represent a **remaining** length **until** end of the **&lt;payload&gt;** layer
-**NOT** including the length of the size field itself.
+The **&lt;size&gt;** layer represent a **remaining** data length **until** end of the **&lt;payload&gt;** layer
+**NOT** including the length of the size field itself and **NOT** including any
+values after **&lt;payload&gt;**.
 ```xml
 <size name="Size">
     <int name="SizeField" type="uint16" serOffset="2" displayOffset="2" />
@@ -221,16 +226,20 @@ algorithms which can be specified using **alg** property. Please refer to
 [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification for a full list. In this
 particular tutorial [CRC-CCITT](https://en.wikipedia.org/wiki/Cyclic_redundancy_check) is used. 
 
-**SIZE NOTE**: It is possible to implement and add usage of custom checksum calculation algorithm, which
+----
+
+**SIDE NOTE**: It is possible to implement and add usage of custom checksum calculation algorithm, which
 is a bit out of scope for this particular tutorial. This subject will be covered in one of the later
 tutorials.
+
+----
 
 Please also pay attention to usage of **from** property in **&lt;checksum&gt;** layer definition. 
 It specifies from which layer the checksum calculation needs to be performed. In the case of
 this tutorial it's from `SIZE` layer until the `CHECKSUM` itself. The
 [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) also supports 
 usage of **&lt;checksum&gt;** layer as prefix to the area on which the checksum needs to be
-calculated. In this case the **until** prefix needs to be used.
+calculated. In this case the **until** property needs to be used.
 
 The suffix **&lt;checksum&gt;** layer is implemented by extending or aliasing 
 [comms::protocol::ChecksumLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
@@ -271,10 +280,12 @@ Note, that there is no real need to use **validValue** and/or **failOnInvalid** 
 of the `SyncField` to force the read operation to fail on invalid value. The implementation of the
 [comms::protocol::SyncPrefixLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html)
 just compares the read field with the default constructed one and fails the read operation if they are
-not equal.
+not equal. During write operation the layer will just invoke `write()` member function on
+the default constructed field, which will write the correct value thanks to 
+usage of **defaultValue** property in the field definition.
 
 ## Full Frame
-The last (outermost) layer is actually used as a protocol framing manager.
+The last (outermost) layer is actually used as a transport frame.
 ```cpp
 template <typename TOpt = tutorial5::options::DefaultOptions>
 struct ClientToServerFrameLayers
@@ -303,6 +314,9 @@ public:
     );
 };
 ```
+As the result the documentation of the last layer type 
+([comms::protocol::SyncPrefixLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html) 
+for the current example) can be used for reference on available framing API.
 
 The final definition of `ClientToServerFrame` frame class uses `COMMS_PROTOCOL_LAYERS_ACCESS()`
 macro to assign names for the defined layers. For every name **X** the macro generates 
@@ -335,7 +349,8 @@ The important code is listed above. Note, that the write operation uses
 to write the code (`std::back_inserter(output)`) which cannot be returned back 
 to and used to re-read the written data in order to calculate the checksum value 
 before it's been written. As the result the call to `m_clientToServerFrame.write(...)`
-will put some dummy (`0`) two bytes as the checksum and return `commms::ErrorStatus::UpdateRequired`
+will put some dummy (`0`) two bytes as the checksum and return 
+[commms::ErrorStatus::UpdateRequired](https://arobenko.github.io/comms_doc/ErrorStatus_8h.html)
 to indicate that the `write()` operation is not complete. The call to 
 `update()` with [random access](https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator) 
 iterator needs to follow. It will be used to re-read the written data as well as
@@ -349,6 +364,18 @@ In this case the [comms::protocol::MsgSizeLayer](https://arobenko.github.io/comm
 will write a dummy value and force a return of `commms::ErrorStatus::UpdateRequired`.
 After that when the `update()` is called, the layer will calculate size of the written 
 code and update previously written dummy value with the correct one.
+
+---
+
+**SIDE NOTE**: In the example above the `update()` functionality doesn't require
+any knowledge about the recently written message to be able to analyse the recently
+written data and update values where needed. However, in some cases the
+access to previously written message needs to be provided. 
+The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+provides such overloaded `update()` member function which receives a reference to
+the message object as its first parameter.
+
+---
 
 Note that this particular tutorial focuses on the deeper understanding of message framing rather
 than messages and their fields. All the exchanged messages are defined not to contain 
@@ -371,7 +398,8 @@ void ClientSession::handle(Message& msg)
 Note, that the compiler still looks for the **best** match of the handling function to invoke when compiling code relevant for
 the message dispatch. In this particular case there is only one function to choose from. However,
 if you add a handling function with better type match say `void ClientSession::handle(Msg1& msg)`,
-then this function will be called to handle `Msg1` message instead of common one.
+then this function will be called to handle `Msg1` message instead of common one
+when the code is recompiled.
 
 
 [Read Previous Tutorial](../tutorial4) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial6) 
