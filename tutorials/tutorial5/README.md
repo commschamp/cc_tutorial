@@ -411,7 +411,8 @@ when the code is recompiled.
   allows the end application to select required one at compile time.
 - Every **&lt;frame&gt;** uses internal layers to specify transport fields and their 
   roles.
-- The generated C++ code uses classes from [comms::protocol](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html)
+- The generated C++ code of the frame(s) resides in [include/&lt;namespace&gt;/frame](include/tutorial5/frame) folder and
+  uses classes from [comms::protocol](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html)
   namespace to define the layers.
 - The defined framing layers wrap one another, as the result the outermost layer is used 
   to handle the whole transport framing.
@@ -422,5 +423,6 @@ when the code is recompiled.
 - When write operation returns [commms::ErrorStatus::UpdateRequired](https://arobenko.github.io/comms_doc/ErrorStatus_8h.html)
   use [random access](https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator) iterator to 
   perform `update()` operation.
+
   
 [Read Previous Tutorial](../tutorial4) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial6) 

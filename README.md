@@ -113,3 +113,4 @@ $> nmake install
   lists.
 - [tutorial5](../../tree/master/tutorials/tutorial5) - Deeper understanding of **&lt;frame&gt;**-ing and working 
   with multiple **&lt;frame&gt;**-s.
+- [tutorial6](../../tree/master/tutorials/tutorial6) - Deeper understanding of message dispatch.
