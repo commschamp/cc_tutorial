@@ -21,7 +21,7 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
     std::cout << std::dec << std::endl;
 
     using AllMessages = tutorial6::input::AllMessages<Message>;
-    static_assert(comms::dispatchMsgTypeIsStaticBinSearch<AllMessages>(), "Unexpected dispatch type");
+    static_assert(comms::dispatchMsgTypeIsPolymorphic<AllMessages>(), "Unexpected dispatch type");
 
     // Process reported input, create relevant message objects and
     // dispatch all the created messages
