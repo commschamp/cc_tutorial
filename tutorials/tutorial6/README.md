@@ -81,6 +81,10 @@ using Message =
         comms::option::app::IdInfoInterface // Polymorphic message ID retrieval
     >;
 ```
-Note that `comms::option::app::Handler` is not used.
+Note that `comms::option::app::Handler` is not used. The 
+`ServerSession::processInputImpl()` member function still uses 
+the [comms::processAllWithDispatch()](https://arobenko.github.io/comms_doc/process_8h.html)
+and the message object is dispatched to template `handle()` member function with the 
+correctly recognized message type.
   
 [Read Previous Tutorial](../tutorial5) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial7) 
