@@ -1,11 +1,16 @@
 # Overview
 This repository is a combination of tutorials and various how-to(s) for
-[CommsChampion Ecosystem](https://arobenko.github.io/cc). 
+[CommsChampion Ecosystem](https://arobenko.github.io/cc). It is important to
+understand the available components and their respective role. Please
+read the [introduction](https://arobenko.github.io/cc) if you haven't done
+so yet.
 
 The tutorials are organized as a combination **tutorials/tutorialX** folders. They 
 gradually introduce various concepts as well as explain various nuances for specific
 use cases. The tutorials are expected to be read **sequentially**
-one by one. Be patient and try to follow them through.
+one by one. Be patient and try to follow them through even if a tutorial subject seems
+irrelevant to a particular use case you are trying to implement. It might
+still introduce a concept relevant for further tutorials.
 
 The how-to(s) on the other hand, do not have any particular organization. They
 reside in **howtos/howtoX** folders and can be read independently. **HOWEVER**, it is
@@ -13,6 +18,11 @@ paramount to understand the core ideas explained in tutorials before attempting
 to understand a particular howto example. The howto(s) are
 there to provide some extra examples or cover some specific nuances which are
 not explained properly in the tutorials. 
+
+It is highly recommended to open 
+a source code with your favourite IDE to be able to easily navigate it and 
+have a full code listing visible, while reading the README files of the tutorials from this
+github repository using your browser.
 
 # Repository Organization
 Every **tutorials/tutorialX** and **howotos/howtoX** folder may contain the following files / directories:
@@ -35,12 +45,20 @@ and **howtows/howtoX** is the **generated** code produced by the **commsdsl2comm
 generation tool during the build process. Note, that it is a bad practice to
 keep generated code as sources of the repository and should not be done in 
 real life projects. It was done here to allow easy generated code demonstration and
-references to it from the tutorial text.
+references to it from the tutorial text. Also note that **commsdsl2comms** 
+generates a full CMake project while only its **include** folder is copied to
+the tutorial.
 
-The whole repository is also a CMake project which builds code of all the 
+This whole repository is also a CMake project which builds code of all the 
 tutorials and how-to(s). Every tutorial and how-to implements both **client** 
-and **server** side of the same protocol and produce **X_client** and **X_server**
-binary executables (where **X** is the name of the tutorial / how-to). 
+and **server** side of the same protocol and produces **X_client** and **X_server**
+binary executables (where **X** is the name of the tutorial / how-to). In most
+cases the **server** is an _echo_ one, it parses the received output, creates 
+appropriate message object, then serializes and sends it back to the **client**.
+The **client**-s usually send multiple messages to the **server** and then 
+process and print the received messages. After exchanging all the planned
+messages with the **server**, the connection session is terminated.
+
 The I/O handling framework used for all the applications is 
 **Boost.Asio** and TCP/IP communication was chosen for all the built client / server
 applications. The relevant code is common for all the applications and is abstracted away into the
@@ -51,10 +69,7 @@ be used in the same way with any I/O link type.
 To test the binaries of the specific tutorial, first run the **server** application
 in your terminal window. It is expected to run indefinitely until manually terminated
 with CTRL+C. In the second terminal window run the **client** application. In most
-cases it will exchange several messages with the **server** and exit. Also in most
-cases (unless specified explicitly in the tutorial/howto) is an **echo** server, it
-decodes the message, re-encodes it and sends it back to the client, which does the
-proper processing and display of the message contents.
+cases it will exchange several messages with the **server** and exit. 
 
 # References
 The core component of the [CommsChampion Ecosystem](https://arobenko.github.io/cc) is
@@ -114,3 +129,4 @@ $> nmake install
 - [tutorial5](../../tree/master/tutorials/tutorial5) - Deeper understanding of **&lt;frame&gt;**-ing and working 
   with multiple **&lt;frame&gt;**-s.
 - [tutorial6](../../tree/master/tutorials/tutorial6) - Deeper understanding of message dispatch.
+- [tutorial7](../../tree/master/tutorials/tutorial7) - Dispatching single message object to multiple handlers.
