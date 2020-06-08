@@ -19,6 +19,7 @@ public:
 
     explicit ClientSession(boost_wrap::io& io);
 
+    // Forward declaration
     class HandlerBase;
 
     // Common interface class for all the messages
@@ -37,7 +38,8 @@ public:
     class HandlerBase : public
         comms::GenericHandler<
             Message,
-            Frame::AllMessages>
+            Frame::AllMessages
+        >
     {
     public:
         virtual ~HandlerBase() = default;
