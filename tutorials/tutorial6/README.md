@@ -27,13 +27,13 @@ struct Message
 public:
     using Handler = ClientSession;
     
-    void handle(Handler& handler)
+    void dispatch(Handler& handler)
     {
-        handleImpl(handler);
+        dispatchImpl(handler);
     }
     
 protected:
-    virtual handleImpl(Handler& handler) = 0; // Implemented by the comms::MessageBase
+    virtual void dispatchImpl(Handler& handler) = 0; // Implemented by the comms::MessageBase
 }
 ```
 See also [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) 
@@ -41,13 +41,13 @@ for details.
 
 The [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html),
 which is used as a base class for all the defined messages, implements the 
-`handleImpl()` virtual member function in the following way:
+`dispatchImpl()` virtual member function in the following way:
 ```cpp
 template <...>
 class comms::MessageBase
 {
 protected:
-    virtual handleImpl(Handler& handler) override
+    virtual dispatchImpl(Handler& handler) override
     {
         handler.handle(static_cast<RealMessageType&>(*this));
     }
@@ -119,7 +119,7 @@ performs the following **compile-time** analysis to choose a proper dispatch opt
   that messages are not too sparse (no more than 10% holes in the sequence of message IDs or 
   the max ID number of all the messages does not exceed 10). If this is the case (like with
   this tutorial) then **static** dispatch array is created where the access index is actually
-  message numeric ID is created, resulting in **O(1)** run-time performance.
+  message numeric ID, resulting in **O(1)** run-time performance.
 - If message IDs are too sparse then **Static Binary Search** dispatch (explained a bit later) is used.
 
 The dispatch strategy in case of the used schema (with sequential IDs and low number of messages)
@@ -138,7 +138,7 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
 ----
 
-**SIDE NOTE**: The definition of the [frame](include/tutorial6/frame/Frame.h] receives
+**SIDE NOTE**: The definition of the [frame](include/tutorial6/frame/Frame.h) receives
 `std::tuple` of all the supported **input** message types which defaults to
 [tutorial6::input::AllMessages](include/tutorial6/input/AllMessages.h)
 ```cpp
