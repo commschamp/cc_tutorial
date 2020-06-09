@@ -7,7 +7,7 @@ multiple handlers.
 
 First of all, there is no limitation imposed on the handling class against using
 virtual `handle()` functions. It's easy to create such a base class for all the other
-candlers and pass it to message interface definition using `comms::option::app::Handler`
+handlers and pass it to message interface definition using `comms::option::app::Handler`
 option.
 ```cpp
 // Forward declaration
@@ -69,7 +69,7 @@ msg->dispatch(handler2);
 ```
 Please pay attention to the following details:
 - The usage of the `comms::option::app::Handler` option requires a knowledge about the
-  handler type.
+  handler type (`HandlerBase`).
 - The handler definition requires knowledge about the message types (`Msg1`, `Msg2`, ...) to
   properly define the handling functions.
 - The message types require knowledge about the message interface type.
@@ -105,7 +105,7 @@ class Msg2 : public tutorial7::message::Message2<Message> {};
 ```
 Also note, that when defining the actual handler classes with accessing the message member 
 fields and/or member functions the actual type of the message needs to be known, i.e. the
-message types / classes need to be defined before defining the handlers.
+message types / classes need to be defined before defining the handling functions.
 
 This was a bit of theory. Now let's take a closer look at the [ClientSession](src/ClientSession.h).
 The [comms::GenericHandler](https://arobenko.github.io/comms_doc/classcomms_1_1GenericHandler.html)
@@ -130,7 +130,7 @@ input messages provided to the framing definition.
 
 The [comms::GenericHandler](https://arobenko.github.io/comms_doc/classcomms_1_1GenericHandler.html)
 creates a common `virtual void handle(Message& msg)` member function that receives a reference to
-the common interface class and does nothing it its body. It also
+the common interface class and does nothing in its body. It also
 creates `virtual void handle(...)` member function for every message type provided as a member of the
 tuple passed as the second template parameter. The default implementation of such function is to
 upcast the message object into the common interface and invoke the common handling function (which 
@@ -141,12 +141,12 @@ class HandlerBase
 public:
     virtual void handle(Msg1& msg)
     {
-        handle(static_cast<Message&>(msg);
+        handle(static_cast<Message&>(msg));
     }
     
     virtual void handle(Msg2& msg)
     {
-        handle(static_cast<Message&>(msg);
+        handle(static_cast<Message&>(msg));
     }    
     ...
     // Handling with common interface
@@ -198,5 +198,107 @@ public:
     virtual void handle(Message& msg) override;
 };
 ```
+The handlers can override any number of of virtual `handle()` member functions and
+leave the default behavior for others. Note, that depending on used compiler options
+there may be a warning or an error report about hiding other inherited `handle()`
+member functions. To suppress such report `using HandlerBase::handle;` statement
+is used.
+
+Please also take a look how the `ClientSession::processInputImpl()` is implemented.
+It doesn't use `comms::processAllWithDispatch()` as many other tutorials did because
+there is no single handler object to dispatch the message to. The handling loop 
+needs to be implemented manually.
+
+Once the message object is successfully created the dispatch to multiple handlers is 
+implemented like this:
+```cpp
+assert(msg); // Message object must be allocated
+
+// Dispatch to all the handlers
+std::cout << "-----------------------------\n";
+for (auto& h : m_handlers) {
+    msg->dispatch(*h);
+}
+```
+
+The handlers are dynamically allocated and held by `std::unique_ptr` to 
+the base class.
+```cpp
+class ClientSession : public Session
+{
+public:
+    ...
+    using HandlerPtr = std::unique_ptr<HandlerBase>;
+    
+private:
+    ...
+    std::vector<HandlerPtr> m_handlers;
+};
+
+ClientSession::ClientSession(boost_wrap::io& io)
+  : Base(io)
+{
+    m_handlers.emplace_back(new Handler1);
+    m_handlers.emplace_back(new Handler2);
+}
+```
+
+--- 
+
+**SIDE NOTE**: Using polymorphic dispatch described above to support multiple
+handlers is **NOT** a must have solution. It is still possible to use various
+dispatch alternatives defined in [comms/dispatch.h](https://arobenko.github.io/comms_doc/dispatch_8h.html).
+For example:
+```cpp
+// Dispatch to all the handlers
+std::cout << "-----------------------------\n";
+Handler1 handler1;
+Handler2 handler2;
+
+comms::dispatchMsgStaticBinSearch<Frame::AllMessages>(*msg, handler1);
+comms::dispatchMsgStaticBinSearch<Frame::AllMessages>(*msg, handler2);
+```
+However be aware that the types of the handlers differ and the code of 
+`comms::dispatchMsgStaticBinSearch()` will be duplicated for every handler
+type passed to the function.
+
+In case the handlers are polymorphic themselves like presented in this tutorial, then
+it is possible to unify the dispatch logic:
+```cpp
+// Dispatch to all the handlers
+std::cout << "-----------------------------\n";
+for (auto& h : m_handlers) {
+    comms::dispatchMsgStaticBinSearch<Frame::AllMessages>(*msg, *h);
+}
+```
+
+Also note that `comms::dispatchMsgStaticBinSearch()` requires knowledge about message ID to 
+be able to implement proper comparison statements. The variant of the 
+`comms::dispatchMsgStaticBinSearch()` used above does not receive the message ID as
+its parameter, hence must retrieve it using polymorphic `msg.getId()` call. There 
+might be a case when message interface does not allow polymorphic retrieval of message ID.
+In such case the ID information needs to be retrieved during framing processing. How to 
+do it is out of scope for this tutorial and will be covered later.
+
+It is also recommended to read 
+[Advanced Guide to Message Dispatching](https://arobenko.github.io/comms_doc/page_dispatch.html)
+tutorial page for deeper understanding of available dispatch mechanisms provided by 
+the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+
+## Summary
+- Dispatch of the single message object to multiple handlers can be implemented by using
+  common base class for all the handlers with virtual `handle()` member functions.
+- The type of such common base class needs to be passed to the message interface 
+  using `comms::option::app::Handler` option.
+- If there are circular dependencies on knowledge of the type the handler one can be
+  forward declared.
+- It is recommended to use [comms::GenericHandler](https://arobenko.github.io/comms_doc/classcomms_1_1GenericHandler.html)
+  to implement polymorphic base class for all the handlers.
+- The polymorphic way of dispatch is recommended solution when multiple handlers need to
+  be supported, but it's **NOT** a "must have" one. Other dispatch functions 
+  defined in [comms/dispatch.h](https://arobenko.github.io/comms_doc/dispatch_8h.html)
+  can also be used. See also 
+  [Advanced Guide to Message Dispatching](https://arobenko.github.io/comms_doc/page_dispatch.html)
+  tutorial page.
 
 [Read Previous Tutorial](../tutorial6) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial8) 

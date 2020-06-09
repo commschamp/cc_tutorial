@@ -83,7 +83,7 @@ page of the documentation.
 
 The **commsdsl2comms** code generator requires schema file(s) to be written in
 [CommsDSL](https://github.com/arobenko/CommsDSL-Specification). The full specification
-can be viewed [online](https://arobenko.gitbooks.io/commsdsl-specification/content/) or
+can be viewed [online](https://arobenko.github.io/commsdsl_spec/) or
 downloaded as PDF from latest [release artifacts](https://github.com/arobenko/CommsDSL-Specification/releases).
 
 # How to Build
