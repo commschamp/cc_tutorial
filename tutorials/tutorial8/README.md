@@ -89,8 +89,8 @@ protected:
 ----
 
 **SIDE NOTE**: One of the previous tutorials showed that the handler type may be 
-forward declared bofore the definition of the common message interface class.
-It is important to understand that the presence of the `RetType` inner type
+forward declared before the definition of the common message interface class.
+It is important to understand that in such case the presence of the `RetType` inner type
 inside the handler class cannot be determined. As the result `void` as the
 handling return type will be assumed.
 
@@ -124,14 +124,14 @@ bool handle(Msg2& msg);
 bool handle(Message& msg);
 ```
 Please pay attention that only `Msg1` and `Msg2` are properly handled (with `true`
-returned by the `handle()` (and `msg.dispatch(...)`). However, when `Msg3` arrives
-the common handling function (`bool handle(Message& msg)`) is called, which will
+returned by the `handle()` and as the result `msg->dispatch(...)`). However, when `Msg3` arrives
+the common handling function `bool handle(Message& msg)` is invoked, which will
 return `false`. As the result, the **client** is expected to report the error message
 above and exit.
 
 ----
 
-**SIDE NOTE**: All the `comms::dispatch*()` functions defined in
+**SIDE NOTE**: All the `comms::dispatchMsg*()` functions defined in
 [comms/dispatch.h](https://arobenko.github.io/comms_doc/dispatch_8h.html) also
 return the same type as `handle()` member functions of the used handler.
 It can be useful for cases when message interface does **NOT** expose polymorphic dispatch and
@@ -141,10 +141,10 @@ one of these functions need to be used instead.
 
 ## Summary
 - Returning non-void values from the handling functions is also supported.
-- There is a need to define inner `RetType` type which specifies the return
+- There is a need to define inner `RetType` type inside the handler class which specifies the return
   type of every `handle()` member function.
 - The [comms::Message::dispatch()](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html)
-  as well as all the functions in [comms/dispatch.h](https://arobenko.github.io/comms_doc/dispatch_8h.html)
+  as well as all `comms::dispatchMsg*()` functions in [comms/dispatch.h](https://arobenko.github.io/comms_doc/dispatch_8h.html)
   use the inner `RetType` of the handler class to define their own return types.
 - In case the handler class is forward declared, the automatic determination of the return 
   type is not possible and as the result `void` is assumed.
