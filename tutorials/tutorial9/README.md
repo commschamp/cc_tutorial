@@ -63,12 +63,12 @@ using OutMsg4 = tutorial9::message::Msg4<OutMessage>;
 ```
 There is also an important thing to note. The 
 [commsdsl2comms](https://github.com/arobenko/commsdsl) code generator produces
-[include/tutorial9/input/ClientInputMessages.h] and 
-[include/tutorial9/input/ServerInputMessages.h] which define input messages
+[include/tutorial9/input/ClientInputMessages.h](include/tutorial9/input/ClientInputMessages.h) and 
+[include/tutorial9/input/ServerInputMessages.h](include/tutorial9/input/ServerInputMessages.h) which define input messages
 for the **client** and **server** sides respectively.
 
-Please also pay closer attention to the [frame class](include/tutorial9/frame/Frame.h)
-definition.
+Please also pay closer attention to the frame class definition inside 
+[include/tutorial9/frame/Frame.h](include/tutorial9/frame/Frame.h).
 ```cpp
 template <
    typename TMessage,
@@ -81,8 +81,8 @@ All the previous tutorials provided only the common message interface class as
 the first template parameter while leaving all others as default. The
 second template parameter specifies all **input** messages the frame is 
 expected to recognize in order to properly create message object. The 
-default configuration is to use [all](include/tutorial9/input/AllMessages.h) 
-the defined messages. 
+default configuration is to use all the defined messages 
+(defined in [nclude/tutorial9/input/AllMessages.h](include/tutorial9/input/AllMessages.h)).
 
 In this tutorial the **server** needs to recognize only limited number of messages,
 hence it can use [tutorial9::input::ServerInputMessages](include/tutorial9/input/ServerInputMessages.h)
