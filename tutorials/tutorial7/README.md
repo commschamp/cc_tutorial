@@ -290,8 +290,7 @@ the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
   common base class for all the handlers with virtual `handle()` member functions.
 - The type of such common base class needs to be passed to the message interface 
   using `comms::option::app::Handler` option.
-- If there are circular dependencies on knowledge of the type the handler one can be
-  forward declared.
+- If there are type definition circular dependencies the handler class can be forward declared.
 - It is recommended to use [comms::GenericHandler](https://arobenko.github.io/comms_doc/classcomms_1_1GenericHandler.html)
   to implement polymorphic base class for all the handlers.
 - The polymorphic way of dispatch is recommended solution when multiple handlers need to

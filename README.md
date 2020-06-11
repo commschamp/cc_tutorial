@@ -130,3 +130,4 @@ $> nmake install
   with multiple **&lt;frame&gt;**-s.
 - [tutorial6](../../tree/master/tutorials/tutorial6) - Deeper understanding of message dispatch.
 - [tutorial7](../../tree/master/tutorials/tutorial7) - Dispatching single message object to multiple handlers.
+- [tutorial8](../../tree/master/tutorials/tutorial8) - Returning values from message handling functions.

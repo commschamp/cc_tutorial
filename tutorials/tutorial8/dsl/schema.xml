@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="tutorial8" endian="big">
+    <fields>
+        <string name="Msg1Name" defaultValue="Message 1" />
+        <string name="Msg2Name" defaultValue="Message 2" />
+        <string name="Msg3Name" defaultValue="Message 3" />
+            
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M1" val="1" displayName="^Msg1Name" />
+            <validValue name="M2" val="2" displayName="^Msg2Name" />
+            <validValue name="M3" val="3" displayName="^Msg3Name" />
+        </enum>
+    </fields>
+        
+    <frame name="Frame">
+        <size name="Size">
+            <int name="SizeField" type="uint16" />
+        </size>
+        <id name="Id" field="MsgId" />
+        <payload name="Data" />
+    </frame>
+    
+    <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name" />
+    <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name" />
+    <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name" />
+    
+</schema>
