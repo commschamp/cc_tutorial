@@ -45,6 +45,7 @@ protected:
     virtual std::size_t processInputImpl(const std::uint8_t* buf, std::size_t bufLen) override final;
 
 private:
+    // Definition of the frame
     using Frame =
         tutorial10::frame::Frame<
             Message,

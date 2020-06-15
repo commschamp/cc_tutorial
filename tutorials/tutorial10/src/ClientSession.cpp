@@ -64,7 +64,7 @@ void ClientSession::handle(Msg5& msg)
 void ClientSession::handle(Message& msg)
 {
     static_cast<void>(msg);
-    std::cout << "ERROR: Received unexpected message !!!" << std::endl;
+    std::cout << "ERROR: Received unexpected message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << std::endl;
 }
 
 bool ClientSession::startImpl()

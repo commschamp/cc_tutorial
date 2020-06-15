@@ -132,3 +132,4 @@ $> nmake install
 - [tutorial7](../../tree/master/tutorials/tutorial7) - Dispatching single message object to multiple handlers.
 - [tutorial8](../../tree/master/tutorials/tutorial8) - Returning values from message handling functions.
 - [tutorial9](../../tree/master/tutorials/tutorial9) - Dealing with multiple uni-directional messages.
+- [tutorial10](../../tree/master/tutorials/tutorial10) - Dealing with small number of uni-directional messages.
