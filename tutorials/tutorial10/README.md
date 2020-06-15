@@ -1,4 +1,4 @@
-tutorial 10
+# Tutorial 10
 Dealing with small number of uni-directional messages.
 
 There are cases when number of uni-directional messages is relatively small 
@@ -80,8 +80,11 @@ The used options parameter (`TOpt`) is the way to extra customize the message de
 
 The [&lt;namespace&gt;::options::DefaultOptions](include/tutorial10/options/DefaultOptions.h)
 contains an empty customization, i.e. `comms::option::app::EmptyOption` is passed to
-**all** the customization points. The generated code contains multiple out-of-the box
-customization options. The ones applicable to this example are 
+**all** the customization points. 
+
+The generated code contains multiple out-of-the box
+customization options which reside in [include/&lt;namespace&gt;/options](include/tutorial10/options) folder. 
+The ones applicable to this example are 
 [tutorial10::options::ServerDefaultOptions](include/tutorial10/options/ServerDefaultOptions.h) and
 [tutorial10::options::ClientDefaultOptions](include/tutorial10/options/ClientDefaultOptions.h).
 
@@ -177,7 +180,7 @@ void ServerSession::handle(Msg1& msg)
 }
 ```
 Note, that attempt to echo `Msg1` back is expected to fail because options passed to `Msg1` definition
-suppress generation of polymorphic `write()` functionality. The return value of the latter will be 
+suppress generation of polymorphic `write()` functionality. The return value of the `write()` operation will be 
 [comms::ErrorStatus::NotSupported](https://arobenko.github.io/comms_doc/ErrorStatus_8h.html). 
 All other messages will be written by the **server** without any problem.
 
@@ -272,6 +275,8 @@ struct ClientDefaultOptionsT : public TBase
         
     };
 };
+
+using ClientDefaultOptions = ClientDefaultOptionsT<>;
 ```
 The attempt to send `Msg2` out to the **server** is expected to fail because `Msg2` definition 
 does not support polymorphic write:
