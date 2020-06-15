@@ -1,0 +1,5 @@
+/// @brief Custom destructor
+~Msg1()
+{
+    std::cout << "Proper destruction: " << __FUNCTION__ << std::endl;
+}

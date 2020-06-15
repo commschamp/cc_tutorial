@@ -185,7 +185,7 @@ function (dsl_parse type name)
     set (src_files)
     if (NOT "${DSL_PARSE_SRC_DIR}" STREQUAL "")
         set (code_input_param "-c${DSL_PARSE_SRC_DIR}")
-        file (GLOB_RECURSE src_files "${code_input_dir}/*") 
+        file (GLOB_RECURSE src_files "${DSL_PARSE_SRC_DIR}/*") 
     endif ()
     
     set (commsdsl_tgt_dep)
