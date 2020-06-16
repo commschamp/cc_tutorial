@@ -22,8 +22,7 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message =
-        tutorial11::Message<>;
+    using Message = tutorial11::Message<>;
 
     // Protocol options for client
     using ClientProtocolOptions = 
@@ -59,6 +58,7 @@ private:
         CommsStage_NumOfValues
     };
 
+    // Send the message requires knowledge about the full message type
     template <typename TMsg>
     void sendMessage(const TMsg& msg)
     {
@@ -94,6 +94,7 @@ private:
     void sendMsg2();
     void sendMsg3();
 
+    // Client specific frame 
     using Frame = 
         tutorial11::frame::Frame<
             Message,

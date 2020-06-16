@@ -23,7 +23,7 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
     // Force static binary search dispatch
     using Dispatcher =
-        comms::MsgDispatcher<comms::option::ForceDispatchStaticBinSearch>;    
+        comms::MsgDispatcher<comms::option::app::ForceDispatchStaticBinSearch>;    
 
     // Process reported input, create relevant message objects and
     // dispatch all the created messages

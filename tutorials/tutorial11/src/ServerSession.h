@@ -20,8 +20,7 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message =
-        tutorial11::Message<>;
+    using Message = tutorial11::Message<>;
 
     // Protocol options for server
     using ServerProtocolOptions = 
