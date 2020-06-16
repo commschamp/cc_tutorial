@@ -5,7 +5,7 @@ All the previous tutorials exposed polymorphic behavior when defining common mes
 class. The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) also
 properly supports message classes without any virtual functions.
 
-Let's take a look at inner definitions inside [ServerSession.h](src/ServerSession.h).
+Let's take a look at inner definitions inside [src/ServerSession.h](src/ServerSession.h).
 ```cpp
 class ServerSession : public Session
 {
@@ -55,7 +55,7 @@ In order to create such object the
 [comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
 contains [comms::MsgFactory](https://arobenko.github.io/comms_doc/classcomms_1_1MsgFactory.html) in its
 private data members. The 
-contains [comms::MsgFactory](https://arobenko.github.io/comms_doc/classcomms_1_1MsgFactory.html)
+contained [comms::MsgFactory](https://arobenko.github.io/comms_doc/classcomms_1_1MsgFactory.html)
 can be configured to use appropriate dispatch logic via its options. The relevant options are:
 `comms::option::app::ForceDispatchPolymorphic`, `comms::option::app::ForceDispatchStaticBinSearch`, or 
 `comms::option::app::ForceDispatchLinearSwitch`. The 
@@ -154,7 +154,7 @@ private:
 };
 ```
 Note that the [schema](dsl/schema.xml) file of this tutorial does not specify 
-uni-directional messages, i.e. The definitions of the 
+uni-directional messages, i.e. the definitions of the 
 [tutorial11::input::AllMessages](include/tutorial11/input/AllMessages.h), 
 [tutorial11::input::ServerInputMessages](include/tutorial11/input/ServerInputMessages.h), and
 [tutorial11::input::ClientInputMessages](include/tutorial11/input/ClientInputMessages.h) look
@@ -167,7 +167,7 @@ differ in terms of defined options. It is still a good practice to force **serve
 (usage of [tutorial11::input::AllMessages](include/tutorial11/input/AllMessages.h) and/or
 [tutorial11::options::DefaultOptions](include/tutorial11/options/DefaultOptions.h)).
 There is always a potential for uni-directional message to be added to the protocol in the future which 
-will case the configurations to be different.
+will cause the configurations to be different.
 
 Another important thing to understand is how the outgoing message is serialized. Due to the 
 fact that the message interface class does **NOT** expose any polymorphic behavior, the 
@@ -201,7 +201,7 @@ the `std::unique_ptr`. The deleter stores numeric ID of the allocated message ob
 way of dispatching to map stored numeric ID into appropriate message type. Before actual
 deletion the provided pointer is cast to the right class and properly destructed.
 
-To test this all of the available message definitions inside 
+To test this, all of the available message definitions inside 
 [include/tutorial11/message](include/tutorial11/message) were modified to
 print their destructor function name when it is invoked:
 ```cpp
@@ -221,10 +221,10 @@ public:
 };
 
 ```
-The **client** client side of this tutorial sends `Msg1`, `Msg2`, and `Msg3` to the 
+The **client** side of this tutorial sends `Msg1`, `Msg2`, and `Msg3` to the 
 **server**. The latter identifies the messages, dynamically allocates appropriate message object 
 (held by `std::unique_ptr` to the common interface class), dispatches it to the handling function, 
-and then destructs the message object hen it's no longer needed. The output produced by the **server** application
+and then destructs the message object when it's no longer needed. The output produced by the **server** application
 looks like this:
 ```
 Processing input: 0 1 1 
@@ -296,7 +296,7 @@ private:
 - The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) provides
   multiple means to avoid any polymorphic functionality, i.e. virtual functions.
 - When no polymorphic behavior options are passed to the common interface definition, the
-  message objects don't have any v-table and their destructor is non-virtual.
+  message objects don't have any v-table and their destructors are non-virtual.
 - All the dynamically allocated message objects are still held by the `std::unique_ptr`
   to the common message interface class, but with a custom deleter which insures
   correct destruction and de-allocation of the object.
