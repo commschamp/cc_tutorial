@@ -19,6 +19,10 @@ if ("${CC_TAG}" STREQUAL "")
     set (CC_TAG "v2.4")
 endif ()
 
+if (NOT CMAKE_CXX_STANDARD)
+    set (CMAKE_CXX_STANDARD 11)
+endif ()
+
 if ((CMAKE_COMPILER_IS_GNUCC) OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
     set (extra_flags_list
         "-Wall" "-Wextra" "-Wcast-align" "-Wcast-qual" "-Wctor-dtor-privacy"
