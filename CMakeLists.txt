@@ -69,7 +69,8 @@ include(GNUInstallDirs)
 find_package(Boost REQUIRED
     COMPONENTS system)
 
-if (WIN32 and BOOST_ROOT)
+if (WIN32 AND BOOST_ROOT)
+    message ("Added ${BOOST_ROOT} to link directories")
     link_directories(${BOOST_ROOT})
 endif ()    
     
