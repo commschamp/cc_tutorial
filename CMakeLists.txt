@@ -68,6 +68,10 @@ include(GNUInstallDirs)
 
 find_package(Boost REQUIRED
     COMPONENTS system)
+
+if (WIN32 and BOOST_ROOT)
+    link_directories(${BOOST_ROOT})
+endif ()    
     
 find_package(Threads REQUIRED)    
 
@@ -147,7 +151,7 @@ if ("${COMMSDSL2COMMS}" STREQUAL "")
         
         set (boost_static_libs_param)
         if (Boost_USE_STATIC_LIBS)
-        set (boost_static_libs_param "-DBoost_USE_STATIC_LIBS=ON")
+            set (boost_static_libs_param "-DBoost_USE_STATIC_LIBS=ON")
         endif()
 
         ExternalProject_Add(
