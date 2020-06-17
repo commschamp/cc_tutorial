@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="tutorial12" endian="big">
+    <fields>
+        <string name="Msg1Name" defaultValue="Message 1" />
+        <string name="Msg2Name" defaultValue="Message 2" />
+        <string name="Msg3Name" defaultValue="Message 3" />
+            
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M1" val="1" displayName="^Msg1Name" />
+            <validValue name="M2" val="2" displayName="^Msg2Name" />
+            <validValue name="M3" val="3" displayName="^Msg3Name" />
+        </enum>
+        
+        <int name="Length" type="uint8" />
+    </fields>
+        
+    <frame name="Frame">
+        <size name="Size">
+            <int name="SizeField" type="uint16" />
+        </size>
+        <id name="Id" field="MsgId" />
+        <payload name="Data" />
+    </frame>
+    
+    <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
+        <string name="F1" lengthPrefix="Length" />
+        <string name="F2" length="8" defaultValue="hello" />
+    </message>
+    
+    <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
+        <data name="F1" lengthPrefix="Length" />
+        <data name="F2" length="6" />
+    </message>
+    
+    <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name">
+        <list name="F1" countPrefix="Length">
+            <int name="Element" type="uint32" />
+        </list>
+        <list name="F2" count="6">
+            <int name="Element" type="uint16" />
+        </list>
+    </message>
+    
+</schema>
