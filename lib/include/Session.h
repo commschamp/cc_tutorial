@@ -15,6 +15,12 @@ public:
     using Ptr = std::unique_ptr<Session>;
     using Socket = boost::asio::ip::tcp::socket;
 
+    explicit Session(boost_wrap::io& io) :
+        m_io(io),
+        m_socket(io)
+    {
+    }    
+
     virtual ~Session() = default;
 
     void setSocket(Socket&& socket)
@@ -42,12 +48,6 @@ public:
 
 
 protected:
-    explicit Session(boost_wrap::io& io) :
-        m_io(io),
-        m_socket(io)
-    {
-    }
-
     virtual bool startImpl();
     virtual std::size_t processInputImpl(const std::uint8_t* buf, std::size_t bufLen) = 0;
 
