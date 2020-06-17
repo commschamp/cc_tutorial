@@ -67,11 +67,11 @@ endif ()
 include(GNUInstallDirs)
 
 find_package(Boost REQUIRED
-    COMPONENTS system)
+    COMPONENTS system date_time)
 
 if (WIN32 AND BOOST_ROOT)
     message ("Added ${BOOST_ROOT} to link directories")
-    link_directories(${BOOST_ROOT})
+    link_directories(${BOOST_ROOT} ${BOOST_ROOT}/lib ${BOOST_ROOT}/staging/lib)
 endif ()    
     
 find_package(Threads REQUIRED)    
