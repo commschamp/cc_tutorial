@@ -67,11 +67,13 @@ endif ()
 include(GNUInstallDirs)
 
 find_package(Boost REQUIRED
-    COMPONENTS system date_time)
+    COMPONENTS system)
 
 if (WIN32 AND BOOST_ROOT)
     message ("Added ${BOOST_ROOT} to link directories")
     link_directories(${BOOST_ROOT} ${BOOST_ROOT}/lib ${BOOST_ROOT}/staging/lib)
+    find_package(Boost COMPONENTS date_time)
+
 endif ()    
     
 find_package(Threads REQUIRED)    
@@ -228,6 +230,11 @@ function (bin_server type name)
     add_executable(${bin_name} ${ARGN})
     target_link_libraries(
         ${bin_name} PRIVATE ${COMMON_SERVER_LIB} cc::comms Boost::system Boost::boost ${CMAKE_THREAD_LIBS_INIT})
+
+    if (TARGET Boost::date_time)
+        target_link_libraries(
+            ${bin_name} PRIVATE Boost::date_time ${CMAKE_THREAD_LIBS_INIT})
+    endif ()        
         
     add_dependencies(${bin_name} ${name}_dsl)
         
