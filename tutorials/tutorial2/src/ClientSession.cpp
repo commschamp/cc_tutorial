@@ -516,7 +516,7 @@ void ClientSession::sendMsg4()
 void ClientSession::sendMsg5()
 {
     Msg5 msg;
-    msg.field_f1().value() = 1.2345;
+    msg.field_f1().value() = 1.2345f;
 
     assert(msg.field_f2().isS1());
     msg.field_f2().setS3();
