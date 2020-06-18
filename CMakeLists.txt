@@ -261,6 +261,11 @@ function (bin_client type name)
     add_executable(${bin_name} ${ARGN})
     target_link_libraries(
         ${bin_name} PRIVATE ${COMMON_CLIENT_LIB} cc::comms Boost::system Boost::boost ${CMAKE_THREAD_LIBS_INIT})
+
+    if (FORCE_EXTRA_BOOST_LIBS)
+        target_link_libraries(
+            ${bin_name} PRIVATE ${EXTRA_BOOST_TARGETS})
+    endif ()         
         
     add_dependencies(${bin_name} ${name}_dsl)
         
