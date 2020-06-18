@@ -10,11 +10,6 @@ function (lib_server)
     add_library(${name} STATIC ${src})
     target_link_libraries(
         ${name} PUBLIC Boost::system Boost::boost)
-
-    if (TARGET Boost::date_time)
-        target_link_libraries(
-            ${name} PUBLIC Boost::date_time)
-    endif ()
         
     target_include_directories(
         ${name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)        

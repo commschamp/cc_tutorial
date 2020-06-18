@@ -43,7 +43,7 @@ build_script:
     - if exist %BUILD_DIR% rmdir /S /Q %BUILD_DIR%
     - mkdir %BUILD_DIR%
     - cd %BUILD_DIR%
-    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -G "NMake Makefiles" -DBOOST_ROOT="%BOOST_DIR%" -DBoost_USE_STATIC_LIBS=ON -DCMAKE_CXX_STANDARD=%CPP_STD% -DCMAKE_INSTALL_PREFIX=install
+    - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -G "NMake Makefiles" -DBOOST_ROOT="%BOOST_DIR%" -DBoost_USE_STATIC_LIBS=ON -DCMAKE_CXX_STANDARD=%CPP_STD% -DCMAKE_INSTALL_PREFIX=install -DFORCE_EXTRA_BOOST_LIBS=ON
     - nmake install
 
 
