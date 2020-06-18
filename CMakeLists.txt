@@ -204,13 +204,14 @@ function (dsl_parse type name)
     endif ()
 
     set (output_dir "${CMAKE_CURRENT_BINARY_DIR}/${name}/output")
-    string(REPLACE ";" " " schema_files "${DSL_PARSE_SCHEMAS}")
+    string(REPLACE ";" "\n" schema_files "${DSL_PARSE_SCHEMAS}")
+    file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${name}/schema_files.txt "${schema_files}")
     add_custom_command(
         OUTPUT ${output_dir}
         DEPENDS ${DSL_PARSE_SCHEMAS} ${src_files} ${commsdsl_tgt_dep}
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${output_dir}
         COMMAND ${COMMSDSL2COMMS} --warn-as-err ${code_input_param} "--cc-tag=${CC_TAG}" 
-            -o ${output_dir} ${schema_files}
+            -o ${output_dir} -i ${CMAKE_CURRENT_BINARY_DIR}/${name}/schema_files.txt
     )
 
     add_custom_target(${name}_dsl ALL
