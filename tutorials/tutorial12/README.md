@@ -173,4 +173,133 @@ using ServerProtocolOptions =
 The [server](src/ServerSession.cpp) doesn't have any other special aspects and
 everything operates normally, but without any dynamic memory allocation.
 
+One of the **important** aspects to understand is that for sequence fields like 
+**&lt;string&gt;**, or **&lt;data&gt;** the data is constantly copied from the 
+**input** buffer to the internal storage of these fields, whether it is 
+`std::string`, `std::vector`, [comms::util::StaticString](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html),
+or [comms::util::StaticVector](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html).
+If we think about it a bit deeper, then the message object doesn't outlive the 
+input buffer in most of the cases (all the previous tutorials so far). It would
+be beneficial if the storage type of the **&lt;string&gt;** and **&lt;data&gt;**
+fields is some kind of "view" on input buffer. The 
+[COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+provides such an ability with [comms::option::app::OrigDataView](https://arobenko.github.io/comms_doc/options_8h.html)
+option. If the option is passed to the definition of 
+[comms::field::String](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1String.html) then 
+the storage type will be [std::string_view](https://en.cppreference.com/w/cpp/string/basic_string_view)
+if C++17 is been used to compile the source and the compiler actually supports it. Otherwise 
+[comms::util::StringView](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StringView.html) is 
+chosen. Similar for the definition of the 
+[comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html) with 
+`std::uint8_t` as its element type (used to defue **&lt;data&gt;** field). If C++20 is used 
+to compile the source and the compiler supports it the 
+[std::span](https://en.cppreference.com/w/cpp/container/span) is used as the storage type.
+Otherwise the [comms::util::ArrayView](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1ArrayView.html)
+is chosen.
+
+**NOTE** that the data view **cannot** be used for the **&lt;list&gt;** field, because its 
+element is a field, not raw data, which might use specific endian for its deserialization or 
+any other special decoding operation.
+
+To help with passing such "data view" options to the used protocol definition, the generated code
+contains [include/&lt;namespace&gt;/options/DataViewDefaultOptions.h](include/tutorial12/options/DataViewDefaultOptions.h).
+
+The **client** side of this tutorial tries to use such options in addition to 
+avoiding dynamic memory allocation. To make the example even more interesting the 
+virtual functions are also avoided.
+
+To support such configuration this tutorial defines a separate options structure
+([src/DataViewBareMetalProtocolOptions.h](src/DataViewBareMetalProtocolOptions.h)) which 
+combines the "data view" and "bare metal" (lack of dynamic memory allocation) 
+configurations.
+```cpp
+template <typename TBase = tutorial12::options::DataViewDefaultOptions>
+struct DataViewBareMetalProtocolOptionsT : public TBase
+{
+    struct frame : public TBase::frame
+    {
+        struct Msg3Fields : public TBase::message::Msg3Fields
+        {
+            using F1 = 
+                std::tuple<
+                    comms::option::app::FixedSizeStorage<16>,
+                    typename TBase::message::Msg3Fields::F1
+                >;
+
+            using F2 = 
+                std::tuple<
+                    comms::option::app::SequenceFixedSizeUseFixedSizeStorage,
+                    typename TBase::message::Msg3Fields::F2
+                >;
+        }; // struct Msg3Fields
+
+        struct FrameLayers : public TBase::frame::FrameLayers
+        {
+            using Id = std::tuple<
+                comms::option::app::InPlaceAllocation,
+                typename TBase::frame::FrameLayers::Id
+            >;
+            
+        }; // struct FrameLayers        
+
+    }; // struct frame
+};
+
+using DataViewBareMetalProtocolOptions = DataViewBareMetalProtocolOptionsT<>;
+```
+Note that it expects a variant of 
+[tutorial12::options::DataViewDefaultOptionsT](include/tutorial12/options/DataViewDefaultOptions.h)
+to be passed as a template parameter. The fields of the `Msg3` are a variants of 
+**&lt;list&gt;** and cannot use a view on input buffer. In order to prevent the 
+storage type from been `std::vector` the `comms::option::app::FixedSizeStorage` or 
+`comms::option::app::SequenceFixedSizeUseFixedSizeStorage` option needs to be used.
+To prevent dynamic memory allocation when message itself is created the 
+`comms::option::app::InPlaceAllocation` option needs to be passed to the `Id` 
+framing layer.
+
+The important part of the **client** definition looks like this:
+```cpp
+class ClientSession : public Session
+{
+    using Base = Session;
+public:
+    using Base::Base; // Inherit constructors
+
+    // Common interface class for all the messages
+    using Message = tutorial12::Message<>;
+
+    // Protocol options for client
+    using ClientProtocolOptions = 
+        DataViewBareMetalProtocolOptionsT<
+            tutorial12::options::DataViewDefaultOptionsT<
+                tutorial12::options::ClientDefaultOptions
+            >
+        >;        
+        
+    // Definition of all the used message classes
+    using Msg1 = tutorial12::message::Msg1<Message, ClientProtocolOptions>;
+    using Msg2 = tutorial12::message::Msg2<Message, ClientProtocolOptions>;
+    using Msg3 = tutorial12::message::Msg3<Message, ClientProtocolOptions>;
+    
+private:    
+    template <typename TMsg>
+    void sendMessage(const TMsg& msg)
+    {
+        ...
+    }
+
+    // Client specific frame 
+    using Frame = 
+        tutorial12::frame::Frame<
+            Message,
+            tutorial12::input::ClientInputMessages<Message, ClientProtocolOptions>,
+            ClientProtocolOptions
+        >;
+};
+```
+The important thing to realize is that the message object is held by the 
+`Frame::MsgPtr` which is a variant of `std::unique_ptr` with a custom deleter.
+The latter contains a special logic to determine the right type of destructor to 
+call when message object is destructed.
+
 [Read Previous Tutorial](../tutorial11) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial13) 
