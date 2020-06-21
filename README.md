@@ -134,3 +134,4 @@ $> nmake install
 - [tutorial9](../../tree/master/tutorials/tutorial9) - Dealing with multiple uni-directional messages.
 - [tutorial10](../../tree/master/tutorials/tutorial10) - Dealing with small number of uni-directional messages.
 - [tutorial11](../../tree/master/tutorials/tutorial11) - Avoiding virtual functions.
+- [tutorial12](../../tree/master/tutorials/tutorial12) - Avoiding dynamic memory allocation.

@@ -27,7 +27,7 @@ new message type is recognized, the message object is created using
 [placement](https://en.cppreference.com/w/cpp/language/new) allocation and a pointer to the used
 array is returned. The message object returned by the frame 
 ([Frame::MsgPtr](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html))
-is still held by `std::unique_ptr`, but with custom deleter, which will invoke the proper message destructor.
+is still held by `std::unique_ptr`, but with a custom deleter, which will invoke the proper message class destructor.
 
 The problematic storage types that use dynamic memory allocation (`std::string` and `std::vector`) can also be
 replaced using some [options](https://arobenko.github.io/comms_doc/options_8h.html). The 
@@ -123,8 +123,8 @@ instead of `std::vector`.
 
 ----
 
-**SIDE NOTE**: The `Data` layer of the protocol framing receives an option which passed to the 
-payload field which is used **only** when framing fields are cached in some external structure
+**SIDE NOTE**: The `Data` layer of the protocol framing receives an option which is passed to the 
+payload field. The latter is used **only** when framing fields are cached in some external structure
 (see documentation of [comms::protocol::ProtocolLayerBase::readFieldsCached()](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html))
 which is **irrelevant** for this tutorial and should be ignored.
 ```cpp
@@ -157,7 +157,7 @@ operates on the **input** buffer itself.
 This tutorial reused the generated 
 [include/tutorial12/options/BareMetalDefaultOptions.h](include/tutorial12/options/BareMetalDefaultOptions.h)
 to define its own protocol options inside [src/BareMetalProtocolOptions.h](src/BareMetalProtocolOptions.h)
-```
+```cpp
 // Expects to wrap a variant of tutorial12::options::BareMetalDefaultOptionsT
 template <typename TBase = tutorial12::options::BareMetalDefaultOptions>
 struct BareMetalProtocolOptionsT : public TBase
@@ -179,7 +179,7 @@ using BareMetalProtocolOptions = BareMetalProtocolOptionsT<>;
 ```
 The definition above assumes that the template parameter is going to be 
 a variant of [tutorial12::options::BareMetalDefaultOptionsT](include/tutorial12/options/BareMetalDefaultOptions.h)
-and overrides the default storage size of `Msg1Fields.F1`.
+and overrides the default storage size of `Msg1Fields::F1`.
 
 ----
 
@@ -207,12 +207,12 @@ The [server](src/ServerSession.cpp) doesn't have any other special aspects and
 everything operates normally, but without any dynamic memory allocation.
 
 One of the **important** aspects to understand is that for sequence fields like 
-**&lt;string&gt;**, or **&lt;data&gt;** the data is constantly copied from the 
+**&lt;string&gt;**, or **&lt;data&gt;** the input data is constantly copied from the 
 **input** buffer to the internal storage of these fields, whether it is 
 `std::string`, `std::vector`, [comms::util::StaticString](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html),
 or [comms::util::StaticVector](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html).
-If we think about it a bit deeper, then the message object doesn't outlive the 
-input buffer in most of the cases (all the previous tutorials so far). It would
+If we think about it a bit deeper, in most of the cases (all the previous tutorials so far) 
+the message object doesn't outlive the  input buffer . It would
 be beneficial if the storage type of the **&lt;string&gt;** and **&lt;data&gt;**
 fields is some kind of "view" on input buffer. The 
 [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
@@ -224,7 +224,7 @@ if C++17 is been used to compile the source and the compiler actually supports i
 [comms::util::StringView](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StringView.html) is 
 chosen. Similar for the definition of the 
 [comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html) with 
-`std::uint8_t` as its element type (used to defue **&lt;data&gt;** field). If C++20 is used 
+`std::uint8_t` as its element type (used to define **&lt;data&gt;** field). If C++20 is used 
 to compile the source and the compiler supports it the 
 [std::span](https://en.cppreference.com/w/cpp/container/span) is used as the storage type.
 Otherwise the [comms::util::ArrayView](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1ArrayView.html)
@@ -286,7 +286,7 @@ to be passed as a template parameter. The fields of the `Msg3` are a variants of
 **&lt;list&gt;** and cannot use a view on input buffer. In order to prevent the 
 storage type from been `std::vector` the `comms::option::app::FixedSizeStorage` or 
 `comms::option::app::SequenceFixedSizeUseFixedSizeStorage` option needs to be used.
-To prevent dynamic memory allocation when message itself is created the 
+To prevent dynamic memory allocation, when message itself is created, the 
 `comms::option::app::InPlaceAllocation` option needs to be passed to the `Id` 
 framing layer.
 
@@ -334,5 +334,56 @@ The important thing to realize is that the message object is held by the
 `Frame::MsgPtr` which is a variant of `std::unique_ptr` with a custom deleter.
 The latter contains a special logic to determine the right type of destructor to 
 call when message object is destructed.
+
+Another interesting aspect worth mentioning is demonstrated by the 
+`void ClientSession::sendMsg2()` function:
+```cpp
+void ClientSession::sendMsg2()
+{
+    static const std::uint8_t Data1[] = {0xaa, 0xbb, 0xcc, 0xdd};
+    static const std::uint8_t Data2[] = {0x12, 0x34, 0x58, 0x78};
+    Msg2 msg;
+    comms::util::assign(msg.field_f1().value(), std::begin(Data1), std::end(Data1));
+    msg.field_f2().value() = Data2;
+    sendMessage(msg);
+}
+```
+The public interface of [std::string](https://en.cppreference.com/w/cpp/string/basic_string) and 
+[std::string_view](https://en.cppreference.com/w/cpp/string/basic_string_view) differ. The 
+latter doesn't have `assign()` member function for example. The similar situation
+can be observed with [std::vector](https://en.cppreference.com/w/cpp/container/vector) and 
+[std::span](https://en.cppreference.com/w/cpp/container/span). It is difficult to write 
+assignment code which is underlying storage type agnostic. Once the underlying storage type 
+is assumed to be something and its known API function is used, it becomes a boilerplate code
+which may fail the compilation and/or work incorrectly when the assumption is broken. The 
+[COMMS Library](https://github.com/arobenko/comms_champion#comms-library) introduces
+`comms::util::assign()` stand alone function (requires include of 
+[comms/util/assign.h](https://arobenko.github.io/comms_doc/assign_8h.html)). It is a helper
+function which allows writing storage type agnostic code to assign a range of values. It 
+can be used when the two iterators (begin and end) are known and works well for any 
+type, whether it is `std::string`, `std::string_view`, `comms::util::StaticString`, 
+`comms::util::StringView`, `std::vector`, `std::span`, `comms::util::StaticVector`, or
+`comms::util::ArrayView`.
+
+## Summary
+- The default behavior of the framing is to dynamically allocate message object. 
+- It can be changed by passing `comms::option::app::InPlaceAllocation` option to the `ID` framing layer
+  (implemented by the [comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)).
+- The default storage of the fields like **&lt;string&gt;**, **&lt;data&gt;** and **&lt;list&gt;** can
+  be changed by passing certain options.
+- Passing [comms::option::app::FixedSizeStorage](https://arobenko.github.io/comms_doc/options_8h.html) option
+  will result in usage of [comms::util::StaticString](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html)
+  instead `std::string` and [comms::util::StaticVector](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html)
+  instead of `std::vector`.
+- Passing [comms::option::app::OrigDataView](https://arobenko.github.io/comms_doc/options_8h.html) option will 
+  result in usage of `std::string_view` or [comms::util::StringView](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StringView.html)
+  instead of `std::string` and `std::span` or [comms::util::ArrayView](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1ArrayView.html)
+  instead of `std::vector`.
+- The generated code provides [include/&lt;namespace&gt;/options/BareMetalDefaultOptions.h](include/tutorial12/options/BareMetalDefaultOptions.h)
+  definition to help with avoiding dynamic memory allocation.
+- The generated code provides [include/&lt;namespace&gt;/options/DataViewDefaultOptions.h](include/tutorial12/options/DataViewDefaultOptions.h)
+  definition to help with avoiding unnecessary data copying from input buffer to message fields' storage.
+- There is [comms::util::assign()](https://arobenko.github.io/comms_doc/assign_8h.html) stand-alone function which helps
+  writing storage type agnostic assignment code with a range of iterators.
 
 [Read Previous Tutorial](../tutorial11) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial13) 

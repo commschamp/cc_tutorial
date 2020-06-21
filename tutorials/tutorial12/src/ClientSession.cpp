@@ -9,6 +9,7 @@
 #include "comms/iterator.h"
 #include "comms/cast.h"
 #include "comms/units.h"
+#include "comms/util/assign.h"
 
 namespace cc_tutorial
 {
@@ -170,7 +171,7 @@ void ClientSession::sendMsg2()
     static const std::uint8_t Data1[] = {0xaa, 0xbb, 0xcc, 0xdd};
     static const std::uint8_t Data2[] = {0x12, 0x34, 0x58, 0x78};
     Msg2 msg;
-    msg.field_f1().value() = Data1;
+    comms::util::assign(msg.field_f1().value(), std::begin(Data1), std::end(Data1));
     msg.field_f2().value() = Data2;
     sendMessage(msg);
 }
