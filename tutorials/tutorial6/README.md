@@ -222,6 +222,51 @@ The run-time performance complexity of such code is **O(log(n))**. The benefit o
 dispatch logic is that there are no virtual functions and v-tables involved. It might
 be much better approach for bare-metal systems with small ROM size.
 
+----
+
+So far we've seen the dispatch fully supported by the 
+[COMMS Library](https://github.com/arobenko/comms_champion#comms-library) itself which
+does not have any preliminary information on the message types it needs to support. As 
+the result it uses various C++ meta-programming techniques to analyze the provided 
+`std::tuple` of supported message types at **compile-time** as well as generate proper
+code. However, the C++ language itself has certain limitations and the generated
+code may be not as efficient as it could be. The [commsdsl2comms](https://github.com/arobenko/commsdsl)
+code generator on the other hand knows about all the available messages and may use
+other means (like a simple `switch` statement) to map message ID to appropriate 
+type. That's what the generated code inside [include/&lt;namespace&gt;/dispatch](include/tutorial6/dispatch)
+does.
+- [include/tutorial6/dispatch/DispatchMessage.h](include/tutorial6/dispatch/DispatchMessage.h) - contains
+  relevant `switch` statement based dispatch logic for **all** the defined messages.
+- [include/tutorial6/dispatch/ClientDispatchMessage.h](include/tutorial6/dispatch/ClientDispatchMessage.h) - contains
+  relevant `switch` statement based dispatch logic for the **client** relevant messages (support for uni-directional
+  messages and split into **client**/**server** ones is explained in one of the later tutorials).
+- [include/tutorial6/dispatch/ServerDispatchMessage.h](include/tutorial6/dispatch/ServerDispatchMessage.h) - contains
+  relevant `switch` statement based dispatch logic for the **client** relevant messages (support for uni-directional
+  messages and split into **client**/**server** ones is explained in one of the later tutorials).
+  
+The [provided file(s)](include/tutorial6/dispatch/DispatchMessage.h) contain definition of the 
+`MsgDispatcher` class which can be used when the `switch` statement dispatch is desired to be used.
+Note, that modern compilers generate quite efficient static dispatch tables for most of the `switch` 
+statements. Such dispatch could have been implemented like this:
+```cpp
+std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
+{
+    ...
+    
+    // Force switch statements based dispatch
+    using Dispatcher =
+        tutorial6::dispatch::MsgDispatcherDefaultOptions;
+
+    // Process reported input, create relevant message objects and
+    // dispatch all the created messages
+    // to this object for handling (appropriate handle() member function will be called)
+    auto result = comms::processAllWithDispatchViaDispatcher<Dispatcher>(buf, bufLen, m_frame, *this);
+    ...
+}
+```
+
+
+
 ## Summary
 
 - The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) supports
@@ -239,5 +284,7 @@ be much better approach for bare-metal systems with small ROM size.
 - The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) documentation contains
   a separate [detailed tutorial page](https://arobenko.github.io/comms_doc/page_dispatch.html) 
   on various supported ways of message dispatch.
+- The generated code contains `switch` statement based dispatch logic inside the 
+  [include/&lt;namespace&gt;/dispatch](include/tutorial6/dispatch) folder.
   
 [Read Previous Tutorial](../tutorial5) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial7) 
