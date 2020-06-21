@@ -30,7 +30,7 @@ array is returned. The message object returned by the frame
 is still held by `std::unique_ptr`, but with custom deleter, which will invoke the proper message destructor.
 
 The problematic storage types that use dynamic memory allocation (`std::string` and `std::vector`) can also be
-replaces using some [options](https://arobenko.github.io/comms_doc/options_8h.html). The 
+replaced using some [options](https://arobenko.github.io/comms_doc/options_8h.html). The 
 [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) provides
 [comms::util::StaticString](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html) and
 [comms::util::StaticVector](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html)
@@ -43,7 +43,7 @@ needs to be passed to the field definition.
 
 The [generated](include) code contains 
 [include/tutorial12/options/BareMetalDefaultOptions.h](include/tutorial12/options/BareMetalDefaultOptions.h)
-options configuration. It completely disabled dynamic memory allocation in all possible places.
+options configuration. It completely disables dynamic memory allocation in all possible places.
 Let's take a look inside:
 ```cpp
 #ifndef DEFAULT_SEQ_FIXED_STORAGE_SIZE
@@ -121,6 +121,39 @@ The used options will force usage of
 instead of `std::string` and [comms::util::StaticVector](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html)
 instead of `std::vector`.
 
+----
+
+**SIDE NOTE**: The `Data` layer of the protocol framing receives an option which passed to the 
+payload field which is used **only** when framing fields are cached in some external structure
+(see documentation of [comms::protocol::ProtocolLayerBase::readFieldsCached()](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html))
+which is **irrelevant** for this tutorial and should be ignored.
+```cpp
+template <typename TBase = tutorial12::options::DefaultOptions>
+struct BareMetalDefaultOptionsT : public TBase
+{
+    ...
+    
+    struct frame : public TBase::frame
+    {
+        struct FrameLayers : public TBase::frame::FrameLayers
+        {
+            using Data = std::tuple<
+                comms::option::app::FixedSizeStorage<DEFAULT_SEQ_FIXED_STORAGE_SIZE * 8>,
+                typename TBase::frame::FrameLayers::Data
+            >;
+            
+            ...
+            
+        }; // struct FrameLayers
+        
+    }; // struct frame
+};
+```
+In normal operation the payload is not copied anywhere and message's `read()` function
+operates on the **input** buffer itself.
+
+----
+
 This tutorial reused the generated 
 [include/tutorial12/options/BareMetalDefaultOptions.h](include/tutorial12/options/BareMetalDefaultOptions.h)
 to define its own protocol options inside [src/BareMetalProtocolOptions.h](src/BareMetalProtocolOptions.h)
@@ -145,12 +178,12 @@ struct BareMetalProtocolOptionsT : public TBase
 using BareMetalProtocolOptions = BareMetalProtocolOptionsT<>;
 ```
 The definition above assumes that the template parameter is going to be 
-a variant of [tutorial12::options::BareMetalDefaultOptions](include/tutorial12/options/BareMetalDefaultOptions.h)
+a variant of [tutorial12::options::BareMetalDefaultOptionsT](include/tutorial12/options/BareMetalDefaultOptions.h)
 and overrides the default storage size of `Msg1Fields.F1`.
 
 ----
 
-The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) was implemented in
+**SIDE NOTE**: The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) was implemented in
 a way that processes the options bottom-up. As the result, the options that appear above may 
 override the configuration enforced by the options listed below.
 
