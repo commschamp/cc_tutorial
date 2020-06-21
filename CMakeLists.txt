@@ -52,6 +52,10 @@ if ((CMAKE_COMPILER_IS_GNUCC) OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
     
 elseif (MSVC)
 
+    if (${CMAKE_CXX_STANDARD} EQUAL 17)
+        add_definitions(_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
+    endif ()
+
     if (WARN_AS_ERR)
         add_definitions("/WX")
     endif ()
