@@ -330,6 +330,8 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
   [comms::MsgFactory](https://arobenko.github.io/comms_doc/classcomms_1_1MsgFactory.html) the 
   `comms::option::app::ForceDispatchStaticBinSearch` option needs to be passed to the 
   `Id` layer definition of the framing.
+- The generated dispatch functions and classes inside [include/&lt;namespace&gt;/dispatch](include/tutorial11/dispatch)
+  folder can also be used for dispatch functionality when virtual functions are been avoided.
   
 
 [Read Previous Tutorial](../tutorial10) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial12) 
