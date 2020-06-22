@@ -10,6 +10,8 @@
 #include "comms/cast.h"
 #include "comms/units.h"
 
+#include "tutorial11/dispatch/DispatchClientInputMessage.h"
+
 namespace cc_tutorial
 {
 
@@ -31,9 +33,9 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
     std::copy_n(buf, bufLen, std::ostream_iterator<unsigned>(std::cout, " "));
     std::cout << std::dec << std::endl;
 
-    // Force static binary search dispatch
+    // Force switch statement based dispatch
     using Dispatcher =
-        comms::MsgDispatcher<comms::option::app::ForceDispatchStaticBinSearch>;
+        tutorial11::dispatch::ClientInputMsgDispatcher<ClientProtocolOptions>;    
 
     // Process reported input, create relevant message objects and
     // dispatch all the created messages

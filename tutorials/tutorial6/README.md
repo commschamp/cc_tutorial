@@ -237,11 +237,11 @@ type. That's what the generated code inside [include/&lt;namespace&gt;/dispatch]
 does.
 - [include/tutorial6/dispatch/DispatchMessage.h](include/tutorial6/dispatch/DispatchMessage.h) - contains
   relevant `switch` statement based dispatch logic for **all** the defined messages.
-- [include/tutorial6/dispatch/ClientDispatchMessage.h](include/tutorial6/dispatch/ClientDispatchMessage.h) - contains
+- [include/tutorial6/dispatch/DispatchClientInputMessage.h](include/tutorial6/dispatch/DispatchClientInputMessage.h) - contains
   relevant `switch` statement based dispatch logic for the **client** relevant messages (support for uni-directional
   messages and split into **client**/**server** ones is explained in one of the later tutorials).
-- [include/tutorial6/dispatch/ServerDispatchMessage.h](include/tutorial6/dispatch/ServerDispatchMessage.h) - contains
-  relevant `switch` statement based dispatch logic for the **client** relevant messages (support for uni-directional
+- [include/tutorial6/dispatch/DispatchServerInputMessage.h](include/tutorial6/dispatch/DispatchServerInputMessage.h) - contains
+  relevant `switch` statement based dispatch logic for the **server** relevant messages (support for uni-directional
   messages and split into **client**/**server** ones is explained in one of the later tutorials).
   
 The [provided file(s)](include/tutorial6/dispatch/DispatchMessage.h) contain definition of the 

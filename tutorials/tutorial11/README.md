@@ -24,15 +24,16 @@ It was explained in one of the previous tutorials that
 [message dispatch](https://arobenko.github.io/comms_doc/page_dispatch.html) logic can 
 also generate polymorphic dispatch table with virtual functions. If the main goal is to
 avoid virtual functions altogether, not just for messages, then the dispatch when processing
-incoming message needs to be forced to be "static-binary-search" one.
+incoming message needs to be forced to be "static-binary-search" one or the 
+`switch` statement based provided by the generated code.
 ```cpp
 std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
 {
     ...
 
-    // Force static binary search dispatch
+    // Force switch statement based dispatch
     using Dispatcher =
-        comms::MsgDispatcher<comms::option::app::ForceDispatchStaticBinSearch>;    
+        tutorial11::dispatch::ServerInputMsgDispatcher<ServerProtocolOptions>;    
 
     // Process reported input, create relevant message objects and
     // dispatch all the created messages
@@ -290,6 +291,23 @@ private:
         >;
 
 };
+```
+The dispatch of the **client** input messages was also chosen to be the
+`switch` statement based.
+```cpp
+std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
+{
+    ...
+
+    // Force switch statement based dispatch
+    using Dispatcher =
+        tutorial11::dispatch::ClientInputMsgDispatcher<ClientProtocolOptions>;    
+
+    // Process reported input, create relevant message objects and
+    // dispatch all the created messages
+    // to this object for handling (appropriate handle() member function will be called)
+    return comms::processAllWithDispatchViaDispatcher<Dispatcher>(buf, bufLen, m_frame, *this);
+}
 ```
 
 ## Summary 

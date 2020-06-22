@@ -5,6 +5,7 @@
 
 #include "comms/process.h"
 #include "comms/iterator.h"
+#include "tutorial11/dispatch/DispatchServerInputMessage.h"
 
 namespace cc_tutorial
 {
@@ -21,9 +22,9 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
     std::copy_n(buf, bufLen, std::ostream_iterator<unsigned>(std::cout, " "));
     std::cout << std::dec << std::endl;
 
-    // Force static binary search dispatch
+    // Force switch statement based dispatch
     using Dispatcher =
-        comms::MsgDispatcher<comms::option::app::ForceDispatchStaticBinSearch>;    
+        tutorial11::dispatch::ServerInputMsgDispatcher<ServerProtocolOptions>;    
 
     // Process reported input, create relevant message objects and
     // dispatch all the created messages
