@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="tutorial13" endian="big" nonUniqueMsgIdAllowed="true">
+    <fields>
+        <string name="Msg1Name" defaultValue="Message 1" />
+        <string name="Msg2Name" defaultValue="Message 2" />
+            
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M1" val="1" displayName="^Msg1Name" />
+            <validValue name="M2" val="2" displayName="^Msg2Name" />
+        </enum>
+
+    </fields>
+        
+    <frame name="Frame">
+        <size name="Size">
+            <int name="SizeField" type="uint16" />
+        </size>
+        <id name="Id" field="MsgId" />
+        <payload name="Data" />
+    </frame>
+    
+    <message name="Msg1_1" id="MsgId.M1" order="0" displayName="Message 1 (1)">
+        <int name="F1" type="uint64" />
+    </message>
+    
+    <message name="Msg1_2" id="MsgId.M1" order="1" displayName="Message 1 (2)">
+        <int name="F1" type="uint32" />
+    </message>    
+    
+    <message name="Msg1_3" id="MsgId.M1" order="2" displayName="Message 1 (3)">
+        <int name="F1" type="uint16" />
+    </message>    
+    
+    <message name="Msg2_1" id="MsgId.M2" order="0" displayName="Message 2 (1)">
+        <int name="Type" type="uint8" defaultValue="1" validValue="1" failOnInvalid="true" />
+        <int name="F1" type="uint16" />
+    </message>    
+
+    <message name="Msg2_2" id="MsgId.M2" order="10" displayName="Message 2 (2)">
+        <int name="Type" type="uint8" defaultValue="2" validValue="2" failOnInvalid="true" />
+        <int name="F1" type="uint32" />        
+    </message>    
+
+    <message name="Msg2_3" id="MsgId.M2" order="20" displayName="Message 2 (3)">
+        <int name="Type" type="uint8" defaultValue="3" validValue="3" failOnInvalid="true" />
+        <int name="F1" type="uint64" />          
+    </message>    
+    
+</schema>
