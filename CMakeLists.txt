@@ -13,11 +13,11 @@ option (FORCE_EXTRA_BOOST_LIBS "Force linking to extra boost libraries" OFF)
 # CC_TAG - Tag / branch of comms_champion project (if built internally)
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
-    set (COMMSDSL_TAG "v3.4.1")
+    set (COMMSDSL_TAG "v3.4.2")
 endif ()
 
 if ("${CC_TAG}" STREQUAL "")
-    set (CC_TAG "develop")
+    set (CC_TAG "v2.4.1")
 endif ()
 
 if (NOT CMAKE_CXX_STANDARD)
@@ -210,9 +210,14 @@ function (dsl_parse type name)
     set (output_dir "${CMAKE_CURRENT_BINARY_DIR}/${name}/output")
     string(REPLACE ";" "\n" schema_files "${DSL_PARSE_SCHEMAS}")
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${name}/schema_files.txt "${schema_files}")
+    
+    add_custom_target(${name}_prot_rm 
+        COMMAND ${CMAKE_COMMAND} -E remove_directory ${output_dir}
+    )
+
     add_custom_command(
         OUTPUT ${output_dir}
-        DEPENDS ${DSL_PARSE_SCHEMAS} ${src_files} ${commsdsl_tgt_dep}
+        DEPENDS ${DSL_PARSE_SCHEMAS} ${src_files} ${commsdsl_tgt_dep} ${name}_prot_rm 
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${output_dir}
         COMMAND ${COMMSDSL2COMMS} --warn-as-err ${code_input_param} "--cc-tag=${CC_TAG}" 
             -o ${output_dir} -i ${CMAKE_CURRENT_BINARY_DIR}/${name}/schema_files.txt
@@ -222,7 +227,7 @@ function (dsl_parse type name)
         COMMAND ${CMAKE_COMMAND}
             -DGENERATED="${output_dir}/include" -DOUTPUT="${PROJECT_SOURCE_DIR}/${type}/${name}/include"
             -P "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake"
-        DEPENDS ${output_dir} "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake" ${DSL_PARSE_SCHEMAS} ${src_files}
+        DEPENDS ${name}_prot_rm ${output_dir} "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake" ${DSL_PARSE_SCHEMAS} ${src_files} ${commsdsl_tgt_dep} 
     )
     
 endfunction ()
