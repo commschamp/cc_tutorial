@@ -135,3 +135,4 @@ $> nmake install
 - [tutorial10](../../tree/master/tutorials/tutorial10) - Dealing with small number of uni-directional messages.
 - [tutorial11](../../tree/master/tutorials/tutorial11) - Avoiding virtual functions.
 - [tutorial12](../../tree/master/tutorials/tutorial12) - Avoiding dynamic memory allocation.
+- [tutorial13](../../tree/master/tutorials/tutorial13) - Supporting multiple message forms with the same numeric ID.

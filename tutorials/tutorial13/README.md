@@ -1,10 +1,10 @@
 # Tutorial 13
-Supporting multiple message variants with the same numeric ID.
+Supporting multiple message forms with the same numeric ID.
 
 Many protocols define multiple forms of the same message. The actual message 
 type depends either on total message payload size or on the value of some particular
 member field. In many cases it is convenient to implement such multiple forms as 
-independent message types. The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
+independent message types / objects. The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
 allows such definition when **nonUniqueMsgIdAllowed** property of the [schema](dsl/schema.xml) 
 is set to **true**.
 ```xml
@@ -29,15 +29,15 @@ The choice for the default behavior of not to allow repetition of the same messa
 a protection against copy-paste errors.
 
 The example above differentiates between the messages based on the payload length, i.e. 
-if there are at least 8 bytes in the input buffer left, then `Msg1_1` needs to be chosen,
-if not, then the check whether there are at least 4 bytes in the input buffer left needs 
+if there are at least 8 bytes left in the input buffer, then `Msg1_1` needs to be chosen,
+if not, then the check whether there are at least 4 bytes left in the input buffer needs 
 to be performed and `Msg1_2` created in case it is. Otherwise `Msg1_3` needs to be created.
 
 Note the existence of the **order** property assigned to every message. It specifies the 
 order in which the message payload reads need to be attempted. The values must be unique 
 for the message definitions sharing the same ID, but doesn't necessarily need to be sequential.
 The lower **order** number will insure that the relevant message definition will precede the other 
-message definition with higher number in the input tuple (like [input::AllMessages](include/tutorial13/input/AllMessages.))
+message definition with higher number in the input tuple (like [input::AllMessages](include/tutorial13/input/AllMessages.h))
 ```cpp
 template <typename TBase, typename TOpt = tutorial13::options::DefaultOptions>
 using AllMessages =
@@ -138,7 +138,7 @@ auto dispatchMessage(
 ```
 Note the usage of `idx` parameter in addition to `id`. The `idx` specifies index (offset) of the 
 detected message type in the **input** tuple (see [include/tutorial13/input/AllMessages.h](include/tutorial13/input/AllMessages.h))
-starting from the first message of having the same numeric ID. In other word the indices are:
+starting from the first message having the same numeric ID. In other word the indices are:
 
 - `Msg1_1`: **0** (offset since definition of `Msg1_1`)
 - `Msg1_2`: **1** (offset since definition of `Msg1_1`)
@@ -165,5 +165,7 @@ information is a bit out of scope for this tutorial and will be covered in other
   to **true**.
 - The multiple forms of the same message require usage of **order** property to specify order in which the 
   read operation for them will be attempted.
+- Some dispatch functionalities may require knowledge about index/offset of the detected message within a 
+  sequence of the input messages with the same numeric ID.
 
 [Read Previous Tutorial](../tutorial12) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial14) 
