@@ -42,8 +42,6 @@ public:
     using Msg2_2 = tutorial13::message::Msg2_2<Message, ClientProtocolOptions>;
     using Msg2_3 = tutorial13::message::Msg2_3<Message, ClientProtocolOptions>;
     
-    static_assert(std::is_base_of<Message, Msg1_2>::value, "Invalid base");
-
     // Handling functions for all the dispatched message objects
     void handle(Msg1_1& msg);
     void handle(Msg1_2& msg);
