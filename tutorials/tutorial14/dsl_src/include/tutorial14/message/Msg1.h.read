@@ -1,0 +1,23 @@
+/// @brief Custom read functionality
+template <typename TIter>
+comms::ErrorStatus doRead(TIter& iter, std::size_t len)
+{
+    field_f1().setExists();
+    field_f2().setMissing();
+    field_f3().setMissing();
+    
+    auto es = Base::doRead(iter, len);
+    if (es != comms::ErrorStatus::Success) {
+        return es;
+    }
+
+    if (field_flags().getBitValue_F2F3()) {
+        field_f2().field().value() = static_cast<typename Field_f2::Field::ValueType>((field_f1().field().value() >> 16U) & 0xffffU);
+        field_f3().field().value() = static_cast<typename Field_f3::Field::ValueType>(field_f1().field().value() & 0xffffU);
+        field_f1().setMissing();
+        field_f2().setExists();
+        field_f3().setExists();
+    }
+    
+    return es;
+}

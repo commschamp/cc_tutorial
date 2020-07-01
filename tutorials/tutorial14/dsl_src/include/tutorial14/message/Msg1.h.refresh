@@ -1,0 +1,28 @@
+/// @brief Custom refresh functionality
+bool doRefresh()
+{
+    auto f1Mode = comms::field::OptionalMode::Exists;
+    auto f2f3Mode = comms::field::OptionalMode::Missing;
+    
+    if (field_flags().getBitValue_F2F3()) {
+        std::swap(f1Mode, f2f3Mode);
+    }
+
+    bool updated = false;
+    if (field_f1().getMode() != f1Mode) {
+        field_f1().setMode(f1Mode);
+        updated = true;
+    }
+    
+    if (field_f2().getMode() != f2f3Mode) {
+        field_f2().setMode(f2f3Mode);
+        updated = true;
+    }
+
+    if (field_f3().getMode() != f2f3Mode) {
+        field_f3().setMode(f2f3Mode);
+        updated = true;
+    }
+
+    return updated;
+}

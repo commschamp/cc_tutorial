@@ -1,0 +1,7 @@
+/// @brief Custom write 
+template <typename TIter>
+comms::ErrorStatus doWrite(TIter& iter, std::size_t len) const
+{
+    std::cout << "Call of custom " << __FUNCTION__ << std::endl;
+    return Base::doWrite(iter, len);
+}

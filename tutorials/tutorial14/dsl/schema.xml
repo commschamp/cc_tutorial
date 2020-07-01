@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="tutorial14" endian="big">
+    <fields>
+        <string name="Msg1Name" defaultValue="Message 1" />
+        <string name="Msg2Name" defaultValue="Message 2" />
+            
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M1" val="1" displayName="^Msg1Name" />
+            <validValue name="M2" val="2" displayName="^Msg2Name" />
+        </enum>
+
+    </fields>
+        
+    <frame name="Frame">
+        <sync name="Sync">
+            <int name="SyncField" type="uint16" defaultValue="0xabcd" />
+        </sync>
+        <size name="Size">
+            <int name="SizeField" type="uint16" />
+        </size>
+        <id name="Id" field="MsgId" />
+        <payload name="Data" />
+        <checksum name="Checksum" alg="custom" algName="PlusOneSum" from="Size" >
+            <int name="ChecksumField" type="uint16" />
+        </checksum>        
+    </frame>
+    
+    <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
+        <optional name="F1" defaultMode="exists" >
+            <int name="F1" type="uint32" />
+        </optional>
+
+        <optional name="F2" defaultMode="missing">
+            <int name="F2" type="uint16" />
+        </optional>
+
+        <optional name="F3" defaultMode="missing">
+            <int name="F3" type="uint16" />
+        </optional>
+        
+        <set name="Flags" length="1">
+            <bit name="F2F3" idx="0" />
+        </set>
+    </message>
+    
+    <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
+        <int name="F1" type="uint16" />
+    </message>    
+    
+</schema>

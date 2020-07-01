@@ -1,0 +1,6 @@
+/// @brief Custom length calculation
+std::size_t doLength() const
+{
+    std::cout << "Call of custom " << __FUNCTION__ << std::endl;
+    return Base::doLength();
+}

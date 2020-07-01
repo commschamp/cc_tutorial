@@ -1,0 +1,6 @@
+/// @brief Custom validity check
+bool doValid() const
+{
+    std::cout << "Call of custom " << __FUNCTION__ << std::endl;
+    return Base::doValid();
+}

@@ -1,0 +1,6 @@
+/// @brief Custom refresh
+bool doRefresh()
+{
+    std::cout << "Call of custom " << __FUNCTION__ << std::endl;
+    return Base::doRefresh();
+}

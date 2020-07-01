@@ -1,0 +1,5 @@
+/// @brief Custom name retrieval
+static const char* doName()
+{
+    return "Custom Message2";
+}

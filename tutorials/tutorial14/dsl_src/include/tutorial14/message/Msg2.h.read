@@ -1,0 +1,7 @@
+/// @brief Custom read 
+template <typename TIter>
+comms::ErrorStatus doRead(TIter& iter, std::size_t len)
+{
+    std::cout << "Call of custom " << __FUNCTION__ << std::endl;
+    return Base::doRead(iter, len);
+}
