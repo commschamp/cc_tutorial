@@ -16,7 +16,7 @@
             <int name="SyncField" type="uint16" defaultValue="0xabcd" />
         </sync>
         <size name="Size">
-            <int name="SizeField" type="uint16" />
+            <int name="SizeField" type="uint16" serOffset="2" />
         </size>
         <id name="Id" field="MsgId" />
         <payload name="Data" />
@@ -31,11 +31,11 @@
         </optional>
 
         <optional name="F2" defaultMode="missing">
-            <int name="F2" type="uint16" />
+            <int name="F2" type="uint16" endian="little" />
         </optional>
 
         <optional name="F3" defaultMode="missing">
-            <int name="F3" type="uint16" />
+            <int name="F3" type="uint16" endian="little" />
         </optional>
         
         <set name="Flags" length="1">

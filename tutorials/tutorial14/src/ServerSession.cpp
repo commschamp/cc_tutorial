@@ -34,6 +34,10 @@ void ServerSession::handle(Message& msg)
 
     // Send (re)serialized message back
     sendOutput(&output[0], output.size());
+
+    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << ": " << std::hex;
+    std::copy(output.begin(), output.end(), std::ostream_iterator<unsigned>(std::cout, " "));
+    std::cout << std::dec << std::endl;    
 }
 
 std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)

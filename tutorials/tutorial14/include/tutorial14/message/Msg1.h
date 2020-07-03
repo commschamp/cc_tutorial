@@ -73,7 +73,7 @@ struct Msg1Fields
         /// @brief Definition of <b>"F2"</b> field.
         struct F2 : public
             comms::field::IntValue<
-                tutorial14::field::FieldBase<>,
+                tutorial14::field::FieldBase<comms::option::def::LittleEndian>,
                 std::uint16_t
             >
         {
@@ -109,7 +109,7 @@ struct Msg1Fields
         /// @brief Definition of <b>"F3"</b> field.
         struct F3 : public
             comms::field::IntValue<
-                tutorial14::field::FieldBase<>,
+                tutorial14::field::FieldBase<comms::option::def::LittleEndian>,
                 std::uint16_t
             >
         {

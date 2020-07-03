@@ -136,3 +136,4 @@ $> nmake install
 - [tutorial11](../../tree/master/tutorials/tutorial11) - Avoiding virtual functions.
 - [tutorial12](../../tree/master/tutorials/tutorial12) - Avoiding dynamic memory allocation.
 - [tutorial13](../../tree/master/tutorials/tutorial13) - Supporting multiple message forms with the same numeric ID.
+- [tutorial14](../../tree/master/tutorials/tutorial14) - Custom checksum and other custom code injections.

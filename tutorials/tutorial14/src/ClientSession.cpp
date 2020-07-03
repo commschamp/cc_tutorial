@@ -206,8 +206,8 @@ void ClientSession::doNextStage()
 void ClientSession::sendMsg1()
 {
     Msg1 msg;
-    msg.field_f2().field().value() = 0xdead;
-    msg.field_f3().field().value() = 0xbeef;
+    msg.field_f2().field().value() = 0x5678;
+    msg.field_f3().field().value() = 0x1234;
     msg.field_flags().setBitValue_F2F3(true);
     msg.doRefresh(); // Bring message to consistent state;
 

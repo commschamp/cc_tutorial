@@ -57,7 +57,8 @@ struct FrameLayers
         struct SizeField : public
             comms::field::IntValue<
                 tutorial14::field::FieldBase<>,
-                std::uint16_t
+                std::uint16_t,
+                comms::option::def::NumValueSerOffset<2>
             >
         {
             /// @brief Name of the field.
