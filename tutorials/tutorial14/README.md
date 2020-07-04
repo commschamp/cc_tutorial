@@ -108,7 +108,7 @@ default generated code for this example won't do the required functionality. The
 **read** and **refresh** functionalities for this message. They are implemented inside 
 [dsl_src/include/tutorial14/message/Msg1.h.read](dsl_src/include/tutorial14/message/Msg1.h.read) and 
 [dsl_src/include/tutorial14/message/Msg1.h.refresh](dsl_src/include/tutorial14/message/Msg1.h.refresh)
-functionalities. The injected code finds its way into the official protocol generated code in
+files. The injected code finds its way into the official protocol generated code in
 [include/tutorial14/message/Msg1.h](include/tutorial14/message/Msg1.h)
 
 Please note that injection of the code snippets is performed by putting them in the file with special suffix / extension
@@ -209,11 +209,11 @@ area and use **&lt;ref&gt;** field inside the **&lt;message&gt;** to reference t
 ## Summary
 - The [CommsChampion Ecosystem](https://arobenko.github.io/cc) allows injection of custom code into
   the generated one.
-- The custom checksum calculation is chosen with **alg="custom** property in conjunction with 
+- The custom checksum calculation is chosen with **alg="custom"** property in conjunction with 
   **algName** which specifies class name of the custom checksum calculation class.
 - The frame definition will attempt to include the missing file which is supposed to define 
   checksum calculation class.
-- The checksum class definition file needs to be implemented separately and residing in the required relative pass to 
+- The checksum class definition file needs to be implemented separately and residing in the required relative path to 
   the custom source directory passed to the code generator.
 - The checksum definition class must also reside inside the correct namespace used by the frame definition.
 - The code snippets for overriding **message** / **field** operation(s) need to reside in the correct relative 
