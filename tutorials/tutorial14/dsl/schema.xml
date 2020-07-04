@@ -31,11 +31,11 @@
         </optional>
 
         <optional name="F2" defaultMode="missing">
-            <int name="F2" type="uint16" endian="little" />
+            <int name="F2" type="uint16" />
         </optional>
 
         <optional name="F3" defaultMode="missing">
-            <int name="F3" type="uint16" endian="little" />
+            <int name="F3" type="uint16" />
         </optional>
         
         <set name="Flags" length="1">
