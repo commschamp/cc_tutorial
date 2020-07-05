@@ -27,7 +27,9 @@ void ServerSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
     std::cout << "Received unexpected message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << 
-        ", ignroring..." << std::endl;
+        ", ignoring..." << std::endl;
+
+    assert(!"Should not happen");
 }
 
 std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
