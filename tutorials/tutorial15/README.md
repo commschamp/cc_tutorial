@@ -2,11 +2,11 @@
 Avoiding unnecessary decoding of messages.
 
 In all the previous tutorials both **client** and **server** decoded all the **input** messages
-even if such messages were discarded as irrelevant. The decoding process involved reading of
+even if such messages were discarded as irrelevant. The decoding process involves reading of
 the message payload. Now imagine the situation where the application being developed is 
 some kind of filter / proxy which is required to monitor / change / drop only limited set 
 of messages and let all the rest (majority) of the messages through. It is not uncommon for 
-such application to change the framing when the message is forwarded on different I/O link
+such application to change the framing as well when the message is forwarded on different I/O link.
 In such case the decoding of all the irrelevant messages seems like a waste of CPU cycles and
 maybe even memory.
 
@@ -46,7 +46,7 @@ or [std::span](https://en.cppreference.com/w/cpp/container/span) depending on th
 Note that the `comms::option::app::OrigDataView` option cannot be used if the input buffer is not sequential, i.e.
 some kind of circular buffer.
 
-The **input** messages to recognize contains only single `Msg1`:
+The **input** messages to recognize tuple contains only single `Msg1`:
 ```cpp
 // Definition of relevant messages
 using Msg1 = tutorial15::message::Msg1<Message, ServerProtocolOptions>;
@@ -58,7 +58,7 @@ using InputMessages =
     >;
 ```
 If the configuration is left like this, then all other messages won't even be recognized and will be dropped by the 
-framing management. In order to force creation of `GenericMessage` for all other messages the `Id` framing layer
+framing management. In order to force creation of `GenericMessage` for all other unknown messages, the `Id` framing layer
 needs to receive [comms::option::app::SupportGenericMessage](https://arobenko.github.io/comms_doc/options_8h.html)
 option.
 
@@ -69,7 +69,7 @@ option.
 class that is responsible to create message objects. It is used by the 
 [comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html). 
 All the options passed to the later are forwarded to the former. As the result if 
-the tuple of **input** messages doesn't contain any class with specified message ID, then `GenericMessage` is 
+the tuple of **input** messages doesn't contain any class with specified message ID, then the specified `GenericMessage` is 
 created and returned instead.
 
 ----
