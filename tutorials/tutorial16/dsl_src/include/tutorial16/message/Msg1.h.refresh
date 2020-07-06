@@ -1,0 +1,18 @@
+ 
+// @brief Custom refresh functionality
+bool doRefresh()
+{
+    bool updated = Base::doRefresh();
+
+    auto expF3Mode = comms::field::OptionalMode::Missing;
+    if (Base::transportField_flags().getBitValue_B0()) {
+        expF3Mode = comms::field::OptionalMode::Exists;
+    }
+
+    if (field_f3().getMode() == expF3Mode) {
+        return updated;
+    }
+
+    field_f3().setMode(expF3Mode);
+    return true;
+}

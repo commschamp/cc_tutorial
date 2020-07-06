@@ -15,7 +15,7 @@
         
     <frame name="Frame">
         <size name="Size">
-            <int name="SizeField" type="uint16" serOffset="2" />
+            <int name="SizeField" type="uint16" />
         </size>
         <id name="Id" field="MsgId" />
         <payload name="Data" />

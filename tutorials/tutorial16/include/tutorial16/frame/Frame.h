@@ -11,13 +11,15 @@
 #include "comms/protocol/MsgDataLayer.h"
 #include "comms/protocol/MsgIdLayer.h"
 #include "comms/protocol/MsgSizeLayer.h"
-#include "tutorial15/field/FieldBase.h"
-#include "tutorial15/field/MsgId.h"
-#include "tutorial15/frame/FrameCommon.h"
-#include "tutorial15/input/AllMessages.h"
-#include "tutorial15/options/DefaultOptions.h"
+#include "comms/protocol/TransportValueLayer.h"
+#include "tutorial16/field/FieldBase.h"
+#include "tutorial16/field/InterfaceFlags.h"
+#include "tutorial16/field/MsgId.h"
+#include "tutorial16/frame/FrameCommon.h"
+#include "tutorial16/input/AllMessages.h"
+#include "tutorial16/options/DefaultOptions.h"
 
-namespace tutorial15
+namespace tutorial16
 {
 
 namespace frame
@@ -26,8 +28,8 @@ namespace frame
 /// @brief Layers definition of @ref Frame frame class.
 /// @tparam TOpt Protocol options.
 /// @see @ref Frame
-/// @headerfile "tutorial15/frame/Frame.h"
-template <typename TOpt = tutorial15::options::DefaultOptions>
+/// @headerfile "tutorial16/frame/Frame.h"
+template <typename TOpt = tutorial16::options::DefaultOptions>
 struct FrameLayers
 {
     /// @brief Definition of layer "Data".
@@ -36,14 +38,41 @@ struct FrameLayers
             typename TOpt::frame::FrameLayers::Data
         >;
     
+    /// @brief Scope for field(s) of @ref Flags layer.
+    struct FlagsMembers
+    {
+        /// @brief Definition of <b>"Field"</b> field.
+        struct Field : public
+            tutorial16::field::InterfaceFlags<
+                TOpt
+            >
+        {
+            /// @brief Name of the field.
+            static const char* name()
+            {
+                return tutorial16::frame::FrameLayersCommon::FlagsMembersCommon::FieldCommon::name();
+            }
+            
+        };
+        
+    };
+    
+    /// @brief Definition of layer "Flags".
+    using Flags =
+        comms::protocol::TransportValueLayer<
+            typename FlagsMembers::Field,
+            0U,
+            Data
+        >;
+    
     /// @brief Definition of layer "Id".
     template <typename TMessage, typename TAllMessages>
     using Id =
         comms::protocol::MsgIdLayer<
-            tutorial15::field::MsgId<TOpt>,
+            tutorial16::field::MsgId<TOpt>,
             TMessage,
             TAllMessages,
-            Data,
+            Flags,
             typename TOpt::frame::FrameLayers::Id
         >;
     
@@ -53,14 +82,14 @@ struct FrameLayers
         /// @brief Definition of <b>"SizeField"</b> field.
         struct SizeField : public
             comms::field::IntValue<
-                tutorial15::field::FieldBase<>,
+                tutorial16::field::FieldBase<>,
                 std::uint16_t
             >
         {
             /// @brief Name of the field.
             static const char* name()
             {
-                return tutorial15::frame::FrameLayersCommon::SizeMembersCommon::SizeFieldCommon::name();
+                return tutorial16::frame::FrameLayersCommon::SizeMembersCommon::SizeFieldCommon::name();
             }
             
         };
@@ -85,11 +114,11 @@ struct FrameLayers
 /// @tparam TMessage Common interface class of all the messages
 /// @tparam TAllMessages All supported input messages.
 /// @tparam TOpt Frame definition options
-/// @headerfile "tutorial15/frame/Frame.h"
+/// @headerfile "tutorial16/frame/Frame.h"
 template <
    typename TMessage,
-   typename TAllMessages = tutorial15::input::AllMessages<TMessage>,
-   typename TOpt = tutorial15::options::DefaultOptions
+   typename TAllMessages = tutorial16::input::AllMessages<TMessage>,
+   typename TOpt = tutorial16::options::DefaultOptions
 >
 class Frame : public
     FrameLayers<TOpt>::template Stack<TMessage, TAllMessages>
@@ -103,10 +132,12 @@ public:
     ///
     ///     The generated functions are:
     ///     @li layer_data() for @ref FrameLayers::Data layer.
+    ///     @li layer_flags() for @ref FrameLayers::Flags layer.
     ///     @li layer_id() for @ref FrameLayers::Id layer.
     ///     @li layer_size() for @ref FrameLayers::Size layer.
     COMMS_PROTOCOL_LAYERS_ACCESS(
         data,
+        flags,
         id,
         size
     );
@@ -114,6 +145,6 @@ public:
 
 } // namespace frame
 
-} // namespace tutorial15
+} // namespace tutorial16
 
 
