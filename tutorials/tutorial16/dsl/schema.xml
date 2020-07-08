@@ -24,10 +24,10 @@
         <size name="Size">
             <int name="SizeField" type="uint16" />
         </size>
-        <id name="Id" field="MsgId" />
         <value name="Flags" interfaceFieldName="Flags">
             <ref field="InterfaceFlags" name="Field" />
-        </value>
+        </value>        
+        <id name="Id" field="MsgId" />
         <payload name="Data" />
     </frame>
     

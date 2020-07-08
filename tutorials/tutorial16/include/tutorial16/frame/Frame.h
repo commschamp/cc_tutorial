@@ -38,6 +38,17 @@ struct FrameLayers
             typename TOpt::frame::FrameLayers::Data
         >;
     
+    /// @brief Definition of layer "Id".
+    template <typename TMessage, typename TAllMessages>
+    using Id =
+        comms::protocol::MsgIdLayer<
+            tutorial16::field::MsgId<TOpt>,
+            TMessage,
+            TAllMessages,
+            Data,
+            typename TOpt::frame::FrameLayers::Id
+        >;
+    
     /// @brief Scope for field(s) of @ref Flags layer.
     struct FlagsMembers
     {
@@ -58,22 +69,12 @@ struct FrameLayers
     };
     
     /// @brief Definition of layer "Flags".
+    template <typename TMessage, typename TAllMessages>
     using Flags =
         comms::protocol::TransportValueLayer<
             typename FlagsMembers::Field,
             0U,
-            Data
-        >;
-    
-    /// @brief Definition of layer "Id".
-    template <typename TMessage, typename TAllMessages>
-    using Id =
-        comms::protocol::MsgIdLayer<
-            tutorial16::field::MsgId<TOpt>,
-            TMessage,
-            TAllMessages,
-            Flags,
-            typename TOpt::frame::FrameLayers::Id
+            Id<TMessage, TAllMessages>
         >;
     
     /// @brief Scope for field(s) of @ref Size layer.
@@ -101,7 +102,7 @@ struct FrameLayers
     using Size =
         comms::protocol::MsgSizeLayer<
             typename SizeMembers::SizeField,
-            Id<TMessage, TAllMessages>
+            Flags<TMessage, TAllMessages>
         >;
     
     /// @brief Final protocol stack definition.
@@ -132,13 +133,13 @@ public:
     ///
     ///     The generated functions are:
     ///     @li layer_data() for @ref FrameLayers::Data layer.
-    ///     @li layer_flags() for @ref FrameLayers::Flags layer.
     ///     @li layer_id() for @ref FrameLayers::Id layer.
+    ///     @li layer_flags() for @ref FrameLayers::Flags layer.
     ///     @li layer_size() for @ref FrameLayers::Size layer.
     COMMS_PROTOCOL_LAYERS_ACCESS(
         data,
-        flags,
         id,
+        flags,
         size
     );
 };
