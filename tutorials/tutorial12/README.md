@@ -365,6 +365,31 @@ type, whether it is `std::string`, `std::string_view`, `comms::util::StaticStrin
 `comms::util::StringView`, `std::vector`, `std::span`, `comms::util::StaticVector`, or
 `comms::util::ArrayView`.
 
+----
+
+**SIDE NOTE**: Most bare metal metal applications avoid using of dynamic memory 
+allocation, some also avoid virtual functions (due to code size limitations). Many also 
+exclude usage of standard C library altogether. 
+
+Note that the 
+[COMMS Library](https://github.com/arobenko/comms_champion#comms-library) uses various
+debug code inner correctness checks (compiled in when standard `NDEBUG` is not defined). Such
+checks are implemented using [COMMS_ASSERT()](https://arobenko.github.io/comms_doc/Assert_8h.html)
+macro, which by default invokes standard `assert()` defined by the standard library, which 
+may cause a problem if the latter is not used. To avoid usage of the standard `assert()` 
+there is a need to define `NOSTDLIB` during compilation. It will cause the default 
+failure functionality of the [COMMS_ASSERT()](https://arobenko.github.io/comms_doc/Assert_8h.html)
+macro to be an infinite loop. 
+
+The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) allows run-time 
+override of the default assertion failure functionality. Please read 
+[Custom Assertion Failure Behaviour](https://arobenko.github.io/comms_doc/page_assert.html) page
+from the documentation for more details. The 
+[Error Handling](https://arobenko.github.io/comms_doc/page_use_prot.html#page_use_prot_error_handling)
+section also contains useful information about the available error handling.
+
+----
+
 ## Summary
 - The default behavior of the framing is to dynamically allocate message object. 
 - It can be changed by passing `comms::option::app::InPlaceAllocation` option to the `ID` framing layer
