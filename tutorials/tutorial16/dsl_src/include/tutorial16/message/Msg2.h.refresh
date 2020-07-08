@@ -2,7 +2,7 @@
 // @brief Custom refresh functionality
 bool doRefresh()
 {
-    bool updated = Base::doRefresh();
+    bool updated = Base::doRefresh(); // Don't forget default refresh functionality
 
     auto expF2Mode = comms::field::OptionalMode::Missing;
     if (Base::transportField_flags().getBitValue_B1()) {

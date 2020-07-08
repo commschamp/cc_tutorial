@@ -111,7 +111,7 @@ empty one is assumed having the `Message` **name**, i.e. equivalent to the follo
 </interface>
 ```
 That's why the common interface class in all the previous tutorials was defined as
-`&lt;namespace&gt;::Message` class inside the `include/&lt;namespace&gt;/Message.h` file.
+`<namespace>::Message` class inside the `include/<namespace>/Message.h` file.
 
 For this tutorial the common interface class is defined as 
 `tutorial16::Interface` class inside the [include/tutorial16/Interface.h](include/tutorial16/Interface.h)
@@ -141,7 +141,7 @@ The message frame is defined like this:
 ```
 The [&lt;value&gt;](https://arobenko.github.io/commsdsl_spec/#frames-value) layer represents extra values
 to be re-assigned to the message interface. Note usage of **interfaceFieldName** property, which specifies 
-the **name** of the relevant field inside the **&lt;interface&gt;** value of which needs to be assigned.
+the **name** of the relevant field inside the **&lt;interface&gt;**, value of which needs to be assigned.
 
 ----
 
@@ -154,7 +154,7 @@ usage of **interfaces** property is omitted.
 
 The **&lt;value&gt;** layer is implemented by extending 
 [comms::protocol::TransportValueLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
-(see [include/tutorial16/frame/Frame.h](include/tutorial16/frame/Frame.h).
+(see [include/tutorial16/frame/Frame.h](include/tutorial16/frame/Frame.h)).
 ```cpp
 template <typename TOpt = tutorial16::options::DefaultOptions>
 struct FrameLayers
@@ -226,10 +226,13 @@ moment the [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) does n
 referencing the **&lt;interface&gt;** member fields inside the **&lt;cond&gt;**-itions 
 of the **&lt;optional&gt;** message member fields (it is only allowed to reference its sibling fields).
 Hence the custom **read** and **refresh** codes need to be written. There are 
-[dsl_src/Msg1.h.read](dsl_src/Msg1.h.read), [dsl_src/Msg1.h.refresh](dsl_src/Msg1.h.refresh),
-[dsl_src/Msg2.h.read](dsl_src/Msg2.h.read), and [dsl_src/Msg2.h.refresh](dsl_src/Msg2.h.refresh) which
+[dsl_src/include/tutorial16/message/Msg1.h.read](dsl_src/include/tutorial16/message/Msg1.h.read), 
+[dsl_src/include/tutorial16/message/Msg1.h.refresh](dsl_src/include/tutorial16/message/Msg1.h.refresh),
+[dsl_src/include/tutorial16/message/Msg2.h.read](dsl_src/include/tutorial16/message/Msg2.h.read), and 
+[dsl_src/include/tutorial16/message/Msg2.h.refresh](dsl_src/include/tutorial16/message/Msg2.h.refresh) which
 implement the required extra functionalities that find their way into 
-[include/tutorial16/Msg1.h](include/tutorial16/Msg1.h) and [include/tutorial16/Msg2.h](include/tutorial16/Msg2.h)
+[include/tutorial16/message/Msg1.h](include/tutorial16/message/Msg1.h) and 
+[include/tutorial16/message/Msg2.h](include/tutorial16/message/Msg2.h)
 message classes definitions.
 
 **NOTE** that the **defaultMode** of the both optional fields are set to **missing** in order to allow

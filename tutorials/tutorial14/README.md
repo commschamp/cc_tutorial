@@ -111,6 +111,23 @@ default generated code for this example won't do the required functionality. The
 files. The injected code finds its way into the official protocol generated code in
 [include/tutorial14/message/Msg1.h](include/tutorial14/message/Msg1.h)
 
+**REMINDER**: The **refresh** functionality is expected to return `true` when the message state has been
+updated and `false` when nothing has changed.
+
+Wnen implementing custom **refresh** functionality it is a good practice to invoke the **refresh** implemented
+by the base class, just in case that the default refresh is **NOT** trivial. If it is, the extra unnecessary code will
+just be optimized away by the compiler.
+```cpp
+/// @brief Custom refresh functionality
+bool doRefresh()
+{
+    ...
+    bool updated = Base::doRefresh(); // Don't forget default refresh functionality
+    ...
+    return updated;
+}
+```
+
 Please note that injection of the code snippets is performed by putting them in the file with special suffix / extension
 (appended to the relevant file name with original extension) to let the code generator know what functionality is being injected. 
 For example knowledge about injected custom **refresh** functionality will force usage of `comms::option::def::HasCustomRefresh`

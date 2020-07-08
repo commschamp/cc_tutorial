@@ -285,7 +285,8 @@ public:
             std::swap(f1Mode, f2f3Mode);
         }
     
-        bool updated = false;
+        bool updated = Base::doRefresh(); // Don't forget default refresh functionality
+        
         if (field_f1().getMode() != f1Mode) {
             field_f1().setMode(f1Mode);
             updated = true;
