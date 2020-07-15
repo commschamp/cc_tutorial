@@ -4,7 +4,7 @@ Custom transport framing layers.
 So far, in all the previous tutorials every frame layer had a well defined single
 responsibility. However, there are protocols that may split the used field to 
 multiple parts where every part has its own influence on how the message is 
-decoded and/or handled. In most such cases, the **&lt;id&lt;** or **&gt;size&gt;**
+decoded and/or handled. In most such cases, the **&lt;id&gt;** or **&lt;size&gt;**
 layers allocate a couple of extra bits of its field to make some extra flags.
 
 This tutorial is quite similar to the [previous](../tutorial16) in terms of 
