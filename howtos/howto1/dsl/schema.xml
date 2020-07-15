@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="howto1" endian="big">
+    <fields>
+        <string name="Msg1Name" defaultValue="Message 1" />
+        <string name="Msg2Name" defaultValue="Message 2" />
+            
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M1" val="1" displayName="^Msg1Name" />
+            <validValue name="M2" val="2" displayName="^Msg2Name" />
+        </enum>
+        
+        
+        <set name="InterfaceFlags" length="1">
+            <bit name="B0" idx="0" />
+            <bit name="B1" idx="1" />
+        </set>        
+        
+    </fields>
+    
+    <interface name="Interface" description="Common Interface for all the messages.">
+        <ref field="InterfaceFlags" name="Flags" />
+    </interface>    
+        
+    <frame name="Frame">
+        <custom name="SizeWithFlags">
+            <bitfield name="Field">
+                <int name="Size" type="uint16" bitLength="12"/>
+                <ref field="InterfaceFlags" name="Flags" bitLength="4" />
+            </bitfield>
+        </custom>        
+        <id name="Id" field="MsgId" />
+        <value name="Flags" interfaceFieldName="Flags" pseudo="true" field="InterfaceFlags" />
+        <payload name="Data" />
+    </frame>
+    
+    <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
+        <int name="F1" type="uint16" />
+        <int name="F2" type="uint16" />
+        <optional name="F3" defaultMode="missing">
+            <description>
+                The field exists only when B0 in interface flags is set.
+            </description>
+            <field>
+                <int name="Field" type="uint16" displayName="F3" />
+            </field>
+        </optional>
+    </message>
+    
+    <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
+        <string name="F1" defaultValue="hello">
+            <lengthPrefix>
+                <int name="Length" type="uint8" />
+            </lengthPrefix>
+        </string>
+        
+        <optional name="F2" defaultMode="missing">
+            <description>
+                The field exists only when B1 in interface flags is set.
+            </description>
+            <field>
+                <int name="Field" type="uint16" displayName="F2" />
+            </field>
+        </optional>        
+    </message>    
+    
+</schema>

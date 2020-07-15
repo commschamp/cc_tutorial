@@ -294,4 +294,5 @@ endfunction ()
 #######################################################
 
 add_subdirectory (tutorials)
+add_subdirectory (howtos)
 
