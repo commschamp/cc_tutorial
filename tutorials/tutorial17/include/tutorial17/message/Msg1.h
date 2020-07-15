@@ -11,12 +11,12 @@
 #include "comms/field/IntValue.h"
 #include "comms/field/Optional.h"
 #include "comms/options.h"
-#include "tutorial16/MsgId.h"
-#include "tutorial16/field/FieldBase.h"
-#include "tutorial16/message/Msg1Common.h"
-#include "tutorial16/options/DefaultOptions.h"
+#include "tutorial17/MsgId.h"
+#include "tutorial17/field/FieldBase.h"
+#include "tutorial17/message/Msg1Common.h"
+#include "tutorial17/options/DefaultOptions.h"
 
-namespace tutorial16
+namespace tutorial17
 {
 
 namespace message
@@ -25,21 +25,21 @@ namespace message
 /// @brief Fields of @ref Msg1.
 /// @tparam TOpt Extra options
 /// @see @ref Msg1
-/// @headerfile "tutorial16/message/Msg1.h"
-template <typename TOpt = tutorial16::options::DefaultOptions>
+/// @headerfile "tutorial17/message/Msg1.h"
+template <typename TOpt = tutorial17::options::DefaultOptions>
 struct Msg1Fields
 {
     /// @brief Definition of <b>"F1"</b> field.
     struct F1 : public
         comms::field::IntValue<
-            tutorial16::field::FieldBase<>,
+            tutorial17::field::FieldBase<>,
             std::uint16_t
         >
     {
         /// @brief Name of the field.
         static const char* name()
         {
-            return tutorial16::message::Msg1FieldsCommon::F1Common::name();
+            return tutorial17::message::Msg1FieldsCommon::F1Common::name();
         }
         
     };
@@ -47,14 +47,14 @@ struct Msg1Fields
     /// @brief Definition of <b>"F2"</b> field.
     struct F2 : public
         comms::field::IntValue<
-            tutorial16::field::FieldBase<>,
+            tutorial17::field::FieldBase<>,
             std::uint16_t
         >
     {
         /// @brief Name of the field.
         static const char* name()
         {
-            return tutorial16::message::Msg1FieldsCommon::F2Common::name();
+            return tutorial17::message::Msg1FieldsCommon::F2Common::name();
         }
         
     };
@@ -66,14 +66,14 @@ struct Msg1Fields
         /// @brief Definition of <b>"F3"</b> field.
         struct Field : public
             comms::field::IntValue<
-                tutorial16::field::FieldBase<>,
+                tutorial17::field::FieldBase<>,
                 std::uint16_t
             >
         {
             /// @brief Name of the field.
             static const char* name()
             {
-                return tutorial16::message::Msg1FieldsCommon::F3MembersCommon::FieldCommon::name();
+                return tutorial17::message::Msg1FieldsCommon::F3MembersCommon::FieldCommon::name();
             }
             
         };
@@ -92,7 +92,7 @@ struct Msg1Fields
         /// @brief Name of the field.
         static const char* name()
         {
-            return tutorial16::message::Msg1FieldsCommon::F3Common::name();
+            return tutorial17::message::Msg1FieldsCommon::F3Common::name();
         }
         
     };
@@ -110,12 +110,12 @@ struct Msg1Fields
 ///     See @ref Msg1Fields for definition of the fields this message contains.
 /// @tparam TMsgBase Base (interface) class.
 /// @tparam TOpt Extra options
-/// @headerfile "tutorial16/message/Msg1.h"
-template <typename TMsgBase, typename TOpt = tutorial16::options::DefaultOptions>
+/// @headerfile "tutorial17/message/Msg1.h"
+template <typename TMsgBase, typename TOpt = tutorial17::options::DefaultOptions>
 class Msg1 : public
     comms::MessageBase<
         TMsgBase,
-        comms::option::def::StaticNumIdImpl<tutorial16::MsgId_M1>,
+        comms::option::def::StaticNumIdImpl<tutorial17::MsgId_M1>,
         comms::option::def::FieldsImpl<typename Msg1Fields<TOpt>::All>,
         comms::option::def::MsgType<Msg1<TMsgBase, TOpt> >,
         comms::option::def::HasName,
@@ -126,7 +126,7 @@ class Msg1 : public
     using Base =
         comms::MessageBase<
             TMsgBase,
-            comms::option::def::StaticNumIdImpl<tutorial16::MsgId_M1>,
+            comms::option::def::StaticNumIdImpl<tutorial17::MsgId_M1>,
             comms::option::def::FieldsImpl<typename Msg1Fields<TOpt>::All>,
             comms::option::def::MsgType<Msg1<TMsgBase, TOpt> >,
             comms::option::def::HasName,
@@ -161,7 +161,7 @@ public:
     /// @brief Name of the message.
     static const char* doName()
     {
-        return tutorial16::message::Msg1Common::name();
+        return tutorial17::message::Msg1Common::name();
     }
     
     /// @brief Custom read functionality
@@ -194,6 +194,6 @@ public:
 
 } // namespace message
 
-} // namespace tutorial16
+} // namespace tutorial17
 
 
