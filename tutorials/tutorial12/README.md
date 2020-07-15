@@ -377,7 +377,7 @@ debug code inner correctness checks (compiled in when standard `NDEBUG` is not d
 checks are implemented using [COMMS_ASSERT()](https://arobenko.github.io/comms_doc/Assert_8h.html)
 macro, which by default invokes standard `assert()` defined by the standard library, which 
 may cause a problem if the latter is not used. To avoid usage of the standard `assert()` 
-there is a need to define `NOSTDLIB` during compilation. It will cause the default 
+there is a need to define `COMMS_NOSTDLIB` during compilation. It will cause the default 
 failure functionality of the [COMMS_ASSERT()](https://arobenko.github.io/comms_doc/Assert_8h.html)
 macro to be an infinite loop. 
 
