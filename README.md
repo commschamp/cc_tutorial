@@ -17,7 +17,10 @@ reside in **howtos/howtoX** folders and can be read independently. **HOWEVER**, 
 paramount to understand the core ideas explained in tutorials before attempting
 to understand a particular howto example. The howto(s) are
 there to provide some extra examples or cover some specific nuances which are
-not explained properly in the tutorials. 
+not explained properly in the tutorials. If you encounter a sutuation where it is 
+not 100% clear how to define and/or implement some logic please open an issue for this 
+project or send a direct [e-mail](https://arobenko.github.io/cc/contact/). 
+Maybe your question will end up as one of the **howtos**.
 
 It is highly recommended to open 
 a source code with your favourite IDE to be able to easily navigate it and 
@@ -140,3 +143,7 @@ $> nmake install
 - [tutorial15](../../tree/master/tutorials/tutorial15) - Avoiding unnecessary decoding of messages.
 - [tutorial16](../../tree/master/tutorials/tutorial16) - Extra values in transport framing.
 - [tutorial17](../../tree/master/tutorials/tutorial17) - Custom transport framing layers.
+
+
+# How-Tos
+- [howto1](../../tree/master/howtos/howto1) - Custom remaining size framing information preceding **&lt;id&gt;**.
