@@ -5,7 +5,7 @@ This howto demonstrates having remaining size information in message framing sha
 extra flags which influence the way message payload is read. 
 
 Having values (flags) in the message framing which influence how message payload is read and/or how 
-message is process requires definition of common message interface:
+message is processed requires definition of common message interface:
 ```xml
 <fields>
     <set name="InterfaceFlags" length="1">
@@ -21,7 +21,7 @@ message is process requires definition of common message interface:
 ```
 
 When remaining message length information in the message framing is split into multiple
-values, the default **lt;size&gt;** cannot be used, the **custom** one needs to be used 
+values, the default **&lt;size&gt;** cannot be used, the **&lt;custom&gt;** one needs to be used 
 instead:
 ```xml
     <frame name="Frame">
