@@ -112,16 +112,9 @@ void ClientSession::doNextStage()
             break;
         }
 
-        ++m_completedCycles;
-        static const std::size_t MaxCycles = 1U;
-        if (MaxCycles <= m_completedCycles) {
-            // Client execution is complete
-            getIo().stop();
-            return;
-        }
-
-        // Start new cycle
-        m_currentStage = static_cast<decltype(m_currentStage)>(0);
+        // Client execution is complete
+        getIo().stop();
+        return;
     } while (false);
 
     using NextSendFunc = void (ClientSession::*)();

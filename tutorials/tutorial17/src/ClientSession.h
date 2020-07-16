@@ -73,7 +73,6 @@ private:
 
     Frame m_frame;
     CommsStage m_currentStage = CommsStage_NumOfValues;
-    unsigned m_completedCycles = 0;
 };
 
 } // namespace cc_tutorial
