@@ -115,6 +115,10 @@ void ClientSession::sendMessage(const Message& msg)
     // The statement below uses polymorphic message name and ID retrievals.
     std::vector<std::uint8_t> output;
 
+    // Use polymorphic serialization length calculation to reserve
+    // needed capacity
+    output.reserve(m_frame.length(msg));
+
     // Serialize message into the buffer (including framing)
     // The serialization uses polymorphic write functionality.
     auto writeIter = std::back_inserter(output);
