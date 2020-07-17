@@ -1,7 +1,7 @@
 # Tutorial 18
 How to access transport framing fields.
 
-In all the tutorials so fare the transport framing fields have been silently stripped 
+In all the tutorials so far the transport framing fields have been silently stripped 
 away by the frame management and only the message object dispatched for handling. 
 There are ways to re-assign values from the frame using **&lt;value&gt;** layer in 
 conjunction with custom **&lt;interface&gt;**. However, there may be cases when it's not
@@ -53,7 +53,7 @@ member function of every protocol layer receives a variadic `extraValues` last p
 used to add several output parameters to the function. In this example the 
 [comms::protocol::msgId()](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html) is used 
 to add `msgId` local variable as an output parameter for the message numeric ID. Also the 
-[comms::protocol::msgIndex](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html)
+[comms::protocol::msgIndex()](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html)
 is used to add `msgIdx` local variable as an output parameter for the index of the message (offset in 
 the tuple of the input messages starting from the first message sharing the same ID).
 Later down the code both `msgId` and `msgIdx` values are used to dispatch message object into the 
@@ -61,7 +61,7 @@ appropriate handling function using
 [comms::dispatchMsg](https://arobenko.github.io/comms_doc/dispatch_8h.html) function.
 
 
-The [src/ClientSession.cpp] on the other hand demonstrates caching of **all** the framing 
+The [ClientSession](src/ClientSession.cpp) on the other hand demonstrates caching of **all** the framing 
 fields.
 ```cpp
 std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
@@ -107,8 +107,8 @@ Every [layer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1Pro
 being defined and down to the bottom (**&lt;payload&gt;**) one. As the result the `AllFields` type of the outermost layer 
 (which is also used as a full frame) is a tuple of all the framing fields.
 
-Also every layer defines [readFieldsCached](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
-member function, which is similar to `read()` used so far, but receives the tuple of all the fields in needs to update as 
+Also every layer defines [readFieldsCached()](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+member function, which is similar to `read()` used so far, but receives the tuple of all the fields it needs to update as 
 its first parameter. After the read operation is complete the provided `transportFields` tuple will have updated values which 
 can be accessed later.
 
@@ -137,7 +137,7 @@ public:
 };
 ```
 Once the layer object is accesses its 
-[accessCachedField](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+[accessCachedField()](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
 member function can be used to access appropriate field in the cached fields tuple.
 
 Note that the inner field of the **&lt;payload&gt;** layer is 
@@ -175,15 +175,15 @@ struct DataViewDefaultOptionsT : public TBase
 
 ## Summary
 - The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) provides multiple ways to access 
-  some or all of the payload fields.
+  some or all of the framing fields.
 - The `read()` member function can receive and update selected output parameters via 
   [comms::protocol::msgId()](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html), 
-  [comms::protocol::msgIndex](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html), etc...
+  [comms::protocol::msgIndex()](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html), etc...
 - In order to get **all** the frame fields the 
-  [readFieldsCached](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+  [readFieldsCached()](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
   member function needs to be used.
 - The frame definition allows access of various inner layers using `layer_*()` member function.
-- Every layer provides [accessCachedField](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+- Every layer provides [accessCachedField()](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
   member function to access appropriate field from the cached tuple.
 
 [Read Previous Tutorial](../tutorial17) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial19) 
