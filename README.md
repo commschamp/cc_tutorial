@@ -143,6 +143,7 @@ $> nmake install
 - [tutorial15](../../tree/master/tutorials/tutorial15) - Avoiding unnecessary decoding of messages.
 - [tutorial16](../../tree/master/tutorials/tutorial16) - Extra values in transport framing.
 - [tutorial17](../../tree/master/tutorials/tutorial17) - Custom transport framing layers.
+- [tutorial18](../../tree/master/tutorials/tutorial18) - How to access transport framing fields.
 
 
 # How-Tos
