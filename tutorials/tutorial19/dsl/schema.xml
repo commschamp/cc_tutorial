@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="tutorial19" endian="big" version="5">
+    <fields>
+        <string name="Msg1Name" defaultValue="Message 1" />
+        <string name="Msg2Name" defaultValue="Message 2" />
+        <string name="Msg3Name" defaultValue="Message 3" />
+            
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M1" val="1" displayName="^Msg1Name" />
+            <validValue name="M2" val="2" displayName="^Msg2Name" />
+            <validValue name="M3" val="3" displayName="^Msg3Name" />
+        </enum>
+        
+    </fields>
+    
+    <interface name="Interface" description="Common Interface for all the messages.">
+        <int name="Version" type="uint16" semanticType="version" />
+    </interface>    
+        
+    <frame name="Frame">
+        <size name="Size">
+            <int name="Field" type="uint16" displayName="Size" />
+        </size>
+        <value name="Version" interfaceFieldName="Version">
+            <int name="Field" type="uint16" displayName="Version"/>
+        </value>        
+        <id name="Id" field="MsgId" />
+        <payload name="Data" />
+    </frame>
+    
+    <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
+        <int name="F1" type="uint16" />
+        <int name="F2" type="uint16" sinceVersion="2" deprecated="4" />
+        <int name="F3" type="uint16" sinceVersion="5" />
+    </message>
+    
+    <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
+        <enum name="F1" type="uint8" sinceVersion="1">
+            <validValue name="V0" val="0" />
+            <validValue name="V1" val="1" sinceVersion="3" deprecated="5" />
+            <validValue name="V2" val="2" sinceVersion="4" />
+        </enum>
+        
+        <enum name="F2" type="uint8" sinceVersion="3" validCheckVersion="true">
+            <validValue name="V0" val="0" />
+            <validValue name="V1" val="1" sinceVersion="4" deprecated="5" />
+            <validValue name="V2" val="2" sinceVersion="5" />
+        </enum>        
+    </message>   
+    
+    <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name" sinceVersion="2">
+        <set name="F1" length="1">
+            <bit name="B0" idx="0" />
+            <bit name="B1" idx="1" />
+        </set>
+        <optional name="F2" cond="$F1.B0" defaultMode="missing">
+            <int name="Field" type="uint16" displayName="F2" />
+        </optional>
+        <optional name="F3" cond="$F1.B1" defaultMode="missing">
+            <int name="Field" type="uint16" displayName="F3" />
+        </optional>   
+        <int name="F4" type="uint16" sinceVersion="3" />
+    </message>    
+    
+</schema>
