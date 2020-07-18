@@ -1,56 +1,13 @@
 #include "ClientSession.h"
 
-#include <iostream>
 #include <cassert>
 #include <iterator>
-#include <iomanip>
 
 #include "comms/process.h"
 #include "comms/iterator.h"
 
 namespace cc_tutorial
 {
-
-namespace
-{
-
-template <typename TField>
-void printIntField(const TField& field, const std::string& prefix = std::string())
-{
-    std::cout << '\t' << prefix << field.name() << " = " << field.value() << '\n';
-}
-
-template <typename TField>
-bool printOptionalField(const TField& field, const std::string& prefix = std::string())
-{
-    std::cout << '\t' << prefix << field.name();
-
-    static const std::string ModeMap[] = {
-        /* comms::field::OptionalMode::Tentative */ "tentative",
-        /* comms::field::OptionalMode::Exists */ "exists",
-        /* comms::field::OptionalMode::Missing */ "missing",
-    };
-    static const std::size_t ModeMapSize = std::extent<decltype(ModeMap)>::value;
-    static_assert(ModeMapSize == (unsigned)comms::field::OptionalMode::NumOfModes, "Invalid Map");
-
-    auto mapIdx = static_cast<unsigned>(field.getMode());
-    if (ModeMapSize <= mapIdx) {
-        assert(!"Unexpected mode value, should not happen");
-        std::cout << " (unknown)" << std::endl;
-        return false;
-    }
-
-    std::cout << " (" << ModeMap[mapIdx] << ")" << std::endl;
-    return field.doesExist(); // Print the rest only if field is present
-}
-
-template <typename TField>
-void printString(const TField& field)
-{
-    std::cout << '\t' << field.name() << " = " << std::string(field.value().begin(), field.value().end()) << '\n';
-}
-
-} // namespace
 
 void ClientSession::handle(Msg1& msg)
 {

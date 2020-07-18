@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 #include "tutorial6/Message.h"
 #include "tutorial6/frame/Frame.h"
 

@@ -1,9 +1,7 @@
 #include "ClientSession.h"
 
-#include <iostream>
 #include <cassert>
 #include <iterator>
-#include <iomanip>
 
 #include "comms/process.h"
 #include "comms/iterator.h"
@@ -16,20 +14,6 @@ namespace cc_tutorial
 
 namespace
 {
-
-template <typename TField>
-void printString(const TField& field)
-{
-    std::cout << '\t' << field.name() << " = " << std::string(field.value().begin(), field.value().end()) << '\n';
-}
-
-template <typename TField>
-void printData(const TField& field)
-{
-    std::cout << '\t' << field.name() << " = " << std::hex;
-    std::copy(field.value().begin(), field.value().end(), std::ostream_iterator<unsigned>(std::cout, " "));
-    std::cout << std::dec << '\n';
-}
 
 template <typename TField>
 void printList(const TField& field)
@@ -61,8 +45,8 @@ void ClientSession::handle(Msg1& msg)
 void ClientSession::handle(Msg2& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
-    printData(msg.field_f1());
-    printData(msg.field_f2());
+    printDataField(msg.field_f1());
+    printDataField(msg.field_f2());
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg2) {

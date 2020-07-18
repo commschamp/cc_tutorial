@@ -1,6 +1,5 @@
 #include "ClientSession.h"
 
-#include <iostream>
 #include <cassert>
 #include <iterator>
 #include <iomanip>
@@ -19,13 +18,6 @@ void printIntFieldHex(const TField& field, const std::string& prefix = std::stri
 {
     std::cout << '\t' << prefix << field.name() << " = " << 
         std::hex << "0x" << std::setfill('0') << std::setw(sizeof(typename TField::ValueType) * 2) << field.value() << std::dec << '\n';
-}
-
-template <typename TField>
-void printEnumField(const TField& field, const std::string& prefix = std::string())
-{
-    std::cout << '\t' << prefix << field.name() << " = " << (unsigned)field.value() << 
-        " (" << field.valueName() << ")\n";
 }
 
 template <typename TField>

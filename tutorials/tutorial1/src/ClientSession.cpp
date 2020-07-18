@@ -1,6 +1,5 @@
 #include "ClientSession.h"
 
-#include <iostream>
 #include <cassert>
 #include <iterator>
 

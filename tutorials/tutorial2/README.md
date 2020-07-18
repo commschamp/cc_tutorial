@@ -1054,7 +1054,8 @@ contains `bitName()` convenience member function, which can be used to retrieve
 human readable name of the bit. By default it is equal to the value of the 
 **name** property, but it can be overwritten with **displayName** one.
 The usage of the `bitName()` member function is demonstrated by the
-following function:
+following function (implemented as member of 
+[Session.h](../lib/include/Session.h) base class):
 ```cpp
 template <typename TField>
 void printSetField(const TField& field, const std::string& prefix = std::string())

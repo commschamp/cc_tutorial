@@ -2,7 +2,6 @@
 
 #include <iterator>
 #include <vector>
-#include <iostream>
 
 #include "tutorial14/Message.h"
 #include "tutorial14/frame/Frame.h"

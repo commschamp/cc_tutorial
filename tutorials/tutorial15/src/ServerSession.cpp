@@ -1,6 +1,5 @@
 #include "ServerSession.h"
 
-#include <iostream>
 #include <cassert>
 
 #include "comms/process.h"

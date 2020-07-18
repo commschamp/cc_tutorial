@@ -2,7 +2,6 @@
 
 #include <iterator>
 #include <vector>
-#include <iostream>
 
 #include "tutorial19/Interface.h"
 #include "tutorial19/frame/Frame.h"

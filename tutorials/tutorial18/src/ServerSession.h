@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 #include "tutorial18/Message.h"
 #include "tutorial18/frame/Frame.h"
 #include "tutorial18/input/ServerInputMessages.h"

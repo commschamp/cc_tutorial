@@ -3,7 +3,6 @@
 #include <cassert>
 #include <iterator>
 #include <iomanip>
-#include <iostream>
 
 #include "comms/process.h"
 #include "comms/iterator.h"

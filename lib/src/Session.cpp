@@ -1,6 +1,5 @@
 #include "Session.h"
 
-#include <iostream>
 #include <cassert>
 
 namespace cc_tutorial

@@ -1,6 +1,5 @@
 #include "ClientSession.h"
 
-#include <iostream>
 #include <cassert>
 #include <iterator>
 #include <iomanip>
@@ -17,7 +16,6 @@ void ClientSession::handle(Message& msg)
 
     doNextStage();
 }
-
 
 bool ClientSession::startImpl()
 {
