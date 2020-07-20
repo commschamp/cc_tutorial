@@ -130,7 +130,6 @@ struct F2Field : public
     
 };
 
-/// @brief Definition of <b>"F2"</b> field.
 struct F2 : public
     comms::field::Optional<
         F2Field,
@@ -362,15 +361,15 @@ ones for improved run-time and code size performance.
 - By default deprecated fields are not removed to maintain backward compatibility of the protocol. In order to
   forcefully remove it use `removed="true"` property assignment.
 - In order to let the [commsdsl2comms](https://github.com/arobenko/commsdsl) generate the version dependent
-  code the **&lt;interface&gt;** need to contain a field marked as version (having `semanticType="version"
+  code, the **&lt;interface&gt;** needs to contain a field marked as version (having `semanticType="version"`
   property assignment).
 - Use usual **&lt;value&gt;** framing layer when version is reported as a field inside the transport frame.
 - All the version dependent fields are implemented as 
   [comms::field::Optional](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Optional.html) fields.
 - All the **&lt;validValue&gt;**-s of the **&lt;enum&gt;** field are considered to be valid (regardless of 
-  the version they where introduced or their deprecated status) as well as all the **&lt;bit&gt;**-s of the 
+  the version they where introduced or their deprecation status) as well as all the **&lt;bit&gt;**-s of the 
   **&lt;set&gt;** field are considered to be not reserved unless **validCheckVersion** property is set to 
-  **true**. In this case the generated `valid()` member function will take the version in to account.
+  **true**. In this case the generated `valid()` member function will take the version into account.
 - When custom `doRead()` member function is injected into the version dependent message, it must call
   [Base::doFieldsVersionUpdate()](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
   to properly update the modes of the version dependent 
