@@ -80,7 +80,7 @@ message framing. In order to re-assign the value from the frame to the message o
         <int name="Field" type="uint16" displayName="Size" />
     </size>
     <value name="Version" interfaceFieldName="Version">
-        <int name="Field" type="uint16" displayName="Version"/>
+        <int name="Field" type="uint16" semanticType="version" displayName="Version"/>
     </value>        
     <id name="Id" field="MsgId" />
     <payload name="Data" />
@@ -111,7 +111,7 @@ public:
 Please note the usage of [comms::option::def::VersionInExtraTransportFields](https://arobenko.github.io/comms_doc/options_8h.html)
 option. It is used to specify index of the transport field containing the version information. 
 It also creates [version()](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) member function which is 
-basically an alias to `transportField_version()`. They can be used interchangeably.
+basically an alias to `transportField_version().value()`. They can be used interchangeably.
 
 Now let's take a look how version dependent fields are defined in the generated code. Let's take a look at 
 the definition of `F2` inside [include/tutorial19/message/Msg1.h](include/tutorial19/message/Msg1.h).

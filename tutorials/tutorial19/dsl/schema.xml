@@ -22,7 +22,7 @@
             <int name="Field" type="uint16" displayName="Size" />
         </size>
         <value name="Version" interfaceFieldName="Version">
-            <int name="Field" type="uint16" displayName="Version"/>
+            <int name="Field" type="uint16" semanticType="version" displayName="Version"/>
         </value>        
         <id name="Id" field="MsgId" />
         <payload name="Data" />

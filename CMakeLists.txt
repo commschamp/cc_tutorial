@@ -13,11 +13,11 @@ option (FORCE_EXTRA_BOOST_LIBS "Force linking to extra boost libraries" OFF)
 # CC_TAG - Tag / branch of comms_champion project (if built internally)
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
-    set (COMMSDSL_TAG "v3.4.2")
+    set (COMMSDSL_TAG "v3.4.3")
 endif ()
 
 if ("${CC_TAG}" STREQUAL "")
-    set (CC_TAG "develop")
+    set (CC_TAG "v2.4.2")
 endif ()
 
 if (NOT CMAKE_CXX_STANDARD)
