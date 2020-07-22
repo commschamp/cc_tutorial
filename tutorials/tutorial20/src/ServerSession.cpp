@@ -16,7 +16,6 @@ void ServerSession::handle(ConnectMsg& msg)
 
     // Assign version for all future messages.
     m_frame.layer_version().pseudoField().value() = msg.field_version().value();
-    sendMessage(msg);
 }
 
 void ServerSession::handle(Message& msg)

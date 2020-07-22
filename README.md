@@ -144,7 +144,8 @@ $> nmake install
 - [tutorial16](../../tree/master/tutorials/tutorial16) - Extra values in transport framing.
 - [tutorial17](../../tree/master/tutorials/tutorial17) - Custom transport framing layers.
 - [tutorial18](../../tree/master/tutorials/tutorial18) - How to access transport framing fields.
-- [tutorial19](../../tree/master/tutorials/tutorial18) - Introduction to protocol version support.
+- [tutorial19](../../tree/master/tutorials/tutorial19) - Introduction to protocol version support.
+- [tutorial20](../../tree/master/tutorials/tutorial20) - Reporting protocol version in one of the messages.
 
 
 # How-Tos

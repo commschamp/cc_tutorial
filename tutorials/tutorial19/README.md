@@ -63,6 +63,19 @@ Note usage of **semanticType** property, which specifies the special role of the
 the field is used to hold protocol version. The message payload deserialization will take it
 into account when needed.
 
+Also the implicit **defaultValue** of the _version_ (marked with `semanticType="version"`) is
+equal to the version of the schema.
+```cpp
+struct Version : public
+    comms::field::IntValue<
+        ...,
+        comms::option::def::DefaultNumValue<5U>
+    >
+{
+    ...
+};
+```
+
 ----
 
 **SIDE NOTE**: In case the defined **&lt;interface&gt;** does not have version field (marked 
