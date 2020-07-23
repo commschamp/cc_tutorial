@@ -135,6 +135,16 @@ If the field is not referenced anywhere the
 [commsdsl2comms](https://github.com/arobenko/commsdsl) code generator 
 does **NOT** generate unnecessary definition file(s).
 
+----
+
+**SIDE NOTE**: Sometimes can can be useful to force generation of the field class and other 
+relevant types. It can be achieved by using **forceGen** property:
+```xml
+<int name="Dummy" type="uint8" forceGen="true" />
+```
+
+---
+
 ## Client / Server Sessions
 Both server and client sessions are very similar to the ones 
 presented in [tutorial1](../tutorial1). The **server** is just the simple
@@ -149,7 +159,7 @@ the sever side is no different than on the client.
 In general, every field is an abstraction wrapper around value storage in
 order to provide common interface for all the fields. All the presented later
 supported field types will have the following public member types and functions:
-```
+```cpp
 class SomeField
 {
 public:
@@ -191,7 +201,7 @@ Please note the following
 rest are automatically used by the message class definition in order to
 implement message class functionality. In most cases these other member functions
 won't be used by the end application.
-- The stored value access **value()** member function returns reference to 
+- The `value()` member function returns reference to 
 the stored value and can be used to assign value to the field as well.
 - All of the field abstraction member functions are **NON-virtual**, i.e. fields
 don't exhibit polymorphic behavior.
@@ -224,7 +234,7 @@ public:
 Usage of `comms::option::def::FieldsImpl` option lets the 
 [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
 base class know the types of fields the message has. As the result the `comms::MessageBases`
-has defines the following member types and functions that allow external access to the fields
+defines the following member types and functions that allow external access to the fields
 ```cpp
 template <typename TMsgBase, typename TOpt = tutorial2::options::DefaultOptions>
 class Msg1 
@@ -239,7 +249,7 @@ public:
 };
 ```
 
-Just using these member functions it is possible to access the fields while
+Just by using these member functions it is possible to access the fields while
 providing the index of the field.
 ```
 auto& msgFields = msg.fields();
@@ -318,9 +328,9 @@ void ClientSession::handle(Msg1& msg)
 The [CommsChampion Ecosystem](https://arobenko.github.io/cc) has multiple 
 supported field types which are covered below one by one. Due to the nature of
 these tutorials it is not possible to cover **all** aspects (properties) of all
-the available fields, it is highly recommended to read 
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification in
-full after this tutorial.
+the available fields, it is highly recommended to read full
+[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification after
+finishing the tutorials.
 
 In general, the fields are defined as XML node. Available field types are:
 
@@ -350,6 +360,8 @@ be returned of the **name()** member function of the field.
 - **description** - Description of the field, will find its way into the field's
 doxygen documentation.
 
+----
+
 **SIDE NOTE**: The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
 supports multiple ways to set the field's property value with the same end result:
 
@@ -369,6 +381,8 @@ supports multiple ways to set the field's property value with the same end resul
     <name>F1</name>
 </int>
 ```
+
+----
 
 ### &lt;enum&gt; Fields
 The `Msg2` message (defined inside [dsl/msg2.xml](dsl/msg2.xml)) is there to
@@ -488,7 +502,7 @@ is possible to change it using **defaultValue** property of the field, which can
 have either numeric value of reference one of its **&lt;valueValue&gt;**-es. In
 case of `E2_2` it is `V2`. It is implemented using `comms::option::def::DefaultNumValue`
 option passed to the class definition.
-- Any numeric value can be assigned as decimal or or as hexadecimal value prefixed
+- Any numeric value can be assigned as decimal or as hexadecimal value prefixed
 with `0x`.
 - When the **&lt;valueValue&gt;**-es cannot be unified into one range, the 
 [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
@@ -508,7 +522,7 @@ class E2_2 : public
 ```
 
 The `Msg2` message defines its third field internally:
-```cpp
+```xml
 <message name="Msg2" id="MsgId.M2" displayName="Message 2">
     ...
     <enum name="F3" type="int8" description="Some Inner enum" defaultValue="V3">
@@ -525,7 +539,7 @@ common, template parameters independent definition is a member of
 [tutorial2::message::Msg2FieldsCommon](include/tutorial2/message/Msg2Common.h)
 
 The fourth `enum` field of the `Msg2` is also defined internally:
-```cpp
+```xml
 <message name="Msg2" id="MsgId.M2" displayName="Message 2">
     ...
     <enum name="F4" type="uint16" hexAssign="true">
@@ -611,7 +625,7 @@ in [include/tutorial2/message/Msg3.h](include/tutorial2/message/Msg3.h)) is ther
 demonstrate basic usage of integral fields. The previous section showed that
 the fields can be defined as global ones or internally as members of 
 **&lt;message&gt;** XML node. For reference and demonstration convenience, the
-explained fields in this and most of subsequent section will be defined as
+explained fields in this and most of subsequent sections will be defined as
 global ones and referenced using **&lt;ref&gt;** XML node.
 
 The first defined **&lt;int&gt;** field is:
@@ -706,8 +720,12 @@ The third defined **&lt;int&gt;** field uses variable length encoding:
 The variable length **type** uses [Base-128](https://en.wikipedia.org/wiki/LEB128)
 encoding by default and no other encoding is **currently** implemented / supported.
 
+----
+
 **SIDE NOTE**: In case there is a need for any other standard encoding please create a request
 issue for [commsdsl](https://github.com/arobenko/commsdsl) project.
+
+----
 
 The value of the **length** property in the case above means **maximal** 
 allowed serialization length of the field. The 
@@ -743,7 +761,7 @@ void ClientSession::sendMsg3()
 In some protocols values of some fields may have special meaning. In order
 to prevent boilerplate code the 
 [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification
-provides and ability to specify names for some values, while 
+provides an ability to specify names for some values, while 
 [commsdsl2comms](https://github.com/arobenko/commsdsl) code generator creates
 necessary helper functions to get/set special values.
 
@@ -764,7 +782,7 @@ The fourth defined **&lt;int&gt;** field demonstrates usage of such special valu
 Also note that **defaultValue** property can reference one of the special
 values. The [I3_4](include/tutorial2/field/I3_4.h)
 field definition contains the following helper member functions:
-```
+```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
 class I3_4 : public
     comms::field::IntValue<...>
@@ -798,7 +816,7 @@ The fifth defined **&lt;int&gt;** field
 ([I3_5](include/tutorial2/field/I3_5.h)) demonstrates usage of **serOffset**
 property. It is used to automatically add / subtract predefined value before / after
 field value serialization. The classic example is having a year number to be serialized
-as offset from year **2000** as single byte.
+as offset from year **2000** as a single byte.
 ```xml
 <fields>
     ...
@@ -1044,7 +1062,7 @@ void ClientSession::sendMsg4()
 As was mentioned early the internal value storage type of the field (`ValueType`)
 is unsigned integral one (**std::uint8_t**, **std::uint16_t**, **std::uint32_t**,
 or **std::uint64_t**). It means that it can be accessed and raw bulk value of all
-the fields can be assigned directly to it, like in the code example above. 
+the bits can be assigned directly to it, like in the code example above. 
 It is obvious that in such assignment above many reserved bits end up with invalid
 value, that's why call to the `valid()` member function is expected to return **false**.
 
@@ -1055,7 +1073,7 @@ human readable name of the bit. By default it is equal to the value of the
 **name** property, but it can be overwritten with **displayName** one.
 The usage of the `bitName()` member function is demonstrated by the
 following function (implemented as member of 
-[Session.h](../lib/include/Session.h) base class):
+[Session.h](../../lib/include/Session.h) base class):
 ```cpp
 template <typename TField>
 void printSetField(const TField& field, const std::string& prefix = std::string())
@@ -1361,7 +1379,7 @@ Just like with **&lt;string&gt;** fields, when such **&lt;data&gt;** field is se
 [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) makes
 sure that correct number of bytes is written to the output buffer. In case the
 stored string value has shorter length, the output is padded with correct number
-of zeroes (**0**). In case the stored string value is longer than allowed, the
+of zeroes (**0**). In case the stored data value is longer than allowed, the
 serialization output will just be truncated without exceeding maximum allowed 
 number of bytes.
 
@@ -1462,14 +1480,14 @@ public:
 ```
 The class is defined using 
 [comms::field::Bundle](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Bundle.html).
-The names of the member fields are provided using **COMMS_FIELD_MEMBERS_NAMES()**
-macro. It is quite similar to **COMMS_MSG_FIELDS_NAMES()** (used to define member
+The names of the member fields are provided using `COMMS_FIELD_MEMBERS_NAMES()`
+macro. It is quite similar to `COMMS_MSG_FIELDS_NAMES()` (used to define member
 fields of the messages), but applicable to composite fields, such as bundles.
 
 The inner `ValueType` type of `comms::field::Bundle` (or its extended type) 
 is `std::tuple` of all the member fields.
 
-Having **COMMS_FIELD_MEMBERS_NAMES()** macro inside class definition is equivalent
+Having `COMMS_FIELD_MEMBERS_NAMES()` macro inside class definition is equivalent
 to having the following types and functions defined:
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
@@ -1502,8 +1520,8 @@ public:
     const Field_m3& field_m3() const;
 };
 ```
-Please note that names provided to **COMMS_FIELD_MEMBERS_NAMES()** macro 
-('m1', 'm2', 'm3') find their way to `FieldIdx_x` enum values, inner
+Please note that names provided to `COMMS_FIELD_MEMBERS_NAMES()` macro 
+(`m1`, `m2`, `m3`) find their way to `FieldIdx_x` enum values, inner
 `Field_x` alias types and `field_x()` access member functions.
 
 The preparation of the field before being sent looks like this:
@@ -1626,14 +1644,13 @@ public:
 The class is defined using 
 [comms::field::Bitfield](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Bitfield.html).
 Similar to [&lt;bundle&gt;](#bundle-fields) the names of the member fields are 
-provided using the same **COMMS_FIELD_MEMBERS_NAMES()**
-macro. 
+provided using the same `COMMS_FIELD_MEMBERS_NAMES()` macro. 
 
 The inner `ValueType` type of `comms::field::Bitfield` (or its extended type) 
 is `std::tuple` of all the member fields.
 
 Just like with [&lt;bundle&gt;](#bundle-fields) fields, having 
-**COMMS_FIELD_MEMBERS_NAMES()** macro inside class definition is equivalent
+`COMMS_FIELD_MEMBERS_NAMES()` macro inside class definition is equivalent
 to having the following types and functions defined:
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
@@ -1718,7 +1735,7 @@ in the example above), the member fields must be wrapped in **&lt;members&gt;**
 XML element. 
 
 Please also note, that only [&lt;int&gt;](#int-fields), [&lt;enum&gt;](#enum-fields),
-and [&lt;set&gt;](#set-fields) fields can be members of [&lt;bitfield&gt;](#bitfield-fields),
+and [&lt;set&gt;](#set-fields) fields (or [&lt;ref&gt;](#ref-fields) to them) can be members of [&lt;bitfield&gt;](#bitfield-fields),
 value of any other field cannot limit its length to number of bits.
 
 ### &lt;list&gt; Fields
@@ -1806,7 +1823,7 @@ a reference to vector of fields (`std::vector<tutorial2::field::L10_1Members<tut
 Also note that usage of **count="5"** property in the 
 [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) schema as well
 as reflected in the generated code usage of `comms::option::def::SequenceFixedSize<5U>`
-option ensures requested number of element in the serialized output buffer, and
+option ensures requested number of elements in the serialized output buffer, and
 does **NOT** influence the size of the storage vector upon construction of the
 field. The default constructed vector is empty. The code above creates and populates only
 3 elements of it. The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
@@ -2434,7 +2451,7 @@ protected:
 unconditionally report `false` without doing anything else). In such case (determined at **compile-time** using 
 multiple meta-programming techniques), the [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
 does **NOT** override `refreshImpl()` and as the result inherits the default implementation provided by the
-[comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html). It allows to avoid a lot of 
+[comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html). It avoids a lot of 
 unnecessary code generation.
 
 Unfortunately the [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html) is not 
@@ -2553,7 +2570,7 @@ void ClientSession::sendMsg14()
 - The fields are abstractions around actual value storage to provide common
   interface for all field types. 
 - The primary and most frequently used member function of the field objects
-  is **value()**. It is used to access the storage **by-reference**.
+  is **value()**. It is used to access the value storage **by-reference**.
 - Every field has inner `ValueType` type, which defines type of the inner value storage.
   - `ValueType` of [&lt;enum&gt;](#enum-fields) is a relevant C++ enum class.
   - `ValueType` of [&lt;int&gt;](#int-fields) is an appropriate integral type (`std::int8_t`,     
@@ -2577,21 +2594,21 @@ void ClientSession::sendMsg14()
   - `ValueType` of [&lt;optional&gt;](#optional-fields) is a type of the field being wrapped.
 - All the member functions of all the fields are **non**-virtual.
 - Every message definition class containing inner fields uses 
-  **COMMS_MSG_FIELDS_NAMES()** macro (provided by the 
+  `COMMS_MSG_FIELDS_NAMES()` macro (provided by the 
   [COMMS Library](https://github.com/arobenko/comms_champion#comms-library))
   to create convenience access member functions for member fields. For every field name **x** 
-  mentioned in the macro, there is **Field_x** member alias type to specify type of the field
-  as well as **field_x()** member function to provide an access to the contained member field 
+  mentioned in the macro, there is `Field_x` member alias type to specify type of the field
+  as well as `field_x()` member function to provide an access to the contained member field 
   object.
 - Generated classes of both [&lt;bundle&gt;](#bundle-fields) and [&lt;bitfield&gt;](#bitfield-fields)
-  fields use **COMMS_FIELD_MEMBERS_NAMES()** macro to provide names for their member fields. For every 
-  field name **x** mentioned in the macro, there is **Field_x** member alias type to specify type of the 
-  field as well as **field_x()** member function to provide an access to the contained member field 
+  fields use `COMMS_FIELD_MEMBERS_NAMES()` macro to provide names for their member fields. For every 
+  field name **x** mentioned in the macro, there is `Field_x` member alias type to specify type of the 
+  field as well as `field_x()` member function to provide an access to the contained member field 
   object.
 - Due to the nature of these tutorials it is not possible to cover **all** aspects (properties) of all
   the available fields, it is highly recommended to read 
   [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification in
-  full after this tutorial.
+  full after reading the tutorials.
 - All the field classes are implemented by extending one of the field definition
   classes provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
   and residing in [comms::field](https://arobenko.github.io/comms_doc/namespacecomms_1_1field.html)

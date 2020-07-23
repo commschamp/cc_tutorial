@@ -18,7 +18,7 @@ the main **&lt;schema&gt;** XML node.
 - The global fields (that can be references by messages and/or other 
 fields) are defined as members of **&lt;fields&gt;** XML node.
 - The `enum` field is defined by **&lt;enum&gt;** XML node.
-- When `enum` is used to defined numeric message IDs it needs to be marked
+- When `enum` is used to define numeric message IDs it needs to be marked
 as such using **semanticType="messageId"** property assignment.
 - The messages are defined using **&lt;message&gt;** XML node.
 - The transport framing is defined using **&lt;frame&gt;** XML node.
@@ -36,8 +36,8 @@ Let's take a look at generated code relevant for this tutorial.
 The numeric message IDs find their way to `MsgId` enum definition inside
 [include/tutorial1/MsgId.h](include/tutorial1/MsgId.h).
 
-To allow polymorphic behavior of the message objects there is a need for
-common interface class for all the messages. 
+To allow polymorphic behavior of the message objects, there is a need for
+a common interface class for all the messages. 
 The relevant interface class for **all** the messages resides in 
 [include/tutorial1/Message.h](include/tutorial1/Message.h). Please take a
 look at its definition.
@@ -98,7 +98,7 @@ later tutorial(s).
 
 ## Client / Server Sessions
 Every tutorial (not just this one) uses common I/O management code, which operates on 
-[Session](../lib/include/Session.h) object(s). Every **tutorialX** / **howtoX** is expected
+[Session](../,,.lib/include/Session.h) object(s). Every **tutorialX** / **howtoX** is expected
 to extend it and implement all the relevant virtual functions to make the common code function
 properly. The sessions are split into **server** and **client** ones. The **server**
 side code is implemented in [src/SeverSession.h](src/ServerSession.h) and 
@@ -242,7 +242,7 @@ class Message
 {
 public: 
     // Define type used to report message ID
-    using MsgIdType = tutorial::MsgId;
+    using MsgIdType = tutorial1::MsgId;
     
     // Polymorphic numeric ID retrieval
     MsgIdType getId() const;

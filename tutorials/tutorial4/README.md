@@ -177,7 +177,7 @@ default:
 };
 ```
 Inside every case the `initField_X()` member is used to initialize the field to hold an appropriate
-member, and then redirect the rest of the `read()` operation to it to read rest of the value (because
+member, and then redirect the rest of the `read()` operation to it, to read rest of the value (because
 the key information was already consumed).
 
 Now, let's take a look how the `Msg1` is prepared to be sent out.
@@ -425,8 +425,9 @@ this tutorial.
 ----
 
 **SIDE NOTE**: In case the **&lt;variant&gt;** field contains other XML child nodes in addition to
-member fields definition (like **&lt;description&gt; in the example above), the member fields need to
+member fields definition (like **&lt;description&gt;** in the example above), the member fields need to
 be defined as children of **&lt;members&gt;** XML node.
+
 ----
 
 The definition of the **&lt;variant&gt;** field above very similar to [Key-Value Pairs](#key-value-pairs) 

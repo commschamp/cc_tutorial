@@ -1,7 +1,7 @@
 # Overview
 This repository is a combination of tutorials and various how-to(s) for
 [CommsChampion Ecosystem](https://arobenko.github.io/cc). It is important to
-understand the available components and their respective role. Please
+understand the available components and their respective roles. Please
 read the [introduction](https://arobenko.github.io/cc) if you haven't done
 so yet.
 
@@ -26,6 +26,17 @@ It is highly recommended to open
 a source code with your favourite IDE to be able to easily navigate it and 
 have a full code listing visible, while reading the README files of the tutorials from this
 github repository using your browser.
+
+The [CommsChampion Ecosystem](https://arobenko.github.io/cc) was built to be easy to use 
+while providing sensible behavioural defaults suitable for most of C++ applications. It 
+is also very flexible when it comes to application specific configurations. However, it 
+is very difficult to cover all the capabilities in a set of introductory tutorials.
+It is highly recommended to read through the [CommsDSL](https://arobenko.github.io/commsdsl_spec/)
+specification in order to understand the full capabilities of the schema definition
+as well as [COMMS Library documentation](https://arobenko.github.io/comms_doc/)
+(especially [How to Use Defined Custom Protocol](https://arobenko.github.io/comms_doc/page_use_prot.html)
+page) in order to understand application specific configuration, after finishing the whole set
+of the tutorials from this repository.
 
 # Repository Organization
 Every **tutorials/tutorialX** and **howotos/howtoX** folder may contain the following files / directories:
