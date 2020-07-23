@@ -70,7 +70,7 @@ v-table of every message to contain a pointer to the function. In some constrain
 environments, such as bare-metal, the code size penalty might be too high. Let's take
 a look at other available dispatch options when 
 [comms::option::app::Handler](https://arobenko.github.io/comms_doc/options_8h.html)
-option is not used, i.e. the message object does NOT support polymorphic dispatch.
+option is not used, i.e. the message object does **NOT** support polymorphic dispatch.
 
 The [ServerSession](src/ServerSession.h) of this tutorial defines the common message interface
 as:
@@ -105,6 +105,20 @@ tutorial page from the [COMMS Library](https://github.com/arobenko/comms_champio
 documentation contains a detailed description of various available dispatch functionalities and 
 their implications.
 
+In short, there are 3 ways to dispatch:
+- **Polymorphic** - If the message does **NOT** provide polymorphic dispatch, the independent
+  polymorphic (with virtual functions) dispatch tables are created and used used. Depending 
+  on how sparce the message IDs are the runtime complexity of this approach can be 
+  either **O(1)** or **O(log(n))**.
+- **Static Binary Search** - The generated dispatch code is equivalent of having multiple
+  folded `if` comparison statements to find the right type to downcast the message object to.
+  The runtime complexity is always **O(log(n))**.
+- **Linear Switch** - Implemented as a sequence of folded `switch` statements. It heavily 
+  depends on the compiler's optimizations. It has been noticed that only **clang** of 
+  quite advanced versions is smart enough to unfold it and create **O(1)** dispatch tables.
+  All other major compilers implement it as a sequence of simple comparisons which result
+  in **O(n)** runtime complexity. Hence using this type of dispatch is really not recommended.
+
 The [comms::processAllWithDispatch()](https://arobenko.github.io/comms_doc/process_8h.html) 
 function calls [comms::dispatchMsg()](https://arobenko.github.io/comms_doc/dispatch_8h.html)
 (defined in [comms/dispatch.h](https://arobenko.github.io/comms_doc/dispatch_8h.html)) 
@@ -120,7 +134,7 @@ performs the following **compile-time** analysis to choose a proper dispatch opt
   the max ID number of all the messages does not exceed 10). If this is the case (like with
   this tutorial) then **static** dispatch array is created where the access index is actually
   message numeric ID, resulting in **O(1)** run-time performance.
-- If message IDs are too sparse then **Static Binary Search** dispatch (explained a bit later) is used.
+- If message IDs are too sparse then **Static Binary Search** dispatch is used.
 
 The dispatch strategy in case of the used schema (with sequential IDs and low number of messages)
 and lack of polymorphic dispatch via interface is chosen to still be polymorphic but with

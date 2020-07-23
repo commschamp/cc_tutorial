@@ -223,7 +223,7 @@ The **&lt;checksum&gt;** layer is used to define checksum information that needs
 ```
 The [CommsChampion Ecosystem](https://arobenko.github.io/cc/) has a list of supported built-in checksum 
 algorithms which can be specified using **alg** property. Please refer to 
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification for a full list. In this
+[CommsDSL](https://arobenko.github.io/commsdsl_spec/#frames-checksum) specification for a full list. In this
 particular tutorial [CRC-CCITT](https://en.wikipedia.org/wiki/Cyclic_redundancy_check) is used. 
 
 ----
@@ -358,7 +358,7 @@ overwrite the dummy checksum with a correct value.
 
 Similar situation may occur when the interface class doesn't expose polymorphic
 `length()` member function (the `comms::option::app::LengthInfoInterface` option
-has NOT been provided). In such case when `SIZE` value needs to be written the
+has **NOT** been provided). In such case when `SIZE` value needs to be written the
 proper value cannot be retrieved (because length of message payload is not known).
 In this case the [comms::protocol::MsgSizeLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html)
 will write a dummy value and force a return of `commms::ErrorStatus::UpdateRequired`.

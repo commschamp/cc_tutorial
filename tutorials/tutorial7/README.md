@@ -285,6 +285,8 @@ It is also recommended to read
 tutorial page for deeper understanding of available dispatch mechanisms provided by 
 the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
 
+----
+
 ## Summary
 - Dispatch of the single message object to multiple handlers can be implemented by using
   common base class for all the handlers with virtual `handle()` member functions.

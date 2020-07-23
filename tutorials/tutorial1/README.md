@@ -98,7 +98,7 @@ later tutorial(s).
 
 ## Client / Server Sessions
 Every tutorial (not just this one) uses common I/O management code, which operates on 
-[Session](../,,.lib/include/Session.h) object(s). Every **tutorialX** / **howtoX** is expected
+[Session](../../lib/include/Session.h) object(s). Every **tutorialX** / **howtoX** is expected
 to extend it and implement all the relevant virtual functions to make the common code function
 properly. The sessions are split into **server** and **client** ones. The **server**
 side code is implemented in [src/SeverSession.h](src/ServerSession.h) and 

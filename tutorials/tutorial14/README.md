@@ -114,7 +114,7 @@ files. The injected code finds its way into the official protocol generated code
 **REMINDER**: The **refresh** functionality is expected to return `true` when the message state has been
 updated and `false` when nothing has changed.
 
-Wnen implementing custom **refresh** functionality it is a good practice to invoke the **refresh** implemented
+When implementing custom **refresh** functionality it is a good practice to invoke the **refresh** implemented
 by the base class, just in case that the default refresh is **NOT** trivial. If it is, the extra unnecessary code will
 just be optimized away by the compiler.
 ```cpp

@@ -21,7 +21,7 @@ places where dynamic memory allocation is used:
 The dynamic allocation inside [comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
 and [comms::MsgFactory](https://arobenko.github.io/comms_doc/classcomms_1_1MsgFactory.html) can be resolved
 by using [comms::option::app::InPlaceAllocation](https://arobenko.github.io/comms_doc/options_8h.html) option. 
-If forces usage an array (as private data member), big
+If forces usage of an uninitialized storage area (as private data member), big
 enough to hold **any** (but one at a time) message provided in the **input** messages tuple. When 
 new message type is recognized, the message object is created using 
 [placement](https://en.cppreference.com/w/cpp/language/new) allocation and a pointer to the used
@@ -367,7 +367,7 @@ type, whether it is `std::string`, `std::string_view`, `comms::util::StaticStrin
 
 ----
 
-**SIDE NOTE**: Most bare metal metal applications avoid using of dynamic memory 
+**SIDE NOTE**: Most bare metal metal applications avoid usage of dynamic memory 
 allocation, some also avoid virtual functions (due to code size limitations). Many also 
 exclude usage of standard C library altogether. 
 
