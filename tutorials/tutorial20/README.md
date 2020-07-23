@@ -32,7 +32,7 @@ The relevant parts of this tutorial [schema](dsl/schema.xml) looks like this:
 </message> 
 ```
 **REMINDER**: The _version_ field (marked with `semanticType="version"`) is default constructed to have
-a value equal to the schema version (**5**) in this tutorial.
+a value equal to the schema version (**5** in this tutorial).
 
 This creates a problem for the **server** that was compiled with version **5** (with default value of 
 the `Version` field inside the **&lt;interface&gt;** to be **5**), but the connected **client** 
@@ -51,7 +51,7 @@ In order to properly support such case the following trick is required:
 </frame>
 ```
 There is still **&lt;value&gt;** layer (like in [previous](../tutorial19) tutorial) 
-which is responsible to assign proper value to the `Value` field, but it is parked as 
+which is responsible to assign proper value to the `Value` field, but it is marked as 
 **pseudo** (`pseudo="true"`). The **pseudo** value layer does not really serialize/deserialize
 any field, it just pretends to. Such layer contains inner field member in its private data, 
 which can be accessed via API and assigned proper value. During the `read()` operation
@@ -59,7 +59,8 @@ such pseudo layer pretends to read the value and just takes the data from its in
 if read.
 
 Note, that **pseudo** layer can be put anywhere in the frame, but it is recommended (for
-performance reasons) to put it right before the **&lt;payload&gt;**.
+performance reasons) to put it right before the **&lt;payload&gt;** to make sure that 
+the message object is properly created.
 
 Let's take a look how the `Connect` message is handled by the [ServerSession](src/ServerSession.cpp):
 ```cpp
@@ -79,7 +80,7 @@ The macro also generates `layer_*()` member functions for all the provided names
 access relevant layer. As the result `m_frame.layer_version()` provides an access to the
 `Version` layer.
 
-The pseudo **&lt;version&gt;** layer is defined with usage of 
+The pseudo **&lt;value&gt;** layer is defined with usage of 
 [comms::option::def::PseudoValue](https://arobenko.github.io/comms_doc/options_8h.html) option.
 ```cpp
 using Version =
@@ -161,7 +162,7 @@ operation.
 ## Summary
 - When the version is reported in one (usually the first) of the messages, the 
   definition is very similar to the one that reports the version in the frame of 
-  every message (described in the [previous](../tutorial19) tutorial.
+  every message (described in the [previous](../tutorial19) tutorial).
 - The main difference is that **&lt;value&gt;** layer needs to be set as **pseudo**
   (`pseudo="true"`).
 - When handling the version reporting message, the relevant pseudo **&lt;value&gt;** layer
