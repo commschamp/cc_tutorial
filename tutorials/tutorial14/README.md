@@ -65,7 +65,7 @@ code is injected.
 The injection of the custom code is performed by creating a separate directory, structure of which 
 resembles the structure of the output project produced by the [commsdsl2comms](https://github.com/arobenko/commsdsl)
 and passing the path to the directory to the [commsdsl2comms](https://github.com/arobenko/commsdsl) (using `-c` parameter) at the
-time of code generation (see [commsdsl2comms Manual](https://github.com/arobenko/commsdsl/wiki/commsdsl2comms-Manual#injecting-custom-code) for details).
+time of code generation (see [commsdsl2comms Manual](https://github.com/arobenko/commsdslhttps://github.com/arobenko/commsdsl/blob/master/doc/Manual_commsdsl2comms.md#injecting-custom-code) for details).
 
 For this tutorial such directory is [dsl_src](dsl_src). The 
 [dsl_src/include/tutorial14/frame/checksum/PlusOneSum.h](dsl_src/include/tutorial14/frame/checksum/PlusOneSum.h)

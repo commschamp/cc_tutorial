@@ -359,7 +359,7 @@ case there are version dependent fields.
 ----
 
 **SIDE NOTE**: The [commsdsl2comms](https://github.com/arobenko/commsdsl) code generator 
-allows selecting a [minimal remote version](https://github.com/arobenko/commsdsl/wiki/commsdsl2comms-Manual#selecting-minimal-remote-version),
+allows selecting a [minimal remote version](https://github.com/arobenko/commsdsl/blob/master/doc/Manual_commsdsl2comms.md#selecting-minimal-remote-version),
 which means all the possible remote endpoints won't use any earlier version then specified. In such 
 case all version dependent fields that where introduced before the specified version will be implemented
 as normal fields, not as [comms::field::Optional](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)

@@ -243,8 +243,8 @@ Proper destruction: ~Msg3
 
 **SIDE NOTE:** The [commsdsl2comms](https://github.com/arobenko/commsdsl) code generator allows injection 
 of custom C++ code snippets into the generated one. It is explained in 
-[Injecting Custom Code](https://github.com/arobenko/commsdsl/wiki/commsdsl2comms-Manual#injecting-custom-code)
-section of [commsdsl2comms manual](https://github.com/arobenko/commsdsl/wiki/commsdsl2comms-Manual) wiki page.
+[Injecting Custom Code](https://github.com/arobenko/commsdsl/blob/master/doc/Manual_commsdsl2comms.md#injecting-custom-code)
+section of [commsdsl2comms manual](https://github.com/arobenko/commsdsl/blob/master/doc/Manual_commsdsl2comms.md) documentation page.
 The [dsl_src](dsl_src) folder of this tutorial contains code snippets injected into the message definitions.
 The [dsl_src/include/tutorial11/message/MsgX.h.inc](dsl_src/include/tutorial11/message/Msg1.h.inc) contains 
 extra include statements to be added at the beginning of `MsgX.h` file, while 
