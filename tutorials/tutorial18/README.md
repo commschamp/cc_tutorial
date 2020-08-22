@@ -48,17 +48,17 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
     return consumed;
 }
 ```
-The [read()](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+The [read()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
 member function of every protocol layer receives a variadic `extraValues` last parameter, which can be 
 used to add several output parameters to the function. In this example the 
-[comms::protocol::msgId()](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html) is used 
+[comms::protocol::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html) is used 
 to add `msgId` local variable as an output parameter for the message numeric ID. Also the 
-[comms::protocol::msgIndex()](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html)
+[comms::protocol::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html)
 is used to add `msgIdx` local variable as an output parameter for the index of the message (offset in 
 the tuple of the input messages starting from the first message sharing the same ID).
 Later down the code both `msgId` and `msgIdx` values are used to dispatch message object into the 
 appropriate handling function using 
-[comms::dispatchMsg](https://arobenko.github.io/comms_doc/dispatch_8h.html) function.
+[comms::dispatchMsg](https://commschamp.github.io/comms_doc/dispatch_8h.html) function.
 
 
 The [ClientSession](src/ClientSession.cpp) on the other hand demonstrates caching of **all** the framing 
@@ -102,12 +102,12 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
     return consumed;
 }
 ```
-Every [layer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html) defines
+Every [layer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html) defines
 `AllFields` inner type which is `std::tuple` of all the fields starting from the layer 
 being defined and down to the bottom (**&lt;payload&gt;**) one. As the result the `AllFields` type of the outermost layer 
 (which is also used as a full frame) is a tuple of all the framing fields.
 
-Also every layer defines [readFieldsCached()](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+Also every layer defines [readFieldsCached()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
 member function, which is similar to `read()` used so far, but receives the tuple of all the fields it needs to update as 
 its first parameter. After the read operation is complete the provided `transportFields` tuple will have updated values which 
 can be accessed later.
@@ -137,16 +137,16 @@ public:
 };
 ```
 Once the layer object is accesses its 
-[accessCachedField()](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+[accessCachedField()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
 member function can be used to access appropriate field in the cached fields tuple.
 
 Note that the inner field of the **&lt;payload&gt;** layer is 
-[comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html) of 
+[comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html) of 
 raw `std::uint8_t` bytes (equivalent to being **&lt;data&gt;**). The options passed to 
-[comms::protocol::MsgDataLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgDataLayer.html)
+[comms::protocol::MsgDataLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgDataLayer.html)
 are passed to the field definition. If no special options are passed then the whole payload will be 
 **copied** to the cached field. It is highly recommended to pass 
-[comms::option::app::OridDataView](https://arobenko.github.io/comms_doc/options_8h.html) to it to 
+[comms::option::app::OridDataView](https://commschamp.github.io/comms_doc/options_8h.html) to it to 
 avoid unnecessary copy of the data. In this particular tutorial the [ClientSession](src/ClientSession.h)
 defines its options to be:
 ```cpp
@@ -174,16 +174,16 @@ struct DataViewDefaultOptionsT : public TBase
 ```
 
 ## Summary
-- The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) provides multiple ways to access 
+- The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) provides multiple ways to access 
   some or all of the framing fields.
 - The `read()` member function can receive and update selected output parameters via 
-  [comms::protocol::msgId()](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html), 
-  [comms::protocol::msgIndex()](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html), etc...
+  [comms::protocol::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html), 
+  [comms::protocol::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html), etc...
 - In order to get **all** the frame fields the 
-  [readFieldsCached()](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+  [readFieldsCached()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
   member function needs to be used.
 - The frame definition allows access of various inner layers using `layer_*()` member function.
-- Every layer provides [accessCachedField()](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+- Every layer provides [accessCachedField()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
   member function to access appropriate field from the cached tuple.
 
 [Read Previous Tutorial](../tutorial17) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial19) 

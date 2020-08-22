@@ -78,5 +78,5 @@ that follows, and second time gives an access to the `Flags` one. After that the
 **&lt;value&gt;** layer will do its job of re-assigning its field to the **&lt;interface&gt;** the 
 normal way it's designed to do.
 
-Also for more details please read [Defining Custom Message Size Protocol Stack Layer](https://arobenko.github.io/comms_doc/page_custom_size_layer.html)
+Also for more details please read [Defining Custom Message Size Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
 tutorial page.

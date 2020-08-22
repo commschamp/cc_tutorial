@@ -5,7 +5,7 @@ Some protocols define member fields common to all the messages and move them int
 having them as normal members of message payload. Such fields may influence the way how the 
 message payload decoded and/or handled.
 
-The [CommsChampion Ecosystem](https://arobenko.github.io/cc) completely separates message framing and message
+The [CommsChampion Ecosystem](https://commschamp.github.io) completely separates message framing and message
 contents. As the result the proper handling of such scenarios may be a bit challenging. It is solved by
 making such extra fields (from the transport framing) to be a member of common message interface. The schema
 file(s) of the previous tutorials didn't contain any special common message interface definition. The 
@@ -61,10 +61,10 @@ public:
     );
 };
 ```
-The defined interface class extends [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) like 
+The defined interface class extends [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) like 
 all other interfaces but also uses `comms::option::def::ExtraTransportFields` option to define the extra transport fields
 it's going to contains as well as uses `COMMS_MSG_TRANSPORT_FIELDS_NAMES()` macro to set convenience access names for them.
-It's very similar to [COMMS_MSG_FIELDS_NAMES()](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html) one
+It's very similar to [COMMS_MSG_FIELDS_NAMES()](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) one
 which is used to set names of the normal message payload fields.
 
 For every name **X** the `COMMS_MSG_TRANSPORT_FIELDS_NAMES()` macro defines the following enum value as well as access
@@ -139,13 +139,13 @@ The message frame is defined like this:
     <payload name="Data" />
 </frame>
 ```
-The [&lt;value&gt;](https://arobenko.github.io/commsdsl_spec/#frames-value) layer represents extra values
+The [&lt;value&gt;](https://commschamp.github.io/commsdsl_spec/#frames-value) layer represents extra values
 to be re-assigned to the message interface. Note usage of **interfaceFieldName** property, which specifies 
 the **name** of the relevant field inside the **&lt;interface&gt;**, value of which needs to be assigned.
 
 ----
 
-**SIDE NOTE**: The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) describes usage of **interfaces**
+**SIDE NOTE**: The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) describes usage of **interfaces**
 property to specify the list of the interfaces it supports. It's applicable to the situation when the protocol schema
 file(s) contain multiple **&lt;interface&gt;** definitions. It is not the case for this tutorial, hence the 
 usage of **interfaces** property is omitted.
@@ -153,7 +153,7 @@ usage of **interfaces** property is omitted.
 ----
 
 The **&lt;value&gt;** layer is implemented by extending 
-[comms::protocol::TransportValueLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
+[comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
 (see [include/tutorial16/frame/Frame.h](include/tutorial16/frame/Frame.h)).
 ```cpp
 template <typename TOpt = tutorial16::options::DefaultOptions>
@@ -178,11 +178,11 @@ struct FrameLayers
 **SIDE NOTE**: In this particular tutorial the **&lt;value&gt;** layer precedes the **&lt;id&gt;** one,
 which creates a situation when the extra transport value is known **before** the message object is created
 (by the **&lt;id&gt;** layer) and cannot be re-assigned to appropriate message object right away.
-The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) contains inner 
+The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) contains inner 
 ~~magic~~ **compile-time** logic which identifies such scenario and results in some kind of `read()` multi-pass
 between the layers (excluding the **&lt;payload&gt;** one) to allow the **&lt;value&gt;** layer to assign the 
 transport values to the created message object **before** the `read()` operation is forwarded to the **&lt;payload&gt;**
-layer. It's just inner implementation details of the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) and 
+layer. It's just inner implementation details of the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) and 
 the integrating developer doesn't need to worry about it.
 
 ----
@@ -222,7 +222,7 @@ Now, let's dive into the definition of the messages themselves:
 The `F3` field of the `Msg1` is defined as **&lt;optional&gt;** and is expected to exist only 
 if `B0` inside the `Flags` is set. The `F2` of the `Msg` also defined as 
 **&lt;optional&gt;** and is expected to exist only if `B1` inside the `Flags` is set. At this 
-moment the [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) does not allow 
+moment the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) does not allow 
 referencing the **&lt;interface&gt;** member fields inside the **&lt;cond&gt;**-itions 
 of the **&lt;optional&gt;** message member fields (it is only allowed to reference its sibling fields).
 Hence the custom **read** and **refresh** codes need to be written. There are 
@@ -263,7 +263,7 @@ function of the message object to bring the message into a consistent state, whi
 updates mode of the `F3` field.
 
 When the whole message is serialized by the **frame**, the value of `Flags` is retrieved by the 
-**&lt;value&gt;** ([comms::protocol::TransportValueLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html))
+**&lt;value&gt;** ([comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html))
 and properly written in the correct place in the frame.
 
 When the sent messages are received back they are printed by the `ClientSession::handle()` functions with the 
@@ -289,7 +289,7 @@ Received message "Message 2" with ID=2
 - When there is a common value for all the messages that resides in message framing, the 
   **&lt;value&gt;** framing layer needs to be used.
 - The **&lt;value&gt;** framing layer is implemented by extending 
-  [comms::protocol::TransportValueLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html) class.
+  [comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html) class.
 - In many cases such transport value has an influence on how message payload is decoded and/or the message is handled.
   To allow transfer of the information to message object custom **&lt;interface&gt;** needs to be defined.
 - The common fields defined as members of the **&lt;interface&gt;** are **NOT** getting serialized as part 

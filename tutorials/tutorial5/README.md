@@ -20,7 +20,7 @@ something like this:
 SYNC (predefined header) | SIZE | ID | PAYLOAD | CHECKSUM
 ```
 
-The whole [CommsChampion Ecosystem](https://arobenko.github.io/cc/) was designed with clean separation
+The whole [CommsChampion Ecosystem](https://commschamp.github.io/) was designed with clean separation
 of message definitions with their payloads and the actual framing. It also allows definition of multiple
 frames in the same protocol schema file(s) and allows the end application to pick at compile time the one 
 that is needed.
@@ -127,7 +127,7 @@ layer that doesn't have any inner field that represents framing value.
 <payload name="Data" />
 ```
 Such layer is implemented by extending or aliasing 
-[comms::protocol::MsgDataLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgDataLayer.html).
+[comms::protocol::MsgDataLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgDataLayer.html).
 ```cpp
 using Data =
     comms::protocol::MsgDataLayer<
@@ -141,11 +141,11 @@ The **&lt;id&gt;** layer represents numeric message ID.
 <id name="Id" field="MsgId" />
 ```
 Note that the `MsgId` field is defined in the global space and is used to enumerate messages. The 
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) allows reference of such field
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows reference of such field
 with **field** property rather than defining a field as XML child element. 
 
 Such layer is implemented by extending or aliasing 
-[comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html),
+[comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html),
 which is responsible to read the numeric message ID and create (allocate) appropriate message object.
 ```cpp
 template <typename TMessage, typename TAllMessages>
@@ -158,7 +158,7 @@ using Id =
         typename TOpt::frame::ClientToServerFrameLayers::Id
     >;
 ```
-Note, that [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) implement message framing
+Note, that [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) implement message framing
 by folding layers, where one layer wraps another and keeps the latter as its private data member. Such architecture
 allows assembling a required framing out of multiple building blocks as well as 
 having any extra logic **before** and **after** read/write operations are forwarded the the next layer
@@ -166,14 +166,14 @@ for processing.
 
 The definition above receives two template parameters `TMessage` and `TAllMessages`. The first one
 (`TMessage`) is expected to be a type of common **interface** class (descendant of 
-[comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html)) of all the message
+[comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html)) of all the message
 types, while second (`TAllMessages`) is `std::tuple` of all the **input** message types
-(descendants of [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)), which 
+(descendants of [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)), which 
 the `ID` layer is expected to recognize and create relevant object during **read** operation.
 
 ----
 
-**SIDE NOTE**: The last template parameter passed to the [comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+**SIDE NOTE**: The last template parameter passed to the [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
 is actually a compile time configuration parameter that can be used by the end-application to configure the
 behavior of the layer, such as replace default dynamic memory allocation of message objects with in-place allocation more 
 suitable for bare-metal development. Such compile time configuration is a subject for another a bit later tutorial.
@@ -198,11 +198,11 @@ There are protocols that include length of the size field itself as the value of
 protocol framing. In such case the **serOffset** property also needs to be used.
 
 Usage of the **displayOffset** property can be used the force adding the same offset to the
-value displayed in [CommsChampion Tools](https://github.com/arobenko/comms_champion#commschampion-tools) and it's
+value displayed in [CommsChampion Tools](https://github.com/commschamp/comms_champion#commschampion-tools) and it's
 not really relevant to this tutorial.
 
 The **&lt;size&gt;** layer is implemented by extending or aliasing 
-[comms::protocol::MsgSizeLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html).
+[comms::protocol::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html).
 ```cpp
 template <typename TMessage, typename TAllMessages>
 using Size =
@@ -221,9 +221,9 @@ The **&lt;checksum&gt;** layer is used to define checksum information that needs
     <int name="ChecksumField" type="uint16" />
 </checksum>        
 ```
-The [CommsChampion Ecosystem](https://arobenko.github.io/cc/) has a list of supported built-in checksum 
+The [CommsChampion Ecosystem](https://commschamp.github.io/) has a list of supported built-in checksum 
 algorithms which can be specified using **alg** property. Please refer to 
-[CommsDSL](https://arobenko.github.io/commsdsl_spec/#frames-checksum) specification for a full list. In this
+[CommsDSL](https://commschamp.github.io/commsdsl_spec/#frames-checksum) specification for a full list. In this
 particular tutorial [CRC-CCITT](https://en.wikipedia.org/wiki/Cyclic_redundancy_check) is used. 
 
 ----
@@ -237,13 +237,13 @@ tutorials.
 Please also pay attention to usage of **from** property in **&lt;checksum&gt;** layer definition. 
 It specifies from which layer the checksum calculation needs to be performed. In the case of
 this tutorial it's from `SIZE` layer until the `CHECKSUM` itself. The
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) also supports 
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) also supports 
 usage of **&lt;checksum&gt;** layer as prefix to the area on which the checksum needs to be
 calculated. In this case the **until** property needs to be used.
 
 The suffix **&lt;checksum&gt;** layer is implemented by extending or aliasing 
-[comms::protocol::ChecksumLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
-or [comms::protocol::ChecksumPrefixLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumPrefixLayer.html)
+[comms::protocol::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
+or [comms::protocol::ChecksumPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumPrefixLayer.html)
 depending on whether the checksum follows or precedes the data used for checksum
 calculation.
 ```cpp
@@ -267,7 +267,7 @@ needs to be used to define the synchronization value.
 </sync>
 ```
 The **&lt;sync&gt;** layer is implemented by extending or aliasing 
-[comms::protocol::SyncPrefixLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html).
+[comms::protocol::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html).
 ```cpp
 template <typename TMessage, typename TAllMessages>
 using Sync =
@@ -278,7 +278,7 @@ using Sync =
 ```
 Note, that there is no real need to use **validValue** and/or **failOnInvalid** properties for the definition 
 of the `SyncField` to force the read operation to fail on invalid value. The implementation of the
-[comms::protocol::SyncPrefixLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html)
+[comms::protocol::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html)
 just compares the read field with the default constructed one and fails the read operation if they are
 not equal. During write operation the layer will just invoke `write()` member function on
 the default constructed field, which will write the correct value thanks to 
@@ -315,7 +315,7 @@ public:
 };
 ```
 As the result the documentation of the last layer type 
-([comms::protocol::SyncPrefixLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html) 
+([comms::protocol::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html) 
 for the current example) can be used for reference on available framing API.
 
 The final definition of `ClientToServerFrame` frame class uses `COMMS_PROTOCOL_LAYERS_ACCESS()`
@@ -350,7 +350,7 @@ to write the code (`std::back_inserter(output)`) which cannot be returned back
 to and used to re-read the written data in order to calculate the checksum value 
 before it's been written. As the result the call to `m_clientToServerFrame.write(...)`
 will put some dummy (`0`) two bytes as the checksum and return 
-[commms::ErrorStatus::UpdateRequired](https://arobenko.github.io/comms_doc/ErrorStatus_8h.html)
+[commms::ErrorStatus::UpdateRequired](https://commschamp.github.io/comms_doc/ErrorStatus_8h.html)
 to indicate that the `write()` operation is not complete. The call to 
 `update()` with [random access](https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator) 
 iterator needs to follow. It will be used to re-read the written data as well as
@@ -360,7 +360,7 @@ Similar situation may occur when the interface class doesn't expose polymorphic
 `length()` member function (the `comms::option::app::LengthInfoInterface` option
 has **NOT** been provided). In such case when `SIZE` value needs to be written the
 proper value cannot be retrieved (because length of message payload is not known).
-In this case the [comms::protocol::MsgSizeLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html)
+In this case the [comms::protocol::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html)
 will write a dummy value and force a return of `commms::ErrorStatus::UpdateRequired`.
 After that when the `update()` is called, the layer will calculate size of the written 
 code and update previously written dummy value with the correct one.
@@ -371,7 +371,7 @@ code and update previously written dummy value with the correct one.
 any knowledge about the recently written message to be able to analyse the recently
 written data and update values where needed. However, in some cases the
 access to previously written message needs to be provided. 
-The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
 provides such overloaded `update()` member function which receives a reference to
 the message object as its first parameter.
 
@@ -404,7 +404,7 @@ when the code is recompiled.
 
 ## Summary
 
-- The [CommsChampion Ecosystem](https://arobenko.github.io/cc/) allows clear separation of the protocol 
+- The [CommsChampion Ecosystem](https://commschamp.github.io/) allows clear separation of the protocol 
   messages definition and the transport framing.
 - The transport framing is defined using **&lt;frame&gt;** XML node.
 - The protocol schema allows definition of multiple transport frames and the generated code
@@ -412,15 +412,15 @@ when the code is recompiled.
 - Every **&lt;frame&gt;** uses internal layers to specify transport fields and their 
   roles.
 - The generated C++ code of the frame(s) resides in [include/&lt;namespace&gt;/frame](include/tutorial5/frame) folder and
-  uses classes from [comms::protocol](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html)
+  uses classes from [comms::protocol](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html)
   namespace to define the layers.
 - The defined framing layers wrap one another, as the result the outermost layer is used 
   to handle the whole transport framing.
 - For available frame API reference open the documentation of the 
-  [outermost layer](https://arobenko.github.io/comms_doc/namespacecomms_1_1protocol.html) type.
+  [outermost layer](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html) type.
 - The polymorphic behavior of the common interface class may influence the ability of the 
   frame to perform its `write()` operation. 
-- When write operation returns [commms::ErrorStatus::UpdateRequired](https://arobenko.github.io/comms_doc/ErrorStatus_8h.html)
+- When write operation returns [commms::ErrorStatus::UpdateRequired](https://commschamp.github.io/comms_doc/ErrorStatus_8h.html)
   use [random access](https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator) iterator to 
   perform `update()` operation.
 

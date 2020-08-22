@@ -139,7 +139,7 @@ if ("${COMMSDSL2COMMS}" STREQUAL "")
             "${COMMSDSL_TGT}"
             PREFIX "${commsdsl2comms_bin_dir}"
             STAMP_DIR "${commsdsl2comms_bin_dir}"
-            GIT_REPOSITORY "https://github.com/arobenko/commsdsl.git"
+            GIT_REPOSITORY "https://github.com/commschamp/commsdsl.git"
             GIT_TAG "${commsdsl2comms_tag}"
             SOURCE_DIR "${commsdsl2comms_src_dir}"
             CMAKE_ARGS

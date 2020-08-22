@@ -25,7 +25,7 @@ as such using **semanticType="messageId"** property assignment.
 
 ## Generated Code
 In general, the generated code uses 
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library),
+[COMMS Library](https://github.com/commschamp/comms_champion#comms-library),
 which was designed to allow having single and functionally correct 
 protocol definition for all possible applications, while allowing the
 latter to **compile-time** customize their data structures, polymorphic interfaces, and/or
@@ -50,12 +50,12 @@ using Message =
         comms::option::def::MsgIdType<tutorial1::MsgId>
     >;
 ```
-It uses [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) class
+It uses [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) class
 definition and allows extension of its default functionality with various **options**. The options
 that are intended to be used for **protocol definition** reside in 
-[comms::option::def](https://arobenko.github.io/comms_doc/namespacecomms_1_1option_1_1def.html)
+[comms::option::def](https://commschamp.github.io/comms_doc/namespacecomms_1_1option_1_1def.html)
 namespace, while options that are intended to be used by the end application for its customization are defined
-in [comms::option::app](https://arobenko.github.io/comms_doc/namespacecomms_1_1option_1_1app.html)
+in [comms::option::app](https://commschamp.github.io/comms_doc/namespacecomms_1_1option_1_1app.html)
 namespace. In this tutorial, the used options specify the serialization endian
 (`Big`) and enum type used for message numeric IDs (`MsgId`). The `TOpt` variadic
 template parameter allows introducing additional **application specific** customization
@@ -66,7 +66,7 @@ All the defined message classes (`Msg1` and `Msg2`) reside in
 **message** namespace and in [include/tutorial1/message](include/tutorial1/message) folder.
 Every [MsgX.h](include/tutorial1/message/Msg1.h) file contains class definition of 
 the relevant message and its fields. The corresponding
-[MsgXCommon.h](https://github.com/arobenko/cc_tutorial/blob/master/tutorial1/include/tutorial1/message/Msg1Common.h)
+[MsgXCommon.h](https://github.com/commschamp/cc_tutorial/blob/master/tutorial1/include/tutorial1/message/Msg1Common.h)
 file contains common, template-parameter independent definitions relevant to the message
 and its fields. 
 
@@ -81,7 +81,7 @@ class Msg1 : public
     >
 ```
 The defined message class extends 
-[comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html), which in
+[comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html), which in
 turn extends the provided interface class passed as first template parameter.
 
 The **comms::MessageBase** class is there to **automatically** implement various operations of message payload as
@@ -109,7 +109,7 @@ side code is implemented in [src/ClientSession.h](src/ClientSession.h) and
 **NOTE** that these client / server session classes are part of the 
 **end applications** and perform their own application specific compile time
 configurations. They are **NOT** actual part of the
-[CommsChampion Ecosystem](https://arobenko.github.io/cc) and do **NOT** necessarily
+[CommsChampion Ecosystem](https://commschamp.github.io) and do **NOT** necessarily
 demonstrate the **right** and **only** way to implement protocol handling code.
 
 ## Server
@@ -166,7 +166,7 @@ Please pay attention to the following details:
 is performed correctly when the message object is held by the pointer or reference
 to the interface class.
 - The **read()** function reports its success / failure status via error code defined
-as [comms::ErrorStatus](https://arobenko.github.io/comms_doc/ErrorStatus_8h.html).
+as [comms::ErrorStatus](https://commschamp.github.io/comms_doc/ErrorStatus_8h.html).
 - The **read** operation receives the iterator used for reading **by reference** and
 advances it when performing the read operation. In order to identify how many bytes were
 consumed, the caller is expected to store the initial value of the iterator and then
@@ -174,7 +174,7 @@ compare it to the value of the advanced one passed as the parameter to the **rea
 function. The caller is also responsible to maintain input data buffer and provides
 only an iterator for the message object to perform its read.
 
-The [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) class
+The [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) class
 defines `constexpr bool hasRead()` static member function which can be used at compile
 time to determine whether the interface class defines polymorphic read functionality.
 ```cpp
@@ -205,7 +205,7 @@ to it for message object to perform its write.
 - The call to **write()** member function is not expected to change the message
 object, that's why it's defined to be **const**.
 
-The [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) class
+The [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) class
 defines `constexpr bool hasWrite()` static member function which can be used at compile
 time to determine whether the interface class defines polymorphic write functionality.
 ```cpp
@@ -227,7 +227,7 @@ The call to **length()** member function will return number of bytes required
 to serialize the message payload. It can be used to allocate output buffer of
 required size.
 
-The [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) class
+The [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) class
 defines `constexpr bool hasLength()` static member function which can be used at compile
 time to determine whether the interface class defines polymorphic length calculation functionality.
 ```cpp
@@ -251,7 +251,7 @@ public:
 The polymorphic message ID retrieval can be used in transport framing operation.
 There is a need to get the message ID when prefixing serialized message payload.
 
-The [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) class
+The [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) class
 defines `constexpr bool hasGetId()` static member function which can be used at compile
 time to determine whether the interface class defines polymorphic ID retrieval functionality.
 ```cpp
@@ -272,12 +272,12 @@ public:
 The polymorphic name retrieval can be used in application when there is a 
 need to print human readable name of the message. Note that such name
 is provided as `displayName` property of the message definition inside
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) schema.
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) schema.
 ```xml
 <message name="Msg1" id="MsgId.M1" displayName="Message 1"/>
 ```
 
-The [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) class
+The [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) class
 defines `constexpr bool hasName()` static member function which can be used at compile
 time to determine whether the interface class defines polymorphic name retrieval functionality.
 ```cpp
@@ -293,7 +293,7 @@ static_assert(std::has_virtual_destructor<Message>::value, "Destructor is not vi
 ```
 
 #### Other Polymorphic Functions
-The [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) supports other
+The [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) supports other
 polymorphic functions that are not covered by this particular tutorial. They will be covered one by one
 along the way buy other tutorials when needed.
 
@@ -303,7 +303,7 @@ by the driving common I/O library to report unprocessed input. The arguments are
 pointer to the input buffer and its size. The function is expected to 
 return number of consumed bytes. To help with such task **COMMS Library** provides
 `comms::processAllWithDispatch()` function (requires 
-"[comms/process.h](https://arobenko.github.io/comms_doc/process_8h.html)" to be 
+"[comms/process.h](https://commschamp.github.io/comms_doc/process_8h.html)" to be 
 included). 
 ```cpp
 std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
@@ -426,7 +426,7 @@ public:
 };
 ```
 
-The [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) class
+The [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) class
 defines `constexpr bool hasDispatch()` static member function which can be used at compile
 time to determine whether the interface class defines polymorphic dispatch functionality.
 ```cpp
@@ -464,7 +464,7 @@ methods will be covered in details in later tutorial(s).
 
 #### Non-Polymorphic Message Interface
 As was mentioned earlier the 
-[comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
+[comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
 class is used (inherited from) to define proper message definition class.
 As the result the latter automatically defines the following **NON-polymorphic** (non-virtual)
 member functions, which can be used when actual message type is known to

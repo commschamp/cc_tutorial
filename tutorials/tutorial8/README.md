@@ -13,7 +13,7 @@ public:
 ```
 
 In some use cases it might be beneficial to return some value, processing status for example.
-The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) supports creation
+The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) supports creation
 of such constructs.
 
 Let's take a look at the [ClientSession](src/ClientSession.h) definition of this tutorial.
@@ -50,9 +50,9 @@ The message interface class defines support for polymorphic dispatch
 specifies the return type of the `handle()` member functions. 
 
 There is a **compile-time** meta-programming logic inside the
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library) which
+[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) which
 determines the return type of the 
-[comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html)'s 
+[comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html)'s 
 `dispatch()` member function. If the used handler type defines `RetType` inner type, then
 it is taken and defined as return type of the `dispatch()` member function.
 
@@ -71,7 +71,7 @@ protected:
     virtual bool dispatchImpl(ClientSession& handler) = 0;
 };
 ```
-The [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html), 
+The [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html), 
 which serves as the base class for every message implements the virtual function taking
 the return type into account:
 ```cpp
@@ -132,7 +132,7 @@ above and exit.
 ----
 
 **SIDE NOTE**: All the `comms::dispatchMsg*()` functions defined in
-[comms/dispatch.h](https://arobenko.github.io/comms_doc/dispatch_8h.html) also
+[comms/dispatch.h](https://commschamp.github.io/comms_doc/dispatch_8h.html) also
 return the same type as `handle()` member functions of the used handler.
 It can be useful for cases when message interface does **NOT** expose polymorphic dispatch and
 one of these functions need to be used instead.
@@ -143,8 +143,8 @@ one of these functions need to be used instead.
 - Returning non-void values from the handling functions is also supported.
 - There is a need to define inner `RetType` type inside the handler class which specifies the return
   type of every `handle()` member function.
-- The [comms::Message::dispatch()](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html)
-  as well as all `comms::dispatchMsg*()` functions in [comms/dispatch.h](https://arobenko.github.io/comms_doc/dispatch_8h.html)
+- The [comms::Message::dispatch()](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html)
+  as well as all `comms::dispatchMsg*()` functions in [comms/dispatch.h](https://commschamp.github.io/comms_doc/dispatch_8h.html)
   use the inner `RetType` of the handler class to define their own return types.
 - In case the handler class is forward declared, the automatic determination of the return 
   type is not possible and as the result `void` is assumed.

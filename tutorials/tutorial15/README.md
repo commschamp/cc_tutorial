@@ -10,11 +10,11 @@ such application to change the framing as well when the message is forwarded on 
 In such case the decoding of all the irrelevant messages seems like a waste of CPU cycles and
 maybe even memory.
 
-To help with such cases the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
-introduced [comms::GenericMessage](https://arobenko.github.io/comms_doc/classcomms_1_1GenericMessage.html).
-It extends [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
+To help with such cases the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+introduced [comms::GenericMessage](https://commschamp.github.io/comms_doc/classcomms_1_1GenericMessage.html).
+It extends [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
 like any regular message definition and has a single member field (payload) which is 
-[comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)
+[comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)
 of raw data `std::uint8_t` (equivalent to basic **&lt;data&gt;** field without any prefixes).
 However, it doesn't specify any numeric message ID, i.e. its ID information is available at run-time,
 not compile-time like any other.
@@ -37,11 +37,11 @@ using GenericMessage =
         comms::option::app::OrigDataView // Passed to raw data storage field
     >;
 ```
-The second template parameter of the [comms::GenericMessage](https://arobenko.github.io/comms_doc/classcomms_1_1GenericMessage.html)
-is options passed to its [comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)
+The second template parameter of the [comms::GenericMessage](https://commschamp.github.io/comms_doc/classcomms_1_1GenericMessage.html)
+is options passed to its [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)
 member field. Passing of the `comms::option::app::OrigDataView` option allows avoiding data copying from the
-input buffer to the the inner storage of the [comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html).
-Just to remind the reader that the storage type will be [comms::util::ArrayView](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1ArrayView.html)
+input buffer to the the inner storage of the [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html).
+Just to remind the reader that the storage type will be [comms::util::ArrayView](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1ArrayView.html)
 or [std::span](https://en.cppreference.com/w/cpp/container/span) depending on the C++ standard been used during the compilation.
 Note that the `comms::option::app::OrigDataView` option cannot be used if the input buffer is not sequential, i.e.
 some kind of circular buffer.
@@ -59,15 +59,15 @@ using InputMessages =
 ```
 If the configuration is left like this, then all other messages won't even be recognized and will be dropped by the 
 framing management. In order to force creation of `GenericMessage` for all other unknown messages, the `Id` framing layer
-needs to receive [comms::option::app::SupportGenericMessage](https://arobenko.github.io/comms_doc/options_8h.html)
+needs to receive [comms::option::app::SupportGenericMessage](https://commschamp.github.io/comms_doc/options_8h.html)
 option.
 
 ----
 
 **SIDE NOTE**: As was already explained in one of the previous tutorials, it's actually 
-[comms::MsgFactory](https://arobenko.github.io/comms_doc/classcomms_1_1MsgFactory.html)
+[comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html)
 class that is responsible to create message objects. It is used by the 
-[comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html). 
+[comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html). 
 All the options passed to the later are forwarded to the former. As the result if 
 the tuple of **input** messages doesn't contain any class with specified message ID, then the specified `GenericMessage` is 
 created and returned instead.
@@ -136,15 +136,15 @@ Processing input: 0 9 3 5 ab cd ef 1 2
 Received message "Generic Message" with ID=3, echoing it back...
 Sending message "Generic Message" with ID=3: 0 9 3 5 ab cd ef 1 2 
 ```
-Please take a look how the `comms::GenericMessage` is actually [implemented](https://arobenko.github.io/comms_doc/GenericMessage_8h_source.html).
+Please take a look how the `comms::GenericMessage` is actually [implemented](https://commschamp.github.io/comms_doc/GenericMessage_8h_source.html).
 It contains definition of the `doName()` which results in printing "Generic Message" as recognized message name.
 
 ## Summary
-- To avoid decoding of some messages the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
-  provides [comms::GenericMessage](https://arobenko.github.io/comms_doc/classcomms_1_1GenericMessage.html).
+- To avoid decoding of some messages the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+  provides [comms::GenericMessage](https://commschamp.github.io/comms_doc/classcomms_1_1GenericMessage.html).
 - To support creation of the `GenericMessage` object instead of unrecognized messages the 
-  [comms::option::app::SupportGenericMessage](https://arobenko.github.io/comms_doc/options_8h.html)
-  option needs to be passed the Id framing layer ([comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html))
+  [comms::option::app::SupportGenericMessage](https://commschamp.github.io/comms_doc/options_8h.html)
+  option needs to be passed the Id framing layer ([comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html))
 - It is recommended to also pass `comms::option::app::OrigDataView` option to the inner field definition of 
   the `GenericMessage` to avoid unnecessary copy of the data from the **input** buffer, unless the 
   input buffer is not sequential and/or the message object outlives the input buffer.

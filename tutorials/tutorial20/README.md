@@ -81,7 +81,7 @@ access relevant layer. As the result `m_frame.layer_version()` provides an acces
 `Version` layer.
 
 The pseudo **&lt;value&gt;** layer is defined with usage of 
-[comms::option::def::PseudoValue](https://arobenko.github.io/comms_doc/options_8h.html) option.
+[comms::option::def::PseudoValue](https://commschamp.github.io/comms_doc/options_8h.html) option.
 ```cpp
 using Version =
     comms::protocol::TransportValueLayer<
@@ -92,7 +92,7 @@ using Version =
     >;
 ```
 When the `comms::option::def::PseudoValue` option is passed to the 
-[comms::protocol::TransportValueLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
+[comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
 it creates `pseudoField()` member functions to access the field stored in the private data members.
 The code above (`m_frame.layer_version().pseudoField()`) accesses it and assigns the reported 
 version.
@@ -104,7 +104,7 @@ the message object.
 
 ----
 
-**SIDE NOTE**: If [CommsChampion Tools](https://github.com/arobenko/comms_champion/wiki/How-to-Use-CommsChampion-Tools)
+**SIDE NOTE**: If [CommsChampion Tools](https://github.com/commschamp/comms_champion/wiki/How-to-Use-CommsChampion-Tools)
 are intended to be used for the protocol visualization and/or debugging, it is better to hide the `Version` field 
 inside the transport framing from being displayed altogether (because it's not really there). In such case it is
 recommended to slightly update the definition of the **&lt;value&gt;** layer above into the following:
@@ -146,7 +146,7 @@ void ClientSession::sendMessage(Message& msg)
 }
 ```
 Note that the refresh functionality is **polymorphic**. It is available thanks to the passing the 
-[comms::option::app::RefreshInterface](https://arobenko.github.io/comms_doc/options_8h.html) 
+[comms::option::app::RefreshInterface](https://commschamp.github.io/comms_doc/options_8h.html) 
 option to the message interface definition:
 ```cpp
 using Message = 

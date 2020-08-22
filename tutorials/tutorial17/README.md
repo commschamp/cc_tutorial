@@ -65,7 +65,7 @@ and [dsl_src/include/tutorial17/frame/layer/SizeWithFlags.h](dsl_src/include/tut
 files implement required layers. The code is just copied to 
 [include/tutorial17/frame/layer/IdWithFlags.h](include/tutorial17/frame/layer/IdWithFlags.h)
 and [include/tutorial17/frame/layer/SizeWithFlags.h](include/tutorial17/frame/layer/SizeWithFlags.h)
-respectively by the [commsdsl2comms](https://github.com/arobenko/commsdsl) code generator.
+respectively by the [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator.
 
 Let's take a look how the [include/tutorial17/frame/layer/IdWithFlags.h](include/tutorial17/frame/layer/IdWithFlags.h)
 is actually implemented.
@@ -84,12 +84,12 @@ class IdWithFlags : public
     ...
 };
 ```
-It extends [comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html).
+It extends [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html).
 The latter supports its extension and customization to support cases like in this tutorial. It is
-properly described in [Defining Custom Message ID Protocol Stack Layer ](https://arobenko.github.io/comms_doc/page_custom_id_layer.html)
-tutorial page of the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) documentation.
+properly described in [Defining Custom Message ID Protocol Stack Layer ](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
+tutorial page of the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) documentation.
 
-Please note usage of [comms::option::def::ExtendingClass](https://arobenko.github.io/comms_doc/options_8h.html) option 
+Please note usage of [comms::option::def::ExtendingClass](https://commschamp.github.io/comms_doc/options_8h.html) option 
 which specifies the actual type of extending class. It is basically the [CRTP](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
 C++ idiom. The extending class is expected to override the following member functions:
 
@@ -99,7 +99,7 @@ C++ idiom. The extending class is expected to override the following member func
 - `prepareFieldForWrite()` - update the field's value (assign provided message ID and other field members) before it is written.
 
 Please refer to the API documentation of the 
-[comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+[comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
 class for the full information on the functions' signatures.
 ```cpp
 template<typename TField, typename TMessage, typename TAllMessages, typename TNextLayer, typename... TOptions>
@@ -138,7 +138,7 @@ public:
 
 The [include/tutorial17/frame/layer/SizeWithFlags.h](include/tutorial17/frame/layer/SizeWithFlags.h)
 is implemented in very similar way, but extending 
-[comms::protocol::MsgSizeLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html).
+[comms::protocol::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html).
 ```cpp
 /// @brief Customizing the size layer
 template<typename TField, typename TNextLayer, typename... TOptions>
@@ -152,11 +152,11 @@ class SizeWithFlags : public
 {
 }
 ```
-The [Defining Custom Message Size Protocol Stack Layer](https://arobenko.github.io/comms_doc/page_custom_size_layer.html)
-tutorial page of the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) documentation provides a lot 
+The [Defining Custom Message Size Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
+tutorial page of the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) documentation provides a lot 
 of details on how define such layer.
 
-The `SizeWithFlags` class also uses [comms::option::def::ExtendingClass](https://arobenko.github.io/comms_doc/options_8h.html) option 
+The `SizeWithFlags` class also uses [comms::option::def::ExtendingClass](https://commschamp.github.io/comms_doc/options_8h.html) option 
 which specifies the actual type of extending class. 
 The extending class is expected to override the following member functions:
 
@@ -166,7 +166,7 @@ The extending class is expected to override the following member functions:
 - `prepareFieldForWrite()` - update the field's value (assign remaining message size and other field members) before it is written.
 
 Please refer to the API documentation of the 
-[comms::protocol::MsgSizeLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html)
+[comms::protocol::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html)
 class for the full information on the functions' signatures.
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
@@ -252,12 +252,12 @@ called to properly set the size and the flags.
 - Custom layers are defined using **&lt;custom&gt;** XML node.
 - The layer that replaces **&lt;id&gt;** needs to set **idReplacement** property to **true**.
 - To implement custom replacement of **&lt;id&gt;**, the custom layer code may extend 
-  [comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
-  (see [Defining Custom Message ID Protocol Stack Layer ](https://arobenko.github.io/comms_doc/page_custom_id_layer.html)
+  [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+  (see [Defining Custom Message ID Protocol Stack Layer ](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
   for details).
 - To implement custom replacement of **&lt;size&gt;**, the custom layer code may extend 
-  [comms::protocol::MsgSizeLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html)
-  (see [Defining Custom Message Size Protocol Stack Layer](https://arobenko.github.io/comms_doc/page_custom_size_layer.html)
+  [comms::protocol::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html)
+  (see [Defining Custom Message Size Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
   for details).
 
 

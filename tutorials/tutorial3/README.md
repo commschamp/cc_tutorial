@@ -7,7 +7,7 @@ Usually such values are serialized as integral ones which treated as
 [fixed point values](https://en.wikipedia.org/wiki/Fixed-point_arithmetic) with predefined scaling multiplier, i.e. predefined 
 number of digits after decimal points.
 
-To help with such cases [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) has
+To help with such cases [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) has
 **scaling** property applicable to **&lt;int&gt;** fields. Message `Msg1` (defined in [dsl/schema.xml](dsl/schema.xml) 
 and implemented inside [include/tutorial3/message/Msg1.h](include/tutorial3/message/Msg1.h)) comes to
 demonstrate definition of such fields.
@@ -21,7 +21,7 @@ The message and its fields are defined in the following way:
 ```
 The **scaling** property defines rational number fraction by which the stored integral value needs to get
 multiplied in order the receive required floating point value. Also the 
-[comms::field::IntValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) class
+[comms::field::IntValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) class
 used to implement defined **&lt;int&gt;** fields provides `getScaled()` and `setScaled()` member functions
 which allow retrieving and setting proper floating point values taking the scaling ratio into account.
 ```cpp
@@ -87,13 +87,13 @@ Received "Message 1" with ID=1
 </message>       
 ```
 The **id** property of every message is expected to be a numeric value. However, the
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) allows usage of 
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows usage of 
 reference strings as well. In the case above they reference the defined **&lt;validValue&gt;**-s
 of the `MsgId` field. The value of the **displayName** property needs to be
-as string. [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) allows
+as string. [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows
 referencing of common definitions for strings as well. 
 There must be a way to differentiate between an actual string value and a reference to other
-field. The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specifies that
+field. The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specifies that
 a reference to other field in such case (when value needs to be a string) is prefixed with
 `^` character. 
 
@@ -116,9 +116,9 @@ integration logic being implemented before the protocol specification is finaliz
 the chosen units for a specific field can get changed in the process. In such case all the written integration
 boilerplate code needs to be modified as well, which is error-prone of course.
 
-The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) allows usage of **units** property when
+The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows usage of **units** property when
 defining **&lt;int&gt;** and **&lt;float&gt;** fields. The list of supported values can be found in
-the [specification](https://arobenko.github.io/commsdsl_spec/#appendix-units).
+the [specification](https://commschamp.github.io/commsdsl_spec/#appendix-units).
 
 Message `Msg2` (defined in [dsl/schema.xml](dsl/schema.xml) 
 and implemented inside [include/tutorial3/message/Msg2.h](include/tutorial3/message/Msg2.h)) comes to
@@ -132,8 +132,8 @@ demonstrate usage of **units** property.
 In the example above the `F1` field is defined to contain **seconds** while `F2` is defined to contain
 millimeters.
 
-In order to efficiently work with units the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
-provides multiple functions defined in [comms::units](https://arobenko.github.io/comms_doc/namespacecomms_1_1units.html)
+In order to efficiently work with units the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+provides multiple functions defined in [comms::units](https://commschamp.github.io/comms_doc/namespacecomms_1_1units.html)
 namespace (requires `#include "comms/units.h"` statement).
 
 The generated code of the fields definition looks like this:
@@ -181,7 +181,7 @@ passed as the first parameter to the units set function. It is required to deter
 class of the field which in turn contains the meta-information of what actual units the field's value must
 contain. The required math is automatically implemented by the compiler.
 
-Also note that [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) contains compile-time
+Also note that [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) contains compile-time
 checks of whether units being assigned are compatible with the ones that field contains, i.e. attempt to 
 assign say **meters** to **seconds** will result in compile time error.
 
@@ -207,13 +207,13 @@ Received "Message 2" with ID=2
 ```
 If units are changed in the protocol definition (schema), such code doesn't need to be changed to work correctly, just recompiled.
 
-**NOTE** that [CommsChampion Ecosystem](https://arobenko.github.io/cc) is about binary protocol definition, not
+**NOTE** that [CommsChampion Ecosystem](https://commschamp.github.io) is about binary protocol definition, not
 efficient and/or convenient work with units. The support for the units is very limited and definitely incomplete, but
 still useful in many cases.
-If the support for new units is desired please [get in touch](https://arobenko.github.io/cc/contact/) and request what you need. 
+If the support for new units is desired please [get in touch](https://commschamp.github.io/contact/) and request what you need. 
 There are multiple available libraries (like Boost.Units) for proper work with units.
 
-In order to support usage of third party units libraries the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+In order to support usage of third party units libraries the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
 provides a **compile-time** check functions that the field contains an assumed units. If units are changed in the
 protocol definition, the compile time checks introduced before the boilerplate units conversion code should fail the compilation
 and help finding places that need to be updated.
@@ -264,18 +264,18 @@ Received "Message 3" with ID=3
 - The string values can reference other fields with '^' prefix.
 - The [fixed point values](https://en.wikipedia.org/wiki/Fixed-point_arithmetic) are defined as **&lt;int&gt;** and 
   use **scaling** property to define their scaling ratio.
-- The [comms::field::IntValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) class
+- The [comms::field::IntValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) class
   used to define **&lt;int&gt;** fields provides **getScaled()** and **setScaled()** member functions to get / set
   scaled floating point values.
 - Measurement units are defined using **units** property.
-- List of supported units can be found in the CommsDSL [specification](https://arobenko.github.io/commsdsl_spec/#appendix-units).
-- Functions that allow working with units reside in [comms::units](https://arobenko.github.io/comms_doc/namespacecomms_1_1units.html)
+- List of supported units can be found in the CommsDSL [specification](https://commschamp.github.io/commsdsl_spec/#appendix-units).
+- Functions that allow working with units reside in [comms::units](https://commschamp.github.io/comms_doc/namespacecomms_1_1units.html)
   namespace and require `#include "comms/units.h"` statement.
 - The `comms::units::set*()` and `comms::units::get*()` stand alone functions are used to set particular units and  
   require reference to the **field** object itself (not its **value**) to use appropriate assignment math.
 - The support for units is very basic and limited. There are **compile-time** inquiry `comms::units::is*()` functions
   which allow check of units assumption before introducing boilerplate code of units conversions.
-- All the units conversion functions in [comms::units](https://arobenko.github.io/comms_doc/namespacecomms_1_1units.html) 
+- All the units conversion functions in [comms::units](https://commschamp.github.io/comms_doc/namespacecomms_1_1units.html) 
   work seamlessly with [scaling](#scaling).
 
 [Read Previous Tutorial](../tutorial2) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial4) 

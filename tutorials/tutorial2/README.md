@@ -2,14 +2,14 @@
 Introduction to message fields definitions and their usage.
 
 ## Multiple CommsDSL Schema Files
-The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification 
-as well as [commsdsl2comms](https://github.com/arobenko/commsdsl) code generator
+The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification 
+as well as [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator
 allow usage of multiple schema files for the same protocol definition. It can
 be used to split protocol definition into multiple sub-sections for convenience,
 especially when protocol is quite big and it becomes difficult to find and update
 things in the single schema file.
 
-The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) does not
+The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) does not
 have any "include" statements. Instead the code generated must process the
 schema files in the provided order and allow references to the other elements
 if they were defined **before** being referenced (in earlier processed schema
@@ -17,7 +17,7 @@ file or earlier in the same file).
 
 The [CMakeLists.txt](CMakeLists.txt) file of this tutorial code creates a list
 of schema files, which are processed by the 
-[commsdsl2comms](https://github.com/arobenko/commsdsl) code generator in the
+[commsdsl2comms](https://github.com/commschamp/commsdsl) code generator in the
 specified order.
 ```
 set (schema_files
@@ -132,7 +132,7 @@ a dummy field, which is not referenced anywhere.
 <int name="Dummy" type="uint8" description="Not referenced anywhere" />
 ```
 If the field is not referenced anywhere the 
-[commsdsl2comms](https://github.com/arobenko/commsdsl) code generator 
+[commsdsl2comms](https://github.com/commschamp/commsdsl) code generator 
 does **NOT** generate unnecessary definition file(s).
 
 ----
@@ -208,7 +208,7 @@ don't exhibit polymorphic behavior.
 - The iterators to **read()** and **write()** member functions are passed by
 reference and are advanced during the operation.
 - All of the presented member functions are provided by the 
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library) except
+[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) except
 **name()** which is a product of **commsdsl2comms** code generation.
 
 Let's also take a look inside the message class definition.
@@ -232,7 +232,7 @@ public:
 };
 ```
 Usage of `comms::option::def::FieldsImpl` option lets the 
-[comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
+[comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
 base class know the types of fields the message has. As the result the `comms::MessageBases`
 defines the following member types and functions that allow external access to the fields
 ```cpp
@@ -293,7 +293,7 @@ public:
 ```
 Please pay attention to the following:
 
-- According to [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification
+- According to [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
 the code generator (**commsdsl2comms**) is allowed to change the first latter of the
 field name by either capitalizing or making it a lower case. That's what happens
 with `Msg1` member fields. When their class is defined the first letter is capitalized,
@@ -325,11 +325,11 @@ void ClientSession::handle(Msg1& msg)
 ```
 
 ## Supported Field Types
-The [CommsChampion Ecosystem](https://arobenko.github.io/cc) has multiple 
+The [CommsChampion Ecosystem](https://commschamp.github.io) has multiple 
 supported field types which are covered below one by one. Due to the nature of
 these tutorials it is not possible to cover **all** aspects (properties) of all
 the available fields, it is highly recommended to read full
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification after
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification after
 finishing the tutorials.
 
 In general, the fields are defined as XML node. Available field types are:
@@ -362,7 +362,7 @@ doxygen documentation.
 
 ----
 
-**SIDE NOTE**: The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
+**SIDE NOTE**: The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification)
 supports multiple ways to set the field's property value with the same end result:
 
 - As attribute's value:
@@ -431,7 +431,7 @@ struct E2_1Common
 - Underlying type is specified using **type** property.
 - Supported values of underlying type are: **int8**, **uint8**, **int16**,
 **uint16**, **int32**, **uint32**, **int64**, **uint64**, **intvar**, **uintvar**.
-- Many elements in [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
+- Many elements in [CommsDSL](https://github.com/commschamp/CommsDSL-Specification)
 schema have **description** property, which finds its way to element's doxygen
 documentation.
 - There are extra `enum` values added by the code generator for convenience:
@@ -452,12 +452,12 @@ struct E2_1Common
 
 ```
 - The field is defined using 
-[comms::field::EnumValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1EnumValue.html) 
-class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+[comms::field::EnumValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1EnumValue.html) 
+class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
 - The field's value is considered to be valid (determined by the call to the
 `valid()` member function) if it is equal to one of
 the **&lt;validValue&gt;**-es. It is implemented by using `comms::option::def::ValidNumValueRange`
-option provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+option provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
 class E2_1 : public
@@ -505,7 +505,7 @@ option passed to the class definition.
 - Any numeric value can be assigned as decimal or as hexadecimal value prefixed
 with `0x`.
 - When the **&lt;valueValue&gt;**-es cannot be unified into one range, the 
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+[COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
 allows usage of multiple `comms::option::def::ValidNumValue` options:
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
@@ -588,12 +588,12 @@ void ClientSession::sendMsg2()
 }
 ```
 Note, that sometimes there may be a need to assign value of different type
-with a cast. The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+with a cast. The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
 provides `comms::cast_assign()` stand-alone helper function which automatically casts the value
 on the right side of the assignment operation to appropriate type and assigns it
 to the value specified on the left side. It eliminates the necessity to explicitly specify
 cast type. To use the `comms::cast_assign()` function it is necessary to
-include [comms/cast.h](https://arobenko.github.io/comms_doc/cast_8h.html) header file.
+include [comms/cast.h](https://commschamp.github.io/comms_doc/cast_8h.html) header file.
 ```
 #include "comms/cast.h"
 ```
@@ -650,8 +650,8 @@ supported types are the same as for `enum` field: **int8**, **uint8**,
 - The numeric value of the default constructed field specified using
 **defaultValue** property.
 - The field is defined using 
-[comms::field::IntValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) 
-class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+[comms::field::IntValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) 
+class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
 - The generated code resides in [include/tutorial2/field/I3_1.h](include/tutorial2/field/I3_1.h)
 file.
 
@@ -686,7 +686,7 @@ Please note the usage of **length** property. It can be used to limit
 serialization length of the specified field to lower number of bytes. In the
 example above, it is limited to be **3** bytes instead of default **4** (due
 to **uint32** storage type). In this case the 
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+[COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
 will serialize the field using correct number of bytes.
 ```cpp
 void ClientSession::sendMsg3()
@@ -723,7 +723,7 @@ encoding by default and no other encoding is **currently** implemented / support
 ----
 
 **SIDE NOTE**: In case there is a need for any other standard encoding please create a request
-issue for [commsdsl](https://github.com/arobenko/commsdsl) project.
+issue for [commsdsl](https://github.com/commschamp/commsdsl) project.
 
 ----
 
@@ -731,7 +731,7 @@ The value of the **length** property in the case above means **maximal**
 allowed serialization length of the field. The 
 [generated code](include/tutorial2/field/I3_3.h)
 uses `comms::option::def::VarLength` option to provide the required information to
-the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
 struct I3_3 : public
@@ -760,9 +760,9 @@ void ClientSession::sendMsg3()
 
 In some protocols values of some fields may have special meaning. In order
 to prevent boilerplate code the 
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
 provides an ability to specify names for some values, while 
-[commsdsl2comms](https://github.com/arobenko/commsdsl) code generator creates
+[commsdsl2comms](https://github.com/commschamp/commsdsl) code generator creates
 necessary helper functions to get/set special values.
 
 The fourth defined **&lt;int&gt;** field demonstrates usage of such special values.
@@ -877,7 +877,7 @@ also uses **name** property to specify name of the bit as well as **idx**
 property to specify bit index.
 
 The [field class definition](include/tutorial2/field/S4_1.h) extends
-[comms::field::BitmaskValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1BitmaskValue.html)
+[comms::field::BitmaskValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1BitmaskValue.html)
 class and uses `COMMS_BITMASK_BITS_SEQ()` macro to specify names of the bits.
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
@@ -924,7 +924,7 @@ public:
 };
 ```
 It's worth mentioning that 
-[comms::field::BitmaskValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1BitmaskValue.html)
+[comms::field::BitmaskValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1BitmaskValue.html)
 class defines `getBitValue()` and `setBitValue()` member functions that receive index of the bit as
 their parameter. The get/set functions generated by the `COMMS_BITMASK_BITS_SEQ()` macro are a mere 
 wrappers around these functions.
@@ -945,7 +945,7 @@ class S4_1 : public
 - All unspecified bits are considered to be **reserved** ones with default
 reserved value to be **0**. 
 - The information about reserved bits is passed to 
-[comms::field::BitmaskValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1BitmaskValue.html)
+[comms::field::BitmaskValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1BitmaskValue.html)
 base class using `comms::option::def::BitmaskReservedBits` option, first template
 parameter of which is the mask of the reserved bits, while the second template
 parameter specifies the expected outcome when binary `and` operation is applied
@@ -1067,7 +1067,7 @@ It is obvious that in such assignment above many reserved bits end up with inval
 value, that's why call to the `valid()` member function is expected to return **false**.
 
 Additional thing to mention is that the field class definition code generated by the
-[commsdsl2comms](https://github.com/arobenko/commsdsl) 
+[commsdsl2comms](https://github.com/commschamp/commsdsl) 
 contains `bitName()` convenience member function, which can be used to retrieve
 human readable name of the bit. By default it is equal to the value of the 
 **name** property, but it can be overwritten with **displayName** one.
@@ -1132,8 +1132,8 @@ used to specify underlying storage type of the field. The available values are
 serialization length).
 
 The **&lt;float&gt;** field is defined using 
-[comms::field::FloatValue](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1FloatValue.html) 
-class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+[comms::field::FloatValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1FloatValue.html) 
+class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
 
 The second defined **&lt;float&gt;** field 
 ([F5_2](include/tutorial2/field/F5_2.h)) demonstrates usage of values with
@@ -1196,8 +1196,8 @@ shows usage of fixed size string field:
 </message>
 ```
 The **&lt;string&gt;** field is defined using 
-[comms::field::String](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1String.html) 
-class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+[comms::field::String](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1String.html) 
+class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
 
 The **default** storage type of any **&lt;string&gt;** field is `std::string`.
 It can be replaced with interface compatible other type at compile time by the application being
@@ -1220,7 +1220,7 @@ void ClientSession::sendMsg6()
 }
 ```
 When such **&lt;string&gt;** field is serialized, the
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library) makes
+[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) makes
 sure that correct number of bytes is written to the output buffer. In case the
 stored string value has shorter length, the output is padded with correct number
 of zeroes (**0**). In case the stored string value is longer than allowed, the
@@ -1352,8 +1352,8 @@ shows usage of fixed size raw binary data sequence:
 </message>
 ```
 The **&lt;data&gt;** field is defined using 
-[comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.htmll) 
-class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library).
+[comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.htmll) 
+class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
 
 The **default** storage type of any **&lt;data&gt;** field is `std::vector<std::uint8_t>`.
 It can be replaced with interface compatible other type at compile time by the application being
@@ -1376,7 +1376,7 @@ void ClientSession::sendMsg7()
 }
 ```
 Just like with **&lt;string&gt;** fields, when such **&lt;data&gt;** field is serialized, the
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library) makes
+[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) makes
 sure that correct number of bytes is written to the output buffer. In case the
 stored string value has shorter length, the output is padded with correct number
 of zeroes (**0**). In case the stored data value is longer than allowed, the
@@ -1479,7 +1479,7 @@ public:
 };
 ```
 The class is defined using 
-[comms::field::Bundle](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Bundle.html).
+[comms::field::Bundle](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Bundle.html).
 The names of the member fields are provided using `COMMS_FIELD_MEMBERS_NAMES()`
 macro. It is quite similar to `COMMS_MSG_FIELDS_NAMES()` (used to define member
 fields of the messages), but applicable to composite fields, such as bundles.
@@ -1642,7 +1642,7 @@ public:
 };
 ```
 The class is defined using 
-[comms::field::Bitfield](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Bitfield.html).
+[comms::field::Bitfield](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Bitfield.html).
 Similar to [&lt;bundle&gt;](#bundle-fields) the names of the member fields are 
 provided using the same `COMMS_FIELD_MEMBERS_NAMES()` macro. 
 
@@ -1790,7 +1790,7 @@ struct L10_1 : public
 };
 ```
 The definition of the list field uses 
-[comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)
+[comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)
 to define the field (the same as [&lt;data&gt;](#data-fields) field), but as
 its element type uses field (`typename L10_1Members<TOpt>::Element`) definition
 instead of raw binary data (`std::uint8_t`). It means that the **default** value storage
@@ -1821,12 +1821,12 @@ additional call to `.value()` needs to be performed. As the result the `f1Vec` i
 a reference to vector of fields (`std::vector<tutorial2::field::L10_1Members<tutorial2::options::DefaultOptions>::Element>`).
 
 Also note that usage of **count="5"** property in the 
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) schema as well
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) schema as well
 as reflected in the generated code usage of `comms::option::def::SequenceFixedSize<5U>`
 option ensures requested number of elements in the serialized output buffer, and
 does **NOT** influence the size of the storage vector upon construction of the
 field. The default constructed vector is empty. The code above creates and populates only
-3 elements of it. The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+3 elements of it. The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
 does the rest to ensure correct number of elements is serialized. The missing
 elements will be default constructed and their value is properly serialized.
 
@@ -2006,7 +2006,7 @@ field will be covered in depth in one of the later tutorials.
 
 ### &lt;ref&gt; Fields
 The **&lt;ref&gt;** fields are there to define a reference to other fields in order to avoid
-code duplication in the [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
+code duplication in the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification)
 schema as well as in the generated code. The **&lt;ref&gt;** fields have been used
 throughout this tutorial as fields of the **&lt;message&gt;**-s and referenced
 ones in the global space. 
@@ -2168,7 +2168,7 @@ referenced field in bits.
 ### &lt;optional&gt; Fields
 Many binary protocols introduce some kind of optional field, which gets (or doesn't get)
 serialized based on some conditions, usually based on values of other fields. The
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) allows definition
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows definition
 of such optional fields by using **&lt;optional&gt;** wrapping around it. 
 
 The `Msg12` message  (defined inside [dsl/msg12.xml](dsl/msg12.xml) and implemented in
@@ -2196,11 +2196,11 @@ in the input buffer to be read the contained field is going to be deserialized, 
 for the contained field is going to be performed.
 
 Such optional field is implemented (in the generated code) using 
-[comms::field::Optional](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
-class provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library), which also wraps the contained field.
+[comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
+class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library), which also wraps the contained field.
 
-The modes described above are implemented as [comms::field::OptionalMode](https://arobenko.github.io/comms_doc/namespacecomms_1_1field.html)
-enumeration type. To [comms::field::Optional](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
+The modes described above are implemented as [comms::field::OptionalMode](https://commschamp.github.io/comms_doc/namespacecomms_1_1field.html)
+enumeration type. To [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
 class provides the following essential member types and functions:
 ```cpp
 template<typename TField, typename... TOptions>
@@ -2329,11 +2329,11 @@ the `Msg13` message  (defined inside [dsl/msg13.xml](dsl/msg13.xml) and implemen
 In the example above the `Msg13.Flags.F2Present` bit indicates that `Msg13.F2` field is present (exists), 
 while `Msg13.Flags.F3Missing` bit indicates that `Msg13.F3` field is missing (reverse condition).
 
-The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) allows specifying conditions 
+The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows specifying conditions 
 (using **cond** property) of when the optional field must have **exists** mode.
 
 Please note the usage of `$` before referencing the bits in the condition statements. According to
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification) it indicates that
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) it indicates that
 the referenced field is a **sibling** of the field being processed rather then a global reference.
 
 Another thing to note is usage of `!` to negate the condition, i.e. the `F3` field exists when `Flags.F3Missing` is
@@ -2385,13 +2385,13 @@ bool doRefresh()
     return updated;
 }
 ```
-The API requirement imposed by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) is that
+The API requirement imposed by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) is that
 `doRefresh()` member function (which is responsible to bring message contents into a consistent state) 
 must return `bool` with value `true` when message contents and/or state has been updated and `false` when nothing
 has been changed.
 
 The code above calls to the `doRefresh()` member function of the base class 
-([comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)), which is 
+([comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)), which is 
 responsible to call `refresh()` member function of **every** member field of the message. It allows having
 similar conditional constructs in composite fields like [&lt;bundle&gt;](#bundle-fields).
 
@@ -2400,7 +2400,7 @@ responsible to update modes of `f2` and `f3` member fields respectively based on
 
 ---
 
-**SIDE NOTE**: The [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) class used to define
+**SIDE NOTE**: The [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) class used to define
 base interface class for all the messages supports introduction of **polymorphic** (i.e. virtual) refresh functionality
 by using `comms::option::app::RefreshInterface` compile time option.
 ```cpp
@@ -2428,10 +2428,10 @@ protected:
     }
 };
 ```
-Note, that [comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) provides a default 
+Note, that [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) provides a default 
 implementation of virtual `refreshImpl()` which constantly return false.
 
-The [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html) is expected
+The [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) is expected
 to implement **non-virtual** `doRefresh()` member function, which calls `refresh()` of every contained field.
 and override **virtual** `refreshImpl()` when polymorphic refresh functionality is requested by the interface:
 ```cpp
@@ -2449,15 +2449,15 @@ protected:
 ```
 **HOWEVER**, In many cases the `refresh()` member function of all the fields in the message don't do anything (i.e. 
 unconditionally report `false` without doing anything else). In such case (determined at **compile-time** using 
-multiple meta-programming techniques), the [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
+multiple meta-programming techniques), the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
 does **NOT** override `refreshImpl()` and as the result inherits the default implementation provided by the
-[comms::Message](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html). It avoids a lot of 
+[comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html). It avoids a lot of 
 unnecessary code generation.
 
-Unfortunately the [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html) is not 
+Unfortunately the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) is not 
 aware of any extra **refreshing** functionality that might be needed by the actual message, like with `Msg13` in
 our recent example. That's why the definition of `Msg13` passes extra `comms::option::def::HasCustomRefresh` option
-to let the [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html) know that
+to let the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) know that
 overriding of `refreshImpl()` might still be needed (if polymorphic refresh functionality is requested by the interface).
 ```cpp
 template <typename TMsgBase, typename TOpt = tutorial2::options::DefaultOptions>
@@ -2474,7 +2474,7 @@ class Msg13 : public
 ```
 Also note the usage of `comms::option::def::MsgType` option, it just uses the 
 [CRTP](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
-idiom to let the [comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html) know
+idiom to let the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) know
 real derived class type to do appropriate casting in its `refreshImpl()` implementation:
 ```cpp
 class comms::MessageBase<...>
@@ -2488,7 +2488,7 @@ protected:
 ```
 As a general rule, every **generated** message and/or field class with custom **refresh** functionality will
 use `comms::option::def::HasCustomRefresh` option to let the 
-[comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
+[comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
 know that previously described optimization of skipping `refreshImpl()` generation must be avoided.
 
 ---
@@ -2595,7 +2595,7 @@ void ClientSession::sendMsg14()
 - All the member functions of all the fields are **non**-virtual.
 - Every message definition class containing inner fields uses 
   `COMMS_MSG_FIELDS_NAMES()` macro (provided by the 
-  [COMMS Library](https://github.com/arobenko/comms_champion#comms-library))
+  [COMMS Library](https://github.com/commschamp/comms_champion#comms-library))
   to create convenience access member functions for member fields. For every field name **x** 
   mentioned in the macro, there is `Field_x` member alias type to specify type of the field
   as well as `field_x()` member function to provide an access to the contained member field 
@@ -2607,11 +2607,11 @@ void ClientSession::sendMsg14()
   object.
 - Due to the nature of these tutorials it is not possible to cover **all** aspects (properties) of all
   the available fields, it is highly recommended to read 
-  [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) specification in
+  [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification in
   full after reading the tutorials.
 - All the field classes are implemented by extending one of the field definition
-  classes provided by the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
-  and residing in [comms::field](https://arobenko.github.io/comms_doc/namespacecomms_1_1field.html)
+  classes provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+  and residing in [comms::field](https://commschamp.github.io/comms_doc/namespacecomms_1_1field.html)
   namespace.
 
 [Read Previous Tutorial](../tutorial1) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial3) 

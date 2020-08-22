@@ -4,7 +4,7 @@ Dealing with multiple uni-directional messages.
 Some protocols define uni-directional messages that always travel one direction and never back,
 i.e. only sent or only received, but never both.
 
-The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) allows specifying the 
+The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows specifying the 
 direction of the message using **sender** property. The available values are
 "client", "server", and "both" (default). All the previous tutorials didn't use this property and
 as the result were assumed to be bi-directional.
@@ -62,7 +62,7 @@ using OutMsg2 = tutorial9::message::Msg2<OutMessage>;
 using OutMsg4 = tutorial9::message::Msg4<OutMessage>;
 ```
 There is also an important thing to note. The 
-[commsdsl2comms](https://github.com/arobenko/commsdsl) code generator produces
+[commsdsl2comms](https://github.com/commschamp/commsdsl) code generator produces
 [include/tutorial9/input/ClientInputMessages.h](include/tutorial9/input/ClientInputMessages.h) and 
 [include/tutorial9/input/ServerInputMessages.h](include/tutorial9/input/ServerInputMessages.h) which define input messages
 for the **client** and **server** sides respectively.
@@ -183,7 +183,7 @@ functionality of the **frame** supports any type of message interface class and
 does **NOT** care about a list of supported **output** messages.
 
 ## Summary
-- The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) allows definition 
+- The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows definition 
   of the direction of the message using **sender** property.
 - When majority of the protocol messages are uni-directional it is highly recommended
   to split the common interface class into two for **input** and **output** messages

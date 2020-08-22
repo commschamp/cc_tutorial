@@ -2,43 +2,43 @@
 Avoiding dynamic memory allocation.
 
 Many embedded bare-metal systems don't use any heap and cannot use dynamic memory allocation.
-The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) has several
+The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) has several
 places where dynamic memory allocation is used:
 
-- Inside [comms::MsgFactory](https://arobenko.github.io/comms_doc/classcomms_1_1MsgFactory.html) used
-  by the [comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+- Inside [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html) used
+  by the [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
   when processing message numeric ID value and creating appropriate message object.
 - Default storage of **&lt;string&gt;** field (implemented by extending 
-  [comms::field::String](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1String.html)) is
+  [comms::field::String](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1String.html)) is
   `std::string`.
 - Default storage of **&lt;data&gt;** field (implemented by extending
-  [comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)) is
+  [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)) is
   `std::vector<std::uint8_t>`.
 - Default storage of **&lt;list&gt;** field (implemented by extending 
-  [comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)) is
+  [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)) is
   `std::vector<ElementField>`.
   
-The dynamic allocation inside [comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
-and [comms::MsgFactory](https://arobenko.github.io/comms_doc/classcomms_1_1MsgFactory.html) can be resolved
-by using [comms::option::app::InPlaceAllocation](https://arobenko.github.io/comms_doc/options_8h.html) option. 
+The dynamic allocation inside [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+and [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html) can be resolved
+by using [comms::option::app::InPlaceAllocation](https://commschamp.github.io/comms_doc/options_8h.html) option. 
 If forces usage of an uninitialized storage area (as private data member), big
 enough to hold **any** (but one at a time) message provided in the **input** messages tuple. When 
 new message type is recognized, the message object is created using 
 [placement](https://en.cppreference.com/w/cpp/language/new) allocation and a pointer to the used
 array is returned. The message object returned by the frame 
-([Frame::MsgPtr](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html))
+([Frame::MsgPtr](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html))
 is still held by `std::unique_ptr`, but with a custom deleter, which will invoke the proper message class destructor.
 
 The problematic storage types that use dynamic memory allocation (`std::string` and `std::vector`) can also be
-replaced using some [options](https://arobenko.github.io/comms_doc/options_8h.html). The 
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library) provides
-[comms::util::StaticString](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html) and
-[comms::util::StaticVector](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html)
+replaced using some [options](https://commschamp.github.io/comms_doc/options_8h.html). The 
+[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) provides
+[comms::util::StaticString](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html) and
+[comms::util::StaticVector](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html)
 which expose similar public interface as `std::string` and `std::vector` respectively, but receive
 additional template parameter which specifies their **maximal** capacity and use `std::array` of
 appropriate `std::aligned_storage` as their private data member. In order to replace usage of 
 problematic `std::string` and/or `std::vector`, the 
-[comms::option::app::FixedSizeStorage](https://arobenko.github.io/comms_doc/options_8h.html)
+[comms::option::app::FixedSizeStorage](https://commschamp.github.io/comms_doc/options_8h.html)
 needs to be passed to the field definition.
 
 The [generated](include) code contains 
@@ -117,15 +117,15 @@ already specify the maximal length / count of the storage and it doesn't need to
 In this  case the passed option is `comms::option::app::SequenceFixedSizeUseFixedSizeStorage`.
 
 The used options will force usage of 
-[comms::util::StaticString](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html) 
-instead of `std::string` and [comms::util::StaticVector](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html)
+[comms::util::StaticString](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html) 
+instead of `std::string` and [comms::util::StaticVector](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html)
 instead of `std::vector`.
 
 ----
 
 **SIDE NOTE**: The `Data` layer of the protocol framing receives an option which is passed to the 
 payload field. The latter is used **only** when framing fields are cached in some external structure
-(see documentation of [comms::protocol::ProtocolLayerBase::readFieldsCached()](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html))
+(see documentation of [comms::protocol::ProtocolLayerBase::readFieldsCached()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html))
 which is **irrelevant** for this tutorial and should be ignored.
 ```cpp
 template <typename TBase = tutorial12::options::DefaultOptions>
@@ -183,7 +183,7 @@ and overrides the default storage size of `Msg1Fields::F1`.
 
 ----
 
-**SIDE NOTE**: The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) was implemented in
+**SIDE NOTE**: The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) was implemented in
 a way that processes the options bottom-up. As the result, the options that appear above may 
 override the configuration enforced by the options listed below.
 
@@ -209,25 +209,25 @@ everything operates normally, but without any dynamic memory allocation.
 One of the **important** aspects to understand is that for sequence fields like 
 **&lt;string&gt;**, or **&lt;data&gt;** the input data is constantly copied from the 
 **input** buffer to the internal storage of these fields, whether it is 
-`std::string`, `std::vector`, [comms::util::StaticString](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html),
-or [comms::util::StaticVector](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html).
+`std::string`, `std::vector`, [comms::util::StaticString](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html),
+or [comms::util::StaticVector](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html).
 If we think about it a bit deeper, in most of the cases (all the previous tutorials so far) 
 the message object doesn't outlive the  input buffer . It would
 be beneficial if the storage type of the **&lt;string&gt;** and **&lt;data&gt;**
 fields is some kind of "view" on input buffer. The 
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
-provides such an ability with [comms::option::app::OrigDataView](https://arobenko.github.io/comms_doc/options_8h.html)
+[COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+provides such an ability with [comms::option::app::OrigDataView](https://commschamp.github.io/comms_doc/options_8h.html)
 option. If the option is passed to the definition of 
-[comms::field::String](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1String.html) then 
+[comms::field::String](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1String.html) then 
 the storage type will be [std::string_view](https://en.cppreference.com/w/cpp/string/basic_string_view)
 if C++17 is been used to compile the source and the compiler actually supports it. Otherwise 
-[comms::util::StringView](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StringView.html) is 
+[comms::util::StringView](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StringView.html) is 
 chosen. Similar for the definition of the 
-[comms::field::ArrayList](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html) with 
+[comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html) with 
 `std::uint8_t` as its element type (used to define **&lt;data&gt;** field). If C++20 is used 
 to compile the source and the compiler supports it the 
 [std::span](https://en.cppreference.com/w/cpp/container/span) is used as the storage type.
-Otherwise the [comms::util::ArrayView](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1ArrayView.html)
+Otherwise the [comms::util::ArrayView](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1ArrayView.html)
 is chosen.
 
 **NOTE** that the data view **cannot** be used for the **&lt;list&gt;** field, because its 
@@ -356,9 +356,9 @@ can be observed with [std::vector](https://en.cppreference.com/w/cpp/container/v
 assignment code which is underlying storage type agnostic. Once the underlying storage type 
 is assumed to be something and its known API function is used, it becomes a boilerplate code
 which may fail the compilation and/or work incorrectly when the assumption is broken. The 
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library) introduces
+[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) introduces
 `comms::util::assign()` stand alone function (requires include of 
-[comms/util/assign.h](https://arobenko.github.io/comms_doc/assign_8h.html)). It is a helper
+[comms/util/assign.h](https://commschamp.github.io/comms_doc/assign_8h.html)). It is a helper
 function which allows writing storage type agnostic code to assign a range of values. It 
 can be used when the two iterators (begin and end) are known and works well for any 
 type, whether it is `std::string`, `std::string_view`, `comms::util::StaticString`, 
@@ -372,20 +372,20 @@ allocation, some also avoid virtual functions (due to code size limitations). Ma
 exclude usage of standard C library altogether. 
 
 Note that the 
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library) uses various
+[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) uses various
 debug code inner correctness checks (compiled in when standard `NDEBUG` is not defined). Such
-checks are implemented using [COMMS_ASSERT()](https://arobenko.github.io/comms_doc/Assert_8h.html)
+checks are implemented using [COMMS_ASSERT()](https://commschamp.github.io/comms_doc/Assert_8h.html)
 macro, which by default invokes standard `assert()` defined by the standard library, which 
 may cause a problem if the latter is not used. To avoid usage of the standard `assert()` 
 there is a need to define `COMMS_NOSTDLIB` during compilation. It will cause the default 
-failure functionality of the [COMMS_ASSERT()](https://arobenko.github.io/comms_doc/Assert_8h.html)
+failure functionality of the [COMMS_ASSERT()](https://commschamp.github.io/comms_doc/Assert_8h.html)
 macro to be an infinite loop. 
 
-The [COMMS Library](https://github.com/arobenko/comms_champion#comms-library) allows run-time 
+The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) allows run-time 
 override of the default assertion failure functionality. Please read 
-[Custom Assertion Failure Behaviour](https://arobenko.github.io/comms_doc/page_assert.html) page
+[Custom Assertion Failure Behaviour](https://commschamp.github.io/comms_doc/page_assert.html) page
 from the documentation for more details. The 
-[Error Handling](https://arobenko.github.io/comms_doc/page_use_prot.html#page_use_prot_error_handling)
+[Error Handling](https://commschamp.github.io/comms_doc/page_use_prot.html#page_use_prot_error_handling)
 section also contains useful information about the available error handling.
 
 ----
@@ -393,22 +393,22 @@ section also contains useful information about the available error handling.
 ## Summary
 - The default behavior of the framing is to dynamically allocate message object. 
 - It can be changed by passing `comms::option::app::InPlaceAllocation` option to the `ID` framing layer
-  (implemented by the [comms::protocol::MsgIdLayer](https://arobenko.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)).
+  (implemented by the [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)).
 - The default storage of the fields like **&lt;string&gt;**, **&lt;data&gt;** and **&lt;list&gt;** can
   be changed by passing certain options.
-- Passing [comms::option::app::FixedSizeStorage](https://arobenko.github.io/comms_doc/options_8h.html) option
-  will result in usage of [comms::util::StaticString](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html)
-  instead `std::string` and [comms::util::StaticVector](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html)
+- Passing [comms::option::app::FixedSizeStorage](https://commschamp.github.io/comms_doc/options_8h.html) option
+  will result in usage of [comms::util::StaticString](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html)
+  instead `std::string` and [comms::util::StaticVector](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html)
   instead of `std::vector`.
-- Passing [comms::option::app::OrigDataView](https://arobenko.github.io/comms_doc/options_8h.html) option will 
-  result in usage of `std::string_view` or [comms::util::StringView](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1StringView.html)
-  instead of `std::string` and `std::span` or [comms::util::ArrayView](https://arobenko.github.io/comms_doc/classcomms_1_1util_1_1ArrayView.html)
+- Passing [comms::option::app::OrigDataView](https://commschamp.github.io/comms_doc/options_8h.html) option will 
+  result in usage of `std::string_view` or [comms::util::StringView](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StringView.html)
+  instead of `std::string` and `std::span` or [comms::util::ArrayView](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1ArrayView.html)
   instead of `std::vector`.
 - The generated code provides [include/&lt;namespace&gt;/options/BareMetalDefaultOptions.h](include/tutorial12/options/BareMetalDefaultOptions.h)
   definition to help with avoiding dynamic memory allocation.
 - The generated code provides [include/&lt;namespace&gt;/options/DataViewDefaultOptions.h](include/tutorial12/options/DataViewDefaultOptions.h)
   definition to help with avoiding unnecessary data copying from input buffer to message fields' storage.
-- There is [comms::util::assign()](https://arobenko.github.io/comms_doc/assign_8h.html) stand-alone function which helps
+- There is [comms::util::assign()](https://commschamp.github.io/comms_doc/assign_8h.html) stand-alone function which helps
   writing storage type agnostic assignment code with a range of iterators.
 
 [Read Previous Tutorial](../tutorial11) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial13) 

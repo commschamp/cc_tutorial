@@ -1,8 +1,8 @@
 # Overview
 This repository is a combination of tutorials and various how-to(s) for
-[CommsChampion Ecosystem](https://arobenko.github.io/cc). It is important to
+[CommsChampion Ecosystem](https://commschamp.github.io). It is important to
 understand the available components and their respective roles. Please
-read the [introduction](https://arobenko.github.io/cc) if you haven't done
+read the [introduction](https://commschamp.github.io) if you haven't done
 so yet.
 
 The tutorials are organized as a combination **tutorials/tutorialX** folders. They 
@@ -19,7 +19,7 @@ to understand a particular howto example. The howto(s) are
 there to provide some extra examples or cover some specific nuances which are
 not explained properly in the tutorials. If you encounter a sutuation where it is 
 not 100% clear how to define and/or implement some logic please open an issue for this 
-project or send a direct [e-mail](https://arobenko.github.io/cc/contact/). 
+project or send a direct [e-mail](https://commschamp.github.io/contact/). 
 Maybe your question will end up as one of the **howtos**.
 
 It is highly recommended to open 
@@ -27,14 +27,14 @@ a source code with your favourite IDE to be able to easily navigate it and
 have a full code listing visible, while reading the README files of the tutorials from this
 github repository using your browser.
 
-The [CommsChampion Ecosystem](https://arobenko.github.io/cc) was built to be easy to use 
+The [CommsChampion Ecosystem](https://commschamp.github.io) was built to be easy to use 
 while providing sensible behavioural defaults suitable for most of C++ applications. It 
 is also very flexible when it comes to application specific configurations. However, it 
 is very difficult to cover all the capabilities in a set of introductory tutorials.
-It is highly recommended to read through the [CommsDSL](https://arobenko.github.io/commsdsl_spec/)
+It is highly recommended to read through the [CommsDSL](https://commschamp.github.io/commsdsl_spec/)
 specification in order to understand the full capabilities of the schema definition
-as well as [COMMS Library documentation](https://arobenko.github.io/comms_doc/)
-(especially [How to Use Defined Custom Protocol](https://arobenko.github.io/comms_doc/page_use_prot.html)
+as well as [COMMS Library documentation](https://commschamp.github.io/comms_doc/)
+(especially [How to Use Defined Custom Protocol](https://commschamp.github.io/comms_doc/page_use_prot.html)
 page) in order to understand application specific configuration, after finishing the whole set
 of the tutorials from this repository.
 
@@ -44,14 +44,14 @@ Every **tutorials/tutorialX** and **howotos/howtoX** folder may contain the foll
 - **README.md** - Actual tutorial / how-to explanation markdown text that is 
 intended to be made available for online reading by the repository hosting service
 (github).
-- **dsl** - Folder containing [CommsDSL](https://github.com/arobenko/CommsDSL-Specification)
+- **dsl** - Folder containing [CommsDSL](https://github.com/commschamp/CommsDSL-Specification)
 schema file(s) relevant for the tutorial / how-to.
 - **include** - Folder that contains protocol definition code 
-**generated** by the [commsdsl2comms](https://github.com/arobenko/commsdsl)
+**generated** by the [commsdsl2comms](https://github.com/commschamp/commsdsl)
 tool and relevant for the tutorial.
 - **src** - Folder containing code relevant to the tutorial / how-to.
 - **dsl_src** - Optional folder containing extra code snippets which are 
-picked up by the [commsdsl2comms](https://github.com/arobenko/commsdsl) tool
+picked up by the [commsdsl2comms](https://github.com/commschamp/commsdsl) tool
 and find their way into the generated protocol definition code.
 
 **IMPORTANT EMPHASIS**: The **include** folder of each and every **tutorials/tutorialX**
@@ -86,19 +86,19 @@ with CTRL+C. In the second terminal window run the **client** application. In mo
 cases it will exchange several messages with the **server** and exit. 
 
 # References
-The core component of the [CommsChampion Ecosystem](https://arobenko.github.io/cc) is
-[COMMS Library](https://github.com/arobenko/comms_champion#comms-library). Its full
-tutorial and API reference can be viewed [online](https://arobenko.github.io/comms_doc) or
-downloaded from latest [release artifacts](https://github.com/arobenko/comms_champion/releases).
-The full tutorial on how to use the [COMMS Library](https://github.com/arobenko/comms_champion#comms-library)
+The core component of the [CommsChampion Ecosystem](https://commschamp.github.io) is
+[COMMS Library](https://github.com/commschamp/comms_champion#comms-library). Its full
+tutorial and API reference can be viewed [online](https://commschamp.github.io/comms_doc) or
+downloaded from latest [release artifacts](https://github.com/commschamp/comms_champion/releases).
+The full tutorial on how to use the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
 resides in
-[How to Use Defined Custom Protocol](https://arobenko.github.io/comms_doc/page_use_prot.html)
+[How to Use Defined Custom Protocol](https://commschamp.github.io/comms_doc/page_use_prot.html)
 page of the documentation.
 
 The **commsdsl2comms** code generator requires schema file(s) to be written in
-[CommsDSL](https://github.com/arobenko/CommsDSL-Specification). The full specification
-can be viewed [online](https://arobenko.github.io/commsdsl_spec/) or
-downloaded as PDF from latest [release artifacts](https://github.com/arobenko/CommsDSL-Specification/releases).
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification). The full specification
+can be viewed [online](https://commschamp.github.io/commsdsl_spec/) or
+downloaded as PDF from latest [release artifacts](https://github.com/commschamp/CommsDSL-Specification/releases).
 
 # How to Build
 This project uses CMake as its build system. Please open main

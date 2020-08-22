@@ -16,8 +16,8 @@ protocol as the [schema](dsl/schema.xml) **version** property.
     ...
 </schema>
 ```
-The [CommsDSL](https://github.com/arobenko/CommsDSL-Specification) defines value of the **version** property 
-as [unsigned numeric](https://arobenko.github.io/commsdsl_spec/#intro-numeric) one. If there is a need 
+The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) defines value of the **version** property 
+as [unsigned numeric](https://commschamp.github.io/commsdsl_spec/#intro-numeric) one. If there is a need 
 to define a version as [semantic](https://semver.org/) one, then it is recommended to mentally split the 
 version number into bytes and use something like `version="0x105` (for version 1.5) or 
 `version=0x10502` (for version 1.5.2).
@@ -121,9 +121,9 @@ public:
     );
 };
 ```
-Please note the usage of [comms::option::def::VersionInExtraTransportFields](https://arobenko.github.io/comms_doc/options_8h.html)
+Please note the usage of [comms::option::def::VersionInExtraTransportFields](https://commschamp.github.io/comms_doc/options_8h.html)
 option. It is used to specify index of the transport field containing the version information. 
-It also creates [version()](https://arobenko.github.io/comms_doc/classcomms_1_1Message.html) member function which is 
+It also creates [version()](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) member function which is 
 basically an alias to `transportField_version().value()`. They can be used interchangeably.
 
 Now let's take a look how version dependent fields are defined in the generated code. Let's take a look at 
@@ -158,10 +158,10 @@ struct F2 : public
 };
 ```
 Due to the fact that the version dependent field may or may not exist then it has to be defined as 
-[comms::field::Optional](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Optional.html).
+[comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html).
 Its version information since which the field must exist is defined using 
-[comms::option::def::ExistsSinceVersion](https://arobenko.github.io/comms_doc/options_8h.html) option.
-The actual field being wrapped by the [comms::field::Optional](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
+[comms::option::def::ExistsSinceVersion](https://commschamp.github.io/comms_doc/options_8h.html) option.
+The actual field being wrapped by the [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
 is defined as `F2Field` (**Field** suffix is added to the field's name). It is equivalent to the following pseudo definition:
 ```xml
 <optional name="F2" cond="_version_ &gt;= 2">
@@ -350,19 +350,19 @@ public:
 };
 ```
 Note the call of the `doFieldsVersionUpdate()` provided by the 
-[comms::MessageBase](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html).
-It updates the modes of all the version based [comms::field::Optional](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
+[comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html).
+It updates the modes of all the version based [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
 fields. It means that in case **custom** read code functionality is injected to the code 
 generator, it needs to call `Base::doFieldsVersionUpdate()` at the beginning of the function in 
 case there are version dependent fields.
 
 ----
 
-**SIDE NOTE**: The [commsdsl2comms](https://github.com/arobenko/commsdsl) code generator 
-allows selecting a [minimal remote version](https://github.com/arobenko/commsdsl/blob/master/doc/Manual_commsdsl2comms.md#selecting-minimal-remote-version),
+**SIDE NOTE**: The [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator 
+allows selecting a [minimal remote version](https://github.com/commschamp/commsdsl/blob/master/doc/Manual_commsdsl2comms.md#selecting-minimal-remote-version),
 which means all the possible remote endpoints won't use any earlier version then specified. In such 
 case all version dependent fields that where introduced before the specified version will be implemented
-as normal fields, not as [comms::field::Optional](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
+as normal fields, not as [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
 ones for improved run-time and code size performance.
 
 ----
@@ -373,20 +373,20 @@ ones for improved run-time and code size performance.
 - The deprecated fields should be marked with **deprecated**.
 - By default deprecated fields are not removed to maintain backward compatibility of the protocol. In order to
   forcefully remove it use `removed="true"` property assignment.
-- In order to let the [commsdsl2comms](https://github.com/arobenko/commsdsl) generate the version dependent
+- In order to let the [commsdsl2comms](https://github.com/commschamp/commsdsl) generate the version dependent
   code, the **&lt;interface&gt;** needs to contain a field marked as version (having `semanticType="version"`
   property assignment).
 - Use usual **&lt;value&gt;** framing layer when version is reported as a field inside the transport frame.
 - All the version dependent fields are implemented as 
-  [comms::field::Optional](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Optional.html) fields.
+  [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html) fields.
 - All the **&lt;validValue&gt;**-s of the **&lt;enum&gt;** field are considered to be valid (regardless of 
   the version they where introduced or their deprecation status) as well as all the **&lt;bit&gt;**-s of the 
   **&lt;set&gt;** field are considered to be not reserved unless **validCheckVersion** property is set to 
   **true**. In this case the generated `valid()` member function will take the version into account.
 - When custom `doRead()` member function is injected into the version dependent message, it must call
-  [Base::doFieldsVersionUpdate()](https://arobenko.github.io/comms_doc/classcomms_1_1MessageBase.html)
+  [Base::doFieldsVersionUpdate()](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
   to properly update the modes of the version dependent 
-  [comms::field::Optional](https://arobenko.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
+  [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
   fields.
 
 
