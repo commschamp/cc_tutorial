@@ -1,4 +1,4 @@
-dist: xenial
+dist: bionic
 language: cpp
 sudo: true
 notifications:
@@ -24,64 +24,48 @@ matrix:
     - os: linux
       addons:
         apt:
-          sources:
-            - sourceline: "ppa:ubuntu-toolchain-r/test"
           packages:
             - g++-6    
       env: _CC=gcc-6 _CXX=g++-6 
     - os: linux
       addons:
         apt:
-          sources:
-            - sourceline: "ppa:ubuntu-toolchain-r/test"
           packages:
             - g++-6    
       env: _CC=gcc-6 _CXX=g++-6 _BUILD="-DCMAKE_CXX_STANDARD=14"
     - os: linux
       addons:
         apt:
-          sources:
-            - sourceline: "ppa:ubuntu-toolchain-r/test"        
           packages:
             - g++-7    
       env: _CC=gcc-7 _CXX=g++-7 
     - os: linux
       addons:
         apt:
-          sources:
-            - sourceline: "ppa:ubuntu-toolchain-r/test"        
           packages:
             - g++-7    
       env: _CC=gcc-7 _CXX=g++-7 _BUILD="-DCMAKE_CXX_STANDARD=14"
     - os: linux
       addons:
         apt:
-          sources:
-            - sourceline: "ppa:ubuntu-toolchain-r/test"        
           packages:
             - g++-7    
       env: _CC=gcc-7 _CXX=g++-7 _BUILD="-DCMAKE_CXX_STANDARD=17"
     - os: linux
       addons:
         apt:
-          sources:
-            - sourceline: "ppa:ubuntu-toolchain-r/test"        
           packages:
             - g++-8    
       env: _CC=gcc-8 _CXX=g++-8 
     - os: linux
       addons:
         apt:
-          sources:
-            - sourceline: "ppa:ubuntu-toolchain-r/test"        
           packages:
             - g++-8    
       env: _CC=gcc-8 _CXX=g++-8 _BUILD="-DCMAKE_CXX_STANDARD=14"     
     - os: linux
       addons:
         apt:
-          sources:
-            - sourceline: "ppa:ubuntu-toolchain-r/test"        
           packages:
             - g++-8    
       env: _CC=gcc-8 _CXX=g++-8 _BUILD="-DCMAKE_CXX_STANDARD=17"  
@@ -121,7 +105,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-3.9
+            - llvm-toolchain-bionic-3.9
           packages:
             - clang-3.9   
       env: _CC=clang-3.9 _CXX=clang++-3.9 
@@ -129,7 +113,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-3.9
+            - llvm-toolchain-bionic-3.9
           packages:
             - clang-3.9   
       env: _CC=clang-3.9 _CXX=clang++-3.9 _BUILD="-DCMAKE_CXX_STANDARD=14"
@@ -137,7 +121,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-4.0
+            - llvm-toolchain-bionic-4.0
           packages:
             - clang-4.0    
       env: _CC=clang-4.0 _CXX=clang++-4.0 
@@ -145,7 +129,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-4.0
+            - llvm-toolchain-bionic-4.0
           packages:
             - clang-4.0    
       env: _CC=clang-4.0 _CXX=clang++-4.0 _BUILD="-DCMAKE_CXX_STANDARD=14"
@@ -153,7 +137,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-5.0
+            - llvm-toolchain-bionic-5.0
           packages:
             - clang-5.0    
       env: _CC=clang-5.0 _CXX=clang++-5.0 
@@ -161,7 +145,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-5.0
+            - llvm-toolchain-bionic-5.0
           packages:
             - clang-5.0    
       env: _CC=clang-5.0 _CXX=clang++-5.0 _BUILD="-DCMAKE_CXX_STANDARD=14"
@@ -169,7 +153,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-5.0
+            - llvm-toolchain-bionic-5.0
           packages:
             - clang-5.0    
       env: _CC=clang-5.0 _CXX=clang++-5.0 _BUILD="-DCMAKE_CXX_STANDARD=17"
@@ -177,7 +161,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-6.0
+            - llvm-toolchain-bionic-6.0
           packages:
             - clang-6.0    
       env: _CC=clang-6.0 _CXX=clang++-6.0 
@@ -185,7 +169,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-6.0
+            - llvm-toolchain-bionic-6.0
           packages:
             - clang-6.0    
       env: _CC=clang-6.0 _CXX=clang++-6.0 _BUILD="-DCMAKE_CXX_STANDARD=14"
@@ -193,7 +177,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-6.0
+            - llvm-toolchain-bionic-6.0
           packages:
             - clang-6.0    
       env: _CC=clang-6.0 _CXX=clang++-6.0 _BUILD="-DCMAKE_CXX_STANDARD=17"
@@ -201,7 +185,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-7
+            - llvm-toolchain-bionic-7
           packages:
             - clang-7    
       env: _CC=clang-7 _CXX=clang++-7 
@@ -209,7 +193,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-7
+            - llvm-toolchain-bionic-7
           packages:
             - clang-7    
       env: _CC=clang-7 _CXX=clang++-7 _BUILD="-DCMAKE_CXX_STANDARD=14"
@@ -217,7 +201,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-7
+            - llvm-toolchain-bionic-7
           packages:
             - clang-7    
       env: _CC=clang-7 _CXX=clang++-7 _BUILD="-DCMAKE_CXX_STANDARD=17"
@@ -225,7 +209,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-8
+            - llvm-toolchain-bionic-8
           packages:
             - clang-8    
       env: _CC=clang-8 _CXX=clang++-8 
@@ -233,7 +217,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-8
+            - llvm-toolchain-bionic-8
           packages:
             - clang-8    
       env: _CC=clang-8 _CXX=clang++-8 _BUILD="-DCMAKE_CXX_STANDARD=14"
@@ -241,7 +225,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-8
+            - llvm-toolchain-bionic-8
           packages:
             - clang-8    
       env: _CC=clang-8 _CXX=clang++-8 _BUILD="-DCMAKE_CXX_STANDARD=17"
@@ -249,13 +233,77 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-xenial-8
+            - llvm-toolchain-bionic-8
           packages:
             - clang-8    
       env: _CC=clang-8 _CXX=clang++-8 _BUILD="-DCMAKE_CXX_STANDARD=20"
-      
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-bionic-9
+          packages:
+            - clang-9    
+      env: _CC=clang-9 _CXX=clang++-9 
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-bionic-9
+          packages:
+            - clang-9    
+      env: _CC=clang-9 _CXX=clang++-9 _BUILD="-DCMAKE_CXX_STANDARD=14"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-bionic-9
+          packages:
+            - clang-9    
+      env: _CC=clang-9 _CXX=clang++-9 _BUILD="-DCMAKE_CXX_STANDARD=17"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-bionic-9
+          packages:
+            - clang-9    
+      env: _CC=clang-9 _CXX=clang++-9 _BUILD="-DCMAKE_CXX_STANDARD=20"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-bionic-10
+          packages:
+            - clang-10    
+      env: _CC=clang-10 _CXX=clang++-10 
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-bionic-10
+          packages:
+            - clang-10    
+      env: _CC=clang-10 _CXX=clang++-10 _BUILD="-DCMAKE_CXX_STANDARD=14"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-bionic-10
+          packages:
+            - clang-10    
+      env: _CC=clang-10 _CXX=clang++-10 _BUILD="-DCMAKE_CXX_STANDARD=17"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-bionic-10
+          packages:
+            - clang-10    
+      env: _CC=clang-10 _CXX=clang++-10 _BUILD="-DCMAKE_CXX_STANDARD=20"
+
+
 before_install:
-  - sudo apt-get install libqt5serialport5-dev  -y 
   - sudo apt-get install libboost-program-options-dev libboost-filesystem-dev libboost-system-dev -y  
 
 script:
