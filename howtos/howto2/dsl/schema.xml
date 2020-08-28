@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="howto2" endian="big">
+    <fields>
+        <string name="Msg1Name" defaultValue="Message 1" />
+        <string name="Msg2Name" defaultValue="Message 2" />
+        <string name="Msg3Name" defaultValue="Message 3" />
+        <string name="Msg4Name" defaultValue="Message 4" />
+            
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M1" val="1" displayName="^Msg1Name" />
+            <validValue name="M2" val="2" displayName="^Msg2Name" />
+            <validValue name="M3" val="3" displayName="^Msg3Name" />
+            <validValue name="M4" val="4" displayName="^Msg4Name" />
+        </enum>
+        
+    </fields>
+    
+    <frame name="Frame">
+        <custom name="IdWithSize" idReplacement="true"> 
+            <bitfield name="Field">
+                <int name="Size" type="uint16" bitLength="12" />
+                <ref field="MsgId" bitLength="4" />
+            </bitfield>
+        </custom>
+        <payload name="Data" />
+    </frame>
+    
+    <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
+        <string name="F1" defaultValue="hello" />
+    </message>
+    
+    <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
+        <int name="F1" type="uint16" defaultValue="12345" />
+        <int name="F2" type="uint16" defaultValue="45678" />
+    </message>    
+
+    <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name">
+        <string name="F1" defaultValue="blabla" />
+    </message>
+
+    <message name="Msg4" id="MsgId.M4" displayName="^Msg4Name">
+        <int name="F1" type="uint16" defaultValue="60000" />
+        <int name="F2" type="uint16" defaultValue="22222" />
+    </message>
+</schema>
