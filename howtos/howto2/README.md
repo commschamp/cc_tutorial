@@ -23,7 +23,7 @@ Please note that the defined **&lt;custom&gt;** layer is marked as the replaceme
 **&lt;id&gt;** layer using **idReplacement** property 
 (because there must be a layer responsible for the message object allocation).
 
-The [tutorial17](../../tree/master/tutorials/tutorial17) explains usage of the custom framing 
+The [tutorial17](../../tutorials/tutorial17) explains usage of the custom framing 
 layers and how it is implemented.
 
 The [dsl_src/include/howto2/frame/layer/IdWithSize.h](dsl_src/include/howto2/frame/layer/IdWithSize.h)
