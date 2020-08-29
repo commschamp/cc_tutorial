@@ -12,8 +12,8 @@ set (client_src
     src/ClientSession.cpp
 )
 
-dsl_tutorial_parse(${name} SCHEMAS ${schema_files} SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dsl_src)
+dsl_howto_parse(${name} SCHEMAS ${schema_files} SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dsl_src)
 
-bin_tutorial_server(${name} ${server_src})
-bin_tutorial_client(${name} ${client_src})
+bin_howto_server(${name} ${server_src})
+bin_howto_client(${name} ${client_src})
 
