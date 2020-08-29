@@ -161,3 +161,4 @@ $> nmake install
 
 # How-Tos
 - [howto1](../../tree/master/howtos/howto1) - Custom remaining size framing information preceding **&lt;id&gt;**.
+- [howto2](../../tree/master/howtos/howto2) - Having single field for message ID and remaining size in message framing.
