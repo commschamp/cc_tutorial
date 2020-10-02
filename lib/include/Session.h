@@ -68,7 +68,8 @@ protected:
                 int,
                 ValueType   
             >::type;  // Upcast to int 1 byte sizes for proper printing
-        std::cout << '\t' << prefix << field.name() << " = " << (CastType)field.value() << '\n';
+        std::cout << '\t' << prefix << field.name() << " = " << 
+            static_cast<CastType>(field.value()) << '\n';
     }
 
     template <typename TField>
@@ -82,7 +83,8 @@ protected:
                 UnderlyingType
             >::type; // Upcast to int 1 byte sizes for proper printing
 
-        std::cout << '\t' << prefix << field.name() << " = " << (CastType)field.value() << 
+        std::cout << '\t' << prefix << field.name() << " = " << 
+            static_cast<CastType>(field.value()) << 
             " (" << field.valueName() << ")\n";
     }
 
@@ -90,8 +92,8 @@ protected:
     static void printSetField(const TField& field, const std::string& prefix = std::string())
     {
         std::cout << '\t' << prefix << field.name() << " = 0x" <<
-            std::setfill('0') << std::setw(field.length() * 2) <<
-            std::hex << (std::uintmax_t)field.value() << std::dec << '\n';
+            std::setfill('0') << std::setw(static_cast<int>(field.length() * 2)) <<
+            std::hex << static_cast<std::uintmax_t>(field.value()) << std::dec << '\n';
 
         for (auto idx = 0U; idx < field.length() * 8; ++idx) {
             auto bitIdx = static_cast<typename TField::BitIdx>(idx);

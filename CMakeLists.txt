@@ -13,61 +13,16 @@ option (FORCE_EXTRA_BOOST_LIBS "Force linking to extra boost libraries" OFF)
 # CC_TAG - Tag / branch of comms_champion project (if built internally)
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
-    set (COMMSDSL_TAG "v3.5.1")
+    set (COMMSDSL_TAG "develop")
 endif ()
 
 if ("${CC_TAG}" STREQUAL "")
-    set (CC_TAG "v3.0.1")
+    set (CC_TAG "develop")
 endif ()
 
 if (NOT CMAKE_CXX_STANDARD)
     set (CMAKE_CXX_STANDARD 11)
 endif ()
-
-if ((CMAKE_COMPILER_IS_GNUCC) OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"))
-    set (extra_flags_list
-        "-Wall" "-Wextra" "-Wcast-align" "-Wcast-qual" "-Wctor-dtor-privacy"
-        "-Wmissing-include-dirs"
-        "-Woverloaded-virtual" "-Wredundant-decls" "-Wshadow" "-Wundef" "-Wunused"
-        "-Wno-unknown-pragmas" "-fdiagnostics-show-option"
-    )
-
-    if (CMAKE_COMPILER_IS_GNUCC)
-        list (APPEND extra_flags_list
-            "-Wnoexcept" "-Wlogical-op" "-Wstrict-null-sentinel"
-        )
-
-    endif ()
-
-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        list (APPEND extra_flags_list "-Wno-dangling-field -Wno-unused-command-line-argument")
-    endif ()
-    
-    if (WARN_AS_ERR)
-        list (APPEND extra_flags_list "-Werror")
-    endif ()
-    
-    string(REPLACE ";" " " extra_flags "${extra_flags_list}")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${extra_flags}")
-    
-elseif (MSVC)
-
-    if (${CMAKE_CXX_STANDARD} EQUAL 17)
-        add_definitions(-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
-    endif ()
-
-    if (WARN_AS_ERR)
-        add_definitions("/WX")
-    endif ()
-endif ()
-
-if ((UNIX) AND (UNIX_USE_CCACHE))
-    find_program(CCACHE_FOUND ccache)
-    if(CCACHE_FOUND)
-        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
-        set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
-    endif()
-endif () 
 
 include(GNUInstallDirs)
 
@@ -83,8 +38,6 @@ find_package(Threads REQUIRED)
 
 set (COMMON_SERVER_LIB "common_server")
 set (COMMON_CLIENT_LIB "common_client")
-
-add_subdirectory (lib)
 
 set (EXTERNALS_DIR "${PROJECT_SOURCE_DIR}/externals")
 
@@ -116,6 +69,23 @@ endif ()
     
 list (APPEND CMAKE_PREFIX_PATH "${CC_MAIN_INSTALL_DIR}")
 find_package(LibComms NO_MODULE REQUIRED)
+
+set (cc_compile_file ${CC_MAIN_INSTALL_DIR}/lib/LibComms/cmake/CC_Compile.cmake)
+if (EXISTS ${cc_compile_file})
+    set (warn_as_err_opt)
+    if (WARN_AS_ERR)
+        set (warn_as_err_opt WARN_AS_ERR)
+    endif()
+
+    set (ccache_opt)
+    if (UNIX_USE_CCACHE)
+        set (ccache_opt USE_CCACHE)
+    endif ()
+
+    include (${cc_compile_file})
+    cc_compile(${warn_as_err_opt} ${ccache_opt})
+endif ()
+
 
 #######################################################
 set (COMMSDSL_TGT "commsdsl_tgt")
@@ -229,6 +199,11 @@ function (bin_server type name)
         
     target_include_directories(
         ${bin_name} PRIVATE ${PROJECT_SOURCE_DIR}/${type}/${name}/include)        
+
+    target_compile_options(${bin_name} PRIVATE
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-old-style-cast -Wno-string-conversion>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-old-style-cast -Wno-string-conversion>
+    )         
         
     install(TARGETS ${bin_name}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -252,6 +227,11 @@ function (bin_client type name)
         
     target_include_directories(
         ${bin_name} PRIVATE ${PROJECT_SOURCE_DIR}/${type}/${name}/include)        
+
+    target_compile_options(${bin_name} PRIVATE
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-old-style-cast -Wno-string-conversion>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-old-style-cast -Wno-string-conversion>
+    )         
         
     install(TARGETS ${bin_name}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -260,6 +240,7 @@ endfunction ()
 
 #######################################################
 
+add_subdirectory (lib)
 add_subdirectory (tutorials)
 add_subdirectory (howtos)
 
