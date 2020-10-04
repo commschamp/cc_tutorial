@@ -86,7 +86,6 @@ if (EXISTS ${cc_compile_file})
     cc_compile(${warn_as_err_opt} ${ccache_opt})
 endif ()
 
-
 #######################################################
 set (COMMSDSL_TGT "commsdsl_tgt")
 if ("${COMMSDSL2COMMS}" STREQUAL "")
@@ -203,6 +202,7 @@ function (bin_server type name)
     target_compile_options(${bin_name} PRIVATE
         $<$<CXX_COMPILER_ID:GNU>:-Wno-old-style-cast -Wno-string-conversion>
         $<$<CXX_COMPILER_ID:Clang>:-Wno-old-style-cast -Wno-string-conversion>
+        $<$<CXX_COMPILER_ID:MSVC>:-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS>
     )         
         
     install(TARGETS ${bin_name}
@@ -231,6 +231,7 @@ function (bin_client type name)
     target_compile_options(${bin_name} PRIVATE
         $<$<CXX_COMPILER_ID:GNU>:-Wno-old-style-cast -Wno-string-conversion>
         $<$<CXX_COMPILER_ID:Clang>:-Wno-old-style-cast -Wno-string-conversion>
+        $<$<CXX_COMPILER_ID:MSVC>:-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS>
     )         
         
     install(TARGETS ${bin_name}

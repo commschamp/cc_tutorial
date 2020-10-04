@@ -17,6 +17,7 @@ function (lib_server)
     target_compile_options(${name} PRIVATE
         $<$<CXX_COMPILER_ID:GNU>:-Wno-string-conversion>
         $<$<CXX_COMPILER_ID:Clang>:-Wno-string-conversion>
+        $<$<CXX_COMPILER_ID:MSVC>:-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS>
     )         
 endfunction ()
 
