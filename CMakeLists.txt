@@ -17,7 +17,7 @@ if ("${COMMSDSL_TAG}" STREQUAL "")
 endif ()
 
 if ("${CC_TAG}" STREQUAL "")
-    set (CC_TAG "v3.1")
+    set (CC_TAG "v3.1.1")
 endif ()
 
 if (NOT CMAKE_CXX_STANDARD)
