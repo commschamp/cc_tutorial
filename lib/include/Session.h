@@ -95,7 +95,7 @@ protected:
             std::setfill('0') << std::setw(static_cast<int>(field.length() * 2)) <<
             std::hex << static_cast<std::uintmax_t>(field.value()) << std::dec << '\n';
 
-        for (auto idx = 0U; idx < field.length() * 8; ++idx) {
+        for (auto idx = 0U; idx < TField::BitIdx_numOfValues; ++idx) {
             auto bitIdx = static_cast<typename TField::BitIdx>(idx);
             const char* bitName = field.bitName(bitIdx);
             if (bitName == nullptr) {

@@ -15,10 +15,17 @@ function (lib_server)
         ${name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)        
 
     target_compile_options(${name} PRIVATE
-        $<$<CXX_COMPILER_ID:GNU>:-Wno-string-conversion>
-        $<$<CXX_COMPILER_ID:Clang>:-Wno-string-conversion>
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-string-conversion ${CC_TUTORIAL_SANITIZER_OPTS}>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-string-conversion ${CC_TUTORIAL_SANITIZER_OPTS}>
         $<$<CXX_COMPILER_ID:MSVC>:-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS>
-    )         
+    )     
+
+    if (NOT "${CC_TUTORIAL_SANITIZER_OPTS}" STREQUAL "")
+        target_link_options(${name} PRIVATE
+            $<$<CXX_COMPILER_ID:GNU>:${CC_TUTORIAL_SANITIZER_OPTS}>
+            $<$<CXX_COMPILER_ID:Clang>:${CC_TUTORIAL_SANITIZER_OPTS}>
+        )         
+    endif ()          
 endfunction ()
 
 #######################################################
@@ -40,10 +47,17 @@ function (lib_client)
         ${name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)        
 
     target_compile_options(${name} PRIVATE
-        $<$<CXX_COMPILER_ID:GNU>:-Wno-string-conversion>
-        $<$<CXX_COMPILER_ID:Clang>:-Wno-string-conversion>
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-string-conversion ${CC_TUTORIAL_SANITIZER_OPTS}>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-string-conversion ${CC_TUTORIAL_SANITIZER_OPTS}>
         $<$<CXX_COMPILER_ID:MSVC>:-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS>
-    )         
+    )   
+
+    if (NOT "${CC_TUTORIAL_SANITIZER_OPTS}" STREQUAL "")
+        target_link_options(${name} PRIVATE
+            $<$<CXX_COMPILER_ID:GNU>:${CC_TUTORIAL_SANITIZER_OPTS}>
+            $<$<CXX_COMPILER_ID:Clang>:${CC_TUTORIAL_SANITIZER_OPTS}>
+        )         
+    endif ()          
 endfunction ()
 
 #######################################################

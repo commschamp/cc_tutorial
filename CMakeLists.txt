@@ -4,6 +4,7 @@ project ("cc_tutorial")
 option (WARN_AS_ERR "Treat warnings as error" ON)
 option (UNIX_USE_CCACHE "Treat warnings as error" ON)
 option (FORCE_EXTRA_BOOST_LIBS "Force linking to extra boost libraries" OFF)
+option (USE_SANITIZERS "Compile with sanitizers." OFF)
 
 # Additional variables to be used if needed
 # ---------------------------
@@ -13,11 +14,11 @@ option (FORCE_EXTRA_BOOST_LIBS "Force linking to extra boost libraries" OFF)
 # CC_TAG - Tag / branch of comms_champion project (if built internally)
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
-    set (COMMSDSL_TAG "v3.5.2")
+    set (COMMSDSL_TAG "develop")
 endif ()
 
 if ("${CC_TAG}" STREQUAL "")
-    set (CC_TAG "v3.1.1")
+    set (CC_TAG "develop")
 endif ()
 
 if (NOT CMAKE_CXX_STANDARD)
@@ -84,6 +85,17 @@ if (EXISTS ${cc_compile_file})
 
     include (${cc_compile_file})
     cc_compile(${warn_as_err_opt} ${ccache_opt})
+endif ()
+
+set (CC_TUTORIAL_SANITIZER_OPTS)
+if (USE_SANITIZERS AND (NOT ${CMAKE_VERSION} VERSION_LESS "3.13") AND
+    ((CMAKE_COMPILER_IS_GNUCC) OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")))
+    set (CC_TUTORIAL_SANITIZER_OPTS 
+        -fno-omit-frame-pointer 
+        -fno-sanitize-recover=address 
+        -fsanitize=address
+        -fno-sanitize-recover=undefined
+        -fsanitize=undefined)
 endif ()
 
 #######################################################
@@ -200,10 +212,18 @@ function (bin_server type name)
         ${bin_name} PRIVATE ${PROJECT_SOURCE_DIR}/${type}/${name}/include)        
 
     target_compile_options(${bin_name} PRIVATE
-        $<$<CXX_COMPILER_ID:GNU>:-Wno-old-style-cast -Wno-string-conversion>
-        $<$<CXX_COMPILER_ID:Clang>:-Wno-old-style-cast -Wno-string-conversion>
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-old-style-cast -Wno-string-conversion ${CC_TUTORIAL_SANITIZER_OPTS}>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-old-style-cast -Wno-string-conversion ${CC_TUTORIAL_SANITIZER_OPTS}>
         $<$<CXX_COMPILER_ID:MSVC>:-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS>
-    )         
+    )       
+
+
+    if (NOT "${CC_TUTORIAL_SANITIZER_OPTS}" STREQUAL "")
+        target_link_options(${bin_name} PRIVATE
+            $<$<CXX_COMPILER_ID:GNU>:${CC_TUTORIAL_SANITIZER_OPTS}>
+            $<$<CXX_COMPILER_ID:Clang>:${CC_TUTORIAL_SANITIZER_OPTS}>
+        )         
+    endif ()
         
     install(TARGETS ${bin_name}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -229,10 +249,17 @@ function (bin_client type name)
         ${bin_name} PRIVATE ${PROJECT_SOURCE_DIR}/${type}/${name}/include)        
 
     target_compile_options(${bin_name} PRIVATE
-        $<$<CXX_COMPILER_ID:GNU>:-Wno-old-style-cast -Wno-string-conversion>
-        $<$<CXX_COMPILER_ID:Clang>:-Wno-old-style-cast -Wno-string-conversion>
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-old-style-cast -Wno-string-conversion ${CC_TUTORIAL_SANITIZER_OPTS}>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-old-style-cast -Wno-string-conversion ${CC_TUTORIAL_SANITIZER_OPTS}>
         $<$<CXX_COMPILER_ID:MSVC>:-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS>
-    )         
+    )        
+
+    if (NOT "${CC_TUTORIAL_SANITIZER_OPTS}" STREQUAL "")
+        target_link_options(${bin_name} PRIVATE
+            $<$<CXX_COMPILER_ID:GNU>:${CC_TUTORIAL_SANITIZER_OPTS}>
+            $<$<CXX_COMPILER_ID:Clang>:${CC_TUTORIAL_SANITIZER_OPTS}>
+        )         
+    endif ()     
         
     install(TARGETS ${bin_name}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
