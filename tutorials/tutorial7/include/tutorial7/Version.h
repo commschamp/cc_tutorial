@@ -23,6 +23,6 @@ inline constexpr unsigned specVersion()
 
 
 // Generated compile time check for minimal supported version of the COMMS library
-static_assert(COMMS_MAKE_VERSION(3, 1, 0) <= comms::version(),
+static_assert(COMMS_MAKE_VERSION(3, 1, 2) <= comms::version(),
     "The version of COMMS library is too old");
 

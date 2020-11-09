@@ -9,6 +9,7 @@
 #include <cstdint>
 #include <limits>
 #include <tuple>
+#include "comms/CompileControl.h"
 #include "comms/field/Bundle.h"
 #include "comms/field/FloatValue.h"
 #include "comms/field/IntValue.h"
@@ -363,6 +364,8 @@ public:
         return tutorial4::field::KeyValuePropCommon::name();
     }
     
+    COMMS_MSVC_WARNING_PUSH
+    COMMS_MSVC_WARNING_DISABLE(4702) // Disable unreachable code warning
     /// @brief Optimized read functionality.
     template <typename TIter>
     comms::ErrorStatus read(TIter& iter, std::size_t len)
@@ -406,8 +409,10 @@ public:
         default:
             break;
         };
+    
         return comms::ErrorStatus::InvalidMsgData;
     }
+    COMMS_MSVC_WARNING_POP
     
     /// @brief Optimized currFieldExec functionality.
     /// @details Replaces the currFieldExec() member function defined
