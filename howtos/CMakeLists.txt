@@ -12,3 +12,4 @@ endfunction ()
 
 add_subdirectory (howto1)
 add_subdirectory (howto2)
+add_subdirectory (howto3)

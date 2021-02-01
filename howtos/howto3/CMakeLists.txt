@@ -1,0 +1,21 @@
+get_filename_component(name ${CMAKE_CURRENT_SOURCE_DIR} NAME)
+
+set (schema_files
+    ${CMAKE_CURRENT_SOURCE_DIR}/dsl/schema.xml
+)
+
+set (server_src
+    src/ServerSession.cpp
+    src/CommonSessionBase.cpp
+)
+
+set (client_src
+    src/ClientSession.cpp
+    src/CommonSessionBase.cpp
+)
+
+dsl_howto_parse(${name} SCHEMAS ${schema_files})
+
+bin_howto_server(${name} ${server_src})
+bin_howto_client(${name} ${client_src})
+

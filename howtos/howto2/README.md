@@ -1,4 +1,4 @@
-# How-To 1
+# How-To 2
 Having single field for message ID and remaining size in message framing.
 
 Some protocols have quite small number of available messages and in order to save some 
