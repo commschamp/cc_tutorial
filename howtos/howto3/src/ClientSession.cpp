@@ -130,11 +130,12 @@ void ClientSession::sendMsg1()
 
 void ClientSession::sendMsg2()
 {
-    Msg2 msg;
-    msg.field_f1().value() = {
+    static const std::uint8_t Buf[] = {
         0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x10, 0x11, 0x12,
     };
 
+    Msg2 msg;
+    comms::util::assign(msg.field_f1().value(), std::begin(Buf), std::end(Buf));
     sendMessage(msg);
 }
 
