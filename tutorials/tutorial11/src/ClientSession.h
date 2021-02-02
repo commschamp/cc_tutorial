@@ -61,6 +61,7 @@ private:
     template <typename TMsg>
     void sendMessage(const TMsg& msg)
     {
+        std::cout << "Sending message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << std::endl;
         // The statement below uses polymorphic message name and ID retrievals.
         std::vector<std::uint8_t> output;
 
@@ -82,10 +83,6 @@ private:
 
         // Send serialized message back
         sendOutput(&output[0], output.size());
-
-        std::cout << "Sending message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << ": " << std::hex;
-        std::copy(output.begin(), output.end(), std::ostream_iterator<unsigned>(std::cout, " "));
-        std::cout << std::dec << std::endl;
     }
 
     void doNextStage();

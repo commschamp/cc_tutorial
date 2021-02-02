@@ -8,6 +8,7 @@
 #include <tuple>
 #include "howto3/message/Msg1.h"
 #include "howto3/message/Msg2.h"
+#include "howto3/message/Msg3.h"
 #include "howto3/options/DefaultOptions.h"
 
 namespace howto3
@@ -23,7 +24,8 @@ template <typename TBase, typename TOpt = howto3::options::DefaultOptions>
 using ClientInputMessages =
     std::tuple<
         howto3::message::Msg1<TBase, TOpt>,
-        howto3::message::Msg2<TBase, TOpt>
+        howto3::message::Msg2<TBase, TOpt>,
+        howto3::message::Msg3<TBase, TOpt>
     >;
 
 } // namespace input

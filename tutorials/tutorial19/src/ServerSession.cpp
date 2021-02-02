@@ -29,6 +29,8 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
 void ServerSession::sendMessage(const Message& msg)
 {
+    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << std::endl;
+    
     std::vector<std::uint8_t> output;
 
     // Use polymorphic serialization length calculation to create
@@ -49,10 +51,6 @@ void ServerSession::sendMessage(const Message& msg)
 
     // Send (re)serialized message back
     sendOutput(&output[0], output.size());
-
-    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << ": " << std::hex;
-    std::copy(output.begin(), output.end(), std::ostream_iterator<unsigned>(std::cout, " "));
-    std::cout << std::dec << std::endl;    
 }
 
 SessionPtr Session::createServer(boost_wrap::io& io)

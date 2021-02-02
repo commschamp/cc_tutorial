@@ -74,6 +74,8 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
 void ClientSession::sendMessage(const Message& msg)
 {
+    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << std::endl;
+
     // The statement below uses polymorphic message name and ID retrievals.
     std::vector<std::uint8_t> output;
 
@@ -100,10 +102,6 @@ void ClientSession::sendMessage(const Message& msg)
 
     // Send serialized message back
     sendOutput(&output[0], output.size());
-
-    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << ": " << std::hex;
-    std::copy(output.begin(), output.end(), std::ostream_iterator<unsigned>(std::cout, " "));
-    std::cout << std::dec << std::endl;
 }
 
 void ClientSession::doNextStage()

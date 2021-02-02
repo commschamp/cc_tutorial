@@ -22,6 +22,12 @@ void ClientSession::handle(Msg2& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
     printDataField(msg.field_f1());
+}
+
+void ClientSession::handle(Msg3& msg)
+{
+    std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
+    printIntField(msg.field_f1());
     doNextStage();
 }
 
@@ -45,20 +51,29 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
     // Process reported input, create relevant message objects and
     // dispatch all the created messages
     // to this object for handling (appropriate handle() member function will be called)
-    MsgBuf msgBuf;
-    auto consumed = preProcessInput(buf, bufLen, msgBuf);
 
-    if (!msgBuf.empty()) {
-        comms::processAllWithDispatch(&msgBuf[0], msgBuf.size(), m_frame, *this);
+    unsigned consumed = 0;
+    while (true) {
+        MsgBuf msgBuf;
+        auto consumedTmp = preProcessInput(buf + consumed, bufLen - consumed, msgBuf);
+
+        if (consumedTmp == 0) {
+            // Empty buffer or incomplete message remaining
+            break;
+        }
+
+        consumed += consumedTmp;
+
+        if (!msgBuf.empty()) {
+            comms::processAllWithDispatch(&msgBuf[0], msgBuf.size(), m_frame, *this);
+        }
     }
 
     return consumed;
 }
 
-void ClientSession::sendMessage(const Message& msg)
+void ClientSession::writeMessage(const Message& msg, MsgBuf& output)
 {
-    MsgBuf output;
-
     // Serialize message into the buffer (including framing)
     // The serialization uses polymorphic write functionality.
     auto writeIter = std::back_inserter(output);
@@ -74,17 +89,10 @@ void ClientSession::sendMessage(const Message& msg)
     if (es != comms::ErrorStatus::Success) {
         assert(!"Write operation failed unexpectedly");
         return;
-    }
+    }    
 
     // Introduce special characters
     postProcessOutput(output);
-
-    // Send serialized message back
-    sendOutput(&output[0], output.size());
-
-    std::cout << "Sending raw data: " << std::hex;
-    std::copy(output.begin(), output.end(), std::ostream_iterator<unsigned>(std::cout, " "));
-    std::cout << std::dec << std::endl;    
 }
 
 void ClientSession::doNextStage()
@@ -112,7 +120,7 @@ void ClientSession::doNextStage()
     using NextSendFunc = void (ClientSession::*)();
     static const NextSendFunc Map[] = {
         /* CommsStage_Msg1 */ &ClientSession::sendMsg1,
-        /* CommsStage_Msg2 */ &ClientSession::sendMsg2,
+        /* CommsStage_Msg2Msg3 */ &ClientSession::sendMsg2Msg3,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -123,20 +131,36 @@ void ClientSession::doNextStage()
 
 void ClientSession::sendMsg1()
 {
-    Msg1 msg;
-    msg.field_f1().value() = "hello";
-    sendMessage(msg);
+    MsgBuf output;
+    Msg1 msg1;
+    msg1.field_f1().value() = "hello";
+    writeMessage(msg1, output);
+
+    // Send serialized message 
+    sendOutput(&output[0], output.size());
 }
 
-void ClientSession::sendMsg2()
+void ClientSession::sendMsg2Msg3()
 {
     static const std::uint8_t Buf[] = {
         0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x10, 0x11, 0x12,
     };
 
-    Msg2 msg;
-    comms::util::assign(msg.field_f1().value(), std::begin(Buf), std::end(Buf));
-    sendMessage(msg);
+    MsgBuf output;
+    Msg2 msg2;
+    comms::util::assign(msg2.field_f1().value(), std::begin(Buf), std::end(Buf));
+    writeMessage(msg2, output);
+
+    MsgBuf outputTmp;
+    Msg3 msg3;
+    msg3.field_f1().value() = 0xabcd;
+    writeMessage(msg3, outputTmp);
+
+    // Concatenate buffers
+    output.insert(output.end(), outputTmp.begin(), outputTmp.end());
+
+    // Send serialized message 
+    sendOutput(&output[0], output.size());
 }
 
 SessionPtr Session::createClient(boost_wrap::io& io)

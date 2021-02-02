@@ -101,6 +101,8 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
 void ClientSession::sendMessage(Message& msg)
 {
+    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << std::endl;
+
     // Update the version and refresh
     msg.version() = m_frame.layer_version().pseudoField().value();
     msg.refresh();
@@ -131,10 +133,6 @@ void ClientSession::sendMessage(Message& msg)
 
     // Send serialized message back
     sendOutput(&output[0], output.size());
-
-    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << ": " << std::hex;
-    std::copy(output.begin(), output.end(), std::ostream_iterator<unsigned>(std::cout, " "));
-    std::cout << std::dec << std::endl;
 }
 
 void ClientSession::doNextStage()

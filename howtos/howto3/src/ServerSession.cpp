@@ -24,11 +24,21 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
     // Process reported input, create relevant message objects and
     // dispatch all the created messages
     // to this object for handling (handle() member function will be called)
-    MsgBuf msgBuf;
-    auto consumed = preProcessInput(buf, bufLen, msgBuf);
+    unsigned consumed = 0;
+    while (true) {
+        MsgBuf msgBuf;
+        auto consumedTmp = preProcessInput(buf + consumed, bufLen - consumed, msgBuf);
 
-    if (!msgBuf.empty()) {
-        comms::processAllWithDispatch(&msgBuf[0], msgBuf.size(), m_frame, *this);
+        if (consumedTmp == 0) {
+            // Empty buffer or incomplete message remaining
+            break;
+        }
+
+        consumed += consumedTmp;
+
+        if (!msgBuf.empty()) {
+            comms::processAllWithDispatch(&msgBuf[0], msgBuf.size(), m_frame, *this);
+        }
     }
 
     return consumed;
@@ -36,6 +46,7 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
 void ServerSession::sendMessage(const Message& msg)
 {
+    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << std::endl;
     MsgBuf output;
 
     // Use polymorphic serialization length calculation to create
@@ -59,10 +70,6 @@ void ServerSession::sendMessage(const Message& msg)
 
     // Send (re)serialized message back
     sendOutput(&output[0], output.size());
-
-    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << ": " << std::hex;
-    std::copy(output.begin(), output.end(), std::ostream_iterator<unsigned>(std::cout, " "));
-    std::cout << std::dec << std::endl;    
 }
 
 SessionPtr Session::createServer(boost_wrap::io& io)

@@ -57,6 +57,11 @@ auto dispatchClientInputMessage(
         using MsgType = howto3::message::Msg2<InterfaceType, TProtOptions>;
         return handler.handle(static_cast<MsgType&>(msg));
     }
+    case howto3::MsgId_M3:
+    {
+        using MsgType = howto3::message::Msg3<InterfaceType, TProtOptions>;
+        return handler.handle(static_cast<MsgType&>(msg));
+    }
     default:
         break;
     };

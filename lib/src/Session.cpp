@@ -24,6 +24,10 @@ bool Session::startImpl()
 
 void Session::sendOutput(const std::uint8_t* buf, std::size_t bufLen)
 {
+    std::cout << "Sending raw data: " << std::hex;
+    std::copy(buf, buf + bufLen, std::ostream_iterator<unsigned>(std::cout, " "));
+    std::cout << std::dec << std::endl; 
+
     if (!m_socket.is_open()) {
         return;
     }

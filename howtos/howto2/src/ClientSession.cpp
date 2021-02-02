@@ -87,10 +87,6 @@ void ClientSession::sendRawData(const OutputBuf& output)
 {
     // Send serialized message back
     sendOutput(&output[0], output.size());
-
-    std::cout << "Sending raw data: " << std::hex;
-    std::copy(output.begin(), output.end(), std::ostream_iterator<unsigned>(std::cout, " "));
-    std::cout << std::dec << std::endl;    
 }
 
 void ClientSession::doNextStage()

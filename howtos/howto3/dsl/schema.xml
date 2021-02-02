@@ -27,4 +27,8 @@
     <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
         <data name="F1" />
     </message>    
+
+    <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name">
+        <int name="F1" type="uint16" />
+    </message>    
 </schema>
