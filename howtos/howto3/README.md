@@ -37,7 +37,7 @@ for processing.
 std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
 {
     ...
-    unsigned consumed = 0;
+    std::size_t consumed = 0;
     while (true) {
         MsgBuf msgBuf;
         auto consumedTmp = preProcessInput(buf + consumed, bufLen - consumed, msgBuf);
