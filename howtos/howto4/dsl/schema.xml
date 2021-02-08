@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="howto4" endian="big">
+    <fields>
+        <string name="MsgName" defaultValue="Message" />
+            
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M0" val="0" displayName="^MsgName" />
+        </enum>
+
+        <enum name="PropKey" type="uint8">
+            <validValue name="K1" val="0" />
+            <validValue name="K2" val="2" />
+            <validValue name="K3" val="5" />
+        </enum>
+        
+        <int name="PropKeyCommon" type="uint8" failOnInvalid="true"/>
+
+        <variant name="TlvProp">
+            <description>
+                Type-Length-Value Property
+            </description>
+            <members>
+                <bundle name="Prop1">
+                    <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K1" validValue="PropKey.K1" />
+                    <int name="Length" type="uint8" semanticType="length" />
+                    <int name="Val" type="uint32" />
+                </bundle>
+                
+                <bundle name="Prop2">
+                    <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K2" validValue="PropKey.K2" />
+                    <int name="Length" type="uint8" semanticType="length" />
+                    <float name="Val" type="double" defaultValue="inf" />
+                </bundle>            
+                
+                <bundle name="Prop3">
+                    <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K3" validValue="PropKey.K3" />
+                    <int name="Length" type="uint8" semanticType="length" />
+                    <string name="Val" />
+                </bundle>   
+                
+                <bundle name="Any">
+                    <int reuse="PropKeyCommon" name="Key" />
+                    <int name="Length" type="uint8" semanticType="length" />
+                    <data name="Val" />
+                </bundle>  
+            </members>
+        </variant>
+    </fields>
+    
+    <frame name="Frame">
+        <sync name="Sync">
+            <int name="SyncField" type="uint16" defaultValue="0xabcd" />
+        </sync>
+        <size name="Size">
+            <int name="SizeField" type="uint16" serOffset="2" />
+        </size>
+        <id name="Id">
+            <int name="IdField" type="uint8" defaultValue="MsgId.M0" pseudo="true" />
+        </id>
+        <payload name="Data" />
+        <checksum name="Checksum" alg="crc-ccitt" from="Size">
+            <int name="ChecksumField" type="uint16" />
+        </checksum>
+    </frame>
+    
+    <message name="Msg" id="MsgId.M0" displayName="^MsgName">
+        <list name="Props" element="TlvProp" />
+    </message>
+</schema>
