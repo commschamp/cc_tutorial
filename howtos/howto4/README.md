@@ -79,7 +79,7 @@ struct FrameLayers
     };
 };
 ```
-When input data is processed the **&lt;id&gt;** field is assumed to read the default value, which is **0**.
+When input data is processed, the **&lt;id&gt;** field is assumed to read the default value, which is **0**.
 
 Now let's take a look at the handling code. The [server](src/ServerSession.h) is defined in its usual way, 
 using polymorphic interface:
@@ -96,7 +96,7 @@ using Message =
     >;
 ```
 
-The [client](src/ClientSession.h) on the other side can use non-polymorphic definition:
+The [client](src/ClientSession.h) on the other hand uses non-polymorphic definition:
 ```cpp
 // Common interface class for all the messages
 using Message = howto4::Message<>;
