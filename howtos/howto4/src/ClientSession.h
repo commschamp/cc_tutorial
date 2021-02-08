@@ -21,8 +21,7 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message = 
-        howto4::Message<>;
+    using Message = howto4::Message<>;
 
     // Protocol options for client
     using ClientProtocolOptions = 
