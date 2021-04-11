@@ -14,7 +14,12 @@
         <set name="InterfaceFlags" length="1">
             <bit name="B0" idx="0" />
             <bit name="B1" idx="1" />
-        </set>        
+        </set>    
+
+        <bitfield name="VersionWithFlags">
+            <ref field="Version" bitLength="12"/>
+            <ref field="InterfaceFlags" name="Flags" bitLength="4" />
+        </bitfield>            
         
     </fields>
     
@@ -28,12 +33,7 @@
             <int name="SizeField" type="uint16" />
         </size>
         <id name="Id" field="MsgId" />
-        <custom name="VersionWithFlags">
-            <bitfield name="Field">
-                <ref field="Version" bitLength="12"/>
-                <ref field="InterfaceFlags" name="Flags" bitLength="4" />
-            </bitfield>
-        </custom>        
+        <custom name="VersionWithFlags" field="VersionWithFlags" />
         <payload name="Data" />
     </frame>
     

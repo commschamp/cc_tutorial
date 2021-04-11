@@ -39,6 +39,7 @@ public:
     // Repeat some types from the base class
     using Field = typename Base::Field;    
 
+protected:    
     // Re-assign the values from the field to message object
     template <typename TMsg>
     static void reassignFieldValue(TMsg& msg, const Field& field)

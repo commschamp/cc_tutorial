@@ -6,17 +6,14 @@
 #pragma once
 
 #include <cstdint>
-#include <tuple>
-#include "comms/field/Bitfield.h"
 #include "comms/field/IntValue.h"
 #include "comms/options.h"
 #include "comms/protocol/MsgDataLayer.h"
 #include "comms/protocol/MsgIdLayer.h"
 #include "comms/protocol/MsgSizeLayer.h"
 #include "howto5/field/FieldBase.h"
-#include "howto5/field/InterfaceFlags.h"
 #include "howto5/field/MsgId.h"
-#include "howto5/field/Version.h"
+#include "howto5/field/VersionWithFlags.h"
 #include "howto5/frame/FrameCommon.h"
 #include "howto5/frame/layer/VersionWithFlags.h"
 #include "howto5/input/AllMessages.h"
@@ -41,85 +38,10 @@ struct FrameLayers
             typename TOpt::frame::FrameLayers::Data
         >;
     
-    /// @brief Scope for field(s) of @ref VersionWithFlags layer.
-    struct VersionWithFlagsMembers
-    {
-        /// @brief Scope for all the member fields of
-        ///     @ref Field bitfield.
-        struct FieldMembers
-        {
-            /// @brief Definition of <b>"Version"</b> field.
-            using Version =
-                howto5::field::Version<
-                    TOpt,
-                    comms::option::def::FixedBitLength<12U>
-                >;
-            
-            /// @brief Definition of <b>"Flags"</b> field.
-            struct Flags : public
-                howto5::field::InterfaceFlags<
-                    TOpt,
-                    comms::option::def::FixedBitLength<4U>
-                >
-            {
-                /// @brief Name of the field.
-                static const char* name()
-                {
-                    return howto5::frame::FrameLayersCommon::VersionWithFlagsMembersCommon::FieldMembersCommon::FlagsCommon::name();
-                }
-                
-            };
-            
-            /// @brief All members bundled in @b std::tuple.
-            using All =
-                std::tuple<
-                   Version,
-                   Flags
-                >;
-        };
-        
-        /// @brief Definition of <b>"Field"</b> field.
-        class Field : public
-            comms::field::Bitfield<
-                howto5::field::FieldBase<>,
-                typename FieldMembers::All
-            >
-        {
-            using Base = 
-                comms::field::Bitfield<
-                    howto5::field::FieldBase<>,
-                    typename FieldMembers::All
-                >;
-        public:
-            /// @brief Allow access to internal fields.
-            /// @details See definition of @b COMMS_FIELD_MEMBERS_NAMES macro
-            ///     related to @b comms::field::Bitfield class from COMMS library
-            ///     for details.
-            ///
-            ///     The generated types and access functions are:
-            ///     @li @b Field_version type and @b field_version() access function -
-            ///         for FieldMembers::Version member field.
-            ///     @li @b Field_flags type and @b field_flags() access function -
-            ///         for FieldMembers::Flags member field.
-            COMMS_FIELD_MEMBERS_NAMES(
-                version,
-                flags
-            );
-            
-            /// @brief Name of the field.
-            static const char* name()
-            {
-                return howto5::frame::FrameLayersCommon::VersionWithFlagsMembersCommon::FieldCommon::name();
-            }
-            
-        };
-        
-    };
-    
     /// @brief Definition of layer "VersionWithFlags".
     using VersionWithFlags =
         howto5::frame::layer::VersionWithFlags<
-            typename VersionWithFlagsMembers::Field,
+            howto5::field::VersionWithFlags<TOpt>,
             Data,
             typename TOpt::frame::FrameLayers::VersionWithFlags
         >;

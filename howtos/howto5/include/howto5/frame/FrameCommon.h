@@ -7,8 +7,6 @@
 #pragma once
 
 #include <cstdint>
-#include "howto5/field/InterfaceFlagsCommon.h"
-#include "howto5/field/VersionCommon.h"
 
 namespace howto5
 {
@@ -40,47 +38,6 @@ struct FrameLayersCommon
             }
             
         };
-        
-    };
-    
-    /// @brief Scope for all the common definitions of the fields defined in
-    ///     @ref howto5::frame::FrameLayers::VersionWithFlagsMembers struct.
-    struct VersionWithFlagsMembersCommon
-    {
-        /// @brief Scope for all the common definitions of the member fields of
-        ///     @ref howto5::frame::FrameLayers::VersionWithFlagsMembers::Field field.
-        struct FieldMembersCommon
-        {
-            /// @brief Common types and functions for
-            ///     @ref howto5::frame::FrameLayers::VersionWithFlagsMembers::FieldMembers::Version field.
-            using VersionCommon = howto5::field::VersionCommon;
-            
-            /// @brief Common types and functions for
-            ///     @ref howto5::frame::FrameLayers::VersionWithFlagsMembers::FieldMembers::Flags field.
-            struct FlagsCommon : public howto5::field::InterfaceFlagsCommon
-            {
-                /// @brief Name of the @ref howto5::frame::FrameLayers::VersionWithFlagsMembers::FieldMembers::Flags field.
-                static const char* name()
-                {
-                    return "Flags";
-                }
-                
-            };
-            
-        };
-        
-        /// @brief Scope for all the common definitions of the
-        ///     @ref howto5::frame::FrameLayers::VersionWithFlagsMembers::Field field.
-        struct FieldCommon
-        {
-            /// @brief Name of the @ref howto5::frame::FrameLayers::VersionWithFlagsMembers::Field field.
-            static const char* name()
-            {
-                return "Field";
-            }
-            
-        };
-        
         
     };
     
