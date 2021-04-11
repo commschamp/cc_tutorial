@@ -103,8 +103,7 @@ class VersionWithFlags : public
         comms::option::def::ExtendingClass<VersionWithFlags<TField, TNextLayer, TOptions...> >
     >
 {
-
-protected:     
+public:     
     // Re-assign the values from the field to message object
     template <typename TMsg>
     static void reassignFieldValue(TMsg& msg, const Field& field)
