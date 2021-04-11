@@ -164,3 +164,4 @@ $> nmake install
 - [howto2](../../tree/master/howtos/howto2) - Having single field for message ID and remaining size in message framing.
 - [howto3](../../tree/master/howtos/howto3) - Using message termination suffix instead of message length prefix.
 - [howto4](../../tree/master/howtos/howto4) - Single message protocol without message ID in framing.
+- [howto5](../../tree/master/howtos/howto5) - Custom transport value containing protocol version and extra flags.
