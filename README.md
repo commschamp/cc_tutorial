@@ -165,3 +165,4 @@ $> nmake install
 - [howto3](../../tree/master/howtos/howto3) - Using message termination suffix instead of message length prefix.
 - [howto4](../../tree/master/howtos/howto4) - Single message protocol without message ID in framing.
 - [howto5](../../tree/master/howtos/howto5) - Custom transport value containing protocol version and extra flags.
+- [howto6](../../tree/master/howtos/howto6) - Multiple run-time determined checksum algorithms in the same protocol.

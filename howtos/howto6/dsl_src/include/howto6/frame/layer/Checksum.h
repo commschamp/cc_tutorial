@@ -124,7 +124,7 @@ public:
     }
  
     // Due to the fact that the used checksums have different lengths, the
-    // functionality of calculating the field's length needs to be overriden
+    // functionality of calculating the field's length needs to be overridden
     template <typename TMsg>
     static std::size_t doFieldLength(const TMsg& msg)
     {
