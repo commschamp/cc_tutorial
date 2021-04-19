@@ -132,7 +132,7 @@ member function to re-assign the read field values to the message object as
 well as **prepareFieldForWrite()** to prepare the field being written when
 the message is serialized. The **COMMS** library tutorial contains a separate page
 called [Defining Custom Transport Value Protocol Stack Layer ](https://commschamp.github.io/comms_doc/page_custom_transport_value_layer.html)
-with a bite more details on the available customization.
+with a bit more details on the available customization.
 
 Other aspects of this howto are described in more details in the:
 

@@ -166,3 +166,4 @@ $> nmake install
 - [howto4](../../tree/master/howtos/howto4) - Single message protocol without message ID in framing.
 - [howto5](../../tree/master/howtos/howto5) - Custom transport value containing protocol version and extra flags.
 - [howto6](../../tree/master/howtos/howto6) - Multiple run-time determined checksum algorithms in the same protocol.
+- [howto7](../../tree/master/howtos/howto7) - Alternating values in synchronization framing prefix.

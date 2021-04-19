@@ -152,7 +152,7 @@ default implement of the **readField()**, **writeField()** and **doFieldLength()
 
 The **COMMS** library tutorial contains a separate page
 called [Defining Custom Checksum Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_checksum_layer.html)
-with a bite more details on the available customization.
+with a bit more details on the available customization.
 
 Let's also take a look how the [client](src/ClientSession.cpp) prepares message to be sent:
 ```cpp
