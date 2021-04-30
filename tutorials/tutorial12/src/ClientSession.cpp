@@ -149,7 +149,7 @@ void ClientSession::sendMsg2()
     static const std::uint8_t Data2[] = {0x12, 0x34, 0x58, 0x78};
     Msg2 msg;
     comms::util::assign(msg.field_f1().value(), std::begin(Data1), std::end(Data1));
-    msg.field_f2().value() = Data2;
+    comms::util::assign(msg.field_f2().value(), std::begin(Data2), std::end(Data2));
     sendMessage(msg);
 }
 
