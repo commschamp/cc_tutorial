@@ -1,7 +1,5 @@
 #pragma once
 
-#include "comms/GenericMessage.h"
-
 #include "howto1/Interface.h"
 #include "howto1/frame/Frame.h"
 #include "howto1/input/ServerInputMessages.h"

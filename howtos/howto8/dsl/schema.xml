@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="howto8" endian="big">
+    <fields>
+        <string name="Msg1Name" defaultValue="Message 1" />
+        <string name="Msg2Name" defaultValue="Message 2" />
+            
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M1" val="1" displayName="^Msg1Name" />
+            <validValue name="M2" val="2" displayName="^Msg2Name" />
+        </enum>
+
+        <set name="Flags" length="1">
+            <bit name="B0" idx="0" />
+            <bit name="B1" idx="1" />
+        </set>
+    </fields>
+
+    <interface name="Interface">
+        <ref field="Flags" />
+    </interface>
+    
+    <frame name="Frame">
+        <size name="Size">
+            <int name="SizeField" type="uint16" />
+        </size>
+        <custom name="Id" idReplacement="true">
+            <bitfield name="Field">
+                <ref field="MsgId" bitLength="7" />
+                <set name="Ctrl" bitLength="1">
+                    <bit name="HasFlags" idx="0" />
+                </set>
+            </bitfield>
+        </custom>
+        <custom name="Flags">
+            <optional name="OptFlags" field="Flags" />
+        </custom>
+        <payload name="Data" />
+    </frame>
+    
+    <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
+        <int name="F1" type="uint16" />
+        <optional name="F2" defaultMode="missing">
+            <description>
+                Present when B0 in the interface flags is set
+            </description>
+            <field>
+                <int name="F2Field" type="uint16" />
+            </field>
+        </optional>
+    </message>
+
+    <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
+        <int name="F1" type="uint32" />
+        <optional name="F2" defaultMode="missing">
+            <description>
+                Present when B1 in the interface flags is set
+            </description>
+            <field>
+                <int name="F2Field" type="uint32" />
+            </field>
+        </optional>      
+    </message>      
+</schema>

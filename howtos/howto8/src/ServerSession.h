@@ -1,10 +1,10 @@
 #pragma once
 
-#include "howto2/Message.h"
-#include "howto2/frame/Frame.h"
-#include "howto2/input/ServerInputMessages.h"
-#include "howto2/options/ServerDefaultOptions.h"
-#include "howto2/options/DataViewDefaultOptions.h"
+#include "howto8/Interface.h"
+#include "howto8/frame/Frame.h"
+#include "howto8/input/ServerInputMessages.h"
+#include "howto8/options/ServerDefaultOptions.h"
+
 #include "Session.h"
 
 namespace cc_tutorial
@@ -18,7 +18,7 @@ public:
 
     // Common interface class for all the messages
     using Message = 
-        howto2::Message<
+        howto8::Interface<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::uint8_t*>, // Polymorphic write
             comms::option::app::LengthInfoInterface, // Polymorphic length calculation
@@ -27,10 +27,7 @@ public:
             comms::option::app::Handler<ServerSession> // Polymorphic dispatch
         >;
 
-    using ServerProtocolOptions = 
-        howto2::options::DataViewDefaultOptionsT<
-            howto2::options::ServerDefaultOptions
-        >;
+    using ServerProtocolOptions = howto8::options::ServerDefaultOptions;
 
     // Handle all the received messages
     void handle(Message& msg);
@@ -41,9 +38,9 @@ protected:
 private:
     // Server specific frame 
     using Frame = 
-        howto2::frame::Frame<
+        howto8::frame::Frame<
             Message,
-            howto2::input::ServerInputMessages<Message, ServerProtocolOptions>,
+            howto8::input::ServerInputMessages<Message, ServerProtocolOptions>,
             ServerProtocolOptions
         >;
 

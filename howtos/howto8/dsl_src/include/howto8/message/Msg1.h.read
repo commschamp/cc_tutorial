@@ -1,0 +1,7 @@
+/// @brief Custom read functionality
+template <typename TIter>
+comms::ErrorStatus doRead(TIter& iter, std::size_t len)
+{
+    doRefresh(); // Update mode according to flags in the interface
+    return Base::doRead(iter, len);
+}
