@@ -121,7 +121,7 @@ public:
     // Due to the fact that the used checksums have different lengths, the
     // functionality of reading a field's value also needs to be customized.
     template <typename TMsg, typename TIter>
-    static comms::ErrorStatus readField(const TMsg* msgPtr, Field& field, TIter& iter, std::size_t len)
+    static comms::ErrorStatus doReadField(const TMsg* msgPtr, Field& field, TIter& iter, std::size_t len)
     {
         ... // Use transportField_checksumType() to determine type of the required field serialization length
             // and perform read operation accordingly
@@ -130,7 +130,7 @@ public:
     // Due to the fact that the used checksums have different lengths, the
     // functionality of reading a field's value also needs to be customized.
     template <typename TMsg, typename TIter>
-    static comms::ErrorStatus writeField(const TMsg* msgPtr, const Field& field, TIter& iter, std::size_t len)
+    static comms::ErrorStatus doWriteField(const TMsg* msgPtr, const Field& field, TIter& iter, std::size_t len)
     {
         ... // Use transportField_checksumType() to determine type of the required field serialization length
             // and perform write operation accordingly
@@ -148,7 +148,7 @@ public:
 Please refer to the [actual code](dsl_src/include/howto6/frame/layer/Checksum.h) for the implementation details.
 
 In cases where the checksum length remains the same, but different algorithms are used, the overriding of the
-default implement of the **readField()**, **writeField()** and **doFieldLength()** becomes non necessary.
+default implement of the **doReadField()**, **doWriteField()** and **doFieldLength()** becomes non necessary.
 
 The **COMMS** library tutorial contains a separate page
 called [Defining Custom Checksum Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_checksum_layer.html)

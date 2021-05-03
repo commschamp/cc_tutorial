@@ -167,6 +167,6 @@ $> nmake install
 - [howto5](../../tree/master/howtos/howto5) - Custom transport value containing protocol version and extra flags.
 - [howto6](../../tree/master/howtos/howto6) - Multiple run-time determined checksum algorithms in the same protocol.
 - [howto7](../../tree/master/howtos/howto7) - Alternating values in synchronization framing prefix.
-- [howto8](../../tree/master/howtos/howto7) - Optional fields in message framing.
+- [howto8](../../tree/master/howtos/howto8) - Optional fields in message framing.
 
 `

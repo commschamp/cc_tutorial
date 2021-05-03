@@ -76,7 +76,7 @@ public:
     // Due to the fact that the used checksums have different lengths, the
     // functionality of reading a field's value also needs to be customized.
     template <typename TMsg, typename TIter>
-    static comms::ErrorStatus readField(const TMsg* msgPtr, Field& field, TIter& iter, std::size_t len)
+    static comms::ErrorStatus doReadField(const TMsg* msgPtr, Field& field, TIter& iter, std::size_t len)
     {
         if (msgPtr == nullptr) {
             return comms::ErrorStatus::ProtocolError;
@@ -101,7 +101,7 @@ public:
     // Due to the fact that the used checksums have different lengths, the
     // functionality of reading a field's value also needs to be customized.
     template <typename TMsg, typename TIter>
-    static comms::ErrorStatus writeField(const TMsg* msgPtr, const Field& field, TIter& iter, std::size_t len)
+    static comms::ErrorStatus doWriteField(const TMsg* msgPtr, const Field& field, TIter& iter, std::size_t len)
     {
         if (msgPtr == nullptr) {
             return comms::ErrorStatus::ProtocolError;

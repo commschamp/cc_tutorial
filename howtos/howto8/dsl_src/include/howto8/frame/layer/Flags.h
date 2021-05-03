@@ -53,7 +53,7 @@ public:
 
     // Overriding default read field functionality
     template <typename TMsg, typename TIter>
-    comms::ErrorStatus readField(const TMsg* msgPtr, Field& field, TIter& iter, std::size_t len)
+    comms::ErrorStatus doReadField(const TMsg* msgPtr, Field& field, TIter& iter, std::size_t len)
     {
         auto mode = comms::field::OptionalMode::Missing;
         if (m_hasFlagsOnRead) {
@@ -61,7 +61,7 @@ public:
         }
 
         field.setMode(mode);
-        return Base::readField(msgPtr, field, iter, len);
+        return Base::doReadField(msgPtr, field, iter, len);
     }
 
     // Reassign the field value
