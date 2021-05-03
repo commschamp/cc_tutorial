@@ -32,7 +32,7 @@
             </bitfield>
         </custom>
         <custom name="Flags">
-            <optional name="OptFlags" field="Flags" />
+            <optional name="OptFlags" field="Flags" defaultMode="missing" />
         </custom>
         <payload name="Data" />
     </frame>

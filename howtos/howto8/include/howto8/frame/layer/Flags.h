@@ -71,7 +71,7 @@ public:
         msg.transportField_flags().value() = field.field().value();
     }    
 
-    // Overriding default field praparation functionality
+    // Overriding default field preparation functionality
     template <typename TMsg>
     static void prepareFieldForWrite(const TMsg& msg, Field& field)
     {
