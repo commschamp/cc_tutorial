@@ -14,11 +14,11 @@ option (USE_SANITIZERS "Compile with sanitizers." OFF)
 # CC_TAG - Tag / branch of comms_champion project (if built internally)
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
-    set (COMMSDSL_TAG "v3.6.2")
+    set (COMMSDSL_TAG "v3.6.3")
 endif ()
 
 if ("${CC_TAG}" STREQUAL "")
-    set (CC_TAG "develop")
+    set (CC_TAG "v3.3")
 endif ()
 
 if (NOT CMAKE_CXX_STANDARD)
