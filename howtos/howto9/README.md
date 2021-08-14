@@ -1,7 +1,7 @@
 # How-To 9
 Frame with checksum of the header.
 
-Some protocols require checksum calculation on the framing header, before procedding
+Some protocols require checksum calculation on the framing header, before proceeding
 to the decoding of the message payload.
 
 This howto uses the following frame
@@ -16,8 +16,8 @@ where:
 - **CHECKSUM** - CRC-16 checksum of the whole preceding header starting from SYNC ending with ID.
 - **PAYLOAD** - variable length message payload
 
-Classic `<checksum>` framing layer definition implies calculation of the checksum includes the message 
-payload. Because this is not the case for demonstrated protocol, `<custom>` layer must be used instead
+Classic `<checksum>` framing layer definition implies calculation of the checksum including the message 
+payload. Because this is not the case for the demonstrated protocol, `<custom>` layer must be used instead
 (see [schema](dsl/schema.xml)).
 
 ```xml
