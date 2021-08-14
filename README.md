@@ -168,5 +168,6 @@ $> nmake install
 - [howto6](../../tree/master/howtos/howto6) - Multiple run-time determined checksum algorithms in the same protocol.
 - [howto7](../../tree/master/howtos/howto7) - Alternating values in synchronization framing prefix.
 - [howto8](../../tree/master/howtos/howto8) - Optional fields in message framing.
+- [howto9](../../tree/master/howtos/howto9) - Frame with checksum of the header.
 
 `
