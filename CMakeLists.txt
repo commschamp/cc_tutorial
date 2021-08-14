@@ -62,7 +62,9 @@ if ("${CC_MAIN_INSTALL_DIR}" STREQUAL "")
         BUILD_DIR ${cc_bin_dir}
         TAG ${CC_TAG}
         CMAKE_ARGS
-            -DCC_COMMS_LIB_ONLY=ON -DCC_NO_UNIT_TESTS=ON
+            -DCC_BUILD_UNIT_TESTS=OFF 
+            -DCC_BUILD_TOOLS_LIBRARY=OFF
+            -DCC_CC_BUILD_TOOLS=OFF 
             -DCMAKE_INSTALL_PREFIX=${CC_MAIN_INSTALL_DIR}
     )
 
