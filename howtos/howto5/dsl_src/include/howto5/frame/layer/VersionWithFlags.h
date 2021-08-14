@@ -41,10 +41,12 @@ public:
 
     // Re-assign the values from the field to message object
     template <typename TMsg>
-    static void reassignFieldValue(TMsg& msg, const Field& field)
+    static bool reassignFieldValueToMsg(const Field& field, TMsg* msgPtr)
     {
-        msg.transportField_version().value() = field.field_version().value();
-        msg.transportField_flags().value() = field.field_flags().value();
+        assert(msgPtr != nullptr);
+        msgPtr->transportField_version().value() = field.field_version().value();
+        msgPtr->transportField_flags().value() = field.field_flags().value();
+        return true;
     }  
 
     // Prepare field value to be written

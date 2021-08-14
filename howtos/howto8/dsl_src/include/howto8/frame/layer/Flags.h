@@ -66,9 +66,11 @@ public:
 
     // Reassign the field value
     template <typename TMsg>
-    static void reassignFieldValue(TMsg& msg, const Field& field)
+    static bool reassignFieldValueToMsg(const Field& field, TMsg* msgPtr)
     {
-        msg.transportField_flags().value() = field.field().value();
+        assert(msgPtr != nullptr);
+        msgPtr->transportField_flags().value() = field.field().value();
+        return true;
     }    
 
     // Overriding default field preparation functionality

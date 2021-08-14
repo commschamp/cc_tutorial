@@ -106,10 +106,12 @@ class VersionWithFlags : public
 public:     
     // Re-assign the values from the field to message object
     template <typename TMsg>
-    static void reassignFieldValue(TMsg& msg, const Field& field)
+    static bool reassignFieldValueToMsg(const Field& field, TMsg* msgPtr)
     {
-        msg.transportField_version().value() = field.field_version().value();
-        msg.transportField_flags().value() = field.field_flags().value();
+        assert(msgPtr != nullptr);
+        msgPtr->transportField_version().value() = field.field_version().value();
+        msgPtr->transportField_flags().value() = field.field_flags().value();
+        return true;
     }  
 
     // Prepare field value to be written
@@ -127,7 +129,7 @@ to provide the base
 [comms::protocol::TransportLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html) class with the 
 actual extending layer type using **comms::option::def::ExtendingClass** option.
 
-In addition it overrides the default implementation of the **reassignFieldValue()**
+In addition it overrides the default implementation of the **reassignFieldValueToMsg()**
 member function to re-assign the read field values to the message object as
 well as **prepareFieldForWrite()** to prepare the field being written when
 the message is serialized. The **COMMS** library tutorial contains a separate page
