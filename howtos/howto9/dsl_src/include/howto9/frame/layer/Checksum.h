@@ -1,6 +1,8 @@
 #pragma once
 
 #include <limits>
+#include <cstddef>
+#include <iterator>
 
 #include "comms/protocol/ChecksumPrefixLayer.h"
 #include "comms/options.h"
@@ -66,7 +68,7 @@ public:
         checksumValid = true;
 
         auto fromIter = iter;
-        std::advance(iter, -HeaderSize);
+        std::advance(iter, -static_cast<std::ptrdiff_t>(HeaderSize));
 
         return Calc()(fromIter, CalcAreaSize);
     }    

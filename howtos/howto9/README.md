@@ -94,7 +94,7 @@ class Checksum : public comms::protocol::ChecksumPrefixLayer<...>
         checksumValid = true;
 
         auto fromIter = iter;
-        std::advance(iter, -HeaderSize);
+        std::advance(iter, -static_cast<std::ptrdiff_t>(HeaderSize));
 
         return Calc()(fromIter, CalcAreaSize);
     }  
