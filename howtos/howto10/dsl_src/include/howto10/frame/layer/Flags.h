@@ -57,7 +57,7 @@ public:
         auto& psedoFlagsLayer = idLayer.nextLayer();
 
         // Re-assign the field to the pseudo layer, which is going to 
-        // assigne it to the message object
+        // assign it to the message object
         psedoFlagsLayer.pseudoField().value() = field.value();
         return true;
     }
