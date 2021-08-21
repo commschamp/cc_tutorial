@@ -19,4 +19,5 @@ add_subdirectory (howto6)
 add_subdirectory (howto7)
 add_subdirectory (howto8)
 add_subdirectory (howto9)
+add_subdirectory (howto10)
 
