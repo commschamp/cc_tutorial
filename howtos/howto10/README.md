@@ -21,7 +21,7 @@ The naive and straightforward way to implement such frame would be something lik
     <size name="Size">
         <int name="SizeField" type="uint16" />
     </size>
-    <value name="PseudoFlags" field="Flags" interfaceFieldName="Flags" />
+    <value name="Flags" field="Flags" interfaceFieldName="Flags" />
     <id name="Id" field="MsgId" />
     <payload name="Data" />
     <checksum name="Checksum" from="Data" alg="crc-ccitt" verifyBeforeRead="true">
@@ -39,7 +39,7 @@ The [tutorial5](../../tutorials/tutorial5) explains that the
 by they "layer" classes wrapping one another, while the 
 [comms::protocol::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
 (defined using [&lt;checksum&gt;](https://commschamp.github.io/commsdsl_spec/#frames-checksum) in the schema)
-wraps all the layers checksum on which needs to be implemented. In this particular case it is only the
+wraps all the layers, checksum on which needs to be implemented. In this particular case it is only the
 `PAYLOAD`. So the wrapping looks something like that:
 ```
 SYNC( SIZE( FLAGS( ID( CHECKSUM( PAYLOAD ) ) ) ) )
@@ -51,16 +51,16 @@ class, which is expected to re-assign the read field's value to the message obje
 the message object hasn't been created yet, because the `ID` information hasn't been processed yet. To help with 
 such cases the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) has compile-time
 meta-programming logic to recognize the scenario and automatically forces splitting its read operation to "until the payload" and 
-"from the payload". When such split occurs the relevant flags field is re-assigned to message object right before the read 
+"from the payload". When such split occurs, the relevant flags field is re-assigned to message object right before the read 
 operation is forwarded to process the message payload.
 
 The [comms::protocol::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
 (implements [&lt;checksum&gt;](https://commschamp.github.io/commsdsl_spec/#frames-checksum)) on the other hand
-disallow such split of read operation to "until" and "from" payload, because in order to finalize its read operation the
+disallows such split of read operation to "until" and "from" payload, because in order to finalize its read operation the
 payload processing needs to be complete.
 
 Such contradiction creates a conflict, which is manifested by the static assertion mentioned in the subject of this howto. In
-order to resolve it, the framing definition needs to be modified as if the `FLAGS` reside after the `ID`. The 
+order to resolve it, the framing definition needs to be modified as if the `FLAGS` resides **after** the `ID`. The 
 [schema](dsl/schema.xml) of this howto does exactly that:
 ```xml
 <frame name="Frame">
@@ -81,7 +81,7 @@ order to resolve it, the framing definition needs to be modified as if the `FLAG
 ```
 Note, that `PseudoFlags` layer is marked with `pseudo="true"` to indicate that its field is not really
 serialized. The definition of the `PseudoFlags` in the 
-[generated code](include/frame/Frame.h) uses `comms::option::def::PseudoValue` option to ensure that.
+[generated code](include/howto10/frame/Frame.h) uses `comms::option::def::PseudoValue` option to ensure that.
 ```cpp
 using PseudoFlags =
     comms::protocol::TransportValueLayer<
@@ -96,8 +96,8 @@ The **real** `Flags` field needs to be customized beyond the current capabilitie
 ```xml
 <custom name="Flags" field="Flags" />
 ```
-The actual code defined in [dsl_src/include/howto10/frame/layer/Flags.h](dsl_src/include/howto10/frame/layer/Flags.h) and
-copied to [include/howto10/frame/layer/Flags.h](include/howto10/frame/layer/Flags.h) by the code generator extends the
+The actual code, defined in [dsl_src/include/howto10/frame/layer/Flags.h](dsl_src/include/howto10/frame/layer/Flags.h) and
+copied to [include/howto10/frame/layer/Flags.h](include/howto10/frame/layer/Flags.h) by the code generator, extends the
 [comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html).
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
