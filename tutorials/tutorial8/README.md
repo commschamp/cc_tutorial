@@ -13,7 +13,7 @@ public:
 ```
 
 In some use cases it might be beneficial to return some value, processing status for example.
-The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) supports creation
+The [COMMS Library](https://github.com/commschamp/comms) supports creation
 of such constructs.
 
 Let's take a look at the [ClientSession](src/ClientSession.h) definition of this tutorial.
@@ -50,7 +50,7 @@ The message interface class defines support for polymorphic dispatch
 specifies the return type of the `handle()` member functions. 
 
 There is a **compile-time** meta-programming logic inside the
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) which
+[COMMS Library](https://github.com/commschamp/comms) which
 determines the return type of the 
 [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html)'s 
 `dispatch()` member function. If the used handler type defines `RetType` inner type, then

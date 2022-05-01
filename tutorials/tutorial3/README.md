@@ -132,7 +132,7 @@ demonstrate usage of **units** property.
 In the example above the `F1` field is defined to contain **seconds** while `F2` is defined to contain
 millimeters.
 
-In order to efficiently work with units the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+In order to efficiently work with units the [COMMS Library](https://github.com/commschamp/comms)
 provides multiple functions defined in [comms::units](https://commschamp.github.io/comms_doc/namespacecomms_1_1units.html)
 namespace (requires `#include "comms/units.h"` statement).
 
@@ -181,7 +181,7 @@ passed as the first parameter to the units set function. It is required to deter
 class of the field which in turn contains the meta-information of what actual units the field's value must
 contain. The required math is automatically implemented by the compiler.
 
-Also note that [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) contains compile-time
+Also note that [COMMS Library](https://github.com/commschamp/comms) contains compile-time
 checks of whether units being assigned are compatible with the ones that field contains, i.e. attempt to 
 assign say **meters** to **seconds** will result in compile time error.
 
@@ -213,7 +213,7 @@ still useful in many cases.
 If the support for new units is desired please [get in touch](https://commschamp.github.io/contact/) and request what you need. 
 There are multiple available libraries (like Boost.Units) for proper work with units.
 
-In order to support usage of third party units libraries the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+In order to support usage of third party units libraries the [COMMS Library](https://github.com/commschamp/comms)
 provides a **compile-time** check functions that the field contains an assumed units. If units are changed in the
 protocol definition, the compile time checks introduced before the boilerplate units conversion code should fail the compilation
 and help finding places that need to be updated.

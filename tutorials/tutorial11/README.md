@@ -2,7 +2,7 @@
 Avoiding virtual functions.
 
 All the previous tutorials exposed polymorphic behavior when defining common message interface
-class. The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) also
+class. The [COMMS Library](https://github.com/commschamp/comms) also
 properly supports message classes without any virtual functions.
 
 Let's take a look at inner definitions inside [src/ServerSession.h](src/ServerSession.h).
@@ -43,12 +43,12 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
 ```
 There is another place that can potentially contain virtual functions. It's when the message
 framing is processed, there is a need to map numeric message ID into appropriate message class.
-The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) uses the same
+The [COMMS Library](https://github.com/commschamp/comms) uses the same
 [dispatch logic](https://commschamp.github.io/comms_doc/page_dispatch.html) for this process.
 If the message IDs are sequential with less than 10% holes, then the polymorphic dispatch tables
 may be created. To avoid that there is a need to request "static-binary-search" dispatch for this
 process as well. In order to understand how to do it there is a need to dive a little bit into the 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) internals.
+[COMMS Library](https://github.com/commschamp/comms) internals.
 
 The framing uses [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
 which is responsible to read received numeric message ID and create appropriate message object.
@@ -195,7 +195,7 @@ dynamically allocates proper message object and holds it by the `std::unique_ptr
 **common message interface** class (see [Frame::MsgPtr](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)). 
 After reading these statements any experienced C++ developer should scream about 
 incorrect message destruction and potential memory leaks. **HOWEVER**, this is not the case
-with the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library). It 
+with the [COMMS Library](https://github.com/commschamp/comms). It 
 recognizes lack of virtual destructor at **compile-time** and uses a custom deleter for 
 the `std::unique_ptr`. The deleter stores numeric ID of the allocated message object and uses 
 [Static Binary Search](https://commschamp.github.io/comms_doc/page_dispatch.html)
@@ -311,7 +311,7 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
 ```
 
 ## Summary 
-- The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) provides
+- The [COMMS Library](https://github.com/commschamp/comms) provides
   multiple means to avoid any polymorphic functionality, i.e. virtual functions.
 - When no polymorphic behavior options are passed to the common interface definition, the
   message objects don't have any v-table and their destructors are non-virtual.

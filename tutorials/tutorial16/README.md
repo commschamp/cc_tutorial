@@ -178,11 +178,11 @@ struct FrameLayers
 **SIDE NOTE**: In this particular tutorial the **&lt;value&gt;** layer precedes the **&lt;id&gt;** one,
 which creates a situation when the extra transport value is known **before** the message object is created
 (by the **&lt;id&gt;** layer) and cannot be re-assigned to appropriate message object right away.
-The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) contains inner 
+The [COMMS Library](https://github.com/commschamp/comms) contains inner 
 ~~magic~~ **compile-time** logic which identifies such scenario and results in some kind of `read()` multi-pass
 between the layers (excluding the **&lt;payload&gt;** one) to allow the **&lt;value&gt;** layer to assign the 
 transport values to the created message object **before** the `read()` operation is forwarded to the **&lt;payload&gt;**
-layer. It's just inner implementation details of the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) and 
+layer. It's just inner implementation details of the [COMMS Library](https://github.com/commschamp/comms) and 
 the integrating developer doesn't need to worry about it.
 
 ----

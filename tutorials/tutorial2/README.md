@@ -208,7 +208,7 @@ don't exhibit polymorphic behavior.
 - The iterators to **read()** and **write()** member functions are passed by
 reference and are advanced during the operation.
 - All of the presented member functions are provided by the 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) except
+[COMMS Library](https://github.com/commschamp/comms) except
 **name()** which is a product of **commsdsl2comms** code generation.
 
 Let's also take a look inside the message class definition.
@@ -453,11 +453,11 @@ struct E2_1Common
 ```
 - The field is defined using 
 [comms::field::EnumValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1EnumValue.html) 
-class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
+class provided by the [COMMS Library](https://github.com/commschamp/comms).
 - The field's value is considered to be valid (determined by the call to the
 `valid()` member function) if it is equal to one of
 the **&lt;validValue&gt;**-es. It is implemented by using `comms::option::def::ValidNumValueRange`
-option provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
+option provided by the [COMMS Library](https://github.com/commschamp/comms).
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
 class E2_1 : public
@@ -505,7 +505,7 @@ option passed to the class definition.
 - Any numeric value can be assigned as decimal or as hexadecimal value prefixed
 with `0x`.
 - When the **&lt;valueValue&gt;**-es cannot be unified into one range, the 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+[COMMS Library](https://github.com/commschamp/comms)
 allows usage of multiple `comms::option::def::ValidNumValue` options:
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
@@ -588,7 +588,7 @@ void ClientSession::sendMsg2()
 }
 ```
 Note, that sometimes there may be a need to assign value of different type
-with a cast. The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+with a cast. The [COMMS Library](https://github.com/commschamp/comms)
 provides `comms::cast_assign()` stand-alone helper function which automatically casts the value
 on the right side of the assignment operation to appropriate type and assigns it
 to the value specified on the left side. It eliminates the necessity to explicitly specify
@@ -651,7 +651,7 @@ supported types are the same as for `enum` field: **int8**, **uint8**,
 **defaultValue** property.
 - The field is defined using 
 [comms::field::IntValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) 
-class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
+class provided by the [COMMS Library](https://github.com/commschamp/comms).
 - The generated code resides in [include/tutorial2/field/I3_1.h](include/tutorial2/field/I3_1.h)
 file.
 
@@ -686,7 +686,7 @@ Please note the usage of **length** property. It can be used to limit
 serialization length of the specified field to lower number of bytes. In the
 example above, it is limited to be **3** bytes instead of default **4** (due
 to **uint32** storage type). In this case the 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+[COMMS Library](https://github.com/commschamp/comms)
 will serialize the field using correct number of bytes.
 ```cpp
 void ClientSession::sendMsg3()
@@ -731,7 +731,7 @@ The value of the **length** property in the case above means **maximal**
 allowed serialization length of the field. The 
 [generated code](include/tutorial2/field/I3_3.h)
 uses `comms::option::def::VarLength` option to provide the required information to
-the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
+the [COMMS Library](https://github.com/commschamp/comms).
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
 struct I3_3 : public
@@ -1133,7 +1133,7 @@ serialization length).
 
 The **&lt;float&gt;** field is defined using 
 [comms::field::FloatValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1FloatValue.html) 
-class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
+class provided by the [COMMS Library](https://github.com/commschamp/comms).
 
 The second defined **&lt;float&gt;** field 
 ([F5_2](include/tutorial2/field/F5_2.h)) demonstrates usage of values with
@@ -1197,7 +1197,7 @@ shows usage of fixed size string field:
 ```
 The **&lt;string&gt;** field is defined using 
 [comms::field::String](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1String.html) 
-class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
+class provided by the [COMMS Library](https://github.com/commschamp/comms).
 
 The **default** storage type of any **&lt;string&gt;** field is `std::string`.
 It can be replaced with interface compatible other type at compile time by the application being
@@ -1220,7 +1220,7 @@ void ClientSession::sendMsg6()
 }
 ```
 When such **&lt;string&gt;** field is serialized, the
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) makes
+[COMMS Library](https://github.com/commschamp/comms) makes
 sure that correct number of bytes is written to the output buffer. In case the
 stored string value has shorter length, the output is padded with correct number
 of zeroes (**0**). In case the stored string value is longer than allowed, the
@@ -1353,7 +1353,7 @@ shows usage of fixed size raw binary data sequence:
 ```
 The **&lt;data&gt;** field is defined using 
 [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.htmll) 
-class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
+class provided by the [COMMS Library](https://github.com/commschamp/comms).
 
 The **default** storage type of any **&lt;data&gt;** field is `std::vector<std::uint8_t>`.
 It can be replaced with interface compatible other type at compile time by the application being
@@ -1376,7 +1376,7 @@ void ClientSession::sendMsg7()
 }
 ```
 Just like with **&lt;string&gt;** fields, when such **&lt;data&gt;** field is serialized, the
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) makes
+[COMMS Library](https://github.com/commschamp/comms) makes
 sure that correct number of bytes is written to the output buffer. In case the
 stored string value has shorter length, the output is padded with correct number
 of zeroes (**0**). In case the stored data value is longer than allowed, the
@@ -1826,7 +1826,7 @@ as reflected in the generated code usage of `comms::option::def::SequenceFixedSi
 option ensures requested number of elements in the serialized output buffer, and
 does **NOT** influence the size of the storage vector upon construction of the
 field. The default constructed vector is empty. The code above creates and populates only
-3 elements of it. The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+3 elements of it. The [COMMS Library](https://github.com/commschamp/comms)
 does the rest to ensure correct number of elements is serialized. The missing
 elements will be default constructed and their value is properly serialized.
 
@@ -2197,7 +2197,7 @@ for the contained field is going to be performed.
 
 Such optional field is implemented (in the generated code) using 
 [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
-class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library), which also wraps the contained field.
+class provided by the [COMMS Library](https://github.com/commschamp/comms), which also wraps the contained field.
 
 The modes described above are implemented as [comms::field::OptionalMode](https://commschamp.github.io/comms_doc/namespacecomms_1_1field.html)
 enumeration type. To [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
@@ -2385,7 +2385,7 @@ bool doRefresh()
     return updated;
 }
 ```
-The API requirement imposed by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) is that
+The API requirement imposed by the [COMMS Library](https://github.com/commschamp/comms) is that
 `doRefresh()` member function (which is responsible to bring message contents into a consistent state) 
 must return `bool` with value `true` when message contents and/or state has been updated and `false` when nothing
 has been changed.
@@ -2595,7 +2595,7 @@ void ClientSession::sendMsg14()
 - All the member functions of all the fields are **non**-virtual.
 - Every message definition class containing inner fields uses 
   `COMMS_MSG_FIELDS_NAMES()` macro (provided by the 
-  [COMMS Library](https://github.com/commschamp/comms_champion#comms-library))
+  [COMMS Library](https://github.com/commschamp/comms))
   to create convenience access member functions for member fields. For every field name **x** 
   mentioned in the macro, there is `Field_x` member alias type to specify type of the field
   as well as `field_x()` member function to provide an access to the contained member field 
@@ -2610,7 +2610,7 @@ void ClientSession::sendMsg14()
   [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification in
   full after reading the tutorials.
 - All the field classes are implemented by extending one of the field definition
-  classes provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+  classes provided by the [COMMS Library](https://github.com/commschamp/comms)
   and residing in [comms::field](https://commschamp.github.io/comms_doc/namespacecomms_1_1field.html)
   namespace.
 

@@ -174,7 +174,7 @@ struct DataViewDefaultOptionsT : public TBase
 ```
 
 ## Summary
-- The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) provides multiple ways to access 
+- The [COMMS Library](https://github.com/commschamp/comms) provides multiple ways to access 
   some or all of the framing fields.
 - The `read()` member function can receive and update selected output parameters via 
   [comms::protocol::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html), 

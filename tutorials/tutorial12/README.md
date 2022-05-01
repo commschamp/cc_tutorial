@@ -2,7 +2,7 @@
 Avoiding dynamic memory allocation.
 
 Many embedded bare-metal systems don't use any heap and cannot use dynamic memory allocation.
-The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) has several
+The [COMMS Library](https://github.com/commschamp/comms) has several
 places where dynamic memory allocation is used:
 
 - Inside [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html) used
@@ -31,7 +31,7 @@ is still held by `std::unique_ptr`, but with a custom deleter, which will invoke
 
 The problematic storage types that use dynamic memory allocation (`std::string` and `std::vector`) can also be
 replaced using some [options](https://commschamp.github.io/comms_doc/options_8h.html). The 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) provides
+[COMMS Library](https://github.com/commschamp/comms) provides
 [comms::util::StaticString](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html) and
 [comms::util::StaticVector](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html)
 which expose similar public interface as `std::string` and `std::vector` respectively, but receive
@@ -183,7 +183,7 @@ and overrides the default storage size of `Msg1Fields::F1`.
 
 ----
 
-**SIDE NOTE**: The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) was implemented in
+**SIDE NOTE**: The [COMMS Library](https://github.com/commschamp/comms) was implemented in
 a way that processes the options bottom-up. As the result, the options that appear above may 
 override the configuration enforced by the options listed below.
 
@@ -215,7 +215,7 @@ If we think about it a bit deeper, in most of the cases (all the previous tutori
 the message object doesn't outlive the  input buffer . It would
 be beneficial if the storage type of the **&lt;string&gt;** and **&lt;data&gt;**
 fields is some kind of "view" on input buffer. The 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+[COMMS Library](https://github.com/commschamp/comms)
 provides such an ability with [comms::option::app::OrigDataView](https://commschamp.github.io/comms_doc/options_8h.html)
 option. If the option is passed to the definition of 
 [comms::field::String](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1String.html) then 
@@ -356,7 +356,7 @@ can be observed with [std::vector](https://en.cppreference.com/w/cpp/container/v
 assignment code which is underlying storage type agnostic. Once the underlying storage type 
 is assumed to be something and its known API function is used, it becomes a boilerplate code
 which may fail the compilation and/or work incorrectly when the assumption is broken. The 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) introduces
+[COMMS Library](https://github.com/commschamp/comms) introduces
 `comms::util::assign()` stand alone function (requires include of 
 [comms/util/assign.h](https://commschamp.github.io/comms_doc/assign_8h.html)). It is a helper
 function which allows writing storage type agnostic code to assign a range of values. It 
@@ -372,7 +372,7 @@ allocation, some also avoid virtual functions (due to code size limitations). Ma
 exclude usage of standard C library altogether. 
 
 Note that the 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) uses various
+[COMMS Library](https://github.com/commschamp/comms) uses various
 debug code inner correctness checks (compiled in when standard `NDEBUG` is not defined). Such
 checks are implemented using [COMMS_ASSERT()](https://commschamp.github.io/comms_doc/Assert_8h.html)
 macro, which by default invokes standard `assert()` defined by the standard library, which 
@@ -381,7 +381,7 @@ there is a need to define `COMMS_NOSTDLIB` during compilation. It will cause the
 failure functionality of the [COMMS_ASSERT()](https://commschamp.github.io/comms_doc/Assert_8h.html)
 macro to be an infinite loop. 
 
-The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) allows run-time 
+The [COMMS Library](https://github.com/commschamp/comms) allows run-time 
 override of the default assertion failure functionality. Please read 
 [Custom Assertion Failure Behaviour](https://commschamp.github.io/comms_doc/page_assert.html) page
 from the documentation for more details. The 

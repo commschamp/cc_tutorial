@@ -158,7 +158,7 @@ using Id =
         typename TOpt::frame::ClientToServerFrameLayers::Id
     >;
 ```
-Note, that [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) implement message framing
+Note, that [COMMS Library](https://github.com/commschamp/comms) implement message framing
 by folding layers, where one layer wraps another and keeps the latter as its private data member. Such architecture
 allows assembling a required framing out of multiple building blocks as well as 
 having any extra logic **before** and **after** read/write operations are forwarded the the next layer
@@ -371,7 +371,7 @@ code and update previously written dummy value with the correct one.
 any knowledge about the recently written message to be able to analyse the recently
 written data and update values where needed. However, in some cases the
 access to previously written message needs to be provided. 
-The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+The [COMMS Library](https://github.com/commschamp/comms)
 provides such overloaded `update()` member function which receives a reference to
 the message object as its first parameter.
 

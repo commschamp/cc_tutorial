@@ -40,7 +40,7 @@ and communicated to other interested parties (like `CHECKSUM` layer) via message
 
 Before proceeding to the actual `<frame>` definition explanation please take a closer look at the
 [Protocol Stack Definition Tutorial](https://commschamp.github.io/comms_doc/page_prot_stack_tutorial.html)
-page from the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) documentation.
+page from the [COMMS Library](https://github.com/commschamp/comms) documentation.
 
 It explains that the checksum layer class needs to wrap all the other layers checksum on which needs to be
 calculated. Such wrapping is also explained and shown in [tutorial5](../../tutorials/tutorial5).
@@ -79,7 +79,7 @@ by the code generator.
 
 The `Checksum` layer is implemented by extending the 
 [comms::protocol::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
-class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library), and
+class provided by the [COMMS Library](https://github.com/commschamp/comms), and
 customizing various operations.
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>

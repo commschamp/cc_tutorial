@@ -87,7 +87,7 @@ class IdWithFlags : public
 It extends [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html).
 The latter supports its extension and customization to support cases like in this tutorial. It is
 properly described in [Defining Custom Message ID Protocol Stack Layer ](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
-tutorial page of the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) documentation.
+tutorial page of the [COMMS Library](https://github.com/commschamp/comms) documentation.
 
 Please note usage of [comms::option::def::ExtendingClass](https://commschamp.github.io/comms_doc/options_8h.html) option 
 which specifies the actual type of extending class. It is basically the [CRTP](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
@@ -153,7 +153,7 @@ class SizeWithFlags : public
 }
 ```
 The [Defining Custom Message Size Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
-tutorial page of the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) documentation provides a lot 
+tutorial page of the [COMMS Library](https://github.com/commschamp/comms) documentation provides a lot 
 of details on how define such layer.
 
 The `SizeWithFlags` class also uses [comms::option::def::ExtendingClass](https://commschamp.github.io/comms_doc/options_8h.html) option 

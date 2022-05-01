@@ -10,7 +10,7 @@ such application to change the framing as well when the message is forwarded on 
 In such case the decoding of all the irrelevant messages seems like a waste of CPU cycles and
 maybe even memory.
 
-To help with such cases the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+To help with such cases the [COMMS Library](https://github.com/commschamp/comms)
 introduced [comms::GenericMessage](https://commschamp.github.io/comms_doc/classcomms_1_1GenericMessage.html).
 It extends [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
 like any regular message definition and has a single member field (payload) which is 
@@ -140,7 +140,7 @@ Please take a look how the `comms::GenericMessage` is actually [implemented](htt
 It contains definition of the `doName()` which results in printing "Generic Message" as recognized message name.
 
 ## Summary
-- To avoid decoding of some messages the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+- To avoid decoding of some messages the [COMMS Library](https://github.com/commschamp/comms)
   provides [comms::GenericMessage](https://commschamp.github.io/comms_doc/classcomms_1_1GenericMessage.html).
 - To support creation of the `GenericMessage` object instead of unrecognized messages the 
   [comms::option::app::SupportGenericMessage](https://commschamp.github.io/comms_doc/options_8h.html)

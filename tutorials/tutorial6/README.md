@@ -101,7 +101,7 @@ integrating application side. However, the integrating developer needs to unders
 going on "under the hood" and how the dispatch is implemented in order to be able to 
 fine-tune the code size and/or run-time performance if needed. The 
 [Advanced Guide to Message Dispathing](https://commschamp.github.io/comms_doc/page_dispatch.html)
-tutorial page from the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+tutorial page from the [COMMS Library](https://github.com/commschamp/comms)
 documentation contains a detailed description of various available dispatch functionalities and 
 their implications.
 
@@ -182,7 +182,7 @@ static_assert(comms::dispatchMsgTypeIsPolymorphic<AllMessages>(), "Unexpected di
 
 ----
 
-The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) strives to
+The [COMMS Library](https://github.com/commschamp/comms) strives to
 provide sensible default behavior suitable for most cases, but also provides a way
 to change / fine-tune it for specific cases. As we already discovered the **default**
 behavior for this tutorial is to create independent polymorphic dispatch tables and use
@@ -239,7 +239,7 @@ be much better approach for bare-metal systems with small ROM size.
 ----
 
 So far we've seen the dispatch fully supported by the 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) itself which
+[COMMS Library](https://github.com/commschamp/comms) itself which
 does not have any preliminary information on the message types it needs to support. As 
 the result it uses various C++ meta-programming techniques to analyze the provided 
 `std::tuple` of supported message types at **compile-time** as well as generate proper
@@ -283,9 +283,9 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
 ## Summary
 
-- The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) supports
+- The [COMMS Library](https://github.com/commschamp/comms) supports
   multiple ways to dispatch message object to the appropriate handling function.
-- The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) has 
+- The [COMMS Library](https://github.com/commschamp/comms) has 
   a compile-time logic for choosing a sensible default dispatch code while providing an
   ability to forcing a particular dispatch logic which better suites the application.
 - The default way of dispatch used by the 
@@ -295,7 +295,7 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
   [comms::MsgDispatcher](https://commschamp.github.io/comms_doc/classcomms_1_1MsgDispatcher.html) 
   as well as using [comms::processAllWithDispatchViaDispatcher()](https://commschamp.github.io/comms_doc/process_8h.html)
   function.
-- The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) documentation contains
+- The [COMMS Library](https://github.com/commschamp/comms) documentation contains
   a separate [detailed tutorial page](https://commschamp.github.io/comms_doc/page_dispatch.html) 
   on various supported ways of message dispatch.
 - The generated code contains `switch` statement based dispatch logic inside the 

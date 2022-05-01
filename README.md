@@ -87,10 +87,10 @@ cases it will exchange several messages with the **server** and exit.
 
 # References
 The core component of the [CommsChampion Ecosystem](https://commschamp.github.io) is
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library). Its full
+[COMMS Library](https://github.com/commschamp/comms). Its full
 tutorial and API reference can be viewed [online](https://commschamp.github.io/comms_doc) or
-downloaded from latest [release artifacts](https://github.com/commschamp/comms_champion/releases).
-The full tutorial on how to use the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+downloaded from latest [release artifacts](https://github.com/commschamp/comms/releases).
+The full tutorial on how to use the [COMMS Library](https://github.com/commschamp/comms)
 resides in
 [How to Use Defined Custom Protocol](https://commschamp.github.io/comms_doc/page_use_prot.html)
 page of the documentation.

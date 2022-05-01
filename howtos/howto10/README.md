@@ -31,11 +31,11 @@ The naive and straightforward way to implement such frame would be something lik
 ```
 Such definition will cause the error being explained here. In order to understand the error and the solution,
 the developer needs to understand some aspects of the 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) architecture and as a 
+[COMMS Library](https://github.com/commschamp/comms) architecture and as a 
 consequence the limitations of the latter.
 
 The [tutorial5](../../tutorials/tutorial5) explains that the 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library) implements framing
+[COMMS Library](https://github.com/commschamp/comms) implements framing
 by they "layer" classes wrapping one another, while the 
 [comms::protocol::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
 (defined using [&lt;checksum&gt;](https://commschamp.github.io/commsdsl_spec/#frames-checksum) in the schema)
@@ -49,7 +49,7 @@ definition is implemented using
 [comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
 class, which is expected to re-assign the read field's value to the message object. However, in this particular scenario
 the message object hasn't been created yet, because the `ID` information hasn't been processed yet. To help with 
-such cases the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) has compile-time
+such cases the [COMMS Library](https://github.com/commschamp/comms) has compile-time
 meta-programming logic to recognize the scenario and automatically forces splitting its read operation to "until the payload" and 
 "from the payload". When such split occurs, the relevant flags field is re-assigned to message object right before the read 
 operation is forwarded to process the message payload.

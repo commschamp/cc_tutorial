@@ -13,7 +13,7 @@ messages will result in generation of unneeded virtual functions, which in turn
 will consume an extra code space. It might be an unacceptable price to pay in
 embedded systems with limited ROM size.
 
-The [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) provides
+The [COMMS Library](https://github.com/commschamp/comms) provides
 a way to suppress generation of specific virtual functions using extra 
 configuration options. Let's see how the generated code helps with the task.
 

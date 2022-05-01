@@ -25,7 +25,7 @@ as such using **semanticType="messageId"** property assignment.
 
 ## Generated Code
 In general, the generated code uses 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library),
+[COMMS Library](https://github.com/commschamp/comms),
 which was designed to allow having single and functionally correct 
 protocol definition for all possible applications, while allowing the
 latter to **compile-time** customize their data structures, polymorphic interfaces, and/or

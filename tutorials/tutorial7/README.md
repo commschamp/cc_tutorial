@@ -109,7 +109,7 @@ message types / classes need to be defined before defining the handling function
 
 This was a bit of theory. Now let's take a closer look at the [ClientSession](src/ClientSession.h).
 The [comms::GenericHandler](https://commschamp.github.io/comms_doc/classcomms_1_1GenericHandler.html)
-helper class provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) 
+helper class provided by the [COMMS Library](https://github.com/commschamp/comms) 
 is used.
 ```cpp
 class HandlerBase : public
@@ -283,7 +283,7 @@ do it is out of scope for this tutorial and will be covered later.
 It is also recommended to read 
 [Advanced Guide to Message Dispatching](https://commschamp.github.io/comms_doc/page_dispatch.html)
 tutorial page for deeper understanding of available dispatch mechanisms provided by 
-the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
+the [COMMS Library](https://github.com/commschamp/comms).
 
 ----
 

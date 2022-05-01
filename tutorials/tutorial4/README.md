@@ -129,7 +129,7 @@ public:
 };
 ```
 The field is defined by extending [comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
-provided by the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library). The 
+provided by the [COMMS Library](https://github.com/commschamp/comms). The 
 class definition uses `COMMS_VARIANT_MEMBERS_NAMES()` macro to provide names to all the member fields it
 might contain. For every such name **X** the following is defined:
 
@@ -523,7 +523,7 @@ error-prone code.
 - Every definition of such **&lt;bundle&gt;** member (inside [include/tutorial4/field/TlvProp.h](include/tutorial4/field/TlvProp.h))
   uses `comms::option::def::RemLengthMemberField<>` option in their definition (generated as the result of
   `semanticType="length"` assignment). It notifies the 
-  [COMMS Library](https://github.com/commschamp/comms_champion#comms-library) about the existence of the
+  [COMMS Library](https://github.com/commschamp/comms) about the existence of the
   `Length` field inside the [comms::field::Bundle](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Bundle.html)
   and allows implementation of the correct `refresh()` functionality.
 

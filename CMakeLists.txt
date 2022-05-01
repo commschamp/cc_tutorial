@@ -9,16 +9,16 @@ option (USE_SANITIZERS "Compile with sanitizers." OFF)
 # Additional variables to be used if needed
 # ---------------------------
 # COMMSDSL2COMMS - Path to "commsdsl2comms" binary if such is already built.
-# CC_MAIN_INSTALL_DIR - Path to CommsChampion external install directory (if such already built).
+# CC_COMMS_INSTALL_DIR - Path to CommsChampion external install directory (if such already built).
 # COMMSDSL_TAG - Tag / branch of commsdsl project (if built internally)
-# CC_TAG - Tag / branch of comms_champion project (if built internally)
+# CC_COMMS_TAG - Tag / branch of COMMS library project (if built internally)
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
-    set (COMMSDSL_TAG "v3.6.4")
+    set (COMMSDSL_TAG "split")
 endif ()
 
-if ("${CC_TAG}" STREQUAL "")
-    set (CC_TAG "v3.4")
+if ("${CC_COMMS_TAG}" STREQUAL "")
+    set (CC_COMMS_TAG "master")
 endif ()
 
 if (NOT CMAKE_CXX_STANDARD)
@@ -44,36 +44,34 @@ set (EXTERNALS_DIR "${PROJECT_SOURCE_DIR}/externals")
 
 #######################################################
 
-if ("${CC_MAIN_INSTALL_DIR}" STREQUAL "")
+if ("${CC_COMMS_INSTALL_DIR}" STREQUAL "")
     execute_process (
         COMMAND ${CMAKE_COMMAND} -E make_directory "${EXTERNALS_DIR}"
     )
 
-    set (cc_src_dir "${EXTERNALS_DIR}/comms_champion")
-    set (cc_bin_dir "${PROJECT_BINARY_DIR}/comms_champion")
-    set (CC_MAIN_INSTALL_DIR "${cc_bin_dir}/install")
+    set (cc_src_dir "${EXTERNALS_DIR}/comms")
+    set (cc_bin_dir "${PROJECT_BINARY_DIR}/comms")
+    set (CC_COMMS_INSTALL_DIR "${cc_bin_dir}/install")
 
     include (${PROJECT_SOURCE_DIR}/cmake/CC_Prefetch.cmake)
-    cc_prefetch(SRC_DIR "${cc_src_dir}" TAG "${CC_TAG}")
-    include(${cc_src_dir}/cmake/CC_External.cmake)
+    cc_prefetch(SRC_DIR "${cc_src_dir}" TAG "${CC_COMMS_TAG}")
+    include(${cc_src_dir}/cmake/CC_CommsExternal.cmake)
 
-    cc_build_during_config(
+    cc_comms_build_during_config(
         SRC_DIR ${cc_src_dir}
         BUILD_DIR ${cc_bin_dir}
-        TAG ${CC_TAG}
+        TAG ${CC_COMMS_TAG}
         CMAKE_ARGS
             -DCC_BUILD_UNIT_TESTS=OFF 
-            -DCC_BUILD_TOOLS_LIBRARY=OFF
-            -DCC_CC_BUILD_TOOLS=OFF 
-            -DCMAKE_INSTALL_PREFIX=${CC_MAIN_INSTALL_DIR}
+            -DCMAKE_INSTALL_PREFIX=${CC_COMMS_INSTALL_DIR}
     )
 
 endif ()
     
-list (APPEND CMAKE_PREFIX_PATH "${CC_MAIN_INSTALL_DIR}")
+list (APPEND CMAKE_PREFIX_PATH "${CC_COMMS_INSTALL_DIR}")
 find_package(LibComms NO_MODULE REQUIRED)
 
-set (cc_compile_file ${CC_MAIN_INSTALL_DIR}/lib/LibComms/cmake/CC_Compile.cmake)
+set (cc_compile_file ${CC_COMMS_INSTALL_DIR}/lib/LibComms/cmake/CC_Compile.cmake)
 if (EXISTS ${cc_compile_file})
     set (warn_as_err_opt)
     if (WARN_AS_ERR)
@@ -129,17 +127,11 @@ if ("${COMMSDSL2COMMS}" STREQUAL "")
                 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${commsdsl2comms_install_dir}
                 -DCOMMSDSL_NO_TESTS=ON -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} 
                 -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-                -DBOOST_ROOT=${BOOST_ROOT} -DBOOST_LIBRARYDIR=${BOOST_LIBRARYDIR}
-                -DBOOST_INCLUDEDIR=${BOOST_INCLUDEDIR} ${boost_static_libs_param}
                 -DCOMMSDSL_EXTERNALS_DIR=${EXTERNALS_DIR} 
             BINARY_DIR "${commsdsl2comms_bin_dir}"
         )
         
         set (COMMSDSL2COMMS "${commsdsl2comms_install_dir}/bin/commsdsl2comms")
-        
-        if (UNIX)
-            set (COMMSDSL2COMMS "${COMMSDSL2COMMS}.sh")
-        endif ()
 endif ()
 
 #######################################################
@@ -158,7 +150,7 @@ function (dsl_parse type name)
     set (code_input_param)
     set (src_files)
     if (NOT "${DSL_PARSE_SRC_DIR}" STREQUAL "")
-        set (code_input_param "-c${DSL_PARSE_SRC_DIR}")
+        set (code_input_param -c ${DSL_PARSE_SRC_DIR})
         file (GLOB_RECURSE src_files "${DSL_PARSE_SRC_DIR}/*") 
     endif ()
     
@@ -179,7 +171,7 @@ function (dsl_parse type name)
         OUTPUT ${output_dir}
         DEPENDS ${DSL_PARSE_SCHEMAS} ${src_files} ${commsdsl_tgt_dep} ${name}_prot_rm 
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${output_dir}
-        COMMAND ${COMMSDSL2COMMS} --warn-as-err ${code_input_param} "--cc-tag=${CC_TAG}" 
+        COMMAND ${COMMSDSL2COMMS} --warn-as-err ${code_input_param} "--comms-tag=${CC_COMMS_TAG}" 
             -o ${output_dir} -i ${CMAKE_CURRENT_BINARY_DIR}/${name}/schema_files.txt
     )
 

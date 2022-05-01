@@ -15,7 +15,7 @@ confused with the end of the current or beginning of the next message.
 
 In order to handle such case it is highly recommended to pre-process the input and strip 
 all the special characters before passing it for processing to the 
-[COMMS Library](https://github.com/commschamp/comms_champion#comms-library).
+[COMMS Library](https://github.com/commschamp/comms).
 The same goes for post-processing the output and inject special characters before sending raw bytes 
 over the I/O link.
 
@@ -31,7 +31,7 @@ The pre- and post-processing functionality is common for both **client** and **s
 inside [src/CommonSessionBase.cpp](src/CommonSessionBase.cpp).
 
 When new input arrives, it's been pre-processed to remove all the special characters before passing 
-the identified message to the [COMMS Library](https://github.com/commschamp/comms_champion#comms-library)
+the identified message to the [COMMS Library](https://github.com/commschamp/comms)
 for processing.
 ```cpp
 std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
