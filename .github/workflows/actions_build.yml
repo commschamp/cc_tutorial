@@ -21,31 +21,13 @@ jobs:
     - name: Install Packages
       run: sudo apt install libboost-all-dev libxml2-dev gcc-${{matrix.cc_ver}} g++-${{matrix.cc_ver}} gcc-8 g++-8
 
-    - name: Create Build Environment for Code Generator
-      run: cmake -E make_directory ${{runner.workspace}}/build.commsdsl      
-
-    - name: Configure CMake for Code Generator
-      shell: bash
-      working-directory: ${{runner.workspace}}/build.commsdsl
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install
-      env:
-        CC: gcc-8
-        CXX: g++-8
-
-    - name: Build Code Generator
-      working-directory: ${{runner.workspace}}/build.commsdsl
-      shell: bash
-      run: cmake --build . --target install
-      env:
-        VERBOSE: 1 
-
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure CMake
       shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCMAKE_INSTALL_PREFIX=install -DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=gold -DCOMMSDSL2COMMS=${{runner.workspace}}/build.commsdsl/install/bin/commsdsl2comms
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCMAKE_INSTALL_PREFIX=install -DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=gold -DCOMMSDSL_C_COMPILER=gcc-8 -DCOMMSDSL_CXX_COMPILER=g++-8
       env:
         CC: gcc-${{matrix.cc_ver}}
         CXX: g++-${{matrix.cc_ver}}
@@ -117,31 +99,13 @@ jobs:
     - name: Install Packages
       run: sudo apt install libqt5gui5 libboost-all-dev libxml2-dev clang-${{matrix.cc_ver}} clang-6.0
 
-    - name: Create Build Environment for Code Generator
-      run: cmake -E make_directory ${{runner.workspace}}/build.commsdsl      
-
-    - name: Configure CMake for Code Generator
-      shell: bash
-      working-directory: ${{runner.workspace}}/build.commsdsl
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install
-      env:
-        CC: clang-6.0
-        CXX: clang++-6.0
-
-    - name: Build Code Generator
-      working-directory: ${{runner.workspace}}/build.commsdsl
-      shell: bash
-      run: cmake --build . --target install
-      env:
-        VERBOSE: 1       
-
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
 
     - name: Configure CMake
       shell: bash
       working-directory: ${{runner.workspace}}/build
-      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCMAKE_INSTALL_PREFIX=install -DCOMMSDSL2COMMS=${{runner.workspace}}/build.commsdsl/install/bin/commsdsl2comms
+      run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCMAKE_INSTALL_PREFIX=install -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DCMAKE_INSTALL_PREFIX=install -DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=gold -DCOMMSDSL_C_COMPILER=clang-6.0 -DCOMMSDSL_CXX_COMPILER=clang++-6.0
       env:
         CC: clang-${{matrix.cc_ver}}
         CXX: clang++-${{matrix.cc_ver}}

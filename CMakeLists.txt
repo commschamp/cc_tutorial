@@ -12,6 +12,8 @@ option (USE_SANITIZERS "Compile with sanitizers." OFF)
 # CC_COMMS_INSTALL_DIR - Path to CommsChampion external install directory (if such already built).
 # COMMSDSL_TAG - Tag / branch of commsdsl project (if built internally)
 # CC_COMMS_TAG - Tag / branch of COMMS library project (if built internally)
+# COMMSDSL_C_COMPILER - "C" Compiler for commsdsl project
+# COMMSDSL_CXX_COMPILER - "C++" Compiler for commsdsl project
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
     set (COMMSDSL_TAG "split")
@@ -110,12 +112,15 @@ if ("${COMMSDSL2COMMS}" STREQUAL "")
         set (commsdsl2comms_src_dir "${EXTERNALS_DIR}/commsdsl")
         set (commsdsl2comms_bin_dir "${commsdsl2comms_main_dir}/build")
         set (commsdsl2comms_install_dir "${commsdsl2comms_main_dir}/install")
-        
-        set (boost_static_libs_param)
-        if (Boost_USE_STATIC_LIBS)
-            set (boost_static_libs_param "-DBoost_USE_STATIC_LIBS=ON")
-        endif()
 
+        if ("${COMMSDSL_C_COMPILER}" STREQUAL "")
+            set (COMMSDSL_C_COMPILER ${CMAKE_CXX_COMPILER})
+        endif ()        
+
+        if ("${COMMSDSL_CXX_COMPILER}" STREQUAL "")
+            set (COMMSDSL_CXX_COMPILER ${CMAKE_CXX_COMPILER})
+        endif ()
+        
         ExternalProject_Add(
             "${COMMSDSL_TGT}"
             PREFIX "${commsdsl2comms_bin_dir}"
@@ -125,8 +130,8 @@ if ("${COMMSDSL2COMMS}" STREQUAL "")
             SOURCE_DIR "${commsdsl2comms_src_dir}"
             CMAKE_ARGS
                 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${commsdsl2comms_install_dir}
-                -DCOMMSDSL_NO_TESTS=ON -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} 
-                -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+                -DCOMMSDSL_NO_TESTS=ON -DCMAKE_C_COMPILER=${COMMSDSL_C_COMPILER} 
+                -DCMAKE_CXX_COMPILER=${COMMSDSL_CXX_COMPILER}
                 -DCOMMSDSL_EXTERNALS_DIR=${EXTERNALS_DIR} 
             BINARY_DIR "${commsdsl2comms_bin_dir}"
         )
