@@ -114,7 +114,7 @@ if ("${COMMSDSL2COMMS}" STREQUAL "")
         set (commsdsl2comms_install_dir "${commsdsl2comms_main_dir}/install")
 
         if ("${COMMSDSL_C_COMPILER}" STREQUAL "")
-            set (COMMSDSL_C_COMPILER ${CMAKE_CXX_COMPILER})
+            set (COMMSDSL_C_COMPILER ${CMAKE_C_COMPILER})
         endif ()        
 
         if ("${COMMSDSL_CXX_COMPILER}" STREQUAL "")
