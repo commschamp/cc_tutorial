@@ -104,7 +104,7 @@ the message object.
 
 ----
 
-**SIDE NOTE**: If [CommsChampion Tools](https://github.com/commschamp/comms_champion/wiki/How-to-Use-CommsChampion-Tools)
+**SIDE NOTE**: If [CommsChampion Tools](https://github.com/commschamp/cc_tools_qt/wiki/How-to-Use-CommsChampion-Tools)
 are intended to be used for the protocol visualization and/or debugging, it is better to hide the `Version` field 
 inside the transport framing from being displayed altogether (because it's not really there). In such case it is
 recommended to slightly update the definition of the **&lt;value&gt;** layer above into the following:

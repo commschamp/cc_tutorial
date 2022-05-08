@@ -198,7 +198,7 @@ There are protocols that include length of the size field itself as the value of
 protocol framing. In such case the **serOffset** property also needs to be used.
 
 Usage of the **displayOffset** property can be used the force adding the same offset to the
-value displayed in [CommsChampion Tools](https://github.com/commschamp/comms_champion#commschampion-tools) and it's
+value displayed in [CommsChampion Tools](https://github.com/commschamp/cc_tools_qt) and it's
 not really relevant to this tutorial.
 
 The **&lt;size&gt;** layer is implemented by extending or aliasing 
