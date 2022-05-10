@@ -6,7 +6,7 @@
 #pragma once
 
 #include <tuple>
-#include "tutorial10/message/Msg1.h"
+#include "tutorial10/message/Msg2.h"
 #include "tutorial10/message/Msg3.h"
 #include "tutorial10/message/Msg4.h"
 #include "tutorial10/message/Msg5.h"
@@ -24,7 +24,7 @@ namespace input
 template <typename TBase, typename TOpt = tutorial10::options::DefaultOptions>
 using ClientInputMessages =
     std::tuple<
-        tutorial10::message::Msg1<TBase, TOpt>,
+        tutorial10::message::Msg2<TBase, TOpt>,
         tutorial10::message::Msg3<TBase, TOpt>,
         tutorial10::message::Msg4<TBase, TOpt>,
         tutorial10::message::Msg5<TBase, TOpt>

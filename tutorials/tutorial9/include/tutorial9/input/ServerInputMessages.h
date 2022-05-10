@@ -6,8 +6,8 @@
 #pragma once
 
 #include <tuple>
-#include "tutorial9/message/Msg2.h"
-#include "tutorial9/message/Msg4.h"
+#include "tutorial9/message/Msg1.h"
+#include "tutorial9/message/Msg3.h"
 #include "tutorial9/options/DefaultOptions.h"
 
 namespace tutorial9
@@ -22,8 +22,8 @@ namespace input
 template <typename TBase, typename TOpt = tutorial9::options::DefaultOptions>
 using ServerInputMessages =
     std::tuple<
-        tutorial9::message::Msg2<TBase, TOpt>,
-        tutorial9::message::Msg4<TBase, TOpt>
+        tutorial9::message::Msg1<TBase, TOpt>,
+        tutorial9::message::Msg3<TBase, TOpt>
     >;
 
 } // namespace input

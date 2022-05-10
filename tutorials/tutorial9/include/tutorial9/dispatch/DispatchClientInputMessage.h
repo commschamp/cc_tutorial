@@ -26,11 +26,11 @@ namespace dispatch
 ///     to handle and one for the interface class as well.
 ///     @code
 ///     using MyInterface = tutorial9::Message<...>;
-///     using MyMsg1 = tutorial9::message::Msg1<MyInterface, tutorial9::options::DefaultOptions>;
-///     using MyMsg3 = tutorial9::message::Msg3<MyInterface, tutorial9::options::DefaultOptions>;
+///     using MyMsg2 = tutorial9::message::Msg2<MyInterface, tutorial9::options::DefaultOptions>;
+///     using MyMsg4 = tutorial9::message::Msg4<MyInterface, tutorial9::options::DefaultOptions>;
 ///     struct MyHandler {
-///         void handle(MyMsg1& msg) {...}
-///         void handle(MyMsg3& msg) {...}
+///         void handle(MyMsg2& msg) {...}
+///         void handle(MyMsg4& msg) {...}
 ///         ...
 ///         // Handle all unexpected or irrelevant messages.
 ///         void handle(MyInterface& msg) {...}
@@ -47,14 +47,14 @@ auto dispatchClientInputMessage(
 {
     using InterfaceType = typename std::decay<decltype(msg)>::type;
     switch(id) {
-    case tutorial9::MsgId_M1:
+    case tutorial9::MsgId_M2:
     {
-        using MsgType = tutorial9::message::Msg1<InterfaceType, TProtOptions>;
+        using MsgType = tutorial9::message::Msg2<InterfaceType, TProtOptions>;
         return handler.handle(static_cast<MsgType&>(msg));
     }
-    case tutorial9::MsgId_M3:
+    case tutorial9::MsgId_M4:
     {
-        using MsgType = tutorial9::message::Msg3<InterfaceType, TProtOptions>;
+        using MsgType = tutorial9::message::Msg4<InterfaceType, TProtOptions>;
         return handler.handle(static_cast<MsgType&>(msg));
     }
     default:

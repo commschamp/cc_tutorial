@@ -26,11 +26,11 @@ namespace dispatch
 ///     to handle and one for the interface class as well.
 ///     @code
 ///     using MyInterface = tutorial20::Interface<...>;
-///     using MyConnect = tutorial20::message::Connect<MyInterface, tutorial20::options::DefaultOptions>;
 ///     using MyMsg1 = tutorial20::message::Msg1<MyInterface, tutorial20::options::DefaultOptions>;
+///     using MyMsg2 = tutorial20::message::Msg2<MyInterface, tutorial20::options::DefaultOptions>;
 ///     struct MyHandler {
-///         void handle(MyConnect& msg) {...}
 ///         void handle(MyMsg1& msg) {...}
+///         void handle(MyMsg2& msg) {...}
 ///         ...
 ///         // Handle all unexpected or irrelevant messages.
 ///         void handle(MyInterface& msg) {...}
@@ -47,11 +47,6 @@ auto dispatchClientInputMessage(
 {
     using InterfaceType = typename std::decay<decltype(msg)>::type;
     switch(id) {
-    case tutorial20::MsgId_Connect:
-    {
-        using MsgType = tutorial20::message::Connect<InterfaceType, TProtOptions>;
-        return handler.handle(static_cast<MsgType&>(msg));
-    }
     case tutorial20::MsgId_M1:
     {
         using MsgType = tutorial20::message::Msg1<InterfaceType, TProtOptions>;
