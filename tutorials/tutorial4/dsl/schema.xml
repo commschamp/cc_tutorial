@@ -32,7 +32,7 @@
             </bundle>            
             
             <bundle name="Prop3">
-                <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K3" validValue="PropKey.K3" />
+                <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K3" />
                 <string name="Val">
                     <lengthPrefix>
                         <int name="Length" type="uint8" />

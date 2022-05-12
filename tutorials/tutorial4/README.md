@@ -45,7 +45,7 @@ above looks like this:
     </bundle>            
     
     <bundle name="Prop3">
-        <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K3" validValue="PropKey.K3" />
+        <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K3" />
         <string name="Val">
             <lengthPrefix>
                 <int name="Length" type="uint8" />
@@ -77,6 +77,10 @@ There are multiple important aspects that require a closer look and deeper under
   boilerplate code that does so the **defaultValue** property is used to set the same value as a valid one.
 - The definition of the key valid values as a separate **&lt;enum&gt;** (PropKey) allows referencing its
   values by a name (instead of hard-coded numeric value) in the **defaultValue** and **validValue** properties.
+- Since release **v4.0** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
+  and [commsdsl](https://github.com/commschamp/commsdsl) code generators it is possible to replace a 
+  combination of **defaultValue** and **validValue** properties with a single one **defaultValidValue**, like
+  it was done for the _Prop3_.
 
 Sometimes there is a need to combine such heterogeneous properties into a list. It is easy to do using
 a **&lt;list&gt;** covered in one of the earlier tutorials.
