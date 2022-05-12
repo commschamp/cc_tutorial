@@ -68,7 +68,7 @@ Another example is to have some special `type` field in message payload which sp
 </message>    
 
 <message name="Msg2_3" id="MsgId.M2" order="20" displayName="Message 2 (3)">
-    <int name="Type" type="uint8" defaultValue="3" validValue="3" failOnInvalid="true" />
+    <int name="Type" type="uint8" defaultValidValue="3" failOnInvalid="true" />
     <int name="F1" type="uint64" />          
 </message>    
 ```
@@ -77,6 +77,12 @@ to insure that `read()` operation fails when the read value doesn't match. Also 
 **defaultValue** property. It is needed to insure that when message object is default constructed
 the `Type` field is to already have a proper value assigned without any need to have explicit boilerplate
 assignment code.
+
+As was mentioned in the [tutorial4](../tutorial4), since **v4.0** of the 
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification and 
+the [commsdsl](https://github.com/commschamp/commsdsl) code generators it is possible to
+replace a combination of **validValue** and **defaultValue** properties with a single one
+**defaultValidValue**, as it was done for the __Msg2_3__.
 
 In such case the order of the messages is not really important, they will all be tried sequentially and
 the right one will be chosen. Maybe for performance reasons the more frequent ones should have the 

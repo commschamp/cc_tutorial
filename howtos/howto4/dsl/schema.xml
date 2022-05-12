@@ -21,19 +21,19 @@
             </description>
             <members>
                 <bundle name="Prop1">
-                    <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K1" validValue="PropKey.K1" />
+                    <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K1" />
                     <int name="Length" type="uint8" semanticType="length" />
                     <int name="Val" type="uint32" />
                 </bundle>
                 
                 <bundle name="Prop2">
-                    <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K2" validValue="PropKey.K2" />
+                    <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K2" />
                     <int name="Length" type="uint8" semanticType="length" />
                     <float name="Val" type="double" defaultValue="inf" />
                 </bundle>            
                 
                 <bundle name="Prop3">
-                    <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K3" validValue="PropKey.K3" />
+                    <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K3" />
                     <int name="Length" type="uint8" semanticType="length" />
                     <string name="Val" />
                 </bundle>   
