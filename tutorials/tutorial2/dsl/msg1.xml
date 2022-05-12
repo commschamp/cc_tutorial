@@ -5,7 +5,7 @@
         <int name="Dummy" type="uint8" description="Not referenced anywhere" />
     </fields>
     
-    <message name="Msg1" id="MsgId.M1" displayName="Message 1">
+    <message name="Msg1" id="MsgId.M1" displayName="Message 1" validateMinLength="3">
         <ref name="F1" field="I1" />
         <int name="F2" type="int16" />
     </message>

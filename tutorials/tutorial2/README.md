@@ -70,7 +70,7 @@ In other words it is:
 ## Defining Fields
 Every message may define internal fields. Let's take a look inside [dsl/msg1.xml](dsl/msg1.xml).
 ```xml
-<message name="Msg1" id="MsgId.M1" displayName="Message 1">
+<message name="Msg1" id="MsgId.M1" displayName="Message 1" ...>
     <ref name="F1" field="I1" />
     <int name="F2" type="int16" />
 </message>
@@ -144,6 +144,24 @@ relevant types. It can be achieved by using **forceGen** property:
 ```
 
 ---
+
+## Validating Message Length
+Quite often the protocol specifications indicate fixed or minimal length of the defined messages. The
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification allows
+optional verification of the message minimal length at the time of the schema parsing 
+using **validateMinLength** property.
+```xml
+<message name="Msg1" id="MsgId.M1" displayName="Message 1" validateMinLength="3">
+    <ref name="F1" field="I1" />
+    <int name="F2" type="int16" />
+</message>
+```
+It can be useful to prevent some typos or copy-paste errors when defining message fields. The
+property is optional and was introduced in **v4.0** of the 
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification.
+
+**NOTE**, that the value of the **validateMinLength** property is expected to be the 
+serialization length of the message fields, **not** including the message transport framing.
 
 ## Client / Server Sessions
 Both server and client sessions are very similar to the ones 
