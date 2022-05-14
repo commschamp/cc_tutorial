@@ -431,30 +431,6 @@ be returned of the **name()** member function of the field.
 - **description** - Description of the field, will find its way into the field's
 doxygen documentation.
 
-----
-
-**SIDE NOTE**: The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification)
-supports multiple ways to set the field's property value with the same end result:
-
-- As attribute's value:
-```xml
-<int name="F1" ... />
-```
-- As child node with **value** property:
-```xml
-<int ...>
-    <name value="F1" />
-</int>
-```
-- As child node text:
-```xml
-<int ...>
-    <name>F1</name>
-</int>
-```
-
-----
-
 ### &lt;enum&gt; Fields
 The `Msg2` message (defined inside [dsl/msg2.xml](dsl/msg2.xml)) is there to
 demonstrate usage of enum fields. Let's take a look inside. There is definition

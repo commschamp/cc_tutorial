@@ -128,7 +128,14 @@ class Msg1 : public
 ```
 The defined message class extends 
 [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html), which in
-turn extends the provided interface class passed as first template parameter.
+turn re-uses the first template parameter passed to extending class `Msg1` as its first template parameter. 
+It causes the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) to extend 
+the provided interface class passed as first template parameter.
+
+The inheritance hierarchy looks like this:
+```
+(Msg1<TMsgBase>) --> (MessageBase<TMsgBase, ...>)    --> TMsgBase
+```
 
 The **comms::MessageBase** class is there to **automatically** implement various operations of message payload as
 well as implement all relevant virtual functions depending on the used message interface class

@@ -107,7 +107,7 @@ their implications.
 
 In short, there are 3 ways to dispatch:
 - **Polymorphic** - If the message does **NOT** provide polymorphic dispatch, the independent
-  polymorphic (with virtual functions) dispatch tables are created and used used. Depending 
+  polymorphic (with virtual functions) dispatch tables are created and used. Depending 
   on how sparce the message IDs are the runtime complexity of this approach can be 
   either **O(1)** or **O(log(n))**.
 - **Static Binary Search** - The generated dispatch code is equivalent of having multiple
