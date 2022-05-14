@@ -205,7 +205,7 @@ protected:
 
 #### Polymorphic Read
 Usage of `comms::option::app::ReadIterator` option adds the following type and 
-function to the message interface.
+functions to the message interface.
 ```cpp
 class Message 
 {
@@ -214,7 +214,14 @@ public:
     using ReadIterator = const std::uint8_t*;
     
     // Polymorphic read functionality
-    comms::ErrorStatus read(ReadIterator& iter, std::size_t len);
+    comms::ErrorStatus read(ReadIterator& iter, std::size_t len)
+    {
+        return readImpl(iter, len);
+    }
+    
+protected:
+    // To be provided by the derived class
+    virtual comms::ErrorStatus readImpl(ReadIterator& iter, std::size_t len) = 0;
 };
 ```
 Please pay attention to the following details:
@@ -249,7 +256,14 @@ public:
     using WriteIterator = std::uint8_t*;
     
     // Polymorphic write functionality
-    comms::ErrorStatus write(WriteIterator& iter, std::size_t len) const;
+    comms::ErrorStatus write(WriteIterator& iter, std::size_t len) const
+    {
+        return writeImpl(iter, len);
+    }
+    
+protected:
+    // To be provided by the derived class
+    virtual comms::ErrorStatus write(WriteIterator& iter, std::size_t len) const = 0;
 };
 ```
 It is very similar to the **polymorphic read** mentioned earlier.
@@ -277,7 +291,14 @@ class Message
 {
 public: 
     // Polymorphic serialization length calculation
-    std::size_t length() const;
+    std::size_t length() const
+    {
+        return lengthImpl();
+    }
+    
+protected:
+    // To be provided by the derived class
+    virtual std::size_t lengthImpl() const = 0;
 };
 ```
 The call to **length()** member function will return number of bytes required
@@ -302,7 +323,14 @@ public:
     using MsgIdType = tutorial1::MsgId;
     
     // Polymorphic numeric ID retrieval
-    MsgIdType getId() const;
+    MsgIdType getId() const
+    {
+        return getIdImpl();
+    }
+    
+protected:
+    // To be provided by the derived class
+    virtual MsgIdType getIdImpl() const = 0;
 };
 ```
 The polymorphic message ID retrieval can be used in transport framing operation.
@@ -323,7 +351,14 @@ class Message
 {
 public: 
     // Polymorphic name retrieval
-    const char* name() const;
+    const char* name() const
+    {
+        return nameImpl();
+    }
+    
+protected:
+    // To be provided by the derived class
+    virtual const char* name() const = 0;    
 };
 ```
 The polymorphic name retrieval can be used in application when there is a 
@@ -454,7 +489,13 @@ public:
     using Handler = tutorial1::ClientSession;
     
     // Polymorphic dispatch
-    void dispatch(Handler& handler);
+    void dispatch(Handler& handler)
+    {
+        return dispatchImpl(handler);
+    }
+    
+protected:
+    virtual void dispatchImpl(Handler& handler) = 0;
 };
 ```
 The handler class (`tutorial::ClientSession`) is expected to define
@@ -546,7 +587,7 @@ public:
     MsgIdType doGetId() const;
     
     // NON-polymorphic payload serialization length calculation
-    std::size_t doLength() const
+    std::size_t doLength() const;
     
     // NON-polymorphic human readable name of the message
     static const char* doName();
@@ -570,6 +611,57 @@ void ClientSession::handle(Msg1& msg)
 }
 ```
 
+In addition to providing the **NON-polymorphic** (non-virtual) member functions
+the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
+**automatically** implements all the virtual functions inherited from the 
+interface definition by redirecting them to the non-polymorphic ones:
+```cpp
+class Msg1 : public comms::MessageBase<...>
+{
+protected:
+    virtual comms::ErrorStatus readImpl(ReadIterator& iter, std::size_t len) override
+    {
+        return doRead(iter, len);
+    }
+    
+    virtual comms::ErrorStatus writeImpl(ReadIterator& iter, std::size_t len) const override
+    {
+        return doWrite(iter, len);
+    }    
+    
+    virtual std::size_t lengthImpl() const override
+    {
+        return doLength();
+    }
+    
+    virtual MsgIdType getIdImpl() const override
+    {
+        return doGetId();
+    }
+    
+    virtual const char* nameImpl() const override
+    {
+        return doName();
+    }
+    
+    virtual bool validImpl() const override
+    {
+        return doValid();
+    }
+    
+    virtual bool refreshImpl() override
+    {
+        return doRefresh();
+    }
+    
+    virtual void dispatchImpl(Handler& handler) override
+    {
+        return handler.handle(*this);
+    }
+}
+```
+
+
 ## Summary
 
 - **COMMS Library** allows creation of common protocol definition code which
@@ -587,6 +679,15 @@ input / output data.
 - By default the message object is dynamically allocated and held by `std::unique_ptr`.
 How to modify this default behavior will be explained in one of the later
 tutorials.
+- The common message interface class, specific for the application is defined
+  by passing relevant options to the definition of the 
+  [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html)  class.
+- Every message class is defined by extending 
+  [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html), 
+  which automatically defines non-polymorphic interface to operate on 
+  message fields as well as **automatically** implements all the necessary
+  virtual functions, presence of which is controlled by the defined interface 
+  class.
 - Every message object has also non-polymorphic interface functions named
 `doX()`, which should be used when real message type is known to avoid
 unnecessary indirection of polymorphic calls.
