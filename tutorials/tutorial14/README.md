@@ -223,6 +223,33 @@ area and use **&lt;ref&gt;** field inside the **&lt;message&gt;** to reference t
 
 ----
 
+**ANOTHER SIDE NOTE**: Quite often just by the look at the message / field definition inside the schema it's
+difficult or even impossible to determine whether the default implementation provided by the 
+[COMMS Library](https://github.com/commschamp/comms) or the [commsdsl2comms](https://github.com/commschamp/commsdsl)
+code generator is correct or custom code injection is required. Since **v4.0** of the 
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) and [commsdsl2comms](https://github.com/commschamp/commsdsl)
+it is possible to specify overriding code requirements using the following properties:
+
+- **readOverride** - specifies overriding code requirement for the **read** operation.
+- **writeOverride** - specifies overriding code requirement for the **write** operation.
+- **refreshOverride** - specifies overriding code requirement for the **refresh** operation.
+- **lengthOverride** - specifies overriding code requirement for the **length** calculation operation.
+- **validOverride** - specifies overriding code requirement for the **valid**ity check operation.
+- **nameOverride** - specifies overriding code requirement for the **name** retrieval operation.
+
+All these properties can have one of the following values:
+
+- **any** (default) - Inject the custom code if exits, use default implementation if it's missing.
+- **replace** - Requires presence of the custom code for injection, the code generation reports error if the code is not found.
+- **extend** - Also requires presence of the custom code for injection (similar to **replace**, but the default
+  code produced by the [commsdsl2comms](https://github.com/commschamp/commsdsl) needs to be present 
+  (renamed by adding "Orig" suffix to avoid names clash) and available for reuse in the new injected code.
+- **none** - The [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator will ignore the 
+  custom code for injection even if it's available.
+  
+
+----
+
 ## Summary
 - The [CommsChampion Ecosystem](https://commschamp.github.io) allows injection of custom code into
   the generated one.
@@ -235,5 +262,6 @@ area and use **&lt;ref&gt;** field inside the **&lt;message&gt;** to reference t
 - The checksum definition class must also reside inside the correct namespace used by the frame definition.
 - The code snippets for overriding **message** / **field** operation(s) need to reside in the correct relative 
   location and have appropriate extension specifying type of the operation it overrides.
+- The presence of the custom code for injection can be regulated using relevant **xOverride** property.
 
 [Read Previous Tutorial](../tutorial13) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial15) 

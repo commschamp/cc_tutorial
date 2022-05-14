@@ -86,7 +86,7 @@ turn extends the provided interface class passed as first template parameter.
 
 The **comms::MessageBase** class is there to **automatically** implement various operations of message payload as
 well as implement all relevant virtual functions depending on the used message interface class
-extension options. In case the application doesn't really customizes the common message interface
+extension options. In case the application doesn't really customize the common message interface
 (The `TOpt` variadic template parameter is empty) the message object is like a `struct` of
 stored fields without any polymorphic behavior.
 
