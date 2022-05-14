@@ -23,6 +23,52 @@ as such using **semanticType="messageId"** property assignment.
 - The messages are defined using **&lt;message&gt;** XML node.
 - The transport framing is defined using **&lt;frame&gt;** XML node.
 
+----
+
+**SIDE NOTE**: Almost every element in 
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) schema has one or more 
+[properties](https://commschamp.github.io/commsdsl_spec/#intro-properties), 
+such as **name**. Any property can be defined using multiple ways. In can be useful 
+when an element has too many properties to specify in a single line for a convenient 
+reading. Any of the described below supported ways of defining a single property 
+can be used for any element in the schema.
+
+The property can be defined as an XML attribute.
+
+```xml
+<message name="Msg1" id="MsgId.M1" displayName="Message 1" />
+```
+
+Or as child node with **value** attribute:
+
+```xml
+<message>
+    <name value="Msg1" />
+    <id value="MsgId.M1" />
+    <displayName value="Message 1" />
+</message>
+```
+
+Property value can also be defined as a text of the child XML element.
+
+```xml
+<message>
+    <name>Msg1</name>
+    <id>MsgId.M1</id>
+    <displayName>Message 1</displayName>
+</message>
+```
+
+It is allowed to mix ways of defining properties for a single element
+
+```xml
+<message name="Msg1">
+    <id value="MsgId.M1" />
+    <displayName>Message 1</displayName>
+</message>
+```
+----
+
 ## Generated Code
 In general, the generated code uses 
 [COMMS Library](https://github.com/commschamp/comms),
@@ -128,6 +174,8 @@ The generated **tutorial1::Message** common interface class is extended
 with multiple options, which create various function with **polymorphic**
 behavior.
 
+---- 
+
 **SIDE NOTE**: **Polymorphic** behavior implies usage of `virtual` function(s).
 To implement it the **COMMS Library** uses 
 [Non-Virtual Interface Idiom](https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Non-Virtual_Interface). 
@@ -145,6 +193,8 @@ protected:
     virtual void someFuncImpl() = 0;
 };
 ```
+
+---- 
 
 #### Polymorphic Read
 Usage of `comms::option::app::ReadIterator` option adds the following type and 
@@ -433,9 +483,13 @@ time to determine whether the interface class defines polymorphic dispatch funct
 static_assert(Message::hasDispatch(), "Missing polymorphic dispatch");
 ```
 
+---- 
+
 **SIDE NOTE**: The **COMMS Library** provides an ability to return values
 from message handling (`handle()`) member functions, but this is subject
 for another tutorial.
+
+---- 
 
 #### Processing I/O Input
 The `turorial1::ClientSession::processInputImpl()` virtual function is invoked
