@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema>
+    <message name="Msg15" id="MsgId.M15" displayName="Message 15" copyFieldsFrom="Msg1"  validateMinLength="4">
+        <int name="F3" type="int8" />
+    </message>
+</schema>

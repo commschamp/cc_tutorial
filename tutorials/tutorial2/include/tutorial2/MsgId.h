@@ -27,11 +27,13 @@ enum MsgId : std::uint8_t
     MsgId_M12 = 12, ///< message id of @b M12 message. ,
     MsgId_M13 = 13, ///< message id of @b M13 message. ,
     MsgId_M14 = 14, ///< message id of @b M14 message. ,
+    MsgId_M15 = 15, ///< message id of @b M15 message. ,
+    MsgId_M16 = 16, ///< message id of @b M16 message. ,
     
     // --- Extra values generated for convenience ---,
     MsgId_FirstValue = 1, ///< First defined value.,
-    MsgId_LastValue = 14, ///< Last defined value.,
-    MsgId_ValuesLimit = 15, ///< Upper limit for defined values.
+    MsgId_LastValue = 16, ///< Last defined value.,
+    MsgId_ValuesLimit = 17, ///< Upper limit for defined values.
 };
 
 } // namespace tutorial2

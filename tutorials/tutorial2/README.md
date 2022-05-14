@@ -197,7 +197,7 @@ public:
     comms::ErrorStatus write(TIter& iter, std::size_t) const;
     
     // Get the serialization length of the stored value
-    std::size_t length() const
+    std::size_t length() const;
     
     // Get compile time known min and max serialization length of the field
     static constexpr std::size_t minLength();
@@ -341,6 +341,59 @@ void ClientSession::handle(Msg1& msg)
 }
 
 ```
+
+## Copying Fields
+There are protocols that have been designed without consideration of versioning or future extension.
+However, quite often the need to introduce new functionality eventually arises. Most common
+solution in such cases is to introduce new message type, which is similar to the previously
+defined one, but adds some extra fields. The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification)
+allows reusing the definition of one message to define another using **copyFieldsFrom** property.
+The message `Msg15` inside [dsl/msg15.xml](dsl/msg15.xml) is defined the following way:
+```xml
+<message name="Msg15" id="MsgId.M15" displayName="Message 15" copyFieldsFrom="Msg1"  validateMinLength="4">
+    <int name="F3" type="int8" />
+</message>
+```
+Thanks to the **copyFieldsFrom** property the `Msg15` copied all the fields defined from the 
+definition of `Msg1` (`F1` and `F2`) and appended one more field (`F3`) at the end. The 
+value of **validateMinLength** property insures the total serialization length of the message
+fields.
+
+The generated code inside [include/tutorial2/message/Msg15.h](include/tutorial2/message/Msg15.h)
+mentions all three fields:
+```cpp
+template <typename TMsgBase, typename TOpt = tutorial2::options::DefaultOptions>
+class Msg15 : public
+    comms::MessageBase<...>
+{
+    ...
+    COMMS_MSG_FIELDS_NAMES(
+        f1,
+        f2,
+        f3
+    );
+};
+```
+Since release **v4.0** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) as
+well as [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator it became
+possible to copy fields from the definition of the [&lt;bundle&gt;](#bundle-fields)
+field, not just another **&lt;message&gt;.
+
+The message `Msg16` inside [dsl/msg16.xml](dsl/msg16.xml) is defined the following way:
+```xml
+<fields>
+    <bundle name="B1">
+        <int name="F1" type="uint8" />
+        <int name="F2" type="int8" />            
+    </bundle>
+</fields>
+
+<message name="Msg16" id="MsgId.M16" displayName="Message 16" copyFieldsFrom="B1"  validateMinLength="3">
+    <int name="F3" type="int8" />
+</message>
+```
+Copying from the [&lt;bundle&gt;](#bundle-fields) can be useful when several messages have certain
+number of similar fields at the beginning, while having a difference in couple of last ones.
 
 ## Supported Field Types
 The [CommsChampion Ecosystem](https://commschamp.github.io) has multiple 
@@ -2585,6 +2638,11 @@ void ClientSession::sendMsg14()
   then referenced by other message member fields.
 - The code for global field which is not referenced by other field or message definition
   won't be generated.
+- Validation of message minimal length at the time of schema parsing can be performed 
+  using **validateMinLength** property.
+- Reusing definition of one message to define another is possible using **copyFieldsFrom**
+  property. The same property can be used to copy member fields from the definition of 
+  the [&lt;bundle&gt;](#bundle-fields) field.
 - The fields are abstractions around actual value storage to provide common
   interface for all field types. 
 - The primary and most frequently used member function of the field objects

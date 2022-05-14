@@ -279,6 +279,37 @@ void ClientSession::handle(Msg14& msg)
     doNextStage();
 }
 
+void ClientSession::handle(Msg15& msg)
+{
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
+        '\t' << msg.field_f1().name() << " = " << (unsigned)msg.field_f1().value() << '\n' <<
+        '\t' << msg.field_f2().name() << " = " << msg.field_f2().value() << '\n' <<
+        '\t' << msg.field_f3().name() << " = " << (unsigned)msg.field_f3().value() << '\n' <<
+        std::endl;
+
+    if (m_currentStage != CommsStage_Msg15) {
+        std::cerr << "ERROR: Unexpected message received: " << std::endl;
+        return;
+    }
+
+    doNextStage();
+}
+
+void ClientSession::handle(Msg16& msg)
+{
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
+        '\t' << msg.field_f1().name() << " = " << (unsigned)msg.field_f1().value() << '\n' <<
+        '\t' << msg.field_f2().name() << " = " << (unsigned)msg.field_f2().value() << '\n' <<
+        '\t' << msg.field_f3().name() << " = " << (unsigned)msg.field_f3().value() << '\n' <<
+        std::endl;
+
+    if (m_currentStage != CommsStage_Msg16) {
+        std::cerr << "ERROR: Unexpected message received: " << std::endl;
+        return;
+    }
+
+    doNextStage();
+}
 
 void ClientSession::handle(Message& msg)
 {
@@ -374,6 +405,8 @@ void ClientSession::doNextStage()
         /* CommsStage_Msg12 */ &ClientSession::sendMsg12,
         /* CommsStage_Msg13 */ &ClientSession::sendMsg13,
         /* CommsStage_Msg14 */ &ClientSession::sendMsg14,
+        /* CommsStage_Msg15 */ &ClientSession::sendMsg15,
+        /* CommsStage_Msg16 */ &ClientSession::sendMsg16,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -632,6 +665,24 @@ void ClientSession::sendMsg14()
     msg.doRefresh(); // Bring message contents into consistent state
     assert(msg.field_f3().doesExist());
 
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg15()
+{
+    Msg15 msg;
+    msg.field_f1().value() = 5;
+    msg.field_f2().value() = 100;
+    msg.field_f3().value() = 20;
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg16()
+{
+    Msg16 msg;
+    msg.field_f1().value() = 1;
+    msg.field_f2().value() = 2;
+    msg.field_f3().value() = 3;
     sendMessage(msg);
 }
 
