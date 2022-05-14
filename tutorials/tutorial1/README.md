@@ -134,7 +134,7 @@ the provided interface class passed as first template parameter.
 
 The inheritance hierarchy looks like this:
 ```
-(Msg1<TMsgBase>) --> (MessageBase<TMsgBase, ...>)    --> TMsgBase
+(Msg1<TMsgBase>) --> (MessageBase<TMsgBase, ...>) --> TMsgBase
 ```
 
 The **comms::MessageBase** class is there to **automatically** implement various operations of message payload as
