@@ -85,6 +85,13 @@ in your terminal window. It is expected to run indefinitely until manually termi
 with CTRL+C. In the second terminal window run the **client** application. In most
 cases it will exchange several messages with the **server** and exit. 
 
+# Updates to the Tutorial(s)
+Any future updates to the [COMMS Library](https://github.com/commschamp/comms) and/or
+[commsdsl2comms](https://github.com/commschamp/commsdsl) code generator will probably
+result in updates to this tutorial. All the new updates can be viewed on
+the [releases](https://github.com/commschamp/cc_tutorial/releases) page. The 
+releases are all date based for easier tracking when an update was introduced.
+
 # References
 The core component of the [CommsChampion Ecosystem](https://commschamp.github.io) is
 [COMMS Library](https://github.com/commschamp/comms). Its full
