@@ -164,6 +164,7 @@ $> nmake install
 - [tutorial18](../../tree/master/tutorials/tutorial18) - How to access transport framing fields.
 - [tutorial19](../../tree/master/tutorials/tutorial19) - Introduction to protocol version support.
 - [tutorial20](../../tree/master/tutorials/tutorial20) - Reporting protocol version in one of the messages.
+- [tutorial21](../../tree/master/tutorials/tutorial21) - Cast between different field types.
 
 
 # How-Tos

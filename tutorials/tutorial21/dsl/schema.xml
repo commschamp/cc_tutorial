@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="tutorial21" endian="big">
+    <fields>
+        <string name="Msg1Name" defaultValue="Message 1" />
+        <string name="Msg2Name" defaultValue="Message 2" />
+        <string name="Msg3Name" defaultValue="Message 3" />
+            
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M1" val="1" displayName="^Msg1Name" />
+            <validValue name="M2" val="2" displayName="^Msg2Name" />
+            <validValue name="M3" val="3" displayName="^Msg3Name" />
+        </enum>
+
+        <int name="BasicFlags" type="uint8" displayName="Flags" />
+
+        <set name="Msg1Flags" length="1" forceGen="true">
+            <bit name="B0" idx="0" />
+            <bit name="B1" idx="1" />
+            <bit name="B2" idx="2" />
+        </set>
+
+        <bitfield name="Msg2Flags" forceGen="true">
+            <enum name="EnumMem" type="uint8" bitLength="2">
+                <validValue name="V0" val="0" />
+                <validValue name="V1" val="1" />
+                <validValue name="V2" val="2" />
+                <validValue name="V3" val="3" />
+            </enum>
+            <int name="IntMem" type="uint8" bitLength="6" />
+        </bitfield>        
+        
+    </fields>
+    
+    <interface name="Interface" description="Common Interface for all the messages.">
+        <ref field="BasicFlags" name="Flags" />
+    </interface>    
+        
+    <frame name="Frame">
+        <size name="Size">
+            <int name="Field" type="uint16" displayName="Size" />
+        </size>
+        <id name="Id" field="MsgId" />
+        <value name="Flags" field="BasicFlags" interfaceFieldName="Flags" />
+        <payload name="Data" />
+    </frame>
+    
+    <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name" />
+    
+    <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name" />
+    
+</schema>
