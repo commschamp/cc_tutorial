@@ -43,6 +43,7 @@ public:
     using Prop4 = Msg2::Field_f1::ValueType::value_type::Field_prop4;
     using Prop5 = Msg2::Field_f1::ValueType::value_type::Field_prop5;
     using Prop6 = Msg2::Field_f1::ValueType::value_type::Field_prop6;
+    using Prop7 = Msg2::Field_f1::ValueType::value_type::Field_prop7;
     using AnyProp = Msg2::Field_f1::ValueType::value_type::Field_any;
 
     void handleProp(const Prop1& prop);
@@ -51,6 +52,7 @@ public:
     void handleProp(const Prop4& prop);
     void handleProp(const Prop5& prop);
     void handleProp(const Prop6& prop);
+    void handleProp(const Prop7& prop);
     void handleProp(const AnyProp& prop);
 
 protected:

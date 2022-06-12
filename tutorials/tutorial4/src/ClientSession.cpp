@@ -133,6 +133,14 @@ void ClientSession::handleProp(const AnyProp& prop)
     std::cout << std::dec << '\n';
 }
 
+void ClientSession::handleProp(const Prop7& prop)
+{
+    std::cout << "\t\t" << prop.name() << ":\n" <<
+        "\t\t\t" << prop.field_key().name() << " = " << (unsigned)prop.field_key().value() << '\n' <<
+        "\t\t\t" << prop.field_length().name() << " = " << (unsigned)prop.field_length().value() << '\n' <<
+        "\t\t\t" << prop.field_val().name() << " = " << prop.field_val().value() << '\n';
+}
+
 bool ClientSession::startImpl()
 {
     doNextStage();
@@ -240,15 +248,17 @@ void ClientSession::sendMsg2()
     Msg2 msg;
 
     auto& listOfProps = msg.field_f1().value(); // vector of variant fields
-    listOfProps.resize(3);
+    listOfProps.resize(4);
     assert(msg.doLength() == 0U);
     assert(!listOfProps[0].valid());
     assert(!listOfProps[1].valid());
     assert(!listOfProps[2].valid());
+    assert(!listOfProps[3].valid());
 
     listOfProps[0].initField_prop4().field_val().value() = 0xdeadbeef;
     listOfProps[1].initField_prop6().field_val().value() = "blabla";
     listOfProps[2].initField_prop5().field_val().value() = 1.234;
+    listOfProps[3].initField_prop7().field_val().value() = 100;
 
     msg.doRefresh(); // Bring message to a consistent state
     sendMessage(msg);
