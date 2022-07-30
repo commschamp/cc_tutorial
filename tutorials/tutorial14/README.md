@@ -84,7 +84,7 @@ need to be interpreted as two `uint16` values.
 
 The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) definition of such message may look like this:
 ```xml
-<message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
+<message name="Msg1" id="MsgId.M1" displayName="^Msg1Name" ...>
     <optional name="F1" defaultMode="exists" >
         <int name="F1" type="uint32" />
     </optional>
@@ -230,6 +230,7 @@ code generator is correct or custom code injection is required. Since **v4.0** o
 [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) and [commsdsl2comms](https://github.com/commschamp/commsdsl)
 it is possible to specify overriding code requirements using the following properties:
 
+- **valueOverride** - specifies overriding code requirement for the **value** retrieval operation.
 - **readOverride** - specifies overriding code requirement for the **read** operation.
 - **writeOverride** - specifies overriding code requirement for the **write** operation.
 - **refreshOverride** - specifies overriding code requirement for the **refresh** operation.
@@ -247,7 +248,12 @@ All these properties can have one of the following values:
 - **none** - The [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator will ignore the 
   custom code for injection even if it's available.
   
-
+The `Msg1` definition of the schema uses these properties:
+```
+<message name="Msg1" id="MsgId.M1" displayName="^Msg1Name" readOverride="replace" refreshOverride="replace">
+    ...
+</message>
+```
 ----
 
 ## Summary
