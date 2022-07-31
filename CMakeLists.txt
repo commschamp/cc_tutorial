@@ -143,7 +143,7 @@ endif ()
 
 function (dsl_parse type name)
     set (prefix DSL_PARSE)
-    set (options)
+    set (options MULTI_SCHEMA)
     set (oneValueArgs SRC_DIR)
     set (mutiValueArgs SCHEMAS)
     cmake_parse_arguments(${prefix} "${options}" "${oneValueArgs}" "${mutiValueArgs}" ${ARGN})
@@ -157,6 +157,11 @@ function (dsl_parse type name)
     if (NOT "${DSL_PARSE_SRC_DIR}" STREQUAL "")
         set (code_input_param -c ${DSL_PARSE_SRC_DIR})
         file (GLOB_RECURSE src_files "${DSL_PARSE_SRC_DIR}/*") 
+    endif ()
+
+    set (multi_schema_param)
+    if (DSL_PARSE_MULTI_SCHEMA)
+        set (multi_schema_param "-s")
     endif ()
     
     set (commsdsl_tgt_dep)
@@ -176,7 +181,7 @@ function (dsl_parse type name)
         OUTPUT ${output_dir}
         DEPENDS ${DSL_PARSE_SCHEMAS} ${src_files} ${commsdsl_tgt_dep} ${name}_prot_rm 
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${output_dir}
-        COMMAND ${COMMSDSL2COMMS} --warn-as-err ${code_input_param} "--comms-tag=${CC_COMMS_TAG}" 
+        COMMAND ${COMMSDSL2COMMS} --warn-as-err ${multi_schema_param} ${code_input_param} "--comms-tag=${CC_COMMS_TAG}" 
             -o ${output_dir} -i ${CMAKE_CURRENT_BINARY_DIR}/${name}/schema_files.txt
     )
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="t23_ext" endian="big">
+    <ns name="ns1">
+        <fields>
+            <bundle name="Length" semanticType="length" valueOverride="replace">
+                <int name="Short" type="uint8">
+                    <special name="LongForm" val="0xff" />
+                </int>
+                <optional name="Long" cond="$Short = 0xff" defaultMode="missing">
+                    <int name="ActLong" type="uint16" /> 
+                </optional>
+            </bundle>
+
+            <int name="I1" type="uint16">
+                <special name="S1" val="0xff" />
+            </int>
+
+            <string name="S1">
+                <lengthPrefix>
+                    <int name="LengthPrefix" type="uint8" /> 
+                </lengthPrefix>
+            </string>
+        </fields>
+    </ns>
+</schema>
