@@ -100,4 +100,16 @@ Please analyze the raw data dump produced by both the "client" and the "server" 
 of this tutorial to see that in case of first property the **short** form of the `Length` field
 is used, while for the second one the **long** form is in place.
 
+## Summary
+
+- Version **v5.0** of [CommsDSL Specification](https://commschamp.github.io/commsdsl_spec/)
+  allows using complex fields like **&lt;bundle&gt;** or **&lt;bitfield&gt;** to be used
+  as length with `semanticType="length"` property assigned.
+- Version **v5.0** of the [COMMS Library](https://github.com/commschamp/comms) uses
+  extra `getValue()` and `setValue()` wrapping functions (in addition to the `value()`),
+  which can be overridden in the injected code to provide custom value handling functionality.
+- In most cases custom length retrieval functionality also requires providing `maxValue()`
+  static constexpr function, which provides maximal remaining length value.
+
+
 [Read Previous Tutorial](../tutorial21) &lt;-----------------------
