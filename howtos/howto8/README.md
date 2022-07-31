@@ -34,7 +34,7 @@ The protocol framing is defined the following way:
     <size name="Size">
         <int name="SizeField" type="uint16" />
     </size>
-    <custom name="Id" idReplacement="true">
+    <custom name="Id" semanticLayerType="id">
         <bitfield name="Field">
             <ref field="MsgId" bitLength="7" />
             <set name="Ctrl" bitLength="1">
@@ -50,7 +50,7 @@ The protocol framing is defined the following way:
 ```
 The `ID` processing framing layer cannot not be defined using built-in `<id>` because the latter is expected to deal with
 the pure numeric value ID without any extra (most significant) control bit indicating presence of the optional flags.
-As the result `<custom>` one needs to be used with `idReplacement="true"` property set.
+As the result `<custom>` one needs to be used with `semanticLayerType="id"` property set.
 
 The `FLAGS` processing framing layer also cannot be defined using built-in `<value>` because it needs
 additional processing logic of whether the field is present.

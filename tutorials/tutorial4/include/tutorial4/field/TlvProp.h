@@ -755,15 +755,13 @@ struct TlvPropMembers
         class Key : public
             comms::field::IntValue<
                 tutorial4::field::FieldBase<>,
-                std::uint8_t,
-                comms::option::def::FailOnInvalid<>
+                std::uint8_t
             >
         {
             using Base =
                 comms::field::IntValue<
                     tutorial4::field::FieldBase<>,
-                    std::uint8_t,
-                    comms::option::def::FailOnInvalid<>
+                    std::uint8_t
                 >;
         public:
             /// @brief Re-definition of the value type.

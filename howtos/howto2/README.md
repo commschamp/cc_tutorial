@@ -10,7 +10,7 @@ ID (4 bits) + SIZE (12 bits) | PAYLOAD
 The [schema](dsl/schema.xml) of this tutorial defines the such frame in the following way:
 ```xml
 <frame name="Frame">
-    <custom name="IdWithSize" idReplacement="true"> 
+    <custom name="IdWithSize" semanticLayerType="id"> 
         <bitfield name="Field">
             <int name="Size" type="uint16" bitLength="12" />
             <ref field="MsgId" bitLength="4" />
@@ -20,7 +20,7 @@ The [schema](dsl/schema.xml) of this tutorial defines the such frame in the foll
 </frame>
 ```
 Please note that the defined **&lt;custom&gt;** layer is marked as the replacement of the 
-**&lt;id&gt;** layer using **idReplacement** property 
+**&lt;id&gt;** layer using `semanticLayerType="id"` property 
 (because there must be a layer responsible for the message object allocation).
 
 The [tutorial17](../../tutorials/tutorial17) explains usage of the custom framing 

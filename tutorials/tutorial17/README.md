@@ -23,7 +23,7 @@ However instead of having separate **&lt;value&gt;** layer in its frame, both
 **id** and **size** values, but also having some extra flags bits.
 ```xml
     <frame name="Frame">
-        <custom name="IdWithFlags" idReplacement="true"> 
+        <custom name="IdWithFlags" semanticLayerType="id"> 
             <bitfield name="Field">
                 <ref field="MsgId" bitLength="6" />
                 <set name="Flags" bitLength="2">
@@ -31,7 +31,7 @@ However instead of having separate **&lt;value&gt;** layer in its frame, both
                 </set>
             </bitfield>
         </custom>
-        <custom name="SizeWithFlags">
+        <custom name="SizeWithFlags" semanticLayerType="size">
             <bitfield name="Field">
                 <int name="Size" type="uint16" bitLength="12"/>
                 <set name="Flags" bitLength="4">
@@ -46,11 +46,24 @@ Please pay attention to the following details:
 
 - The default **&lt;id&gt;** and **&lt;size&gt;** do **NOT** support the intended split of the value into
   multiple sub-fields. Hence the **&lt;custom&gt;** layer definition needs to be used instead.
-- The layer that replaces **&lt;id&gt;** must set **idReplacement** property to **true**.
+- The layer that replaces **&lt;id&gt;** must set **semanticLayerType** property to **id** to let
+  the code generator know which layer replaces original **&lt;id&gt;** layer.
+- Setting **semanticLayerType** for the layer that replaced **&lt;size&gt;** is not necessary
+  at this stage of developement (the code generator doesn't produce any special code for such layer),
+  but still recommended.
 - The **&lt;bitfield&gt;** field is used to split the field in multiple members.
 - In this particular tutorial `SizeWithFlags` follows the `IdWithFlags`, i.e the frame is 
   ` ID (with flags) | SIZE (with flags) | PAYLOAD`. The opposite case where the size handling 
   precedes the id is also supported but it has its nuances. It will be covered in one of the **howto**-s.
+
+----
+
+**SIDE NOTE**: Before **v5.0** of the [CommsDSL Specification](https://commschamp.github.io/commsdsl_spec/),
+the `IdWithFlags` custom layer had to use `idReplacement="true"` property to indicate that
+the layer replaces the original **&lt;id&gt;**. Since **v5.0** it is deprecated and **semanticLayerType**
+should be used instead.
+
+----
   
 Let's take a look inside generated [include/tutorial17/frame/Frame.h](include/tutorial17/frame/Frame.h).
 It contains the following include statements:
