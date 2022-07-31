@@ -10,23 +10,43 @@
 namespace cc_tutorial
 {
 
+namespace
+{
+
+class PropDispatchHelper
+{
+public:
+    explicit PropDispatchHelper(ClientSession& session)
+      : m_session(session)
+    {
+    }
+
+    template <std::size_t TIdx, typename TField>
+    void operator()(const TField& field)
+    {
+        m_session.handleProp(field);
+    }
+
+private:
+    ClientSession& m_session;
+};
+
+} // namespace    
+
 void ClientSession::handle(Msg1& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << std::endl;
 
-    if (m_currentStage != CommsStage_Msg1) {
-        std::cerr << "ERROR: Unexpected stage" << std::endl;
-        return;
+    auto& f1Vec = msg.field_f1().value();
+    std::cout << '\t' << msg.field_f1().name() << " (" << f1Vec.size() << " elements)\n";
+    for (auto idx = 0U; idx < f1Vec.size(); ++idx) {
+        auto& elem = f1Vec[idx]; // access to the variant element
+        elem.currFieldExec(PropDispatchHelper(*this));
     }
 
-    doNextStage();
-}
+    std::cout << std::endl;    
 
-void ClientSession::handle(Msg2& msg)
-{
-    std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << std::endl;
-
-    if (m_currentStage != CommsStage_Msg2) {
+    if (m_currentStage != CommsStage_Msg1) {
         std::cerr << "ERROR: Unexpected stage" << std::endl;
         return;
     }
@@ -38,6 +58,35 @@ void ClientSession::handle(Message& msg)
 {
     std::cerr << "ERROR: Received unexpected message \"" << msg.name() << " with ID=" << (unsigned)msg.getId() << std::endl;
 }
+
+
+void ClientSession::handleProp(const Prop1& prop)
+{
+    std::cout << "\t\t" << prop.name() << ":\n" <<
+        "\t\t\t" << prop.field_key().name() << " = " << (unsigned)prop.field_key().value() << '\n' <<
+        "\t\t\t" << prop.field_length().name() << " = " << (unsigned)prop.field_length().getValue() << '\n' <<
+        "\t\t\t" << prop.field_val().name() << " = " << prop.field_val().value() << '\n';
+}
+
+void ClientSession::handleProp(const Prop2& prop)
+{
+    std::cout << "\t\t" << prop.name() << ":\n" <<
+        "\t\t\t" << prop.field_key().name() << " = " << (unsigned)prop.field_key().value() << '\n' <<
+        "\t\t\t" << prop.field_length().name() << " = " << (unsigned)prop.field_length().getValue() << '\n' <<
+        "\t\t\t" << prop.field_val().name() << " = " << prop.field_val().value() << '\n';
+}
+
+void ClientSession::handleProp(const AnyProp& prop)
+{
+    std::cout << "\t\t" << prop.name() << ":\n" <<
+        "\t\t\t" << prop.field_key().name() << " = " << (unsigned)prop.field_key().value() << '\n' <<
+        "\t\t\t" << prop.field_length().name() << " = " << (unsigned)prop.field_length().getValue() << '\n' <<
+        "\t\t\t" << prop.field_val().name() << " = " << std::hex;
+
+    std::copy(prop.field_val().value().begin(), prop.field_val().value().end(), std::ostream_iterator<unsigned>(std::cout, " "));
+    std::cout << std::dec << '\n';
+}
+
 
 bool ClientSession::startImpl()
 {
@@ -114,7 +163,6 @@ void ClientSession::doNextStage()
     using NextSendFunc = void (ClientSession::*)();
     static const NextSendFunc Map[] = {
         /* CommsStage_Msg1 */ &ClientSession::sendMsg1,
-        /* CommsStage_Msg2 */ &ClientSession::sendMsg2,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -127,16 +175,16 @@ void ClientSession::sendMsg1()
 {
     Msg1 msg;
 
-    sendMessage(msg);
-}
+    auto& listOfProps = msg.field_f1().value(); // vector of variant fields
+    listOfProps.resize(2);
+    assert(msg.doLength() == 0U);
+    assert(!listOfProps[0].valid());
+    assert(!listOfProps[1].valid());
 
-void ClientSession::sendMsg2()
-{
-    Msg2 msg;
+    listOfProps[0].initField_prop1().field_val().value() = 0x12;
+    listOfProps[1].initField_prop2().field_val().value().assign(300, 'a'); // Force long length form.
 
-    // Make the message long
-    msg.field_f1().value().assign(300, 'a');
-    
+    msg.doRefresh(); // Bring message to a consistent state    
     sendMessage(msg);
 }
 

@@ -19,6 +19,39 @@
                 <int name="ActLong" type="uint16" /> 
             </optional>
         </bundle>
+
+        <enum name="PropKey" type="uint8">
+            <validValue name="K1" val="0" />
+            <validValue name="K2" val="2" />
+            <validValue name="K3" val="5" />
+        </enum>
+        
+        <int name="PropKeyCommon" type="uint8" failOnInvalid="true"/>
+        
+        <variant name="TlvProp">
+            <description>
+                Type-Length-Value Property
+            </description>
+            <members>
+                <bundle name="Prop1">
+                    <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K1" />
+                    <ref field="Length" semanticType="length" />
+                    <int name="Val" type="uint32" availableLengthLimit="true" />
+                </bundle>
+                
+                <bundle name="Prop2">
+                    <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K2" />
+                    <ref field="Length" semanticType="length" />
+                    <string name="Val" />
+                </bundle>   
+
+                <bundle name="Any">
+                    <int reuse="PropKeyCommon" name="Key" failOnInvalid="false" />
+                    <int name="Length" type="uint8" semanticType="length" />
+                    <data name="Val" />
+                </bundle>  
+            </members>
+        </variant>        
         
     </fields>
     
@@ -31,10 +64,7 @@
         <payload name="Data" />
     </frame>
     
-    <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name" />
-    
-    <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
-        <string name="F1" />
+    <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
+        <list name="F1" element="TlvProp" />
     </message>
-    
 </schema>

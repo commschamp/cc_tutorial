@@ -7,7 +7,11 @@
 
 #include <tuple>
 #include "comms/MessageBase.h"
+#include "comms/field/ArrayList.h"
+#include "comms/options.h"
 #include "tutorial22/MsgId.h"
+#include "tutorial22/field/FieldBase.h"
+#include "tutorial22/field/TlvProp.h"
 #include "tutorial22/message/Msg1Common.h"
 #include "tutorial22/options/DefaultOptions.h"
 
@@ -26,8 +30,34 @@ namespace message
 template <typename TOpt = tutorial22::options::DefaultOptions>
 struct Msg1Fields
 {
+    /// @brief Definition of <b>"F1"</b> field.
+    class F1 : public
+        comms::field::ArrayList<
+            tutorial22::field::FieldBase<>,
+            tutorial22::field::TlvProp<TOpt>,
+            typename TOpt::message::Msg1Fields::F1
+        >
+    {
+        using Base =
+            comms::field::ArrayList<
+                tutorial22::field::FieldBase<>,
+                tutorial22::field::TlvProp<TOpt>,
+                typename TOpt::message::Msg1Fields::F1
+            >;
+    public:
+        /// @brief Name of the field.
+        static const char* name()
+        {
+            return tutorial22::message::Msg1FieldsCommon::F1Common::name();
+        }
+        
+    
+    };
+    
+    
     /// @brief All the fields bundled in std::tuple.
     using All = std::tuple<
+        F1
     >;
 };
 
@@ -58,11 +88,21 @@ class Msg1 : public
         >;
 
 public:
+    /// @brief Provide names and allow access to internal fields.
+    /// @details See definition of @b COMMS_MSG_FIELDS_NAMES macro
+    ///     related to @b comms::MessageBase class from COMMS library
+    ///     for details.
+    ///
+    ///     The generated values, types and functions are:
+    ///     @li @b FieldIdx_f1 index, @b Field_f1 type and @b field_f1() access fuction
+    ///         for @ref Msg1Fields::F1 field.
+    COMMS_MSG_FIELDS_NAMES(
+        f1
+    );
+    
     // Compile time check for serialisation length.
     static const std::size_t MsgMinLen = Base::doMinLength();
-    static const std::size_t MsgMaxLen = Base::doMaxLength();
     static_assert(MsgMinLen == 0U, "Unexpected min serialisation length");
-    static_assert(MsgMaxLen == 0U, "Unexpected max serialisation length");
     
     /// @brief Name of the message.
     static const char* doName()

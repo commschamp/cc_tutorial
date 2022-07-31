@@ -20,15 +20,42 @@ struct EmptyOptions {};
 template <typename TBase = EmptyOptions>
 struct DefaultOptionsT : public TBase
 {
+    /// @brief Extra options for fields.
+    struct field
+    {
+        struct TlvPropMembers
+        {
+            struct Prop2Members
+            {
+                /// @brief Extra options for @ref
+                ///     tutorial22::field::TlvPropMembers::Prop2Members::Val
+                ///     field.
+                using Val = comms::option::EmptyOption;
+                
+            }; // struct Prop2Members
+            
+            struct AnyMembers
+            {
+                /// @brief Extra options for @ref
+                ///     tutorial22::field::TlvPropMembers::AnyMembers::Val
+                ///     field.
+                using Val = comms::option::EmptyOption;
+                
+            }; // struct AnyMembers
+            
+        }; // struct TlvPropMembers
+        
+    }; // struct field
+    
     /// @brief Extra options for messages.
     struct message
     {
         /// @brief Extra options for fields of
-        ///     @ref tutorial22::message::Msg2 message.
-        struct Msg2Fields
+        ///     @ref tutorial22::message::Msg1 message.
+        struct Msg1Fields
         {
             /// @brief Extra options for @ref
-            ///     tutorial22::message::Msg2Fields::F1
+            ///     tutorial22::message::Msg1Fields::F1
             ///     field.
             using F1 = comms::option::EmptyOption;
             

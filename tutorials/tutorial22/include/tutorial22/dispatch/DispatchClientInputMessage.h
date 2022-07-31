@@ -27,10 +27,10 @@ namespace dispatch
 ///     @code
 ///     using MyInterface = tutorial22::Message<...>;
 ///     using MyMsg1 = tutorial22::message::Msg1<MyInterface, tutorial22::options::DefaultOptions>;
-///     using MyMsg2 = tutorial22::message::Msg2<MyInterface, tutorial22::options::DefaultOptions>;
+///     using MySomeOtherMessage = SomeOtherMessage<MyInterface, tutorial22::options::DefaultOptions>;
 ///     struct MyHandler {
 ///         void handle(MyMsg1& msg) {...}
-///         void handle(MyMsg2& msg) {...}
+///         void handle(MySomeOtherMessage& msg) {...}
 ///         ...
 ///         // Handle all unexpected or irrelevant messages.
 ///         void handle(MyInterface& msg) {...}
@@ -50,11 +50,6 @@ auto dispatchClientInputMessage(
     case tutorial22::MsgId_M1:
     {
         using MsgType = tutorial22::message::Msg1<InterfaceType, TProtOptions>;
-        return handler.handle(static_cast<MsgType&>(msg));
-    }
-    case tutorial22::MsgId_M2:
-    {
-        using MsgType = tutorial22::message::Msg2<InterfaceType, TProtOptions>;
         return handler.handle(static_cast<MsgType&>(msg));
     }
     default:

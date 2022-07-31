@@ -23,20 +23,55 @@ namespace options
 template <typename TBase = tutorial22::options::DefaultOptions>
 struct BareMetalDefaultOptionsT : public TBase
 {
+    /// @brief Extra options for fields.
+    struct field : public TBase::field
+    {
+        struct TlvPropMembers : public TBase::field::TlvPropMembers
+        {
+            struct Prop2Members : public TBase::field::TlvPropMembers::Prop2Members
+            {
+                /// @brief Extra options for @ref
+                ///     tutorial22::field::TlvPropMembers::Prop2Members::Val
+                ///     field.
+                using Val =
+                    std::tuple<
+                        comms::option::app::FixedSizeStorage<DEFAULT_SEQ_FIXED_STORAGE_SIZE>,
+                        typename TBase::field::TlvPropMembers::Prop2Members::Val
+                    >;
+                
+            }; // struct Prop2Members
+            
+            struct AnyMembers : public TBase::field::TlvPropMembers::AnyMembers
+            {
+                /// @brief Extra options for @ref
+                ///     tutorial22::field::TlvPropMembers::AnyMembers::Val
+                ///     field.
+                using Val =
+                    std::tuple<
+                        comms::option::app::FixedSizeStorage<DEFAULT_SEQ_FIXED_STORAGE_SIZE>,
+                        typename TBase::field::TlvPropMembers::AnyMembers::Val
+                    >;
+                
+            }; // struct AnyMembers
+            
+        }; // struct TlvPropMembers
+        
+    }; // struct field
+    
     /// @brief Extra options for messages.
     struct message : public TBase::message
     {
         /// @brief Extra options for fields of
-        ///     @ref tutorial22::message::Msg2 message.
-        struct Msg2Fields : public TBase::message::Msg2Fields
+        ///     @ref tutorial22::message::Msg1 message.
+        struct Msg1Fields : public TBase::message::Msg1Fields
         {
             /// @brief Extra options for @ref
-            ///     tutorial22::message::Msg2Fields::F1
+            ///     tutorial22::message::Msg1Fields::F1
             ///     field.
             using F1 =
                 std::tuple<
                     comms::option::app::FixedSizeStorage<DEFAULT_SEQ_FIXED_STORAGE_SIZE>,
-                    typename TBase::message::Msg2Fields::F1
+                    typename TBase::message::Msg1Fields::F1
                 >;
             
         };

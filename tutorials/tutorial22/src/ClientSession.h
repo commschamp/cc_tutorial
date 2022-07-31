@@ -37,12 +37,18 @@ public:
         
     // Definition of all the used message classes
     using Msg1 = tutorial22::message::Msg1<Message, ClientProtocolOptions>;
-    using Msg2 = tutorial22::message::Msg2<Message, ClientProtocolOptions>;
     
     // Handling functions for all the dispatched message objects
     void handle(Msg1& msg);
-    void handle(Msg2& msg);
     void handle(Message& msg);
+
+    using Prop1 = Msg1::Field_f1::ValueType::value_type::Field_prop1;
+    using Prop2 = Msg1::Field_f1::ValueType::value_type::Field_prop2;
+    using AnyProp = Msg1::Field_f1::ValueType::value_type::Field_any;    
+
+    void handleProp(const Prop1& prop);
+    void handleProp(const Prop2& prop);
+    void handleProp(const AnyProp& prop);    
 
 protected:
     virtual bool startImpl() override final;
@@ -52,14 +58,12 @@ private:
     enum CommsStage
     {
         CommsStage_Msg1,
-        CommsStage_Msg2,
         CommsStage_NumOfValues
     };
 
     void sendMessage(Message& msg);
     void doNextStage();
     void sendMsg1();
-    void sendMsg2();
 
     // Client specific frame 
     using Frame = 

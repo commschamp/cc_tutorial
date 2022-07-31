@@ -425,7 +425,7 @@ this tutorial.
         </bundle>  
         
         <bundle name="Any">
-            <int reuse="PropKeyCommon" name="Key" />
+            <int reuse="PropKeyCommon" name="Key" failOnInvalid="false" />
             <int name="Length" type="uint8" semanticType="length" />
             <data name="Val" />
         </bundle>  

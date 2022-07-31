@@ -13,6 +13,25 @@ namespace message
 {
 
 
+/// @brief Common types and functions for fields of 
+///     @ref tutorial22::message::Msg1 message.
+/// @see tutorial22::message::Msg1Fields
+struct Msg1FieldsCommon
+{
+    /// @brief Common types and functions for
+    ///     @ref tutorial22::message::Msg1Fields::F1 field.
+    struct F1Common
+    {
+        /// @brief Name of the @ref tutorial22::message::Msg1Fields::F1 field.
+        static const char* name()
+        {
+            return "F1";
+        }
+        
+    };
+    
+};
+
 /// @brief Common types and functions of 
 ///     @ref tutorial22::message::Msg1 message.
 struct Msg1Common
