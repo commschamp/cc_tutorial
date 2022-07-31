@@ -13,8 +13,6 @@
 
         <ref field="@t23_ext.ns1.I1" />
 
-        <ref field="@t23_ext.ns1.S1" />
-
         <bundle reuse="@t23_ext.ns1.Length" reuseCode="true" />
     </fields>
     
