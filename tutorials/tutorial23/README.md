@@ -88,6 +88,24 @@ using ClientProtocolOptions =
         >
     >;
 ```
+
+The [ServerSession](src/ServerSession.h) used even more complex definition:
+```cpp
+using ExtProtocolOptions = 
+    t23_ext::options::DataViewDefaultOptionsT<
+        t23_ext::options::ServerDefaultOptions
+    >;
+
+using ServerProtocolOptions = 
+    tutorial23::options::DataViewDefaultOptionsT<
+        tutorial23::options::ServerDefaultOptionsT<
+            tutorial23::options::DefaultOptionsT<
+                ExtProtocolOptions
+            >   
+        >
+    >;
+```
+
 Without using options from the `t23_ext::options` the compilation will fail because
 `t23_ext::ns1::field::S1` [field](include/t23_ext/ns1/field/S1.h) attempts to
 access the options referencing `typename TOpt::t23_ext::ns1::field::S1`, which
@@ -125,7 +143,7 @@ than **&lt;ref&gt;**-erence them.
 - External schema definitions reuse is supported since **v5.0** of the [CommsDSL](https://commschamp.github.io/commsdsl_spec)
   and [commsdsl](https://github/commschamp/commsdsl) code generators.
 - Inter-schema referencing is allowed using `@<schema_name>.` prefix.
-- When using multiple schemas it is hight recommended to **reuse** the fields  rather
+- When using multiple schemas it is highly recommended to **reuse** the fields  rather
 than **&lt;ref&gt;**-erence them.
 
 
