@@ -14,6 +14,7 @@
 #include "tutorial2/message/Msg14.h"
 #include "tutorial2/message/Msg15.h"
 #include "tutorial2/message/Msg16.h"
+#include "tutorial2/message/Msg17.h"
 #include "tutorial2/message/Msg2.h"
 #include "tutorial2/message/Msg3.h"
 #include "tutorial2/message/Msg4.h"
@@ -51,7 +52,8 @@ using ClientInputMessages =
         tutorial2::message::Msg13<TBase, TOpt>,
         tutorial2::message::Msg14<TBase, TOpt>,
         tutorial2::message::Msg15<TBase, TOpt>,
-        tutorial2::message::Msg16<TBase, TOpt>
+        tutorial2::message::Msg16<TBase, TOpt>,
+        tutorial2::message::Msg17<TBase, TOpt>
     >;
 
 } // namespace input

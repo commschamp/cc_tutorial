@@ -311,6 +311,28 @@ void ClientSession::handle(Msg16& msg)
     doNextStage();
 }
 
+void ClientSession::handle(Msg17& msg)
+{
+    auto* f2Name = msg.field_f2().name();
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
+        '\t' << msg.field_f1().name() << " = " <<
+            msg.field_f1().value() << '\n' <<
+        '\t' << f2Name << '.' << msg.field_f2().field_m1().name() << " = " <<
+            msg.field_f2().field_m1().value() << '\n' <<
+        '\t' << f2Name << '.' << msg.field_f2().field_m2().name() << " = " <<
+            msg.field_f2().field_m2().value() << '\n' <<
+        '\t' << f2Name << '.' << msg.field_f2().field_m3().name() << " = " <<
+            msg.field_f2().field_m3().value() << '\n';            
+    std::cout << std::endl;
+
+    if (m_currentStage != CommsStage_Msg17) {
+        std::cerr << "ERROR: Unexpected message received: " << std::endl;
+        return;
+    }
+
+    doNextStage();
+}
+
 void ClientSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
@@ -407,6 +429,7 @@ void ClientSession::doNextStage()
         /* CommsStage_Msg14 */ &ClientSession::sendMsg14,
         /* CommsStage_Msg15 */ &ClientSession::sendMsg15,
         /* CommsStage_Msg16 */ &ClientSession::sendMsg16,
+        /* CommsStage_Msg17 */ &ClientSession::sendMsg17,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -683,6 +706,20 @@ void ClientSession::sendMsg16()
     msg.field_f1().value() = 1;
     msg.field_f2().value() = 2;
     msg.field_f3().value() = 3;
+    sendMessage(msg);
+}
+
+
+void ClientSession::sendMsg17()
+{
+    Msg17 msg;
+
+    auto& f2 = msg.field_f2(); // Access to f2 field
+    // Assign values to f2 members
+    f2.field_m1().value() = 0x1234;
+    f2.field_m2().value() = 0x5678;
+    f2.field_m2().value() = 0xdead;
+
     sendMessage(msg);
 }
 

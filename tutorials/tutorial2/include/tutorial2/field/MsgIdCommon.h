@@ -73,7 +73,8 @@ struct MsgIdCommon
             "M13",
             "M14",
             "M15",
-            "M16"
+            "M16",
+            "M17"
         };
         static const std::size_t MapSize = std::extent<decltype(Map)>::value;
         

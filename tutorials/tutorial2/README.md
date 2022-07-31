@@ -377,7 +377,7 @@ class Msg15 : public
 Since release **v4.0** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) as
 well as [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator it became
 possible to copy fields from the definition of the [&lt;bundle&gt;](#bundle-fields)
-field, not just another **&lt;message&gt;.
+field, not just another **&lt;message&gt;**.
 
 The message `Msg16` inside [dsl/msg16.xml](dsl/msg16.xml) is defined the following way:
 ```xml
@@ -2603,6 +2603,42 @@ void ClientSession::sendMsg14()
 }
 ```
   
+## Reusing Fields Definitions
+In many cases some fields may share some portions of their definitions. To avoid various
+copy-paste errors, the **CommsDSL** allows reusing of other fields using `reuse`
+property like it is done in [dsl/msg17.xml](dsl/msg17.xml). Using this property is 
+equivalent to copying all other properties from one field to another.
+```xml
+<fields>
+    <int name="I17_1" type="uint32" />
+    <bundle name="B17_1">
+        <int name="M1" type="uint16" />
+        <int name="M2" type="uint32" />
+    </bundle>
+</fields>
+
+<message name="Msg17" id="MsgId.M17" displayName="Message 17" validateMinLength="10">
+    <int name="F1" reuse="I17_1" defaultValue="S1">
+        <special name="S1" val="10" />
+    </int>
+    <bundle name="F2" reuse="B17_1">
+        <members>
+            <int name="M3" type="uint16" />
+        </members>
+        <replace>
+            <int name="M2" type="uint16" />
+        </replace>
+    </bundle>
+</message>
+```
+In the example above the `Msg17.F1` field copies all the properties from `I17_1` and
+then modifies its `defaultValue` as well as adds extra &lt;special&gt; one.
+
+The `Msg17.F2` &lt;bungle&gt; field copies all the properties including the original two
+member fields, adds the third one (`M3`) and replaces the (`M2`) with different field.
+
+The replacing of the member fields became available since **v5.0** of the 
+[CommsDSL Specification](https://commschamp.github.io/commsdsl_spec).
 
 ## Summary
 
@@ -2619,6 +2655,9 @@ void ClientSession::sendMsg14()
 - Reusing definition of one message to define another is possible using **copyFieldsFrom**
   property. The same property can be used to copy member fields from the definition of 
   the [&lt;bundle&gt;](#bundle-fields) field.
+- Reusing other fields definitions is possuble using **reuse** property.
+- The replacing of member fields in composite fields like **&lt;bundle&gt;** and **&lt;bitfield&gt;**
+  is available since version **v5.0** of the **CommsDSL** using **&lt;replace&gt;** child node.
 - The fields are abstractions around actual value storage to provide common
   interface for all field types. 
 - The primary and most frequently used member function of the field objects
@@ -2659,7 +2698,7 @@ void ClientSession::sendMsg14()
   object.
 - Due to the nature of these tutorials it is not possible to cover **all** aspects (properties) of all
   the available fields, it is highly recommended to read 
-  [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification in
+  [CommsDSL](https://commschamp.github.io/commsdsl_spec) specification in
   full after reading the tutorials.
 - All the field classes are implemented by extending one of the field definition
   classes provided by the [COMMS Library](https://github.com/commschamp/comms)
