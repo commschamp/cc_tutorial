@@ -16,11 +16,11 @@ option (USE_SANITIZERS "Compile with sanitizers." OFF)
 # COMMSDSL_CXX_COMPILER - "C++" Compiler for commsdsl project
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
-    set (COMMSDSL_TAG "develop")
+    set (COMMSDSL_TAG "v5.0")
 endif ()
 
 if ("${CC_COMMS_TAG}" STREQUAL "")
-    set (CC_COMMS_TAG "develop")
+    set (CC_COMMS_TAG "v5.0")
 endif ()
 
 if (NOT CMAKE_CXX_STANDARD)
@@ -132,6 +132,7 @@ if ("${COMMSDSL2COMMS}" STREQUAL "")
                 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${commsdsl2comms_install_dir}
                 -DCOMMSDSL_NO_TESTS=ON -DCMAKE_C_COMPILER=${COMMSDSL_C_COMPILER} 
                 -DCMAKE_CXX_COMPILER=${COMMSDSL_CXX_COMPILER}
+                -DCOMMSDSL_INSTALL_LIBRARY=OFF
                 -DCOMMSDSL_EXTERNALS_DIR=${EXTERNALS_DIR} 
             BINARY_DIR "${commsdsl2comms_bin_dir}"
         )
