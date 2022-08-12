@@ -112,4 +112,4 @@ is used, while for the second one the **long** form is in place.
   static constexpr function, which provides maximal remaining length value.
 
 
-[Read Previous Tutorial](../tutorial21) &lt;----------------------- [Read Next Tutorial](../tutorial23) 
+[Read Previous Tutorial](../tutorial21) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial23) 
