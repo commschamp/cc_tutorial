@@ -11,6 +11,7 @@ class TcpClient
 {
 public:
     using Socket = Session::Socket;
+    using SocketPtr = Session::SocketPtr;
     using PortType = unsigned short;
 
     explicit TcpClient(boost_wrap::io& io);

@@ -17,16 +17,16 @@ class Session
 public:
     using Ptr = std::unique_ptr<Session>;
     using Socket = boost::asio::ip::tcp::socket;
+    using SocketPtr = std::unique_ptr<Socket>;
 
     explicit Session(boost_wrap::io& io) :
-        m_io(io),
-        m_socket(io)
+        m_io(io)
     {
     }    
 
-    virtual ~Session() = default;
+    virtual ~Session();
 
-    void setSocket(Socket&& socket)
+    void setSocket(SocketPtr socket)
     {
         m_socket = std::move(socket);
     }
@@ -150,7 +150,7 @@ private:
     void doRead();
 
     boost_wrap::io& m_io;
-    Socket m_socket;
+    SocketPtr m_socket;
     std::array<std::uint8_t, 1024> m_inBuf;
     std::vector<std::uint8_t> m_inData;
     TerminateCb m_terminateCb;

@@ -1,0 +1,30 @@
+/// @brief Get length value
+std::size_t getValue() const
+{
+    if (!field_short().isLongForm()) {
+        return static_cast<std::size_t>(field_short().value());
+    }
+
+    COMMS_ASSERT(field_long().doesExist()); // Make sure the field in the consistent state
+    return static_cast<std::size_t>(field_long().field().value());
+}
+
+/// @brief Set length value
+void setValue(std::size_t val)
+{
+    if (val < Field_short::valueLongForm()) {
+        field_short().setValue(val);
+        field_long().setMissing();
+        return;
+    }
+
+    field_short().setLongForm();
+    field_long().field().setValue(val);
+    field_long().setExists();
+}
+
+/// @brief Maximal possible length value
+static constexpr std::size_t maxValue()
+{
+    return std::numeric_limits<typename Field_long::Field::ValueType>::max();
+}

@@ -35,7 +35,7 @@ jobs:
     - name: Build
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cmake --build . --target install
+      run: cmake --build . --config ${{matrix.type}} --target install
       env:
         VERBOSE: 1 
 
@@ -74,7 +74,7 @@ jobs:
     - name: Build
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cmake --build . --target install
+      run: cmake --build . --config ${{matrix.type}} --target install
       env:
         VERBOSE: 1 
 
@@ -113,7 +113,7 @@ jobs:
     - name: Build
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cmake --build . --target install
+      run: cmake --build . --config ${{matrix.type}} --target install
       env:
         VERBOSE: 1 
 
@@ -154,6 +154,6 @@ jobs:
     - name: Build
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cmake --build . --target install
+      run: cmake --build . --config ${{matrix.type}} --target install
       env:
         VERBOSE: 1 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 
 #include <boost/asio.hpp>
 
@@ -14,6 +15,7 @@ class TcpServer
 public:
     using Acceptor = boost::asio::ip::tcp::acceptor;
     using Socket = boost::asio::ip::tcp::socket;
+    using SocketPtr = std::unique_ptr<Socket>;
     using PortType = unsigned short;
 
     explicit TcpServer(boost_wrap::io& io);
@@ -27,7 +29,7 @@ private:
 
     boost_wrap::io& m_io;
     Acceptor m_acceptor;
-    Socket m_socket;
+    SocketPtr m_socket;
     SessionsMap m_sessions;
 };
 

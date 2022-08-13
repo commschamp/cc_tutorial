@@ -16,11 +16,11 @@ option (USE_SANITIZERS "Compile with sanitizers." OFF)
 # COMMSDSL_CXX_COMPILER - "C++" Compiler for commsdsl project
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
-    set (COMMSDSL_TAG "v4.0")
+    set (COMMSDSL_TAG "v5.0")
 endif ()
 
 if ("${CC_COMMS_TAG}" STREQUAL "")
-    set (CC_COMMS_TAG "v4.0")
+    set (CC_COMMS_TAG "v5.0")
 endif ()
 
 if (NOT CMAKE_CXX_STANDARD)
@@ -132,6 +132,7 @@ if ("${COMMSDSL2COMMS}" STREQUAL "")
                 -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DCMAKE_INSTALL_PREFIX=${commsdsl2comms_install_dir}
                 -DCOMMSDSL_NO_TESTS=ON -DCMAKE_C_COMPILER=${COMMSDSL_C_COMPILER} 
                 -DCMAKE_CXX_COMPILER=${COMMSDSL_CXX_COMPILER}
+                -DCOMMSDSL_INSTALL_LIBRARY=OFF
                 -DCOMMSDSL_EXTERNALS_DIR=${EXTERNALS_DIR} 
             BINARY_DIR "${commsdsl2comms_bin_dir}"
         )
@@ -143,7 +144,7 @@ endif ()
 
 function (dsl_parse type name)
     set (prefix DSL_PARSE)
-    set (options)
+    set (options MULTI_SCHEMA)
     set (oneValueArgs SRC_DIR)
     set (mutiValueArgs SCHEMAS)
     cmake_parse_arguments(${prefix} "${options}" "${oneValueArgs}" "${mutiValueArgs}" ${ARGN})
@@ -157,6 +158,11 @@ function (dsl_parse type name)
     if (NOT "${DSL_PARSE_SRC_DIR}" STREQUAL "")
         set (code_input_param -c ${DSL_PARSE_SRC_DIR})
         file (GLOB_RECURSE src_files "${DSL_PARSE_SRC_DIR}/*") 
+    endif ()
+
+    set (multi_schema_param)
+    if (DSL_PARSE_MULTI_SCHEMA)
+        set (multi_schema_param "-s")
     endif ()
     
     set (commsdsl_tgt_dep)
@@ -176,7 +182,7 @@ function (dsl_parse type name)
         OUTPUT ${output_dir}
         DEPENDS ${DSL_PARSE_SCHEMAS} ${src_files} ${commsdsl_tgt_dep} ${name}_prot_rm 
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${output_dir}
-        COMMAND ${COMMSDSL2COMMS} --warn-as-err ${code_input_param} "--comms-tag=${CC_COMMS_TAG}" 
+        COMMAND ${COMMSDSL2COMMS} --warn-as-err ${multi_schema_param} ${code_input_param} "--comms-tag=${CC_COMMS_TAG}" 
             -o ${output_dir} -i ${CMAKE_CURRENT_BINARY_DIR}/${name}/schema_files.txt
     )
 

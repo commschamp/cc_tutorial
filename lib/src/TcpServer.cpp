@@ -8,8 +8,7 @@ namespace cc_tutorial
 
 TcpServer::TcpServer(boost_wrap::io& io)
   : m_io(io),
-    m_acceptor(io),
-    m_socket(io)
+    m_acceptor(io)
 {
 }
 
@@ -43,8 +42,9 @@ bool TcpServer::start(PortType port)
 
 void TcpServer::doAccept()
 {
+    m_socket.reset(new Socket(m_io));
     m_acceptor.async_accept(
-        m_socket,
+        *m_socket,
         [this](const boost::system::error_code& ec)
         {
             if (ec == boost::asio::error::operation_aborted) {
@@ -58,7 +58,7 @@ void TcpServer::doAccept()
                 }
 
                 std::stringstream stream;
-                stream << m_socket.remote_endpoint();
+                stream << m_socket->remote_endpoint();
                 auto sessionId = stream.str();
 
                 std::cout << "INFO: New connection from " << sessionId << std::endl;
@@ -83,6 +83,7 @@ void TcpServer::doAccept()
                     break;
                 }
 
+                assert(!m_socket);
                 m_sessions.insert(std::make_pair(std::move(sessionId), std::move(session)));
             } while (false);
 

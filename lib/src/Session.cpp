@@ -1,13 +1,16 @@
 #include "Session.h"
 
 #include <cassert>
+#include <iostream>
 
 namespace cc_tutorial
 {
 
+Session::~Session() = default; 
+
 bool Session::start()
 {
-    assert(m_socket.is_open());
+    assert(m_socket->is_open());
 
     if (!startImpl()) {
         return false;
@@ -28,14 +31,14 @@ void Session::sendOutput(const std::uint8_t* buf, std::size_t bufLen)
     std::copy(buf, buf + bufLen, std::ostream_iterator<unsigned>(std::cout, " "));
     std::cout << std::dec << std::endl; 
 
-    if (!m_socket.is_open()) {
+    if (!m_socket->is_open()) {
         return;
     }
 
     std::size_t consumed = 0U;
     while (consumed < bufLen) {
         boost::system::error_code ec;
-        consumed += boost::asio::write(m_socket, boost::asio::buffer(buf, bufLen), ec);
+        consumed += boost::asio::write(*m_socket, boost::asio::buffer(buf, bufLen), ec);
         if (ec) {
             std::cerr << "ERROR: Failed to write: " << ec.message() << std::endl;
             terminateSession();
@@ -52,8 +55,9 @@ void Session::terminateSession()
 
 void Session::doRead()
 {
-    assert(m_socket.is_open());
-    m_socket.async_read_some(
+    assert(m_socket);
+    assert(m_socket->is_open());
+    m_socket->async_read_some(
         boost::asio::buffer(m_inBuf),
         [this](const boost::system::error_code& ec, std::size_t bytesCount)
         {

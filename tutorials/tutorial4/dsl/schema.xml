@@ -16,6 +16,7 @@
             <validValue name="K4" val="10" />
             <validValue name="K5" val="15" />
             <validValue name="K6" val="25" />
+            <validValue name="K7" val="30" />
         </enum>
         
         <int name="PropKeyCommon" type="uint8" failOnInvalid="true"/>
@@ -63,9 +64,15 @@
                     <int name="Length" type="uint8" semanticType="length" />
                     <string name="Val" />
                 </bundle>   
+
+                <bundle name="Prop7">
+                    <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K7" />
+                    <int name="Length" type="uint8" semanticType="length" />
+                    <int name="Val" type="uint64" availableLengthLimit="true" />
+                </bundle>                 
                 
                 <bundle name="Any">
-                    <int reuse="PropKeyCommon" name="Key" />
+                    <int reuse="PropKeyCommon" name="Key" failOnInvalid="false" />
                     <int name="Length" type="uint8" semanticType="length" />
                     <data name="Val" />
                 </bundle>  

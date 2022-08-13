@@ -25,7 +25,7 @@
         </checksum>        
     </frame>
     
-    <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
+    <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name" readOverride="replace" refreshOverride="replace">
         <optional name="F1" defaultMode="exists" >
             <int name="F1" type="uint32" />
         </optional>

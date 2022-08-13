@@ -23,7 +23,7 @@
         <size name="Size">
             <int name="SizeField" type="uint16" />
         </size>
-        <custom name="Id" idReplacement="true">
+        <custom name="Id" semanticLayerType="id">
             <bitfield name="Field">
                 <ref field="MsgId" bitLength="7" />
                 <set name="Ctrl" bitLength="1">

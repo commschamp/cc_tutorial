@@ -19,7 +19,7 @@
     </interface>    
         
     <frame name="Frame">
-        <custom name="IdWithFlags" idReplacement="true"> 
+        <custom name="IdWithFlags" semanticLayerType="id"> 
             <bitfield name="Field">
                 <ref field="MsgId" bitLength="6" />
                 <set name="Flags" bitLength="2">
@@ -27,7 +27,7 @@
                 </set>
             </bitfield>
         </custom>
-        <custom name="SizeWithFlags">
+        <custom name="SizeWithFlags" semanticLayerType="size">
             <bitfield name="Field">
                 <int name="Size" type="uint16" bitLength="12"/>
                 <set name="Flags" bitLength="4">

@@ -144,7 +144,8 @@ might contain. For every such name **X** the following is defined:
 Note, that `ValueType` inner type defined by every field class is a variant of 
 [std::aligned_storage](https://en.cppreference.com/w/cpp/types/aligned_storage) and should not be
 accessed directly via usual `.value()` member function. Instead, generated `initField_X()` and/or
-`accessField_X()` member functions need to be used to access the storage cast to an appropriate type.
+`accessField_X()` member functions need to be used to access the storage and perform the cast to 
+the appropriate type.
 
 Another thing to pay attention to at this stage is an existence of custom `read()` member function which
 overrides a default one provided by the [comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
@@ -417,8 +418,14 @@ this tutorial.
             <string name="Val" />
         </bundle>   
         
+        <bundle name="Prop7">
+            <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K7" />
+            <int name="Length" type="uint8" semanticType="length" />
+            <int name="Val" type="uint64" availableLengthLimit="true" />
+        </bundle>  
+        
         <bundle name="Any">
-            <int reuse="PropKeyCommon" name="Key" />
+            <int reuse="PropKeyCommon" name="Key" failOnInvalid="false" />
             <int name="Length" type="uint8" semanticType="length" />
             <data name="Val" />
         </bundle>  
@@ -464,9 +471,14 @@ when a message containing it is received. The client doesn't have any other choi
 of properties, the client has an information about received property length and can skip over and ignore unknown
 ones. 
 
-The example above allows ignore and skip over unknown properties by defining the **last** member (`Any`) with non-failing
+The example above allows ignoring and skipping over unknown properties by defining the **last** member (`Any`) with non-failing
 read operation on the `Key`. The latter in the example above doesn't specify which values are considered to be
 valid (hence all possible ones are valid). The `Val` in such property is defined to be **&lt;data&gt;**.
+
+Th **TLV** type of properties also allows reducing serialization length of some value types. The example of
+is is the definition of `Prop7`. The default serialization length of its `Val` member value (of `uint64` type) is 8 bytes.
+However, usage of **availableLengthLimit** property allows having less bytes when value is serialized if the 
+stored value allows. The length of such serialization is controlled by the preceding `Length` member.
 
 The `Msg2` in this tutorial is defined to contain a list of **TLV** properties.
 ```xml
@@ -490,15 +502,17 @@ void ClientSession::sendMsg2()
     Msg2 msg;
 
     auto& listOfProps = msg.field_f1().value(); // vector of variant fields
-    listOfProps.resize(3);
+    listOfProps.resize(4);
     assert(msg.doLength() == 0U);
     assert(!listOfProps[0].valid());
     assert(!listOfProps[1].valid());
     assert(!listOfProps[2].valid());
+    assert(!listOfProps[3].valid());
 
     listOfProps[0].initField_prop4().field_val().value() = 0xdeadbeef;
     listOfProps[1].initField_prop6().field_val().value() = "blabla";
     listOfProps[2].initField_prop5().field_val().value() = 1.234;
+    listOfProps[3].initField_prop7().field_val().value() = 100;
 
     msg.doRefresh(); // Bring message to a consistent state
     sendMessage(msg);

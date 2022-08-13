@@ -16,7 +16,7 @@
     </fields>
     
     <frame name="Frame">
-        <custom name="IdWithSize" idReplacement="true"> 
+        <custom name="IdWithSize" semanticLayerType="id"> 
             <bitfield name="Field">
                 <int name="Size" type="uint16" bitLength="12" />
                 <ref field="MsgId" bitLength="4" />

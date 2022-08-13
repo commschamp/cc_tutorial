@@ -19,9 +19,9 @@ TcpClient::TcpClient(boost_wrap::io& io)
 
 bool TcpClient::start(PortType port)
 {
-    Socket socket(m_io);
+    SocketPtr socket(new Socket(m_io));
     boost::system::error_code ec;
-    socket.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port), ec);
+    socket->connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port), ec);
     if (ec) {
         std::cerr << "ERROR: Failed to connect with error: " << ec.message();
         return false;
