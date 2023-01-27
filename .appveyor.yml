@@ -48,9 +48,6 @@ install:
     - call script\prepare_externals.bat
 
 build_script:
-    - set BUILD_DIR=%APPVEYOR_BUILD_FOLDER%\build.%PLATFORM%.%CONFIGURATION%.%TOOLCHAIN%
-    - if exist %BUILD_DIR% rmdir /S /Q %BUILD_DIR%
-    - mkdir %BUILD_DIR%
     - cd %BUILD_DIR%
     - cmake .. -DCMAKE_BUILD_TYPE=%CONFIGURATION% -G "NMake Makefiles" -DBOOST_ROOT="%BOOST_DIR%" -DBoost_USE_STATIC_LIBS=ON -DCMAKE_CXX_STANDARD=%CPP_STD% -DCMAKE_INSTALL_PREFIX=install -DFORCE_EXTRA_BOOST_LIBS=ON -DCMAKE_PREFIX_PATH="%COMMON_INSTALL_DIR%"
     - nmake install
