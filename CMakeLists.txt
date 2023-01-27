@@ -16,11 +16,11 @@ option (USE_SANITIZERS "Compile with sanitizers." OFF)
 # COMMSDSL_CXX_COMPILER - "C++" Compiler for commsdsl project
 
 if ("${COMMSDSL_TAG}" STREQUAL "")
-    set (COMMSDSL_TAG "v5.1.3")
+    set (COMMSDSL_TAG "v5.2")
 endif ()
 
 if ("${CC_COMMS_TAG}" STREQUAL "")
-    set (CC_COMMS_TAG "v5.0.2")
+    set (CC_COMMS_TAG "v5.0.3")
 endif ()
 
 if (NOT CMAKE_CXX_STANDARD)
