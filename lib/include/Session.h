@@ -6,7 +6,6 @@
 #include <iostream>
 #include <iomanip>
 #include <type_traits>
-#include <utility>
 
 #include "boost_wrap.h"
 
