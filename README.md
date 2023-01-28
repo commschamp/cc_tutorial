@@ -113,6 +113,18 @@ This project uses CMake as its build system. Please open main
 mentioned available parameters, which can be used in addition to standard 
 ones provided by CMake itself, to modify the default build. 
 
+This project also has external dependencies, it requires an access to
+the [COMMS Library](https://github.com/commschamp/commsdsl) and
+code generators from [commsdsl](https://github.com/commschamp/commsdsl) projects.
+These dependencies are expected to be built independenty and access to them provided
+via standard **CMAKE_PREFIX_PATH** and/or **CMAKE_PROGRAM_PATH** (for the binaries of
+the code generators). There are also scripts (
+[script/prepare_externals.sh](script/prepare_externals.sh) for Linux and
+[script/prepare_externals.bat](script/prepare_externals.bat) for Windows)
+which can help in preparation of these dependencies. They are also used
+in configuration of the [github actions](.github/workflows/actions_build.yml) and
+[appveyor](.appveyor.yml).
+
 **NOTE**, that [Boost](https://www.boost.org) libraries are also required.
 In case Boost libraries are not installed in expected default location
 (mostly happens on Windows systems), use variables described in 
@@ -125,7 +137,8 @@ linkage with static Boost libraries.
 ```
 $> cd /source/of/this/project
 $> mkdir build && cd build
-$> cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PWD/install ..
+$> cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PWD/install \
+    -DCMAKE_PREFIX_PATH=/path/to/comms -DCMAKE_PROGRAM_PATH=/path/to/commsdsl
 $> make install
 ```
 ### Windows Build
@@ -133,9 +146,10 @@ $> make install
 $> cd C:\source\of\this\project
 $> mkdir build
 $> cd build
-$> cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release \ 
-    -DCMAKE_INSTALL_PREFIX=%cd%/install \
-    -DBOOST_ROOT="C:\Libraries\boost_1_65_1" -DBoost_USE_STATIC_LIBS=ON ..
+$> cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release ^
+    -DCMAKE_INSTALL_PREFIX=%cd%/install ^
+    -DBOOST_ROOT="C:\Libraries\boost_1_65_1" -DBoost_USE_STATIC_LIBS=ON ^
+    -DCMAKE_PREFIX_PATH=C:\path\to\comms -DCMAKE_PROGRAM_PATH=C:\path\to\commsdsl
 $> nmake install
 ```
 

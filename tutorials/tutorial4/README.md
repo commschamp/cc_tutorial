@@ -381,6 +381,23 @@ of the detected member, while `accessField_X()` just gives as an access to the s
 (which already is properly initialized and holds the required data)
 with cast to the appropriate type.
 
+Similar `switch` statement based functionality for better compilation times as well as runtime performance
+is generated for other member functions like `write()`, `refresh()`, `length()`, and `valid()`.
+```cpp
+template <typename TIter>
+comms::ErrorStatus write(TIter& iter, std::size_t len) const
+{
+    switch (Base::currentField()) {
+    case FieldIdx_prop1: return accessField_prop1().write(iter, len);
+    case FieldIdx_prop2: return accessField_prop2().write(iter, len);
+    case FieldIdx_prop3: return accessField_prop3().write(iter, len);
+    default: break;
+    }
+
+    return comms::ErrorStatus::Success;
+}
+```
+
 ## Type-Length-Value (TLV) Triplets
 There are protocols that introduce additional **length** information in their _properties_ definition
 to make them type-length-value (TLV) triplets. Let's take a look how such triplet is defined in
