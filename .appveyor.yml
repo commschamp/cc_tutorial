@@ -18,8 +18,8 @@ configuration:
     - Release
 
 environment:
-    COMMS_BRANCH: master
-    COMMSDSL_BRANCH: master
+    COMMS_BRANCH: develop
+    COMMSDSL_BRANCH: develop
     matrix:
         - CPP_STD: 11
         - CPP_STD: 14
