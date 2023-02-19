@@ -1,0 +1,5 @@
+///@brief Custom construction
+Msg2()
+{
+    // Custom construction code
+}
