@@ -122,8 +122,6 @@ struct Msg1Fields
     };
 
     /// @brief Definition of <b>"F3"</b> field.
-    /// @details
-    ///     The field exists only when B0 in interface flags is set.
     class F3 : public
         comms::field::Optional<
             typename F3Members::Field,
@@ -210,29 +208,50 @@ public:
         return tutorial16::message::Msg1Common::name();
     }
 
-    /// @brief Custom read functionality
+    /// @brief Generated read functionality.
     template <typename TIter>
     comms::ErrorStatus doRead(TIter& iter, std::size_t len)
     {
-        doRefresh(); // Update mode according to flags in the interface
-        return Base::doRead(iter, len);
+        auto es = comms::ErrorStatus::Success;
+        do {
+            es = Base::template doReadUntilAndUpdateLen<FieldIdx_f3>(iter, len);
+            if (es != comms::ErrorStatus::Success) {
+                break;
+            }
+
+            readPrepare_f3();
+
+            es = Base::template doReadFrom<FieldIdx_f3>(iter, len);
+        } while (false);
+        return es;
     }
 
-    // @brief Custom refresh functionality
+    /// @brief Generated refresh functionality.
     bool doRefresh()
     {
-        bool updated = Base::doRefresh(); // Don't forget default refresh functionality
+       bool updated = Base::doRefresh();
+       updated = refresh_f3() || updated;
+       return updated;
+    }
 
-        auto expF3Mode = comms::field::OptionalMode::Missing;
+private:
+    void readPrepare_f3()
+    {
+        refresh_f3();
+    }
+
+    bool refresh_f3()
+    {
+        auto mode = comms::field::OptionalMode::Missing;
         if (Base::transportField_flags().getBitValue_B0()) {
-            expF3Mode = comms::field::OptionalMode::Exists;
+            mode = comms::field::OptionalMode::Exists;
         }
 
-        if (field_f3().getMode() == expF3Mode) {
-            return updated;
+        if (field_f3().getMode() == mode) {
+            return false;
         }
 
-        field_f3().setMode(expF3Mode);
+        field_f3().setMode(mode);
         return true;
     }
 };

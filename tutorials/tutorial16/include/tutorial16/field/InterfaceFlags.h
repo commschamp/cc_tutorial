@@ -26,7 +26,7 @@ class InterfaceFlags : public
         tutorial16::field::FieldBase<>,
         TExtraOpts...,
         comms::option::def::FixedLength<1U>,
-        comms::option::def::BitmaskReservedBits<0xFCU, 0x0U>
+        comms::option::def::BitmaskReservedBits<0xF0U, 0x0U>
     >
 {
     using Base =
@@ -34,7 +34,7 @@ class InterfaceFlags : public
             tutorial16::field::FieldBase<>,
             TExtraOpts...,
             comms::option::def::FixedLength<1U>,
-            comms::option::def::BitmaskReservedBits<0xFCU, 0x0U>
+            comms::option::def::BitmaskReservedBits<0xF0U, 0x0U>
         >;
 public:
     /// @brief Provides names and generates access functions for internal bits.
@@ -45,9 +45,13 @@ public:
     ///      The generated enum values and functions are:
     ///      @li @b BitIdx_B0, @b getBitValue_B0() and @b setBitValue_B0().
     ///      @li @b BitIdx_B1, @b getBitValue_B1() and @b setBitValue_B1().
+    ///      @li @b BitIdx_B2, @b getBitValue_B2() and @b setBitValue_B2().
+    ///      @li @b BitIdx_B3, @b getBitValue_B3() and @b setBitValue_B3().
     COMMS_BITMASK_BITS_SEQ(
         B0,
-        B1
+        B1,
+        B2,
+        B3
     );
 
     /// @brief Retrieve name of the bit.

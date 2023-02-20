@@ -30,7 +30,9 @@ struct InterfaceFlagsCommon
     {
         static const char* Map[] = {
             "B0",
-            "B1"
+            "B1",
+            "B2",
+            "B3"
         };
 
         static const std::size_t MapSize = std::extent<decltype(Map)>::value;

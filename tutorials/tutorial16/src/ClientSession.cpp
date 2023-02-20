@@ -44,6 +44,34 @@ void ClientSession::handle(Msg2& msg)
     doNextStage();
 }
 
+void ClientSession::handle(Msg3& msg)
+{
+    std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
+    printIntField(msg.field_f1());
+    std::cout << std::endl;
+
+    if (m_currentStage != CommsStage_Msg3) {
+        std::cerr << "ERROR: Unexpected stage" << std::endl;
+        return;
+    }
+
+    doNextStage();
+}
+
+void ClientSession::handle(Msg4& msg)
+{
+    std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
+    printIntField(msg.field_f1());
+    std::cout << std::endl;
+
+    if (m_currentStage != CommsStage_Msg4) {
+        std::cerr << "ERROR: Unexpected stage" << std::endl;
+        return;
+    }
+
+    doNextStage();
+}
+
 void ClientSession::handle(Message& msg)
 {
     std::cerr << "ERROR: Received unexpected message \"" << msg.name() << " with ID=" << (unsigned)msg.getId() << std::endl;
@@ -125,6 +153,8 @@ void ClientSession::doNextStage()
     static const NextSendFunc Map[] = {
         /* CommsStage_Msg1 */ &ClientSession::sendMsg1,
         /* CommsStage_Msg2 */ &ClientSession::sendMsg2,
+        /* CommsStage_Msg3 */ &ClientSession::sendMsg3,
+        /* CommsStage_Msg4 */ &ClientSession::sendMsg4,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -160,6 +190,25 @@ void ClientSession::sendMsg2()
 
     msg.doRefresh(); // Bring everything into consistent state
     assert(msg.field_f2().doesExist()); // F2 must exist after refresh    
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg3()
+{
+    Msg3 msg;
+    assert(msg.transportField_flags().getBitValue_B2()); // Check the constructor sets bit's value
+
+    msg.field_f1().value() = 1111;
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg4()
+{
+    Msg4 msg;
+    assert(msg.transportField_flags().getBitValue_B2()); // Check the constructor sets bit's value
+    assert(msg.transportField_flags().getBitValue_B3()); // Check the constructor sets bit's value
+
+    msg.field_f1().value() = 2222;
     sendMessage(msg);
 }
 
