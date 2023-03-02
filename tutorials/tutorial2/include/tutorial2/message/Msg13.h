@@ -271,6 +271,7 @@ public:
 
             es = Base::template doReadFrom<FieldIdx_f3>(iter, len);
         } while (false);
+
         return es;
     }
 

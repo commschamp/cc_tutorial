@@ -22,5 +22,5 @@ inline constexpr unsigned specVersion()
 } // namespace howto5
 
 // Generated compile time check for minimal supported version of the COMMS library
-static_assert(COMMS_MAKE_VERSION(5, 0, 3) <= comms::version(),
+static_assert(COMMS_MAKE_VERSION(5, 1, 0) <= comms::version(),
     "The version of COMMS library is too old");
