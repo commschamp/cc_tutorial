@@ -390,5 +390,7 @@ comms::ErrorStatus doRead(TIter& iter, std::size_t len)
 - The common fields defined as members of the **&lt;interface&gt;** are **NOT** getting serialized as part 
   of message payload, only by the **&lt;value&gt;** framing layer.
 - Referencing **&lt;interface&gt;** fields is allowing using `%` character prefix.
+- Use **construct** property (or **&lt;construct&gt;** node) to specify extra construction requirements.
+- Use **readCond** property (or **&lt;readCond&gt;** node) to specify reading conditions that take place before reading of the payload.
 
 [Read Previous Tutorial](../tutorial15) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial17) 
