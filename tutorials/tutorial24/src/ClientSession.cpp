@@ -145,12 +145,12 @@ void ClientSession::sendMsg2()
 {
     Msg2 msg;
     assert(!msg.doValid()); // F2 is invalid when default constructed
-
     sendMessage(msg); // Invalid message can be sent, but should be ignored on reception
     
     msg.field_f1().value() = 5;
     msg.field_f2().value() = 10;
-    sendMessage(msg);
+    assert(msg.doValid());
+    sendMessage(msg); // Should get received and echoed back
 }
 
 SessionPtr Session::createClient(boost_wrap::io& io)
