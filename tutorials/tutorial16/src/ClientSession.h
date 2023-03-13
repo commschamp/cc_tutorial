@@ -40,10 +40,14 @@ public:
     // Definition of all the used message classes
     using Msg1 = tutorial16::message::Msg1<Message, ClientProtocolOptions>;
     using Msg2 = tutorial16::message::Msg2<Message, ClientProtocolOptions>;
+    using Msg3 = tutorial16::message::Msg3<Message, ClientProtocolOptions>;
+    using Msg4 = tutorial16::message::Msg4<Message, ClientProtocolOptions>;
     
     // Handling functions for all the dispatched message objects
     void handle(Msg1& msg);
     void handle(Msg2& msg);
+    void handle(Msg3& msg);
+    void handle(Msg4& msg);
     void handle(Message& msg);
 
 protected:
@@ -55,6 +59,8 @@ private:
     {
         CommsStage_Msg1,
         CommsStage_Msg2,
+        CommsStage_Msg3,
+        CommsStage_Msg4,
         CommsStage_NumOfValues
     };
 
@@ -62,6 +68,8 @@ private:
     void doNextStage();
     void sendMsg1();
     void sendMsg2();
+    void sendMsg3();
+    void sendMsg4();
 
     // Client specific frame 
     using Frame = 

@@ -19,6 +19,8 @@ definition:
     <set name="InterfaceFlags" length="1">
         <bit name="B0" idx="0" />
         <bit name="B1" idx="1" />
+        <bit name="B2" idx="2" />
+        <bit name="B3" idx="3" />        
     </set>
     
 </fields>
@@ -192,13 +194,8 @@ Now, let's dive into the definition of the messages themselves:
 <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
     <int name="F1" type="uint16" />
     <int name="F2" type="uint16" />
-    <optional name="F3" defaultMode="missing">
-        <description>
-            The field exists only when B0 in interface flags is set.
-        </description>
-        <field>
-            <int name="Field" type="uint16" displayName="F3" />
-        </field>
+    <optional name="F3" defaultMode="missing" cond="%Flags.B0">
+        <int name="Field" type="uint16" displayName="F3" />
     </optional>
 </message>
 
@@ -209,31 +206,29 @@ Now, let's dive into the definition of the messages themselves:
         </lengthPrefix>
     </string>
     
-    <optional name="F2" defaultMode="missing">
-        <description>
-            The field exists only when B1 in interface flags is set.
-        </description>
-        <field>
-            <int name="Field" type="uint16" displayName="F2" />
-        </field>
+    <optional name="F2" defaultMode="missing" cond="%Flags.B1">
+        <int name="Field" type="uint16" displayName="F2" />
     </optional>        
-</message>  
+</message>   
 ```
 The `F3` field of the `Msg1` is defined as **&lt;optional&gt;** and is expected to exist only 
 if `B0` inside the `Flags` is set. The `F2` of the `Msg` also defined as 
-**&lt;optional&gt;** and is expected to exist only if `B1` inside the `Flags` is set. At this 
-moment the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) does not allow 
-referencing the **&lt;interface&gt;** member fields inside the **&lt;cond&gt;**-itions 
-of the **&lt;optional&gt;** message member fields (it is only allowed to reference its sibling fields).
-Hence the custom **read** and **refresh** codes need to be written. There are 
-[dsl_src/include/tutorial16/message/Msg1.h.read](dsl_src/include/tutorial16/message/Msg1.h.read), 
-[dsl_src/include/tutorial16/message/Msg1.h.refresh](dsl_src/include/tutorial16/message/Msg1.h.refresh),
-[dsl_src/include/tutorial16/message/Msg2.h.read](dsl_src/include/tutorial16/message/Msg2.h.read), and 
-[dsl_src/include/tutorial16/message/Msg2.h.refresh](dsl_src/include/tutorial16/message/Msg2.h.refresh) which
-implement the required extra functionalities that find their way into 
-[include/tutorial16/message/Msg1.h](include/tutorial16/message/Msg1.h) and 
-[include/tutorial16/message/Msg2.h](include/tutorial16/message/Msg2.h)
-message classes definitions.
+**&lt;optional&gt;** and is expected to exist only if `B1` inside the `Flags` is set. 
+Since version **v6.0** the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification)
+allows referencing interface fields prefixing the reference string with `%` character.
+
+----
+
+**WARNING**: The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification 
+supports multiple interfaces and doesn’t impose any restriction on how they are used in the end 
+application. The schema parser is responsible to do a check that **any** (not all) of the previously 
+encountered <interface>-es contains the referenced field.
+The code generator also does not impose many restrictions on such references. Usage of the wrong
+<interface> class with the missing referenced field in the end application may result in compilation
+errors.
+
+----
+
 
 **NOTE** that the **defaultMode** of the both optional fields are set to **missing** in order to allow
 default constructions of the message objects to end up being in the consistent state (without any 
@@ -266,23 +261,123 @@ When the whole message is serialized by the **frame**, the value of `Flags` is r
 **&lt;value&gt;** ([comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html))
 and properly written in the correct place in the frame.
 
-When the sent messages are received back they are printed by the `ClientSession::handle()` functions with the 
-following output, which shows that the custom read functionality works correctly:
+In addition to allowing referencing of the **&lt;interface&gt;** fields in the **cond** properties,
+the **v6.0** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
+allows using similar syntax to assign values to the **&lt;interface&gt;** fields in the
+constructor of the relevant **&lt;message&gt;** class using the **construct** property.
+```xml
+<message name="Msg3" id="MsgId.M3" displayName="^Msg3Name" construct="%Flags.B2" ...>
+    <int name="F1" type="uint16" />
+</message>
 ```
-Sending message "Message 1" with ID=1: 0 8 1 1 4 57 8 ae 4 d2 
-Processing input: 0 8 1 1 4 57 8 ae 4 d2 
-Received message "Message 1" with ID=1
-        F1 = 1111
-        F2 = 2222
-        F3 (exists)
-                F3 = 1234
 
-Sending message "Message 2" with ID=2: 0 a 2 2 5 68 65 6c 6c 6f 10 e1 
-Processing input: 0 a 2 2 5 68 65 6c 6c 6f 10 e1 
-Received message "Message 2" with ID=2
-        F1 = hello
-        F2 (exists)
-                F2 = 4321
+The generated `Msg3` constructor code (in the [include/tutorial16/message/Msg3.h](include/tutorial16/message/Msg3.h))
+looks like this:
+```cpp
+Msg3()
+{
+    Base::transportField_flags().setBitValue_B2(true);
+}
+```
+The **construct** property use the same syntax as the **cond** one, but with limitations. Only bit references
+and equality statements are allowed.
+
+Multiple **construct** properties are supported as the **&lt;construct&gt;** child node with a single
+**&lt;and&gt;** child:
+```xml
+<message name="Msg4" id="MsgId.M4" displayName="^Msg4Name" ...>
+    <construct>
+        <and>
+            <construct value="%Flags.B2" />
+            <construct value="%Flags.B3" />
+        </and>
+    </construct>
+    ...
+</message>
+```
+The generated `Msg4` constructor code (in the [include/tutorial16/message/Msg4.h](include/tutorial16/message/Msg3.h))
+looks like this:
+```cpp
+Msg4()
+{
+    Base::transportField_flags().setBitValue_B2(true);
+    Base::transportField_flags().setBitValue_B3(true);
+}
+```
+
+The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) also supports a check that the
+**&lt;interface&gt;** fields have particular value in the **read** operation before proceeding to
+reading the message payload (inner fields). It is performed using the **readCond** property.
+```xml
+<message name="Msg3" id="MsgId.M3" ... readCond="%Flags.B2">
+    ...
+</message>
+```
+The **readCond** property uses the same syntax as the previously mention **cond** of the **&lt;optional&gt;** field.
+The generated **read** functionality of the [Msg3](include/tutorial16/message/Msg3.h) looks like this:
+```cpp
+/// @brief Generated read functionality.
+template <typename TIter>
+comms::ErrorStatus doRead(TIter& iter, std::size_t len)
+{
+    bool validRead =
+        Base::transportField_flags().getBitValue_B2();
+
+    if (!validRead) {
+        return comms::ErrorStatus::InvalidMsgData;
+    }
+
+    return Base::doRead(iter, len);
+}
+```
+Quite often **readCond** property value will be the same as the **construct** one. To avoid unnecessary code
+duplication the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification introduced
+**constructAsReadCond** property with boolean value.
+```xml
+<message name="Msg4" id="MsgId.M4" displayName="^Msg4Name" constructAsReadCond="true">
+    <construct>
+        <and>
+            <construct value="%Flags.B2" />
+            <construct value="%Flags.B3" />
+        </and>
+    </construct>
+    ...
+</message>
+```
+It is equivalent to having the following definition:
+```xml
+<message name="Msg4" id="MsgId.M4" displayName="^Msg4Name">
+    <construct>
+        <and>
+            <construct value="%Flags.B2" />
+            <construct value="%Flags.B3" />
+        </and>
+    </construct>
+    <readCond>
+        <and>
+            <readCond value="%Flags.B2" />
+            <readCond value="%Flags.B3" />
+        </and>
+    </readCond>
+    ...
+</message>
+```
+The generated **read** functionality of the [Msg4](include/tutorial16/message/Msg4.h) looks like this:
+```cpp
+/// @brief Generated read functionality.
+template <typename TIter>
+comms::ErrorStatus doRead(TIter& iter, std::size_t len)
+{
+    bool validRead =
+        ((Base::transportField_flags().getBitValue_B2()) &&
+         (Base::transportField_flags().getBitValue_B3()));
+
+    if (!validRead) {
+        return comms::ErrorStatus::InvalidMsgData;
+    }
+
+    return Base::doRead(iter, len);
+}
 ```
 
 ## Summary
@@ -294,5 +389,8 @@ Received message "Message 2" with ID=2
   To allow transfer of the information to message object custom **&lt;interface&gt;** needs to be defined.
 - The common fields defined as members of the **&lt;interface&gt;** are **NOT** getting serialized as part 
   of message payload, only by the **&lt;value&gt;** framing layer.
+- Referencing **&lt;interface&gt;** fields is allowing using `%` character prefix.
+- Use **construct** property (or **&lt;construct&gt;** node) to specify extra construction requirements.
+- Use **readCond** property (or **&lt;readCond&gt;** node) to specify reading conditions that take place before reading of the payload.
 
 [Read Previous Tutorial](../tutorial15) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial17) 

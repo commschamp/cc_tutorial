@@ -147,4 +147,4 @@ than **&lt;ref&gt;**-erence them.
 than **&lt;ref&gt;**-erence them.
 
 
-[Read Previous Tutorial](../tutorial22) &lt;-----------------------
+[Read Previous Tutorial](../tutorial22) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial24) 

@@ -26,10 +26,6 @@ if [%COMMSDSL_REPO%] == [] set COMMSDSL_REPO="https://github.com/commschamp/comm
 
 if [%COMMSDSL_TAG%] == [] set COMMSDSL_TAG="master"
 
-if [%CC_TOOLS_QT_REPO%] == [] set CC_TOOLS_QT_REPO="https://github.com/commschamp/cc_tools_qt.git"
-
-if [%CC_TOOLS_QT_TAG%] == [] set CC_TOOLS_QT_TAG="master"
-
 if [%COMMON_BUILD_TYPE%] == [] set COMMON_BUILD_TYPE=Debug
 
 set COMMS_SRC_DIR=%EXTERNALS_DIR%/comms

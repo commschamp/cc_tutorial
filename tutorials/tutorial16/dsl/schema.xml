@@ -3,15 +3,21 @@
     <fields>
         <string name="Msg1Name" defaultValue="Message 1" />
         <string name="Msg2Name" defaultValue="Message 2" />
+        <string name="Msg3Name" defaultValue="Message 3" />
+        <string name="Msg4Name" defaultValue="Message 4" />
             
         <enum name="MsgId" type="uint8" semanticType="messageId">
             <validValue name="M1" val="1" displayName="^Msg1Name" />
             <validValue name="M2" val="2" displayName="^Msg2Name" />
+            <validValue name="M3" val="3" displayName="^Msg3Name" />
+            <validValue name="M4" val="4" displayName="^Msg3Name" />
         </enum>
         
         <set name="InterfaceFlags" length="1">
             <bit name="B0" idx="0" />
             <bit name="B1" idx="1" />
+            <bit name="B2" idx="2" />
+            <bit name="B3" idx="3" />
         </set>
         
     </fields>
@@ -34,13 +40,8 @@
     <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
         <int name="F1" type="uint16" />
         <int name="F2" type="uint16" />
-        <optional name="F3" defaultMode="missing">
-            <description>
-                The field exists only when B0 in interface flags is set.
-            </description>
-            <field>
-                <int name="Field" type="uint16" displayName="F3" />
-            </field>
+        <optional name="F3" defaultMode="missing" cond="%Flags.B0">
+            <int name="Field" type="uint16" displayName="F3" />
         </optional>
     </message>
     
@@ -51,14 +52,25 @@
             </lengthPrefix>
         </string>
         
-        <optional name="F2" defaultMode="missing">
-            <description>
-                The field exists only when B1 in interface flags is set.
-            </description>
-            <field>
-                <int name="Field" type="uint16" displayName="F2" />
-            </field>
+        <optional name="F2" defaultMode="missing" cond="%Flags.B1">
+            <int name="Field" type="uint16" displayName="F2" />
         </optional>        
-    </message>    
+    </message>   
+
+    <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name" construct="%Flags.B2" readCond="%Flags.B2">
+        <int name="F1" type="uint16" />
+    </message> 
+
+    <message name="Msg4" id="MsgId.M4" displayName="^Msg4Name" constructAsReadCond="true">
+        <construct>
+            <and>
+                <construct value="%Flags.B2" />
+                <construct value="%Flags.B3" />
+            </and>
+        </construct>
+        <fields>
+            <int name="F1" type="uint16" />
+        </fields>
+    </message>     
     
 </schema>

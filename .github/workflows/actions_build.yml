@@ -7,8 +7,9 @@ env:
   COMMSDSL_BRANCH: master
 
 jobs:
-  build_gcc_ubuntu_18_04:
-    runs-on: ubuntu-18.04
+
+  build_gcc_old_ubuntu_20_04:
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -19,6 +20,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Add repositories
+      run: |
+        sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu/ bionic main'; \
+        sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu/ bionic universe'  
+
     - name: Prepare Install
       run: sudo apt-get update --fix-missing    
       
@@ -27,7 +33,6 @@ jobs:
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
-
 
     - name: Prepare externals
       shell: bash
@@ -60,7 +65,7 @@ jobs:
       shell: bash
       run: cmake --build . --config ${{matrix.type}} --target install
       env:
-        VERBOSE: 1 
+        VERBOSE: 1     
 
   build_gcc_ubuntu_20_04:
     runs-on: ubuntu-20.04

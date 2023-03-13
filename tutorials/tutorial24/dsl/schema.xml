@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="tutorial24" endian="big">
+    <fields>
+        <string name="Msg1Name" defaultValue="Message 1" />
+        <string name="Msg2Name" defaultValue="Message 2" />
+            
+        <enum name="MsgId" type="uint8" semanticType="messageId">
+            <validValue name="M1" val="1" displayName="^Msg1Name" />
+            <validValue name="M2" val="2" displayName="^Msg2Name" />
+        </enum>
+    </fields>
+    <frame name="Frame">
+        <size name="Size">
+            <int name="SizeField" type="uint16" />
+        </size>
+        <id name="Id" field="MsgId" />
+        <payload name="Data" />
+    </frame>
+    
+    <message name="Msg1" id="MsgId.M1" failOnInvalid="true" displayName="^Msg1Name">
+        <fields>
+            <int name="F1" type="uint8" />
+            <int name="F2" type="uint8" />
+        </fields>
+        <validCond>
+            <or>
+                <validCond value="$F1 != 0" />
+                <validCond value="$F2 = 0" />
+            </or>
+        </validCond>
+    </message>      
+    
+    <message name="Msg2" id="MsgId.M2" failOnInvalid="true" displayName="^Msg2Name">
+        <int name="F1" type="uint8" validRange="[0, 10]" />
+        <int name="F2" type="uint8" validRange="[10, 20]" />
+    </message>    
+</schema>

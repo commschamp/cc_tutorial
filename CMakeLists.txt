@@ -6,9 +6,7 @@ option (UNIX_USE_CCACHE "Treat warnings as error" ON)
 option (FORCE_EXTRA_BOOST_LIBS "Force linking to extra boost libraries" OFF)
 option (USE_SANITIZERS "Compile with sanitizers." OFF)
 
-if (NOT CMAKE_CXX_STANDARD)
-    set (CMAKE_CXX_STANDARD 11)
-endif ()
+set(CMAKE_CXX_STANDARD 11 CACHE STRING "The C++ standard to use")
 
 include(GNUInstallDirs)
 

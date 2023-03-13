@@ -146,6 +146,8 @@ class Msg1 : public
 
 The suffixes / extensions recognized by the code generator are:
 - **.inc** - Adds extra include statements.
+- **.construct** - Overwrites default construction functionality (applicable to messages only).
+- **.value** - Overwrites default value get / set functionality (applicable to fields only).
 - **.read** - Overwrites default read functionality.
 - **.write** - Overwrites default write functionality.
 - **.length** - Overwrites default serialization length calculation.

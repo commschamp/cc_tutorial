@@ -181,6 +181,7 @@ $> nmake install
 - [tutorial21](../../tree/master/tutorials/tutorial21) - Cast between different field types.
 - [tutorial22](../../tree/master/tutorials/tutorial22) - Complex length fields.
 - [tutorial23](../../tree/master/tutorials/tutorial23) - Reusing definitions from other schemas.
+- [tutorial24](../../tree/master/tutorials/tutorial24) - Extra validity verification of message payload.
 
 
 # How-Tos
