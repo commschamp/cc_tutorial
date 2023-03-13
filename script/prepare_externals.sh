@@ -68,13 +68,6 @@ if [ -n "${COMMON_INSTALL_DIR}" ]; then
     COMMSDSL_INSTALL_DIR=${COMMON_INSTALL_DIR}
 fi
 
-CC_TOOLS_QT_SRC_DIR=${EXTERNALS_DIR}/cc_tools_qt
-CC_TOOLS_QT_BUILD_DIR=${BUILD_DIR}/externals/cc_tools_qt/build
-CC_TOOLS_QT_INSTALL_DIR=${CC_TOOLS_QT_BUILD_DIR}/install
-if [ -n "${COMMON_INSTALL_DIR}" ]; then
-    CC_TOOLS_QT_INSTALL_DIR=${COMMON_INSTALL_DIR}
-fi
-
 procs=$(nproc)
 if [ -n "${procs}" ]; then
     procs_param="-- -j${procs}"
