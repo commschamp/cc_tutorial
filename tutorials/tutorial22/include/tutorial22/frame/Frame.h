@@ -128,7 +128,7 @@ class Frame : public
         FrameLayers<TOpt>::template Stack<TMessage, TAllMessages>;
 public:
     /// @brief Allow access to frame definition layers.
-    /// @details See definition of @b COMMS_PROTOCOL_LAYERS_ACCESS macro
+    /// @details See definition of @b COMMS_PROTOCOL_LAYERS_NAMES macro
     ///     from COMMS library for details.
     ///
     ///     The generated types and functions are:

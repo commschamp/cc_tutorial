@@ -112,7 +112,7 @@ member function, which is similar to `read()` used so far, but receives the tupl
 its first parameter. After the read operation is complete the provided `transportFields` tuple will have updated values which 
 can be accessed later.
 
-Please pay attention that the frame definition uses `COMMS_PROTOCOL_LAYERS_ACCESS()` macro, which defines names of the 
+Please pay attention that the frame definition uses `COMMS_PROTOCOL_LAYERS_NAMES()` macro, which defines names of the 
 used layers and allows convenient access to them using `layer_*()` member function.
 ```cpp
 template <
@@ -127,7 +127,7 @@ class Frame : public
         typename FrameLayers<TOpt>::template Stack<TMessage, TAllMessages>;
 public:
     ...
-    COMMS_PROTOCOL_LAYERS_ACCESS(
+    COMMS_PROTOCOL_LAYERS_NAMES(
         data,
         id,
         size,

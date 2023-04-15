@@ -75,7 +75,7 @@ void ServerSession::handle(ConnectMsg& msg)
 }
 ```
 **REMINDER**: The [frame](include/tutorial20/frame/Frame.h) definition uses 
-`COMMS_PROTOCOL_LAYERS_ACCESS()` macro which assigns names to the used framing layers.
+`COMMS_PROTOCOL_LAYERS_NAMES()` macro which assigns names to the used framing layers.
 The macro also generates `layer_*()` member functions for all the provided names to 
 access relevant layer. As the result `m_frame.layer_version()` provides an access to the
 `Version` layer.
