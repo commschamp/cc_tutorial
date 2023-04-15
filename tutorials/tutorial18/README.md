@@ -3,10 +3,10 @@ How to access transport framing fields.
 
 In all the tutorials so far the transport framing fields have been silently stripped 
 away by the frame management and only the message object dispatched for handling. 
-There are ways to re-assign values from the frame using **&lt;value&gt;** layer in 
-conjunction with custom **&lt;interface&gt;**. However, there may be cases when it's not
+There are ways to re-assign values from the frame using `<value>` layer in 
+conjunction with custom `<interface>`. However, there may be cases when it's not
 enough and there is a need to actually know the values of the other fields 
-(from **&lt;id&gt;**, **&lt;size&gt;** and other layers). 
+(from `<id>`, `<size>` and other layers). 
 
 This tutorial demonstrates a way of caching and accessing the fields of the framing layers.
 
@@ -104,7 +104,7 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
 ```
 Every [layer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html) defines
 `AllFields` inner type which is `std::tuple` of all the fields starting from the layer 
-being defined and down to the bottom (**&lt;payload&gt;**) one. As the result the `AllFields` type of the outermost layer 
+being defined and down to the bottom (`<payload>`) one. As the result the `AllFields` type of the outermost layer 
 (which is also used as a full frame) is a tuple of all the framing fields.
 
 Also every layer defines [readFieldsCached()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
@@ -140,9 +140,9 @@ Once the layer object is accesses its
 [accessCachedField()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
 member function can be used to access appropriate field in the cached fields tuple.
 
-Note that the inner field of the **&lt;payload&gt;** layer is 
+Note that the inner field of the `<payload>` layer is 
 [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html) of 
-raw `std::uint8_t` bytes (equivalent to being **&lt;data&gt;**). The options passed to 
+raw `std::uint8_t` bytes (equivalent to being `<data>`). The options passed to 
 [comms::protocol::MsgDataLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgDataLayer.html)
 are passed to the field definition. If no special options are passed then the whole payload will be 
 **copied** to the cached field. It is highly recommended to pass 

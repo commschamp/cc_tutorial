@@ -2,8 +2,8 @@
 Complex length fields.
 
 Up until **v5.0** of the [CommsDSL Specification](https://commschamp.github.io/commsdsl_spec/) the 
-`semanticType="length"` property was allowed to be assinged only for **&lt;int&gt;** fields. Since **v5.0**
-it is allowed for complex fields, such as **&lt;bundle&gt;** or **&lt;bitfield&gt;**. However,
+`semanticType="length"` property was allowed to be assinged only for `<int>` fields. Since **v5.0**
+it is allowed for complex fields, such as `<bundle>` or `<bitfield>`. However,
 the custom code is required to be injected which implements the functionality of 
 setting and retrieving numeric length values.
 
@@ -11,7 +11,7 @@ This tutorial demonstrates using the length field, which is serialized as one by
 remaining length value is `254` or lower. Otherwise is is serialized as 3 bytes, where the 
 first one is special value `0xff (255)`, followed by the 2 bytes of real length.
 
-The [schema](dsl/schema.xml) file defines the `Length` field as the following **&lt;bundle&gt;**:
+The [schema](dsl/schema.xml) file defines the `Length` field as the following `<bundle>`:
 ```xml
 <bundle name="Length" semanticType="length" valueOverride="replace">
     <int name="Short" type="uint8">
@@ -103,7 +103,7 @@ is used, while for the second one the **long** form is in place.
 ## Summary
 
 - Version **v5.0** of [CommsDSL Specification](https://commschamp.github.io/commsdsl_spec/)
-  allows using complex fields like **&lt;bundle&gt;** or **&lt;bitfield&gt;** to be used
+  allows using complex fields like `<bundle>` or `<bitfield>` to be used
   as length with `semanticType="length"` property assigned.
 - Version **v5.0** of the [COMMS Library](https://github.com/commschamp/comms) uses
   extra `getValue()` and `setValue()` wrapping functions (in addition to the `value()`),

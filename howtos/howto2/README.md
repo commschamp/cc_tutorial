@@ -19,8 +19,8 @@ The [schema](dsl/schema.xml) of this tutorial defines the such frame in the foll
     <payload name="Data" />
 </frame>
 ```
-Please note that the defined **&lt;custom&gt;** layer is marked as the replacement of the 
-**&lt;id&gt;** layer using `semanticLayerType="id"` property 
+Please note that the defined `<custom>` layer is marked as the replacement of the 
+`<id>` layer using `semanticLayerType="id"` property 
 (because there must be a layer responsible for the message object allocation).
 
 The [tutorial17](../../tutorials/tutorial17) explains usage of the custom framing 
@@ -30,7 +30,7 @@ The [dsl_src/include/howto2/frame/layer/IdWithSize.h](dsl_src/include/howto2/fra
 (which finds its way to be [include/howto2/frame/layer/IdWithSize.h](include/howto2/frame/layer/IdWithSize.h) 
 in the generated code) implements the required functionality.
 
-Due to the fact of this class is a replacement to the **&lt;id&gt;** layer it must extend 
+Due to the fact of this class is a replacement to the `<id>` layer it must extend 
 the [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
 and implement its member functions that allow set / get of the message ID value out of the 
 field object 
@@ -137,7 +137,7 @@ by the framing size:
     <string name="F1" defaultValue="hello" />
 </message>
 ```
-The inner **&lt;string&gt;** field doesn't have any length limitation and will consume all the available data 
+The inner `<string>` field doesn't have any length limitation and will consume all the available data 
 (which is limited by the frame size).
 
 The [ClientSession](src/ClientSession.cpp) sends two messages in a row:

@@ -35,8 +35,8 @@ The relevant parts of this tutorial [schema](dsl/schema.xml) looks like this:
 a value equal to the schema version (**5** in this tutorial).
 
 This creates a problem for the **server** that was compiled with version **5** (with default value of 
-the `Version` field inside the **&lt;interface&gt;** to be **5**), but the connected **client** 
-has version **4**. There is a need for the `Version` field of the **&lt;interface&gt;** to have updated
+the `Version` field inside the `<interface>` to be **5**), but the connected **client** 
+has version **4**. There is a need for the `Version` field of the `<interface>` to have updated
 value before the `read()` operation of the newly created message object is invoked.
 
 In order to properly support such case the following trick is required:
@@ -50,7 +50,7 @@ In order to properly support such case the following trick is required:
     <payload name="Data" />
 </frame>
 ```
-There is still **&lt;value&gt;** layer (like in [previous](../tutorial19) tutorial) 
+There is still `<value>` layer (like in [previous](../tutorial19) tutorial) 
 which is responsible to assign proper value to the `Value` field, but it is marked as 
 **pseudo** (`pseudo="true"`). The **pseudo** value layer does not really serialize/deserialize
 any field, it just pretends to. Such layer contains inner field member in its private data, 
@@ -59,7 +59,7 @@ such pseudo layer pretends to read the value and just takes the data from its in
 if read.
 
 Note, that **pseudo** layer can be put anywhere in the frame, but it is recommended (for
-performance reasons) to put it right before the **&lt;payload&gt;** to make sure that 
+performance reasons) to put it right before the `<payload>` to make sure that 
 the message object is properly created.
 
 Let's take a look how the `Connect` message is handled by the [ServerSession](src/ServerSession.cpp):
@@ -80,7 +80,7 @@ The macro also generates `layer_*()` member functions for all the provided names
 access relevant layer. As the result `m_frame.layer_version()` provides an access to the
 `Version` layer.
 
-The pseudo **&lt;value&gt;** layer is defined with usage of 
+The pseudo `<value>` layer is defined with usage of 
 [comms::option::def::PseudoValue](https://commschamp.github.io/comms_doc/options_8h.html) option.
 ```cpp
 using Version =
@@ -98,8 +98,8 @@ The code above (`m_frame.layer_version().pseudoField()`) accesses it and assigns
 version.
 
 As the result, for all the messages that follow, the `Version` member field 
-(in the **&lt;interface&gt;**) will be assigned the right value before
-the `read()` operation is forwarded to the **&lt;payload&gt;** layer, which in turn invokes `read()` operation of 
+(in the `<interface>`) will be assigned the right value before
+the `read()` operation is forwarded to the `<payload>` layer, which in turn invokes `read()` operation of 
 the message object. 
 
 ----
@@ -107,7 +107,7 @@ the message object.
 **SIDE NOTE**: If [CommsChampion Tools](https://github.com/commschamp/cc_tools_qt/wiki/How-to-Use-CommsChampion-Tools)
 are intended to be used for the protocol visualization and/or debugging, it is better to hide the `Version` field 
 inside the transport framing from being displayed altogether (because it's not really there). In such case it is
-recommended to slightly update the definition of the **&lt;value&gt;** layer above into the following:
+recommended to slightly update the definition of the `<value>` layer above into the following:
 ```xml
 <value name="Version" interfaceFieldName="Version" pseudo="true">
     <ref field="Version" displayHidden="true" />
@@ -118,7 +118,7 @@ recommended to slightly update the definition of the **&lt;value&gt;** layer abo
 
 Note that in this tutorial the client is also compiled to have the default version **5** (the default state of all the 
 fields in all the messages is valid for version **5**). In order to emulate version **4** client the 
-field of the pseudo `Version` **&lt;value&gt;** layer is modified when `Connect` message is sent:
+field of the pseudo `Version` `<value>` layer is modified when `Connect` message is sent:
 ```cpp
 void ClientSession::sendConnect()
 {
@@ -163,9 +163,9 @@ operation.
 - When the version is reported in one (usually the first) of the messages, the 
   definition is very similar to the one that reports the version in the frame of 
   every message (described in the [previous](../tutorial19) tutorial).
-- The main difference is that **&lt;value&gt;** layer needs to be set as **pseudo**
+- The main difference is that `<value>` layer needs to be set as **pseudo**
   (`pseudo="true"`).
-- When handling the version reporting message, the relevant pseudo **&lt;value&gt;** layer
+- When handling the version reporting message, the relevant pseudo `<value>` layer
   object in the frame needs to be accessed and its pseudo field needs to be updated to the 
   right version. It will result in all subsequent incoming messages to be read as if having 
   the reported version.

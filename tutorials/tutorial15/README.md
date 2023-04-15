@@ -15,7 +15,7 @@ introduced [comms::GenericMessage](https://commschamp.github.io/comms_doc/classc
 It extends [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
 like any regular message definition and has a single member field (payload) which is 
 [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)
-of raw data `std::uint8_t` (equivalent to basic **&lt;data&gt;** field without any prefixes).
+of raw data `std::uint8_t` (equivalent to basic `<data>` field without any prefixes).
 However, it doesn't specify any numeric message ID, i.e. its ID information is available at run-time,
 not compile-time like any other.
 

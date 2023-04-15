@@ -43,7 +43,7 @@ The member field of the `Msg` message definition also references field in the ex
 ```
 
 The definition of the `Length` field in the external `t23_ext` schema is taken from the
-previous [tutorial22](../tutorial22). Instead of referencing it with the **&lt;ref&gt;**
+previous [tutorial22](../tutorial22). Instead of referencing it with the `<ref>`
 field definition (which is also possible) the schema just copies its definition using **reuse**
 property:
 ```xml
@@ -130,13 +130,13 @@ To cope with this problem the code generation utilities (**commsdsl2comms** and 
 renaming different namespaces to avoid clashing.
 
 However, as was shown in this tutorial the fields which are **reuse**-ed rather than
-**&lt;ref&gt;**-erenced don't generate code in the external namespace. In case the **all**
+`<ref>`-erenced don't generate code in the external namespace. In case the **all**
 the schema fields defined this way, the external namespace will be empty and no code for it
 will be generated. As the result the definition of the protocol options are also getting
 much simpler.
 
 The bottom line, it is highly recommended to **reuse** the fields from the external schema rather
-than **&lt;ref&gt;**-erence them.
+than `<ref>`-erence them.
 
 ## Summary
 
@@ -144,7 +144,7 @@ than **&lt;ref&gt;**-erence them.
   and [commsdsl](https://github/commschamp/commsdsl) code generators.
 - Inter-schema referencing is allowed using `@<schema_name>.` prefix.
 - When using multiple schemas it is highly recommended to **reuse** the fields  rather
-than **&lt;ref&gt;**-erence them.
+than `<ref>`-erence them.
 
 
 [Read Previous Tutorial](../tutorial22) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial24) 

@@ -8,7 +8,7 @@ Usually such values are serialized as integral ones which treated as
 number of digits after decimal points.
 
 To help with such cases [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) has
-**scaling** property applicable to **&lt;int&gt;** fields. Message `Msg1` (defined in [dsl/schema.xml](dsl/schema.xml) 
+**scaling** property applicable to `<int>` fields. Message `Msg1` (defined in [dsl/schema.xml](dsl/schema.xml) 
 and implemented inside [include/tutorial3/message/Msg1.h](include/tutorial3/message/Msg1.h)) comes to
 demonstrate definition of such fields.
 
@@ -22,7 +22,7 @@ The message and its fields are defined in the following way:
 The **scaling** property defines rational number fraction by which the stored integral value needs to get
 multiplied in order the receive required floating point value. Also the 
 [comms::field::IntValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) class
-used to implement defined **&lt;int&gt;** fields provides `getScaled()` and `setScaled()` member functions
+used to implement defined `<int>` fields provides `getScaled()` and `setScaled()` member functions
 which allow retrieving and setting proper floating point values taking the scaling ratio into account.
 ```cpp
 void ClientSession::sendMsg1()
@@ -59,7 +59,7 @@ Received "Message 1" with ID=1
 ---
 
 **SIDE NOTE**: Please pay attention to the way of how **displayName** property is set to the values of
-`MsgId` **&lt;enum&gt;** field as well as messages themselves.
+`MsgId` `<enum>` field as well as messages themselves.
 ```xml
 
 <fields>
@@ -88,7 +88,7 @@ Received "Message 1" with ID=1
 ```
 The **id** property of every message is expected to be a numeric value. However, the
 [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows usage of 
-reference strings as well. In the case above they reference the defined **&lt;validValue&gt;**-s
+reference strings as well. In the case above they reference the defined `<validValue>`-s
 of the `MsgId` field. The value of the **displayName** property needs to be
 as string. [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows
 referencing of common definitions for strings as well. 
@@ -117,7 +117,7 @@ the chosen units for a specific field can get changed in the process. In such ca
 boilerplate code needs to be modified as well, which is error-prone of course.
 
 The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows usage of **units** property when
-defining **&lt;int&gt;** and **&lt;float&gt;** fields. The list of supported values can be found in
+defining `<int>` and `<float>` fields. The list of supported values can be found in
 the [specification](https://commschamp.github.io/commsdsl_spec/#appendix-units).
 
 Message `Msg2` (defined in [dsl/schema.xml](dsl/schema.xml) 
@@ -262,10 +262,10 @@ Received "Message 3" with ID=3
 ## Summary
 
 - The string values can reference other fields with '^' prefix.
-- The [fixed point values](https://en.wikipedia.org/wiki/Fixed-point_arithmetic) are defined as **&lt;int&gt;** and 
+- The [fixed point values](https://en.wikipedia.org/wiki/Fixed-point_arithmetic) are defined as `<int>` and 
   use **scaling** property to define their scaling ratio.
 - The [comms::field::IntValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) class
-  used to define **&lt;int&gt;** fields provides **getScaled()** and **setScaled()** member functions to get / set
+  used to define `<int>` fields provides **getScaled()** and **setScaled()** member functions to get / set
   scaled floating point values.
 - Measurement units are defined using **units** property.
 - List of supported units can be found in the CommsDSL [specification](https://commschamp.github.io/commsdsl_spec/#appendix-units).

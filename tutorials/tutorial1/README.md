@@ -10,18 +10,18 @@ numeric message ID.
 
 Several highlights:
 
-- The **name** property of the **&lt;schema&gt;** XML node will be
+- The **name** property of the `<schema>` XML node will be
 a default main namespace of the protocol code. The code generated has a
 command line option to overwrite it.
 - The protocol endian is defined as **endian="big"** property of
-the main **&lt;schema&gt;** XML node.
+the main `<schema>` XML node.
 - The global fields (that can be references by messages and/or other 
-fields) are defined as members of **&lt;fields&gt;** XML node.
-- The `enum` field is defined by **&lt;enum&gt;** XML node.
+fields) are defined as members of `<fields>` XML node.
+- The `enum` field is defined by `<enum>` XML node.
 - When `enum` is used to define numeric message IDs it needs to be marked
 as such using **semanticType="messageId"** property assignment.
-- The messages are defined using **&lt;message&gt;** XML node.
-- The transport framing is defined using **&lt;frame&gt;** XML node.
+- The messages are defined using `<message>` XML node.
+- The transport framing is defined using `<frame>` XML node.
 
 ----
 

@@ -9,7 +9,7 @@ SYNC (0xabcd) | LENGTH (2 bytes) | TLV1 | TLV2 | .... | TLVN | CHECKSUM (CRC-CCI
 ```
 
 Although the protocol specification might not define any particular message structure there is still a 
-need to define a **&lt;message&gt;** with some dummy numeric ID.
+need to define a `<message>` with some dummy numeric ID.
 ```xml
 <fields>
     <string name="MsgName" defaultValue="Message" />
@@ -24,7 +24,7 @@ need to define a **&lt;message&gt;** with some dummy numeric ID.
     ...
 </message>
 ```
-The TLV triplets are defined using **&lt;variant&gt;** field and are described in detail in the 
+The TLV triplets are defined using `<variant>` field and are described in detail in the 
 [tutorial4](../../tutorials/tutorial4).
 ```xml
 <fields>
@@ -55,7 +55,7 @@ The message frame is defined the following way:
     </checksum>
 </frame>
 ```
-**NOTE**, that **&lt;id&gt;** layer is still present, but its field has **pseudo** property set (`pseudo="true"`).
+**NOTE**, that `<id>` layer is still present, but its field has **pseudo** property set (`pseudo="true"`).
 It means that the field is not really written / read during serialization / deserialization. 
 The field is [defined](include/howto4/frame/Frame.h) using 
 [comms::option::def::EmptySerialization](https://commschamp.github.io/comms_doc/structcomms_1_1option_1_1def_1_1EmptySerialization.html)
@@ -79,7 +79,7 @@ struct FrameLayers
     };
 };
 ```
-When input data is processed, the **&lt;id&gt;** field is assumed to read the default value, which is **0**.
+When input data is processed, the `<id>` field is assumed to read the default value, which is **0**.
 
 Now let's take a look at the handling code. The [server](src/ServerSession.h) is defined in its usual way, 
 using polymorphic interface:

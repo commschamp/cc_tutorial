@@ -159,10 +159,10 @@ $> nmake install
   interfaces, and dispatching message object into appropriate handling function.
 - [tutorial2](../../tree/master/tutorials/tutorial2) - Introduction to message fields definitions and their usage.
 - [tutorial3](../../tree/master/tutorials/tutorial3) - Working with scaling and units in numeric fields.
-- [tutorial4](../../tree/master/tutorials/tutorial4) - Working with **&lt;variant&gt;** fields and defining heterogeneous
+- [tutorial4](../../tree/master/tutorials/tutorial4) - Working with `<variant>` fields and defining heterogeneous
   lists.
-- [tutorial5](../../tree/master/tutorials/tutorial5) - Deeper understanding of **&lt;frame&gt;**-ing and working 
-  with multiple **&lt;frame&gt;**-s.
+- [tutorial5](../../tree/master/tutorials/tutorial5) - Deeper understanding of `<frame>`-ing and working 
+  with multiple `<frame>`-s.
 - [tutorial6](../../tree/master/tutorials/tutorial6) - Deeper understanding of message dispatch.
 - [tutorial7](../../tree/master/tutorials/tutorial7) - Dispatching single message object to multiple handlers.
 - [tutorial8](../../tree/master/tutorials/tutorial8) - Returning values from message handling functions.
@@ -185,7 +185,7 @@ $> nmake install
 
 
 # How-Tos
-- [howto1](../../tree/master/howtos/howto1) - Custom remaining size framing information preceding **&lt;id&gt;**.
+- [howto1](../../tree/master/howtos/howto1) - Custom remaining size framing information preceding `<id>`.
 - [howto2](../../tree/master/howtos/howto2) - Having single field for message ID and remaining size in message framing.
 - [howto3](../../tree/master/howtos/howto3) - Using message termination suffix instead of message length prefix.
 - [howto4](../../tree/master/howtos/howto4) - Single message protocol without message ID in framing.

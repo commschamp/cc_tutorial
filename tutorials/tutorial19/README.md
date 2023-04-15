@@ -78,7 +78,7 @@ struct Version : public
 
 ----
 
-**SIDE NOTE**: In case the defined **&lt;interface&gt;** does not have version field (marked 
+**SIDE NOTE**: In case the defined `<interface>` does not have version field (marked 
 with `semanticType="version"`) the generated code won't be really version dependent, and all 
 **sinceVersion** and **deprecated** properties will be ignored.
 
@@ -86,7 +86,7 @@ with `semanticType="version"`) the generated code won't be really version depend
 
 As was already mentioned earlier this tutorial will report a version for every message as part of the 
 message framing. In order to re-assign the value from the frame to the message object usual 
-**&lt;value&gt;** layer can be used:
+`<value>` layer can be used:
 ```xml
 <frame name="Frame">
     <size name="Size">
@@ -100,7 +100,7 @@ message framing. In order to re-assign the value from the frame to the message o
 </frame>
 ```
 **REMINDER**: The value of **interfaceFieldName** property needs to contain a name of the 
-field inside the **&lt;interface&gt;** to which it needs to be re-assigned.
+field inside the `<interface>` to which it needs to be re-assigned.
 
 Now it's time to take a closer look at the generated code. Let's take a look at the 
 generated common interface class:
@@ -225,11 +225,11 @@ Let's also take a closer look at the definition of `Msg2`.
     </enum>        
 </message>
 ```
-Every **&lt;validValue&gt;** of the **&lt;enum&gt;** field can also have 
+Every `<validValue>` of the `<enum>` field can also have 
 version information specified with **sinceVersion** and/or **deprecated** properties.
 In most cases such version information is for documentation purposes only and doesn't 
 have any influence on the generated code, i.e. all the deprecated and 
-newly introduced **&lt;validValue&gt;** are considered valid ones 
+newly introduced `<validValue>` are considered valid ones 
 **unless** **validCheckVersion** property is set to **true**. In such case 
 (`F2` in the example above) the code generator creates special code for the 
 `valid()` member function of the field to check the validity of the value 
@@ -297,8 +297,8 @@ struct Msg2Fields
     ...
 };
 ```
-The same thing is applicable to the **&lt;set&gt;** field with its **&lt;bit&gt;**-s. 
-Every specified **&lt;bit&gt;** (regardless of the version it has been introduced) is 
+The same thing is applicable to the `<set>` field with its `<bit>`-s. 
+Every specified `<bit>` (regardless of the version it has been introduced) is 
 considered to be valid (non-reserved) unless **validCheckVersion** property is set, 
 which will result is the generation of the special `valid()` member function.
 
@@ -368,20 +368,20 @@ ones for improved run-time and code size performance.
 ----
 
 ## Summary
-- To specify version of the protocol (schema) assign **version** property of the **&lt;schema&gt;**.
+- To specify version of the protocol (schema) assign **version** property of the `<schema>`.
 - Newly introduced field and/or message need to specify version when it happened using **sinceVersion** property.
 - The deprecated fields should be marked with **deprecated**.
 - By default deprecated fields are not removed to maintain backward compatibility of the protocol. In order to
   forcefully remove it use `removed="true"` property assignment.
 - In order to let the [commsdsl2comms](https://github.com/commschamp/commsdsl) generate the version dependent
-  code, the **&lt;interface&gt;** needs to contain a field marked as version (having `semanticType="version"`
+  code, the `<interface>` needs to contain a field marked as version (having `semanticType="version"`
   property assignment).
-- Use usual **&lt;value&gt;** framing layer when version is reported as a field inside the transport frame.
+- Use usual `<value>` framing layer when version is reported as a field inside the transport frame.
 - All the version dependent fields are implemented as 
   [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html) fields.
-- All the **&lt;validValue&gt;**-s of the **&lt;enum&gt;** field are considered to be valid (regardless of 
-  the version they where introduced or their deprecation status) as well as all the **&lt;bit&gt;**-s of the 
-  **&lt;set&gt;** field are considered to be not reserved unless **validCheckVersion** property is set to 
+- All the `<validValue>`-s of the `<enum>` field are considered to be valid (regardless of 
+  the version they where introduced or their deprecation status) as well as all the `<bit>`-s of the 
+  `<set>` field are considered to be not reserved unless **validCheckVersion** property is set to 
   **true**. In this case the generated `valid()` member function will take the version into account.
 - When custom `doRead()` member function is injected into the version dependent message, it must call
   [Base::doFieldsVersionUpdate()](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)

@@ -76,11 +76,11 @@ The message can define its field internally:
 ```xml
 <int name="F2" type="int16" />
 ```
-or reference the previously defined global field (using **&lt;ref&gt;** node):
+or reference the previously defined global field (using `<ref>` node):
 ```xml
 <ref name="F1" field="I1" />
 ```
-The globally defined fields need to reside inside **&lt;fields&gt;** XML node:
+The globally defined fields need to reside inside `<fields>` XML node:
 ```xml
 <fields>
     <int name="I1" type="uint8" />
@@ -374,7 +374,7 @@ class Msg15 : public
 Since release **v4.0** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) as
 well as [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator it became
 possible to copy fields from the definition of the [&lt;bundle&gt;](#bundle-fields)
-field, not just another **&lt;message&gt;**.
+field, not just another `<message>`.
 
 The message `Msg16` inside [dsl/msg16.xml](dsl/msg16.xml) is defined the following way:
 ```xml
@@ -409,7 +409,7 @@ In general, the fields are defined as XML node. Available field types are:
 - [&lt;string&gt;](#string-fields) - Strings.
 - [&lt;data&gt;](#data-fields) - Raw binary data.
 - [&lt;bundle&gt;](#bundle-fields) - Bundling of multiple fields into a single composite field.
-- [&lt;bitfield&gt;](#bitfield-fields) - Similar to **&lt;bundle&gt;**, but allows member fields
+- [&lt;bitfield&gt;](#bitfield-fields) - Similar to `<bundle>`, but allows member fields
 having length in bits (not bytes), up to max of 64 bits.
 - [&lt;list&gt;](#list-fields) - List of fields.
 - [&lt;variant&gt;](#variant-fields) - Union of possible fields, containing one value of any
@@ -500,7 +500,7 @@ struct E2_1Common
 class provided by the [COMMS Library](https://github.com/commschamp/comms).
 - The field's value is considered to be valid (determined by the call to the
 `valid()` member function) if it is equal to one of
-the **&lt;validValue&gt;**-es. It is implemented by using `comms::option::def::ValidNumValueRange`
+the `<validValue>`-es. It is implemented by using `comms::option::def::ValidNumValueRange`
 option provided by the [COMMS Library](https://github.com/commschamp/comms).
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
@@ -543,12 +543,12 @@ Please note the following:
 
 - By default the value of the default-constructed `enum` field object is `0`. It
 is possible to change it using **defaultValue** property of the field, which can
-have either numeric value of reference one of its **&lt;valueValue&gt;**-es. In
+have either numeric value of reference one of its `<validValue>`-es. In
 case of `E2_2` it is `V2`. It is implemented using `comms::option::def::DefaultNumValue`
 option passed to the class definition.
 - Any numeric value can be assigned as decimal or as hexadecimal value prefixed
 with `0x`.
-- When the **&lt;valueValue&gt;**-es cannot be unified into one range, the 
+- When the `<validValue>`-es cannot be unified into one range, the 
 [COMMS Library](https://github.com/commschamp/comms)
 allows usage of multiple `comms::option::def::ValidNumValue` options:
 ```cpp
@@ -670,7 +670,7 @@ msg.field_f4().setValue(0xff);
 
 The definition of the enum fields also provides `valueName()` member function
 which allows retrieval of the human readable name of the current value. Note, that
-by default the value's name is the value of **name** property of the **&lt;validValue&gt;**
+by default the value's name is the value of **name** property of the `<validValue>`
 XML note, unless **displayName** property is set, which takes over. 
 The usage of the `valueName()` member function is demonstrated inside 
 message handling function when the received message content is printed:
@@ -694,11 +694,11 @@ The `Msg3` message (defined inside [dsl/msg3.xml](dsl/msg3.xml) and implemented
 in [include/tutorial2/message/Msg3.h](include/tutorial2/message/Msg3.h)) is there to
 demonstrate basic usage of integral fields. The previous section showed that
 the fields can be defined as global ones or internally as members of 
-**&lt;message&gt;** XML node. For reference and demonstration convenience, the
+`<message>` XML node. For reference and demonstration convenience, the
 explained fields in this and most of subsequent sections will be defined as
-global ones and referenced using **&lt;ref&gt;** XML node.
+global ones and referenced using `<ref>` XML node.
 
-The first defined **&lt;int&gt;** field is:
+The first defined `<int>` field is:
 ```xml
 <fields>
     <int name="I3_1" type="int32" defaultValue="10" />
@@ -738,7 +738,7 @@ void ClientSession::sendMsg3()
 
 ```
 
-The second defined **&lt;int&gt;** field is:
+The second defined `<int>` field is:
 ```xml
 <fields>
     <int name="I3_2" type="uint32" length="3" />
@@ -775,7 +775,7 @@ serialization length of the field and `minLength()` as well as `maxLength()`
 static member functions that can be used at compile time to verify minimal and
 maximal serialization lengths of the field.
 
-The third defined **&lt;int&gt;** field uses variable length encoding:
+The third defined `<int>` field uses variable length encoding:
 ```xml
 <fields>
     <int name="I3_3" type="uintvar" length="4" />
@@ -835,7 +835,7 @@ provides an ability to specify names for some values, while
 [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator creates
 necessary helper functions to get/set special values.
 
-The fourth defined **&lt;int&gt;** field demonstrates usage of such special values.
+The fourth defined `<int>` field demonstrates usage of such special values.
 ```xml
 <fields>
     <int name="I3_4" type="uint8" defaultValue="S1">
@@ -882,7 +882,7 @@ void ClientSession::sendMsg3()
 }
 ```
 
-The fifth defined **&lt;int&gt;** field 
+The fifth defined `<int>` field 
 ([I3_5](include/tutorial2/field/I3_5.h)) demonstrates usage of **serOffset**
 property. It is used to automatically add / subtract predefined value before / after
 field value serialization. The classic example is having a year number to be serialized
@@ -917,12 +917,12 @@ Note that the field's value contains proper year number and the integration code
 not need to know or care about applied serialization offset.
 
 ### &lt;set&gt; Fields
-The **&lt;set&gt;** field allows creation of bitset / bitmask fields where
+The `<set>` field allows creation of bitset / bitmask fields where
 every bit has independent meaning. The `Msg4` message 
 (defined inside [dsl/msg4.xml](dsl/msg4.xml) and implemented
 in [include/tutorial2/message/Msg4.h](include/tutorial2/message/Msg4.h)) demonstrates usage of such fields.
 
-The first defined **&lt;set&gt;** field is ([S4_1](include/tutorial2/field/S4_1.h)):
+The first defined `<set>` field is ([S4_1](include/tutorial2/field/S4_1.h)):
 ```xml
 <fields>
     <set name="S4_1" length="1">
@@ -942,7 +942,7 @@ Please note the following:
 
 - The length of the field is specified using **length** property. The value
 of the property is length of the field in **bytes**. 
-- The information of the bit is defined using **&lt;bit&gt;** XML node, which
+- The information of the bit is defined using `<bit>` XML node, which
 also uses **name** property to specify name of the bit as well as **idx**
 property to specify bit index.
 
@@ -1040,7 +1040,7 @@ void ClientSession::sendMsg4()
 }
 ```
 
-The second defined **&lt;set&gt;** field is ([S4_2](include/tutorial2/field/S4_2.h)):
+The second defined `<set>` field is ([S4_2](include/tutorial2/field/S4_2.h)):
 ```xml
 <fields>
     ...
@@ -1087,7 +1087,7 @@ public:
 };
 ```
 
-The third defined **&lt;set&gt;** field ([S4_3](include/tutorial2/field/S4_3.h))
+The third defined `<set>` field ([S4_3](include/tutorial2/field/S4_3.h))
 demonstrates better control of reserved fields:
 ```xml
 <fields>
@@ -1178,13 +1178,13 @@ void ClientSession::handle(Msg4& msg)
 ```
 
 ### &lt;float&gt; Fields
-The **&lt;float&gt;** stores and abstracts away value of floating point type 
+The `<float>` stores and abstracts away value of floating point type 
 with IEEE 754 encoding. The `Msg5` message 
 (defined inside [dsl/msg5.xml](dsl/msg5.xml) and implemented in 
 [include/tutorial2/message/Msg5.h](include/tutorial2/message/Msg5.h)) 
 demonstrates usage of such fields.
 
-The first defined **&lt;float&gt;** field is ([F5_1](include/tutorial2/field/F5_1.h)):
+The first defined `<float>` field is ([F5_1](include/tutorial2/field/F5_1.h)):
 ```xml
 <fields>
     <float name="F5_1" type="float" />
@@ -1201,11 +1201,11 @@ used to specify underlying storage type of the field. The available values are
 **float** (with 4 bytes serialization length) and **double** (with 8 bytes
 serialization length).
 
-The **&lt;float&gt;** field is defined using 
+The `<float>` field is defined using 
 [comms::field::FloatValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1FloatValue.html) 
 class provided by the [COMMS Library](https://github.com/commschamp/comms).
 
-The second defined **&lt;float&gt;** field 
+The second defined `<float>` field 
 ([F5_2](include/tutorial2/field/F5_2.h)) demonstrates usage of values with
 special meaning (similar to special values that can be defined for 
 [&lt;int&gt;](#int-fields) fields).
@@ -1247,12 +1247,12 @@ void ClientSession::sendMsg5()
 ```
 
 ### &lt;string&gt; Fields
-The **&lt;string&gt;** fields abstract away string values. The `Msg6` message 
+The `<string>` fields abstract away string values. The `Msg6` message 
 (defined inside [dsl/msg6.xml](dsl/msg6.xml) and implemented in
 [include/tutorial2/message/Msg6.h](include/tutorial2/message/Msg6.h)) 
 demonstrates usage of such fields.
 
-The first defined **&lt;string&gt;** field ([S6_1](include/tutorial2/field/S6_1.h)) 
+The first defined `<string>` field ([S6_1](include/tutorial2/field/S6_1.h)) 
 shows usage of fixed size string field:
 ```xml
 <fields>
@@ -1265,11 +1265,11 @@ shows usage of fixed size string field:
     ...
 </message>
 ```
-The **&lt;string&gt;** field is defined using 
+The `<string>` field is defined using 
 [comms::field::String](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1String.html) 
 class provided by the [COMMS Library](https://github.com/commschamp/comms).
 
-The **default** storage type of any **&lt;string&gt;** field is `std::string`.
+The **default** storage type of any `<string>` field is `std::string`.
 It can be replaced with interface compatible other type at compile time by the application being
 developed using one of the extension options. One of the later tutorials will cover this topic in detail.
 
@@ -1289,7 +1289,7 @@ void ClientSession::sendMsg6()
     ...
 }
 ```
-When such **&lt;string&gt;** field is serialized, the
+When such `<string>` field is serialized, the
 [COMMS Library](https://github.com/commschamp/comms) makes
 sure that correct number of bytes is written to the output buffer. In case the
 stored string value has shorter length, the output is padded with correct number
@@ -1297,7 +1297,7 @@ of zeroes (**0**). In case the stored string value is longer than allowed, the
 serialization output will just be truncated without exceeding maximum allowed 
 number of bytes.
 
-The second defined **&lt;string&gt;** field ([S6_2](include/tutorial2/field/S6_2.h))
+The second defined `<string>` field ([S6_2](include/tutorial2/field/S6_2.h))
 demonstrates string prefixed with
 1 byte of its serialization length:
 ```xml
@@ -1332,7 +1332,7 @@ void ClientSession::sendMsg6()
 }
 ```
 
-The third defined **&lt;string&gt;** field ([S6_3](include/tutorial2/field/S6_3.h)) 
+The third defined `<string>` field ([S6_3](include/tutorial2/field/S6_3.h)) 
 also demonstrates string prefixed with
 its serialization length, but this time of variable length.
 ```xml
@@ -1350,14 +1350,14 @@ its serialization length, but this time of variable length.
 </message>
 ```
 Note that this time **lengthPrefix** is used as field's property and
-it's value references already defined external **&lt;int&gt;** field.
+it's value references already defined external `<int>` field.
 
 Also note that the length prefix has variable length of 1 or 2 bytes
 with [Base-128](https://en.wikipedia.org/wiki/LEB128) encoding. In case the
 stored string value has more than 127 characters, the length prefix will occupy 2 bytes 
 when string field is serialized.
 
-The fourth defined **&lt;string&gt;** field ([S6_4](include/tutorial2/field/S6_4.h))
+The fourth defined `<string>` field ([S6_4](include/tutorial2/field/S6_4.h))
 demonstrates zero (**0**) terminating 
 string fields. Such fields are not prefixed with their length, their length is
 determined by the presence of zero (**0**) byte.
@@ -1388,7 +1388,7 @@ void ClientSession::sendMsg6()
 }
 ```
 
-The fifth defined **&lt;string&gt;** field demonstrates string field without
+The fifth defined `<string>` field demonstrates string field without
 any size limitations and/or termination character.
 ```xml
 <message name="Msg6" id="MsgId.M6" displayName="Message 6">
@@ -1402,13 +1402,13 @@ all the available remaining data (bound by the total message length controlled
 by the framing).
 
 ### &lt;data&gt; Fields
-The **&lt;data&gt;** fields abstract away lists of raw binary bytes. The `Msg7` message 
+The `<data>` fields abstract away lists of raw binary bytes. The `Msg7` message 
 (defined inside [dsl/msg7.xml](dsl/msg7.xml) and implemented in
 [include/tutorial2/message/Msg7.h](include/tutorial2/message/Msg7.h)) 
 demonstrates usage of such fields.
 
-The **&lt;data&gt;** fields are very similar to **&lt;string&gt;** ones. 
-The first defined **&lt;data&gt;** field ([D7_1](include/tutorial2/field/D7_1.h))
+The `<data>` fields are very similar to `<string>` ones. 
+The first defined `<data>` field ([D7_1](include/tutorial2/field/D7_1.h))
 shows usage of fixed size raw binary data sequence:
 ```xml
 <fields>
@@ -1421,11 +1421,11 @@ shows usage of fixed size raw binary data sequence:
     ...
 </message>
 ```
-The **&lt;data&gt;** field is defined using 
+The `<data>` field is defined using 
 [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.htmll) 
 class provided by the [COMMS Library](https://github.com/commschamp/comms).
 
-The **default** storage type of any **&lt;data&gt;** field is `std::vector<std::uint8_t>`.
+The **default** storage type of any `<data>` field is `std::vector<std::uint8_t>`.
 It can be replaced with interface compatible other type at compile time by the application being
 developed using one of the extension options. One of the later tutorials will cover this topic in detail.
 
@@ -1445,7 +1445,7 @@ void ClientSession::sendMsg7()
     ...
 }
 ```
-Just like with **&lt;string&gt;** fields, when such **&lt;data&gt;** field is serialized, the
+Just like with `<string>` fields, when such `<data>` field is serialized, the
 [COMMS Library](https://github.com/commschamp/comms) makes
 sure that correct number of bytes is written to the output buffer. In case the
 stored string value has shorter length, the output is padded with correct number
@@ -1453,7 +1453,7 @@ of zeroes (**0**). In case the stored data value is longer than allowed, the
 serialization output will just be truncated without exceeding maximum allowed 
 number of bytes.
 
-The second defined **&lt;data&gt;** field ([D7_2](include/tutorial2/field/D7_2.h)) 
+The second defined `<data>` field ([D7_2](include/tutorial2/field/D7_2.h)) 
 demonstrates raw data prefixed with
 1 byte of its serialization length:
 ```xml
@@ -1490,7 +1490,7 @@ void ClientSession::sendMsg7()
 }
 ```
 
-The third defined **&lt;data&gt;** field demonstrates raw data field without
+The third defined `<data>` field demonstrates raw data field without
 any size limitations.
 ```xml
 <message name="Msg7" id="MsgId.M7" displayName="Message 7">
@@ -1504,13 +1504,13 @@ all the available remaining data (bound by the total message length controlled
 by the framing).
 
 ### &lt;bundle&gt; Fields
-The **&lt;bundle&gt;** fields are composite fields that bundle multiple other
+The `<bundle>` fields are composite fields that bundle multiple other
 fields into a single one. The `Msg8` message 
 (defined inside [dsl/msg8.xml](dsl/msg8.xml) and implemented in
 [include/tutorial2/message/Msg8.h](include/tutorial2/message/Msg8.h)) 
 demonstrates usage of such fields.
 
-The first defined **&lt;bundle&gt;** field is ([B8_1](include/tutorial2/field/B8_1.h)):
+The first defined `<bundle>` field is ([B8_1](include/tutorial2/field/B8_1.h)):
 ```xml
 <fields>
     <bundle name="B8_1">
@@ -1529,7 +1529,7 @@ The first defined **&lt;bundle&gt;** field is ([B8_1](include/tutorial2/field/B8
     ...
 </message>
 ```
-The member fields are listed as child XML elements of the **&lt;bundle&gt;** node.
+The member fields are listed as child XML elements of the `<bundle>` node.
 
 Let's take a closer look at the generated code of the field class definition 
 inside [include/tutorial2/field/B8_1.h](include/tutorial2/field/B8_1.h).
@@ -1629,7 +1629,7 @@ auto& m2 = std::get<Msg8::Field_f1::FieldIdx_m2>(tupleOfMembers);
 auto& m3 = std::get<Msg8::Field_f1::FieldIdx_m3>(tupleOfMembers);
 ```
 
-The second **&lt;bundle&gt;** 
+The second `<bundle>` 
 field ([B8_2](include/tutorial2/field/B8_2.h)) is defined to be:
 ```xml
 <fields>
@@ -1657,12 +1657,12 @@ field ([B8_2](include/tutorial2/field/B8_2.h)) is defined to be:
 </message>
 ```
 Please note that the field definition contains its **description** property defined
-as **&lt;descrption&gt;** XML child node. As the result the member fields definition
-needs to be wrapped in **&lt;members&gt;** XML node instead of being direct
-children of **&lt;bundle&gt;**.
+as `<description>` XML child node. As the result the member fields definition
+needs to be wrapped in `<members>` XML node instead of being direct
+children of `<bundle>`.
 
 ### &lt;bitfield&gt; Fields
-The **&lt;bitfield&gt;** fields are also composite ones, members of which limit
+The `<bitfield>` fields are also composite ones, members of which limit
 their serialization lengths in **bits** (not bytes), with total sum of bits not
 exceeding **64** and being a multiplication of **8** (to properly fit into 
 serialization bytes). The `Msg9` message 
@@ -1670,7 +1670,7 @@ serialization bytes). The `Msg9` message
 [include/tutorial2/message/Msg9.h](include/tutorial2/message/Msg9.h)) 
 demonstrates usage of such fields.
 
-The first defined **&lt;bitfield&gt;** field is ([B9_1](include/tutorial2/field/B9_1.h)):
+The first defined `<bitfield>` field is ([B9_1](include/tutorial2/field/B9_1.h)):
 ```xml
 <fields>
     <bitfield name="B9_1">
@@ -1693,7 +1693,7 @@ The first defined **&lt;bitfield&gt;** field is ([B9_1](include/tutorial2/field/
 </message>
 ```
 Similar to [&lt;bundle&gt;](#bundle-fields) field, the member fields 
-can be listed as child XML elements of the **&lt;bitfield&gt;** node.
+can be listed as child XML elements of the `<bitfield>` node.
 
 Let's take a closer look at the generated code of the field class definition 
 inside [include/tutorial2/field/B9_1.h](include/tutorial2/field/B9_1.h).
@@ -1772,7 +1772,7 @@ void ClientSession::sendMsg8()
 }
 ```
 
-The second **&lt;bitfield&gt;** 
+The second `<bitfield>` 
 field ([B9_2](include/tutorial2/field/B9_2.h)) is defined to be:
 ```xml
 <fields>
@@ -1800,8 +1800,8 @@ field ([B9_2](include/tutorial2/field/B9_2.h)) is defined to be:
 </message>
 ```
 Just like with [&lt;bundle&gt;](#bundle-fields) fields, in case some property
-of the **&lt;bitfield&gt;** is defined as XML child element (like **&lt;description&gt;**
-in the example above), the member fields must be wrapped in **&lt;members&gt;**
+of the `<bitfield>` is defined as XML child element (like `<description>`
+in the example above), the member fields must be wrapped in `<members>`
 XML element. 
 
 Please also note, that only [&lt;int&gt;](#int-fields), [&lt;enum&gt;](#enum-fields),
@@ -1809,12 +1809,12 @@ and [&lt;set&gt;](#set-fields) fields (or [&lt;ref&gt;](#ref-fields) to them) ca
 value of any other field cannot limit its length to number of bits.
 
 ### &lt;list&gt; Fields
-The **&lt;list&gt;** fields abstract away sequences of other fields. 
+The `<list>` fields abstract away sequences of other fields. 
 The `Msg10` message  (defined inside [dsl/msg10.xml](dsl/msg10.xml) and implemented in
 [include/tutorial2/message/Msg10.h](include/tutorial2/message/Msg10.h)) 
 demonstrates usage of such fields.
 
-The first defined **&lt;list&gt;** field is ([L10_1](include/tutorial2/field/L10_1.h)):
+The first defined `<list>` field is ([L10_1](include/tutorial2/field/L10_1.h)):
 ```xml
 <fields>
     <list name="L10_1" count="5">
@@ -1829,7 +1829,7 @@ The first defined **&lt;list&gt;** field is ([L10_1](include/tutorial2/field/L10
 </message>
 ```
 
-The list element field can be defined as child XML elements of the **&lt;list&gt;** node.
+The list element field can be defined as child XML elements of the `<list>` node.
 
 The definition above specifies list of **fixed** size of 5 elements (using **count**
 property). Each element is 32 bit unsigned integer. Let's take a look at 
@@ -1904,7 +1904,7 @@ Also note, that accessing the vector element (`f1Vec[0]`) gives a reference to
 the **field** object, not its storage value. To access the storage, there is a 
 need to use additional `.value()` call.
 
-The second defined **&lt;list&gt;** field is ([L10_2](include/tutorial2/field/L10_2.h)):
+The second defined `<list>` field is ([L10_2](include/tutorial2/field/L10_2.h)):
 ```xml
 <fields>
     <list name="L10_2">
@@ -1925,17 +1925,17 @@ The second defined **&lt;list&gt;** field is ([L10_2](include/tutorial2/field/L1
 </message>
 ```
 Such field defines a list prefixed with number of its elements (the 
-**&lt;countPrefix&gt;** XML child contains definition of the prefix field). 
+`<countPrefix>` XML child contains definition of the prefix field). 
 The `Size` field is of variable length and has `Base-128` encoding. Just a reminder,
 usage of the **length** property for variable length integral field (**type="uintvar"**)
 specifies **maximal** allowed length.
 
 Also note that due to existence of other, non-element XML nodes as child of the
-**&lt;list&gt;** (**&lt;countPrefix&gt;** for example), it is required to 
-define the element inside the **&lt;element&gt;**
+`<list>` (`<countPrefix>` for example), it is required to 
+define the element inside the `<element>`
 XML node.
 
-The third defined **&lt;list&gt;** field is ([L10_3](include/tutorial2/field/L10_3.h)):
+The third defined `<list>` field is ([L10_3](include/tutorial2/field/L10_3.h)):
 ```xml
 <fields>
     <list name="L10_3">
@@ -1959,9 +1959,9 @@ The third defined **&lt;list&gt;** field is ([L10_3](include/tutorial2/field/L10
 </message>
 ```
 It defines a list prefixed with 2 bytes of total serialization length of the whole list (the 
-**&lt;lengthPrefix&gt;** XML child contains definition of the prefix field). 
+`<lengthPrefix>` XML child contains definition of the prefix field). 
 
-Note, that **&lt;list&gt;** allows only single field as its element. In order to
+Note, that `<list>` allows only single field as its element. In order to
 have multiple fields inside, they need to be bundled together as a single field
 using [&lt;bundle&gt;](#bundle-fields) field.
 
@@ -1982,7 +1982,7 @@ void ClientSession::sendMsg10()
 ```
 There are couple of things to pay attention to:
 
-- Access to the storage vector element (`f3Vec[0]`) gives a reference the the **&lt;bundle&gt;**
+- Access to the storage vector element (`f3Vec[0]`) gives a reference the the `<bundle>`
 field. To access the member field additional call to `field_X()` needs to be
 performed (`.field_m1()`), which in turn gives a reference to the member field
 object, not its value storage. To access the storage additional call to `.value()`
@@ -1991,7 +1991,7 @@ needs to be performed.
 Extra character assigned to the value will be ignored during serialization and
 any missing characters will be padded with `0`.
 
-The fourth defined **&lt;list&gt;** field is ([L10_4](include/tutorial2/field/L10_4.h)):
+The fourth defined `<list>` field is ([L10_4](include/tutorial2/field/L10_4.h)):
 ```xml
 <fields>
     <list name="L10_4">
@@ -2020,15 +2020,15 @@ The fourth defined **&lt;list&gt;** field is ([L10_4](include/tutorial2/field/L1
     <ref name="F4" field="L10_4" />
 </message>
 ```
-In addition to **&lt;countPrefix&gt;** node that defines number of element prefix
-of the list, there is **&lt;elemLengthPrefix&gt;** node which defines serialization
+In addition to `<countPrefix>` node that defines number of element prefix
+of the list, there is `<elemLengthPrefix>` node which defines serialization
 length prefix for **every** element that follows. Some protocols use this 
 feature to allow forward-compatibility of the protocol. For example if in the
 future some new fields are going to be added to the element, the element length
 information allows older version of the protocol, which is not aware of the 
 newly added fields to skip extra bytes before reading the next element.
 
-In the example above, the last **&lt;string&gt;** member field of the **&lt;bundle&gt;**
+In the example above, the last `<string>` member field of the `<bundle>`
 element doesn't have any length bound. Its length will be limited by the 
 element length prefix value.
 
@@ -2058,7 +2058,7 @@ provides a type of the stored bundle element.
 - As was already mentioned in [&lt;bundle&gt; Fields](#bundle-fields) section, every
 bundle field creates alias types for its members, so 
 `Msg10::Field_f4::ValueType::value_type::Field_m2` is accessing the type of the 
-**M2** member field, which is **&lt;enum&gt;** field.
+**M2** member field, which is `<enum>` field.
 - The inner `ValueType` type of the enum field definition
 (`Msg10::Field_f4::ValueType::value_type::Field_m2::ValueType`) is an alias to actual
 enumeration type.
@@ -2066,30 +2066,30 @@ enumeration type.
 (`Msg10::Field_f4::ValueType::value_type::Field_m2::ValueType::V2`).
 
 ### &lt;variant&gt; Fields
-The **&lt;variant&gt;** fields abstract away a "union" of multiple other fields. They
+The `<variant>` fields abstract away a "union" of multiple other fields. They
 can initialize and hold only one instance of any member member fields at a time. The
-**&lt;variant&gt;** fields can be used to create a heterogeneous list of some properties, 
+`<variant>` fields can be used to create a heterogeneous list of some properties, 
 such as **key-value** pairs or **TLV** (type-length-value) triplets.
-Note, that working with **&lt;variant&gt;** fields is not simple and requires a bit deeper
-understanding. It's a bit out of "introductory" scope of this tutorial. The **&lt;variant&gt;**
+Note, that working with `<variant>` fields is not simple and requires a bit deeper
+understanding. It's a bit out of "introductory" scope of this tutorial. The `<variant>`
 field will be covered in depth in one of the later tutorials.
 
 ### &lt;ref&gt; Fields
-The **&lt;ref&gt;** fields are there to define a reference to other fields in order to avoid
+The `<ref>` fields are there to define a reference to other fields in order to avoid
 code duplication in the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification)
-schema as well as in the generated code. The **&lt;ref&gt;** fields have been used
-throughout this tutorial as fields of the **&lt;message&gt;**-s and referenced
+schema as well as in the generated code. The `<ref>` fields have been used
+throughout this tutorial as fields of the `<message>`-s and referenced
 ones in the global space. 
 
-NOTE, that **&lt;ref&gt;** field can only reference freestanding fields (not members
-of other **&lt;message&gt;**, **&lt;bundle&gt;**, or **&lt;bitfield&gt;**).
+NOTE, that `<ref>` field can only reference freestanding fields (not members
+of other `<message>`, `<bundle>`, or `<bitfield>`).
 
-There are a couple of extra aspects about **&lt;ref&gt;** that are worth emphasizing.
+There are a couple of extra aspects about `<ref>` that are worth emphasizing.
 The `Msg11` message  (defined inside [dsl/msg11.xml](dsl/msg11.xml) and implemented in
 [include/tutorial2/message/Msg11.h](include/tutorial2/message/Msg11.h)) 
 is there to demonstrate them.
 
-The **&lt;ref&gt;** field uses **field** property to reference
+The `<ref>` field uses **field** property to reference
 other fields. It also inherits the **name** and **displayName**
 properties of the referenced field.
 ```xml
@@ -2103,7 +2103,7 @@ properties of the referenced field.
     ...
 </message>
 ```
-In the example above the first **&lt;ref&gt;** member field of the `Msg11` inherits the
+In the example above the first `<ref>` member field of the `Msg11` inherits the
 `F11_1` as **name** and `Field 11_1` as **displayName**. It results in the
 following definition of the member field names inside 
 [include/tutorial2/message/Msg11.h](include/tutorial2/message/Msg11.h)
@@ -2154,7 +2154,7 @@ struct Msg11Fields
 };
 ```
 
-The second used **&lt;ref&gt;** field overrides the **name** property while
+The second used `<ref>` field overrides the **name** property while
 still inheriting **displayName** one.
 ```xml
 <fields>
@@ -2224,7 +2224,7 @@ Received "Message 11" with ID=11
     ...
 ```
 
-Another important aspect of **&lt;ref&gt;** fields is that it can be used 
+Another important aspect of `<ref>` fields is that it can be used 
 as member of [&lt;bitfield&gt;](#bitfield-fields).
 ```xml
 <bitfield name="F11_3">
@@ -2239,7 +2239,7 @@ referenced field in bits.
 Many binary protocols introduce some kind of optional field, which gets (or doesn't get)
 serialized based on some conditions, usually based on values of other fields. The
 [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows definition
-of such optional fields by using **&lt;optional&gt;** wrapping around it. 
+of such optional fields by using `<optional>` wrapping around it. 
 
 The `Msg12` message  (defined inside [dsl/msg12.xml](dsl/msg12.xml) and implemented in
 [include/tutorial2/message/Msg12.h](include/tutorial2/message/Msg12.h)) demonstrates
@@ -2251,13 +2251,13 @@ basic usage of such field.
     </optional>
 </message>
 ```
-Every **&lt;optional&gt;** field has the following modes:
+Every `<optional>` field has the following modes:
 
 - **exists** - The read / write operations on the contained field are performed as normal.
 - **missing** - The read / write operations do nothing.
 - **tentative** (default) - The write operation does nothing, but the read is forwarded to the contained field only if there is data available in the input buffer.
 
-The **tentative** mode is a default one, it can be updated using **defaultMode** property of the **&lt;optional&gt;** field (will be demonstrated a bit later).
+The **tentative** mode is a default one, it can be updated using **defaultMode** property of the `<optional>` field (will be demonstrated a bit later).
 
 In the example above the field is constructed with **tentative** mode. If such field (without any further updates) is serialized 
 (during write operation) no output is going to be produced. In case such field is deserialized (in read operation), then if there are some bytes left 
@@ -2378,7 +2378,7 @@ Received "Message 12" with ID=12
 ```
 
 In many cases the existence of the optional field depends on the value of other fields. The classical example
-would be a presence of value fields based on some kind of flags **&lt;set&gt;** field where single bit marks presence 
+would be a presence of value fields based on some kind of flags `<set>` field where single bit marks presence 
 or absence of other field(s) that follow. Such example is demonstrated by the 
 the `Msg13` message  (defined inside [dsl/msg13.xml](dsl/msg13.xml) and implemented in
 [include/tutorial2/message/Msg13.h](include/tutorial2/message/Msg13.h)).
@@ -2599,9 +2599,9 @@ The message definition above has the following logic for having `F3` field being
 Please note the following aspects:
 
 - The `<` and `>` comparisons cannot be used "as-is" in XML attributes / values. They need to be replaced with `&lt;` and `&gt;` respectively.
-- The wrapped field definition needs to be wrapped in **&lt;field&gt;** XML node when there are other nodes present (like **&lt;or&gt;** in
+- The wrapped field definition needs to be wrapped in `<field>` XML node when there are other nodes present (like `<or>` in
   the example above).
-- The logical **or** is represented by the **&lt;or&gt;** XML node while logical **and** is represented by the **&lt;and&gt;** XML
+- The logical **or** is represented by the `<or>` XML node while logical **and** is represented by the `<and>` XML
   node.
 - The `Msg14` is defined in such a way that default constructed object is in a proper consistent state (`F3` is defined to be **missing**
   by default).
@@ -2668,8 +2668,8 @@ The replacing of the member fields became available since **v5.0** of the
 - The protocol definition does not necessarily need to be defined in a single
   schema file, it can be split into multiple ones and being processed in specified
   order.
-- The fields can be defined as member nodes of the **&lt;message&gt;**
-  definition or global ones (members of global **&lt;fields&gt;** XML node) and
+- The fields can be defined as member nodes of the `<message>`
+  definition or global ones (members of global `<fields>` XML node) and
   then referenced by other message member fields.
 - The code for global field which is not referenced by other field or message definition
   won't be generated.
@@ -2679,8 +2679,8 @@ The replacing of the member fields became available since **v5.0** of the
   property. The same property can be used to copy member fields from the definition of 
   the [&lt;bundle&gt;](#bundle-fields) field.
 - Reusing other fields definitions is possuble using **reuse** property.
-- The replacing of member fields in composite fields like **&lt;bundle&gt;** and **&lt;bitfield&gt;**
-  is available since version **v5.0** of the **CommsDSL** using **&lt;replace&gt;** child node.
+- The replacing of member fields in composite fields like `<bundle>` and `<bitfield>`
+  is available since version **v5.0** of the **CommsDSL** using `<replace>` child node.
 - The fields are abstractions around actual value storage to provide common
   interface for all field types. 
 - The primary and most frequently used member function of the field objects

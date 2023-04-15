@@ -123,12 +123,7 @@ public:
         prop2,
         prop3
     );
-    
-    comms::ErrorStatus read(TIter& iter, std::size_t len)
-    {
-        ...
-    }
-    
+
     ...
 };
 ```
