@@ -6,7 +6,8 @@ option (UNIX_USE_CCACHE "Treat warnings as error" ON)
 option (FORCE_EXTRA_BOOST_LIBS "Force linking to extra boost libraries" OFF)
 option (USE_SANITIZERS "Compile with sanitizers." OFF)
 
-set(CMAKE_CXX_STANDARD 11 CACHE STRING "The C++ standard to use")
+set (CMAKE_CXX_STANDARD 11 CACHE STRING "The C++ standard to use")
+set (MIN_COMMSDSL_VERSION "6.1")
 
 include(GNUInstallDirs)
 
@@ -20,6 +21,11 @@ endif ()
 find_package(Threads REQUIRED)    
 find_package(LibComms REQUIRED)
 find_program(COMMSDSL2COMMS commsdsl2comms PATH_SUFFIXES bin REQUIRED)
+
+execute_process(COMMAND "${COMMSDSL2COMMS}" --version OUTPUT_VARIABLE commsdsl2comms_version)
+if ("${commsdsl2comms_version}" VERSION_LESS "${MIN_COMMSDSL_VERSION}")
+    message (FATAL_ERROR "Version of commsdsl2comms is too old, required minimum is v${MIN_COMMSDSL_VERSION}.")
+endif ()
 
 set (COMMON_SERVER_LIB "common_server")
 set (COMMON_CLIENT_LIB "common_client")

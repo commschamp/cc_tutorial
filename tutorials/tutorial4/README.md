@@ -253,18 +253,18 @@ void ClientSession::handle(Msg1& msg)
     auto& f1Vec = msg.field_f1().value();
     for (auto idx = 0U; idx < f1Vec.size(); ++idx) {
         const auto& elem = f1Vec[idx]; // access to the variant element
-        elem.currFieldExec(PropDispatchHelper(*this));
+        elem.currentFieldExec(PropDispatchHelper(*this));
     }
     ...
 }
 ```
 The code above iterates over received **&lt;variant&gt;** fields in the list and dispatches them for
-proper processing using `currFieldExec()` member function. Note, that at the time of the processing
+proper processing using `currentFieldExec()` member function. Note, that at the time of the processing
 the `read()` operation has been successfully completed and the index of the member (**0** based) in 
 order of their definition is held as a private data and can be retrieved using 
 [comms::field::Variant::currentField()](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
 member function. Please pay attention that this is a **run-time** (not compile-time) information and the
-actual type of the stored value (to cast to) needs to be determined at run-time. The `currFieldExec()`
+actual type of the stored value (to cast to) needs to be determined at run-time. The `currentFieldExec()`
 member function of the variant field receives a functor object, which is expected to define its `operator()` with
 appropriate signature, determines the correct type of the member for the cast and invokes `operator()` of the
 passed functor object with the correct reference to the held member. The definition of the `PropDispatchHelper` in
@@ -288,7 +288,7 @@ private:
     ClientSession& m_session;
 };
 ```
-See also the documentation on [comms::field::Variant::currFieldExec()](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html).
+See also the documentation on [comms::field::Variant::currentFieldExec()](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html).
 
 Note that `operator()` above in addition to actual type of the member receives also the index of the
 detected member as a template parameter, so the run-time information of the index becomes a compile-time
@@ -324,7 +324,7 @@ Received "Message 1" with ID=1
             Key = 2
             Val = inf
 ```
-The `currFieldExec()` member function provided by the 
+The `currentFieldExec()` member function provided by the 
 [comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html) field 
 implements static binary search (**O(log(n)** complexity) with similar logic to the code below to determine 
 the real type to cast to.
@@ -349,11 +349,11 @@ else {
 }
 ```
 It gets the job done, however the [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator
-overrode the definition of inherited `currFieldExec()` from [comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
+overrode the definition of inherited `currentFieldExec()` from [comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
 with a custom [implementation](include/tutorial4/field/KeyValueProp.h):
 ```cpp
 template <typename TFunc>
-void currFieldExec(TFunc&& func) 
+void currentFieldExec(TFunc&& func) 
 {
     switch (Base::currentField()) {
     case FieldIdx_prop1:
@@ -593,7 +593,7 @@ result the function signature needs also to be changed to receive reference to *
 ----
 
 Handling of the `Msg2` inside `void ClientSession::handle(Msg2& msg)` is very similar to handling of
-the `Msg1` described earlier. It uses the same `PropDispatchHelper` with call to `currFieldExec()` to
+the `Msg1` described earlier. It uses the same `PropDispatchHelper` with call to `currentFieldExec()` to
 dispatch held property into appropriate `ClientSession::handleProp()` member function.
 
 ## Summary
@@ -625,8 +625,8 @@ dispatch held property into appropriate `ClientSession::handleProp()` member fun
   [comms::field::Variant::currentField()](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
   member function.
 - To determine the type of the held member and dispatch it to the appropriate handler the 
-  `currFieldExec()` member function needs to be used (see 
-  [comms::field::Variant::currFieldExec()](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
+  `currentFieldExec()` member function needs to be used (see 
+  [comms::field::Variant::currentFieldExec()](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
   for documentation).
 
 [Read Previous Tutorial](../tutorial3) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial5) 

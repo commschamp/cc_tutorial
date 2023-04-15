@@ -42,7 +42,7 @@ void ClientSession::handle(Msg& msg)
     std::cout << '\t' << msg.field_props().name() << " (" << propsVec.size() << " elements)\n";
     for (auto idx = 0U; idx < propsVec.size(); ++idx) {
         const auto& elem = propsVec[idx]; // access to the variant element
-        elem.currFieldExec(PropDispatchHelper(*this));
+        elem.currentFieldExec(PropDispatchHelper(*this));
     }
 
     std::cout << std::endl;
