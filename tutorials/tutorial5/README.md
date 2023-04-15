@@ -305,7 +305,7 @@ class ClientToServerFrame : public
     ClientToServerFrameLayers<TOpt>::template Stack<TMessage, TAllMessages>
 {
 public:
-    COMMS_PROTOCOL_LAYERS_ACCESS(
+    COMMS_PROTOCOL_LAYERS_NAMES(
         data,
         id,
         size,
@@ -318,9 +318,9 @@ As the result the documentation of the last layer type
 ([comms::protocol::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html) 
 for the current example) can be used for reference on available framing API.
 
-The final definition of `ClientToServerFrame` frame class uses `COMMS_PROTOCOL_LAYERS_ACCESS()`
+The final definition of `ClientToServerFrame` frame class uses `COMMS_PROTOCOL_LAYERS_NAMES()`
 macro to assign names for the defined layers. For every name **X** the macro generates 
-`layer_X()` member function to allow access to it if needed. This particular tutorial doesn't
+`Layer_X` type and `layer_X()` member function to allow access to it if needed. This particular tutorial doesn't
 have such a need, so these functions are not really used.
 
 Now, let's take a look at the sending and processing code inside the [src/ClientSession.cpp](src/ClientSession.cpp).
