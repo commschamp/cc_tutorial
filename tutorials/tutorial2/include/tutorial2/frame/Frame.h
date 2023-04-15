@@ -36,21 +36,13 @@ struct FrameLayers
             typename TOpt::frame::FrameLayers::Data
         >;
 
-    /// @brief Scope for field(s) of @ref ID layer.
-    struct IDMembers
-    {
-        /// @brief Definition of <b>"MsgId"</b> field.
-        using MsgId =
-            tutorial2::field::MsgId<
-                TOpt
-            >;
-    };
-
     /// @brief Definition of layer "ID".
     template <typename TMessage, typename TAllMessages>
     using ID =
         comms::protocol::MsgIdLayer<
-            typename IDMembers::MsgId,
+            tutorial2::field::MsgId<
+                TOpt
+            >,
             TMessage,
             TAllMessages,
             Data,

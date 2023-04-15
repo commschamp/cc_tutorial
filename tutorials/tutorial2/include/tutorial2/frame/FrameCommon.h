@@ -7,7 +7,6 @@
 #pragma once
 
 #include <cstdint>
-#include "tutorial2/field/MsgIdCommon.h"
 
 namespace tutorial2
 {
@@ -44,15 +43,6 @@ struct FrameLayersCommon
                 return false;
             }
         };
-    };
-
-    /// @brief Scope for all the common definitions of the fields defined in
-    ///     @ref tutorial2::frame::FrameLayers::IDMembers struct.
-    struct IDMembersCommon
-    {
-        /// @brief Common types and functions for
-        ///     @ref tutorial2::frame::FrameLayers::IDMembers::MsgId field.
-        using MsgIdCommon = tutorial2::field::MsgIdCommon;
     };
 };
 

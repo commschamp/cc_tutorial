@@ -13,7 +13,8 @@ The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) does not
 have any "include" statements. Instead the code generated must process the
 schema files in the provided order and allow references to the other elements
 if they were defined **before** being referenced (in earlier processed schema
-file or earlier in the same file).
+file or earlier in the same file). Such approach allows conditional assembling 
+of different versions of the protocol if needed.
 
 The [CMakeLists.txt](CMakeLists.txt) file of this tutorial code creates a list
 of schema files, which are processed by the 
@@ -53,18 +54,14 @@ This tutorial uses the following framing for all the messages:
     <size name="Size">
         <int name="SizeField" type="uint16" />
     </size>
-    <id name="ID">
-        <field>
-            <ref field="MsgId" />
-        </field>
-    </id>
+    <id name="ID" field="MsgId" />
     <payload name="Data" />
 </frame>
 ```
 In other words it is:
 
 - 2 bytes of remaining length (ID + PAYLOAD), not including the length field itself.
-- 1 byte of numeric message ID.
+- 1 byte of numeric message ID (references global field `MsgId`).
 - N bytes of payload itself.
 
 ## Defining Fields
@@ -137,7 +134,7 @@ does **NOT** generate unnecessary definition file(s).
 
 ----
 
-**SIDE NOTE**: Sometimes can can be useful to force generation of the field class and other 
+**SIDE NOTE**: Sometimes it can be useful to force generation of the field class and other 
 relevant types. It can be achieved by using **forceGen** property:
 ```xml
 <int name="Dummy" type="uint8" forceGen="true" />
@@ -312,11 +309,11 @@ public:
 Please pay attention to the following:
 
 - According to [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
-the code generator (**commsdsl2comms**) is allowed to change the first latter of the
+the code generator (**commsdsl2comms**) is allowed to change the first letter of the
 field name by either capitalizing or making it a lower case. That's what happens
 with `Msg1` member fields. When their class is defined the first letter is capitalized,
 while the access names changed to start with lower case.
-- The provided names ('f1', 'f2') find their way to `FieldIdx_x` enum values, inner
+- The provided names (`f1`, `f2`) find their way to `FieldIdx_x` enum values, inner
 `Field_x` alias types and `field_x()` access member functions.
 
 Usage of the access member functions can be demonstrated in the function that prepares and
@@ -601,7 +598,8 @@ The fourth `enum` field of the `Msg2` is also defined internally:
 
 Please note the setting of **hexAssign** boolean property to **true**. It results
 in having hexadecimal values assigned (instead of usual decimals) in the generated
-code. It can improve the generated code clarity in in some cases.
+code. It can improve the generated code clarity in some cases, especially when
+the protocol specification lists supported values in hexadecimal format.
 ```cpp
 struct Msg2FieldsCommon
 {
@@ -644,6 +642,31 @@ include [comms/cast.h](https://commschamp.github.io/comms_doc/cast_8h.html) head
 ```
 #include "comms/cast.h"
 ```
+
+----
+
+**SIDE NOTE**: Since **v5.0** the [COMMS Library](https://github.com/commschamp/comms) provides
+extra wrapping functions around `value()` for every field:
+
+```cpp
+const ValueType& getValue() const
+{
+    return value();
+}
+
+template <typename T>
+void setType(T&& val)
+{
+    comms::cast_assign(value()) = std::forward<T>(val);
+}
+```
+
+It means that the last assignment statement from the example above can be changed into more convenient one:
+
+```cpp
+msg.field_f4().setValue(0xff);
+```
+----
 
 The definition of the enum fields also provides `valueName()` member function
 which allows retrieval of the human readable name of the current value. Note, that
@@ -2540,14 +2563,14 @@ know that previously described optimization of skipping `refreshImpl()` generati
 
 ---
 
-Another thing to pay attention to is when message object is default constructed the 
+Another thing to pay attention to is when message object is default constructed, the 
 **refreshing** functionality (bringing message to a consistent state) is **NOT** called automatically.
 Hence, it is highly recommended to define a message in already consistent state, like with
 `Msg13` described above, the default modes of `f2` as well as `f3` fields were set in accordance
 with default value of the `flags` field.
 
 The optional existence conditions (**cond**) can also contain value comparisons as well as involve
-multiple fields and contain logical **or** and **and** statements. The 
+multiple fields and contain logical **"or"** and **"and"** statements. The 
 `Msg14` message  (defined inside [dsl/msg14.xml](dsl/msg14.xml) and implemented in
 [include/tutorial2/message/Msg14.h](include/tutorial2/message/Msg14.h)) demonstrates exactly that.
 ```xml
@@ -2632,9 +2655,9 @@ equivalent to copying all other properties from one field to another.
 </message>
 ```
 In the example above the `Msg17.F1` field copies all the properties from `I17_1` and
-then modifies its `defaultValue` as well as adds extra &lt;special&gt; one.
+then modifies its `defaultValue` as well as adds extra `<special>` value.
 
-The `Msg17.F2` &lt;bungle&gt; field copies all the properties including the original two
+The `Msg17.F2`'s `<bungle>` field copies all the properties including the original two
 member fields, adds the third one (`M3`) and replaces the (`M2`) with different field.
 
 The replacing of the member fields became available since **v5.0** of the 
