@@ -2657,7 +2657,7 @@ equivalent to copying all other properties from one field to another.
 In the example above the `Msg17.F1` field copies all the properties from `I17_1` and
 then modifies its `defaultValue` as well as adds extra `<special>` value.
 
-The `Msg17.F2`'s `<bungle>` field copies all the properties including the original two
+The `Msg17.F2`'s `<bundle>` field copies all the properties including the original two
 member fields, adds the third one (`M3`) and replaces the (`M2`) with different field.
 
 The replacing of the member fields became available since **v5.0** of the 
