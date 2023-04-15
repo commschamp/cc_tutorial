@@ -5,12 +5,9 @@
 
 #pragma once
 
-#include "comms/options.h"
 #include "comms/protocol/MsgDataLayer.h"
 #include "comms/protocol/MsgIdLayer.h"
-#include "tutorial1/field/FieldBase.h"
 #include "tutorial1/field/MsgId.h"
-#include "tutorial1/frame/FrameCommon.h"
 #include "tutorial1/input/AllMessages.h"
 #include "tutorial1/options/DefaultOptions.h"
 
@@ -33,21 +30,13 @@ struct FrameLayers
             typename TOpt::frame::FrameLayers::Data
         >;
 
-    /// @brief Scope for field(s) of @ref ID layer.
-    struct IDMembers
-    {
-        /// @brief Definition of <b>"MsgId"</b> field.
-        using MsgId =
-            tutorial1::field::MsgId<
-                TOpt
-            >;
-    };
-
     /// @brief Definition of layer "ID".
     template <typename TMessage, typename TAllMessages>
     using ID =
         comms::protocol::MsgIdLayer<
-            typename IDMembers::MsgId,
+            tutorial1::field::MsgId<
+                TOpt
+            >,
             TMessage,
             TAllMessages,
             Data,
