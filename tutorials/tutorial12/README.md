@@ -367,7 +367,7 @@ type, whether it is `std::string`, `std::string_view`, `comms::util::StaticStrin
 
 ----
 
-**SIDE NOTE**: Most bare metal metal applications avoid usage of dynamic memory 
+**SIDE NOTE**: Most bare metal applications avoid usage of dynamic memory 
 allocation, some also avoid virtual functions (due to code size limitations). Many also 
 exclude usage of standard C library altogether. 
 

@@ -22,7 +22,7 @@ to define a version as [semantic](https://semver.org/) one, then it is recommend
 version number into bytes and use something like `version="0x105` (for version 1.5) or 
 `version=0x10502` (for version 1.5.2).
 
-The version information can be added to message fields using **senceVersion** and **deprecated** properties:
+The version information can be added to message fields using **sinceVersion** and **deprecated** properties:
 ```xml
 <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
     <int name="F1" type="uint16" />
@@ -164,12 +164,10 @@ Its version information since which the field must exist is defined using
 The actual field being wrapped by the [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
 is defined as `F2Field` (**Field** suffix is added to the field's name). It is equivalent to the following pseudo definition:
 ```xml
-<optional name="F2" cond="_version_ &gt;= 2">
+<optional name="F2" cond="%Version &gt;= 2">
     <int name="F2Field" type="uint16" />
 </optional>
 ```
-Note that the definition above is invalid (you cannot put a condition on the protocol version), it is just to 
-demonstrate the idea.
 
 The preparation of the `Msg1` to be sent out is the usual way of working with optional fields:
 ```cpp

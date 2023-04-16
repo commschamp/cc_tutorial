@@ -182,6 +182,7 @@ $> nmake install
 - [tutorial22](../../tree/master/tutorials/tutorial22) - Complex length fields.
 - [tutorial23](../../tree/master/tutorials/tutorial23) - Reusing definitions from other schemas.
 - [tutorial24](../../tree/master/tutorials/tutorial24) - Extra validity verification of message payload.
+- [tutorial25](../../tree/master/tutorials/tutorial25) - Dealing with big protocols.
 
 
 # How-Tos
