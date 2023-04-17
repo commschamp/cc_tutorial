@@ -22,11 +22,11 @@ the compilation may report an error due to being out of heap space.
 To mitigate this problem / annoyance the **v6.1** of the **commsdsl2comms** code generator added extra `switch`
 based message factories in the [&lt;protocol_namespace&gt;/factory](include/tutorial25/factory) folder.
 
-- [&lt;protocol_namespace&gt;::factory::AllMessagesDynMemMsgFactory](include/tutorial25/factory/AllMessagesDynMemMsgFactory.h) class -
+- [&lt;protocol_namespace&gt;::<zero-width space>factory::AllMessagesDynMemMsgFactory](include/tutorial25/factory/AllMessagesDynMemMsgFactory.h) class -
   a factory for all the messages of the protocol.
-- [&lt;protocol_namespace&gt;::factory::ClientInputMessagesDynMemMsgFactory](include/tutorial25/factory/ClientInputMessagesDynMemMsgFactory.h) class -
+- [&lt;protocol_namespace&gt;::<zero-width space>factory::ClientInputMessagesDynMemMsgFactory](include/tutorial25/factory/ClientInputMessagesDynMemMsgFactory.h) class -
   a factory for the client input messages of the protocol.
-- [&lt;protocol_namespace&gt;::factory::ServerInputMessagesDynMemMsgFactory](include/tutorial25/factory/ServerInputMessagesDynMemMsgFactory.h) class -
+- [&lt;protocol_namespace&gt;::<zero-width space>factory::ServerInputMessagesDynMemMsgFactory](include/tutorial25/factory/ServerInputMessagesDynMemMsgFactory.h) class -
   a factory for the server input messages of the protocol.
 
 The **DynMem** part of the name implies dynamic memory allocation.
@@ -43,11 +43,11 @@ The **v6.1** of the **commsdsl2comms** code generator also generates extra proto
 option to the [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) class:
 
 - [&lt;protocol_namespace&gt;::optoins::AllMessagesDynMemMsgFactoryDefaultOptions](include/tutorial25/options/AllMessagesDynMemMsgFactoryDefaultOptions.h) - the options forcing usage
-  of the [&lt;protocol_namespace&gt;::factory::AllMessagesDynMemMsgFactory](include/tutorial25/factory/AllMessagesDynMemMsgFactory.h).
+  of the [&lt;protocol_namespace&gt;::<zero-width space>factory::AllMessagesDynMemMsgFactory](include/tutorial25/factory/AllMessagesDynMemMsgFactory.h).
 - [&lt;protocol_namespace&gt;::optoins::ClientInputMessagesDynMemMsgFactoryDefaultOptions](include/tutorial25/options/ClientInputMessagesDynMemMsgFactoryDefaultOptions.h) -
-  the options forcing usage of the [&lt;protocol_namespace&gt;::factory::ClientInputMessagesDynMemMsgFactory](include/tutorial25/factory/ClientInputMessagesDynMemMsgFactory.h).
+  the options forcing usage of the [&lt;protocol_namespace&gt;::<zero-width space>factory::ClientInputMessagesDynMemMsgFactory](include/tutorial25/factory/ClientInputMessagesDynMemMsgFactory.h).
 - [&lt;protocol_namespace&gt;::optoins::ServerInputMessagesDynMemMsgFactoryDefaultOptions](include/tutorial25/options/ServerInputMessagesDynMemMsgFactoryDefaultOptions.h) -
-  the options forcing usage of the [&lt;protocol_namespace&gt;::factory::ServerInputMessagesDynMemMsgFactory](include/tutorial25/factory/ServerInputMessagesDynMemMsgFactory.h).
+  the options forcing usage of the [&lt;protocol_namespace&gt;::<zero-width space>factory::ServerInputMessagesDynMemMsgFactory](include/tutorial25/factory/ServerInputMessagesDynMemMsgFactory.h).
 
 Let's take a look how the protocol options above can be used to force usage of the more efficient message factories.
 
@@ -125,7 +125,7 @@ void ClientSession::sendMsg2()
 ## Summary
 
 - As the number of messages in the protocol grow, the burden on the compilation time and memory consumption can grow exponentially.
-- When number of the messages exceeds 20-30 messages, it is recommended to use more optimized generated message factories.
+- When number of the messages exceeds 30-50 messages, it is recommended to use more optimized generated message factories.
 - The message factory classes reside in the **&lt;protocol_namespace&gt;/factory** folder.
 - The **&lt;protocol_namespace&gt;/options** folder will also contain new relevant option classes which can be used to
   force usage of the new factories.
