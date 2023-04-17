@@ -6,7 +6,7 @@
 #include "tutorial25/frame/Frame.h"
 #include "tutorial25/input/ServerInputMessages.h"
 #include "tutorial25/options/ServerDefaultOptions.h"
-#include "tutorial25/options/DataViewDefaultOptions.h"
+#include "tutorial25/options/ServerInputMessagesDynMemMsgFactoryDefaultOptions.h"
 #include "Session.h"
 
 namespace cc_tutorial
@@ -29,7 +29,10 @@ public:
             comms::option::app::Handler<ServerSession> // Polymorphic dispatch
         >;
 
-    using ServerProtocolOptions = tutorial25::options::ServerDefaultOptions;
+    using ServerProtocolOptions = 
+        ServerInputMessagesDynMemMsgFactoryDefaultOptionsT<
+            tutorial25::options::ServerDefaultOptions
+        >;
 
     // Handle all the received messages
     void handle(Message& msg);
