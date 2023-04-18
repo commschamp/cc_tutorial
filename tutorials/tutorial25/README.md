@@ -54,7 +54,7 @@ Let's take a look how the protocol options above can be used to force usage of t
 The [ServerSession](src/ServerSession.h) defines its protocol options like this:
 ```cpp
 using ServerProtocolOptions =
-    ServerInputMessagesDynMemMsgFactoryDefaultOptionsT<
+    tutorial25::options::ServerInputMessagesDynMemMsgFactoryDefaultOptionsT<
         tutorial25::options::ServerDefaultOptions
     >;
 ```

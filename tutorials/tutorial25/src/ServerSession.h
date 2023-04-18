@@ -30,7 +30,7 @@ public:
         >;
 
     using ServerProtocolOptions = 
-        ServerInputMessagesDynMemMsgFactoryDefaultOptionsT<
+        tutorial25::options::ServerInputMessagesDynMemMsgFactoryDefaultOptionsT<
             tutorial25::options::ServerDefaultOptions
         >;
 
