@@ -1,5 +1,5 @@
 # Tutorial 5
-Deeper understanding of **&lt;frame&gt;**-ing and working with multiple **&lt;frame&gt;**-s.
+Deeper understanding of `<frame>`-ing and working with multiple `<frame>`-s.
 
 Many embedded systems have multiple I/O interfaces for communication with external world. It is also
 not uncommon for new I/O interfaces been added in the future versions of the hardware. Many developers
@@ -26,7 +26,7 @@ frames in the same protocol schema file(s) and allows the end application to pic
 that is needed.
 
 In this tutorial we will use two different frames: one for messages sent from **client** to **server** 
-and another for the opposite direction. In the process we'll get a deeper understanding of **&lt;frame&gt;**
+and another for the opposite direction. In the process we'll get a deeper understanding of `<frame>`
 definition options.
 
 The [schema](dsl/schema.xml) defines two frames. One is for messages being sent by the **server** to the 
@@ -74,8 +74,8 @@ and [include/tutorial5/frame/ClientToServerFrame.h](include/tutorial5/frame/Clie
 To properly understand the schema definition above and the implementation implications let's go through the
 important points one by one.
 
-First of all, every **&lt;frame&gt;** must define internal so called **layers** (**&lt;sync&gt;**, 
-**&lt;size&gt;**, etc...). Every such layer handles only one specific value inside the message frame. To
+First of all, every `<frame>` must define internal so called **layers** (`<sync>`, 
+`<size>`, etc...). Every such layer handles only one specific value inside the message frame. To
 properly describe the length and type of such value, the layer needs to define suitable inner **field**:
 ```xml
 <sync name="Sync">
@@ -85,8 +85,8 @@ properly describe the length and type of such value, the layer needs to define s
 
 ----
 
-**SIDE NOTE**: In case the **&lt;frame&gt;** XML node has properties other than **layers** defined as XML children,
-then the layers themselves need to be defined inside **&lt;layers&gt;** XML node.
+**SIDE NOTE**: In case the `<frame>` XML node has properties other than **layers** defined as XML children,
+then the layers themselves need to be defined inside `<layers>` XML node.
 ```xml
 <frame name="ClientToServerFrame">
     <description>
@@ -102,7 +102,7 @@ then the layers themselves need to be defined inside **&lt;layers&gt;** XML node
 ```
 
 Similar with the definition of the layer itself. If it has some other non inner field definition properties
-defined as XML children, then the field definition needs to be defined as a child of **&lt;field&gt;** XML
+defined as XML children, then the field definition needs to be defined as a child of `<field>` XML
 node:
 ```xml
 <sync name="Sync">
@@ -121,7 +121,7 @@ Let's take a look at the defined layers of `ClientToServerFrame` (from
 [include/tutorial5/frame/ClientToServerFrame.h](include/tutorial5/frame/ClientToServerFrame.h)) one by one. 
 
 ## &lt;payload&gt; Layer
-The **&lt;payload&gt;** layer represents message payload (serialized fields). It is **the only**
+The `<payload>` layer represents message payload (serialized fields). It is **the only**
 layer that doesn't have any inner field that represents framing value.
 ```xml
 <payload name="Data" />
@@ -136,7 +136,7 @@ using Data =
 ```
 
 ## &lt;id&gt; Layer
-The **&lt;id&gt;** layer represents numeric message ID.
+The `<id>` layer represents numeric message ID.
 ```xml
 <id name="Id" field="MsgId" />
 ```
@@ -181,16 +181,16 @@ suitable for bare-metal development. Such compile time configuration is a subjec
 ----
 
 ## &lt;size&gt; Layer
-The **&lt;size&gt;** layer represent a **remaining** data length **until** end of the **&lt;payload&gt;** layer
+The `<size>` layer represent a **remaining** data length **until** end of the `<payload>` layer
 **NOT** including the length of the size field itself and **NOT** including any
-values after **&lt;payload&gt;**.
+values after `<payload>`.
 ```xml
 <size name="Size">
     <int name="SizeField" type="uint16" serOffset="2" displayOffset="2" />
 </size>
 ```
 Note, that in this particular tutorial the `SIZE` value in the framing represents remaining length until
-end of the message **including** checksum (which follows the **&lt;payload&gt;**). To satisfy this
+end of the message **including** checksum (which follows the `<payload>`). To satisfy this
 requirement, the **serOffset="2"** property has been used to add extra 2 bytes (length of the checksum) to the 
 serialized value.
 
@@ -201,7 +201,7 @@ Usage of the **displayOffset** property can be used the force adding the same of
 value displayed in [CommsChampion Tools](https://github.com/commschamp/cc_tools_qt) and it's
 not really relevant to this tutorial.
 
-The **&lt;size&gt;** layer is implemented by extending or aliasing 
+The `<size>` layer is implemented by extending or aliasing 
 [comms::protocol::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html).
 ```cpp
 template <typename TMessage, typename TAllMessages>
@@ -215,7 +215,7 @@ Just like described earlier the `Size` layer type definition receives the type o
 wraps (`Id`) as its template parameter.
 
 ## &lt;checksum&gt; Layer
-The **&lt;checksum&gt;** layer is used to define checksum information that needs to be calculated.
+The `<checksum>` layer is used to define checksum information that needs to be calculated.
 ```xml
 <checksum name="Checksum" alg="crc-ccitt" from="Size" >
     <int name="ChecksumField" type="uint16" />
@@ -234,14 +234,14 @@ tutorials.
 
 ----
 
-Please also pay attention to usage of **from** property in **&lt;checksum&gt;** layer definition. 
+Please also pay attention to usage of **from** property in `<checksum>` layer definition. 
 It specifies from which layer the checksum calculation needs to be performed. In the case of
 this tutorial it's from `SIZE` layer until the `CHECKSUM` itself. The
 [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) also supports 
-usage of **&lt;checksum&gt;** layer as prefix to the area on which the checksum needs to be
+usage of `<checksum>` layer as prefix to the area on which the checksum needs to be
 calculated. In this case the **until** property needs to be used.
 
-The suffix **&lt;checksum&gt;** layer is implemented by extending or aliasing 
+The suffix `<checksum>` layer is implemented by extending or aliasing 
 [comms::protocol::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
 or [comms::protocol::ChecksumPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumPrefixLayer.html)
 depending on whether the checksum follows or precedes the data used for checksum
@@ -259,14 +259,14 @@ Note, that the C++ class of `Checksum` layer needs to wrap all the other layers 
 the checksum value is calculated. That's the reason while the `Checksum` wraps the `Size`.
 
 ## &lt;sync&gt; Layer
-The **&lt;sync&gt;** layer is used to define synchronization prefix. The **defaultValue** property of the field 
+The `<sync>` layer is used to define synchronization prefix. The **defaultValue** property of the field 
 needs to be used to define the synchronization value.
 ```xml
 <sync name="Sync">
     <int name="SyncField" type="uint16" defaultValue="0xabcd" />
 </sync>
 ```
-The **&lt;sync&gt;** layer is implemented by extending or aliasing 
+The `<sync>` layer is implemented by extending or aliasing 
 [comms::protocol::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html).
 ```cpp
 template <typename TMessage, typename TAllMessages>
@@ -305,7 +305,7 @@ class ClientToServerFrame : public
     ClientToServerFrameLayers<TOpt>::template Stack<TMessage, TAllMessages>
 {
 public:
-    COMMS_PROTOCOL_LAYERS_ACCESS(
+    COMMS_PROTOCOL_LAYERS_NAMES(
         data,
         id,
         size,
@@ -318,9 +318,9 @@ As the result the documentation of the last layer type
 ([comms::protocol::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html) 
 for the current example) can be used for reference on available framing API.
 
-The final definition of `ClientToServerFrame` frame class uses `COMMS_PROTOCOL_LAYERS_ACCESS()`
+The final definition of `ClientToServerFrame` frame class uses `COMMS_PROTOCOL_LAYERS_NAMES()`
 macro to assign names for the defined layers. For every name **X** the macro generates 
-`layer_X()` member function to allow access to it if needed. This particular tutorial doesn't
+`Layer_X` type and `layer_X()` member function to allow access to it if needed. This particular tutorial doesn't
 have such a need, so these functions are not really used.
 
 Now, let's take a look at the sending and processing code inside the [src/ClientSession.cpp](src/ClientSession.cpp).
@@ -406,10 +406,10 @@ when the code is recompiled.
 
 - The [CommsChampion Ecosystem](https://commschamp.github.io/) allows clear separation of the protocol 
   messages definition and the transport framing.
-- The transport framing is defined using **&lt;frame&gt;** XML node.
+- The transport framing is defined using `<frame>` XML node.
 - The protocol schema allows definition of multiple transport frames and the generated code
   allows the end application to select required one at compile time.
-- Every **&lt;frame&gt;** uses internal layers to specify transport fields and their 
+- Every `<frame>` uses internal layers to specify transport fields and their 
   roles.
 - The generated C++ code of the frame(s) resides in [include/&lt;namespace&gt;/frame](include/tutorial5/frame) folder and
   uses classes from [comms::protocol](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html)

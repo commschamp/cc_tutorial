@@ -7,7 +7,6 @@
 #include "tutorial22/frame/Frame.h"
 #include "tutorial22/input/ClientInputMessages.h"
 #include "tutorial22/options/ClientDefaultOptions.h"
-#include "tutorial22/options/DataViewDefaultOptions.h"
 
 #include "Session.h"
 

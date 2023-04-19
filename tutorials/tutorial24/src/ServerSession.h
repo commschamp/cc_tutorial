@@ -6,7 +6,6 @@
 #include "tutorial24/frame/Frame.h"
 #include "tutorial24/input/ServerInputMessages.h"
 #include "tutorial24/options/ServerDefaultOptions.h"
-#include "tutorial24/options/DataViewDefaultOptions.h"
 #include "Session.h"
 
 namespace cc_tutorial

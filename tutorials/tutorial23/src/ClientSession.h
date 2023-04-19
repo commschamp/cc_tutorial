@@ -8,7 +8,6 @@
 #include "tutorial23/input/ClientInputMessages.h"
 #include "t23_ext/options/ClientDefaultOptions.h"
 #include "tutorial23/options/ClientDefaultOptions.h"
-#include "tutorial23/options/DataViewDefaultOptions.h"
 
 #include "Session.h"
 

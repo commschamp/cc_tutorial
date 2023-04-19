@@ -41,7 +41,7 @@ void ClientSession::handle(Msg1& msg)
     std::cout << '\t' << msg.field_f1().name() << " (" << f1Vec.size() << " elements)\n";
     for (auto idx = 0U; idx < f1Vec.size(); ++idx) {
         auto& elem = f1Vec[idx]; // access to the variant element
-        elem.currFieldExec(PropDispatchHelper(*this));
+        elem.currentFieldExec(PropDispatchHelper(*this));
     }
 
     std::cout << std::endl;    

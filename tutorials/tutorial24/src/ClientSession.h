@@ -7,7 +7,6 @@
 #include "tutorial24/frame/Frame.h"
 #include "tutorial24/input/ClientInputMessages.h"
 #include "tutorial24/options/ClientDefaultOptions.h"
-#include "tutorial24/options/DataViewDefaultOptions.h"
 
 #include "Session.h"
 

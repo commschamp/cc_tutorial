@@ -13,7 +13,7 @@ of the messages are not important. The important part is that the `FLAGS` byte i
 the framing needs to be interpreted differently when handling the `Msg1` and `Msg2`.
 
 As was already described in one of the previous tutorials the value which resides in the framing, but needs 
-to be available when message object is handled has to be propagated to the message **&lt;interface&gt;**.
+to be available when message object is handled has to be propagated to the message `<interface>`.
 
 ```xml
 <fields>

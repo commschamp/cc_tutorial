@@ -26,11 +26,7 @@
         <size name="Size">
             <int name="SizeField" type="uint16" />
         </size>
-        <id name="ID">
-            <field>
-                <ref field="MsgId" />
-            </field>
-        </id>
+        <id name="ID" field="MsgId" />
         <payload name="Data" />
     </frame>
 </schema>

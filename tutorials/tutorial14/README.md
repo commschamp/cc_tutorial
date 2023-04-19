@@ -77,7 +77,7 @@ details. The `PlusOneSum` class is implemented inside the required `tutorial14::
 
 In addition to the custom checksum, there may be some extravagant protocols for which current out-of-the box
 functionality of the [CommsChampion Ecosystem](https://commschamp.github.io) is insufficient and/or incorrect and
-some custom code needs to be written. As the example let's define a message that has flags **&lt;set&gt;** field at the end,
+some custom code needs to be written. As the example let's define a message that has flags `<set>` field at the end,
 which defines how the previously read **4** bytes of data needs to be interpreted. If least significant bit of the flags is cleared than the 
 preceding **4** bytes are interpreted as a single `uint32` value, and in case the bit is set, then the preceding **4** bytes
 need to be interpreted as two `uint16` values.
@@ -102,8 +102,8 @@ The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) definition 
     </set>
 </message>
 ```
-Unfortunately the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows conditions (**&lt;cond&gt;**) for 
-**&lt;optional&gt;** field using references to only preceding fields, not to ones that follow, like in this example. The 
+Unfortunately the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows conditions (`<cond>`) for 
+`<optional>` field using references to only preceding fields, not to ones that follow, like in this example. The 
 default generated code for this example won't do the required functionality. There is a need to modify default
 **read** and **refresh** functionalities for this message. They are implemented inside 
 [dsl_src/include/tutorial14/message/Msg1.h.read](dsl_src/include/tutorial14/message/Msg1.h.read) and 
@@ -219,9 +219,9 @@ static const char* name() {...}
 ----
 
 **SIDE NOTE**: Injection of custom read / write/ refresh/ etc... functionalities are allowed only for message classes and 
-**stand-alone** global fields. Currently overriding of the functionality of the member field defined inside **&lt;message&gt;**
-node is not supported. If there is any need for such override, there is a need to move the field into the global **&lt;fields&gt;**
-area and use **&lt;ref&gt;** field inside the **&lt;message&gt;** to reference the modified global one.
+**stand-alone** global fields. Currently overriding of the functionality of the member field defined inside `<message>`
+node is not supported. If there is any need for such override, there is a need to move the field into the global `<fields>`
+area and use `<ref>` field inside the `<message>` to reference the modified global one.
 
 ----
 

@@ -1,5 +1,5 @@
 # How-To 1
-Custom remaining size framing information preceding **&lt;id&gt;**.
+Custom remaining size framing information preceding `<id>`.
 
 This howto demonstrates having remaining size information in message framing sharing its 2 bytes with
 extra flags which influence the way message payload is read. 
@@ -21,7 +21,7 @@ message is processed requires definition of common message interface:
 ```
 
 When remaining message length information in the message framing is split into multiple
-values, the default **&lt;size&gt;** cannot be used, the **&lt;custom&gt;** one needs to be used 
+values, the default `<size>` cannot be used, the `<custom>` one needs to be used 
 instead:
 ```xml
     <frame name="Frame">
@@ -36,20 +36,20 @@ instead:
         <payload name="Data" />
     </frame>
 ```
-When _size_ layer precedes **&lt;id&gt;** it is not possible to assign flags to message object 
+When _size_ layer precedes `<id>` it is not possible to assign flags to message object 
 (because the latter is not allocated yet) and then forward the `read()` operation to the next 
 layer. In order to solve the problem the **pseudo** (marked with **pseudo="true"** property) 
-**&lt;value&gt;** layer is added right before the **&lt;payload&gt;**.
+`<value>` layer is added right before the `<payload>`.
 
 ---
 
-**REMINDER**: The **pseudo** **&lt;value&gt;** layer does not produce any output or consumes any input, it just 
+**REMINDER**: The **pseudo** `<value>` layer does not produce any output or consumes any input, it just 
 contains its field as a private data member (value of which can be assigned externally) and 
 pretends to read the value when its `read()` member function is invoked.
 
 ---
 
-When the `SizeWithFlags` reads its value it needs to access the `Flags` **&lt;value&gt;** layer and 
+When the `SizeWithFlags` reads its value it needs to access the `Flags` `<value>` layer and 
 assign the pseudo field value, see [dsl_src/include/howto1/frame/layer/SizeWithFlags.h](dsl_src/include/howto1/frame/layer/SizeWithFlags.h)
 for details:
 ```cpp
@@ -75,7 +75,7 @@ public:
 ```
 **Note** that `nextLayer()` function is called twice: first time gives an access to the `Id` layer 
 that follows, and second time gives an access to the `Flags` one. After that the 
-**&lt;value&gt;** layer will do its job of re-assigning its field to the **&lt;interface&gt;** the 
+`<value>` layer will do its job of re-assigning its field to the `<interface>` the 
 normal way it's designed to do.
 
 Also for more details please read [Defining Custom Message Size Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)

@@ -1,5 +1,5 @@
 # Tutorial 4
-Working with **&lt;variant&gt;** fields and defining heterogeneous lists.
+Working with `<variant>` fields and defining heterogeneous lists.
 
 ## Key-Value Pairs
 Some protocols in some cases don't _hardcode_ type of the field value which is supposed to
@@ -9,7 +9,7 @@ It makes it ideal to define various _properties_ (or list of _properties_) which
 or any type and reported in any order.
 
 The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) supports such constructs
-using **&lt;variant&gt;** fields. Let's take a look inside [dsl/schema.xml](dsl/schema.xml) 
+using `<variant>` fields. Let's take a look inside [dsl/schema.xml](dsl/schema.xml)
 and see how the following table of properties is implemented.
 
 |ID (1 byte)|Value Type|
@@ -19,7 +19,7 @@ and see how the following table of properties is implemented.
 |5|Property3 - string prefixed with 1 bytes of its length|
 
 First of all the numeric property ID (**key**) is convenient to define
-as stand-alone **&lt;enum&gt;** first.
+as stand-alone `<enum>` first.
 ```xml
 <enum name="PropKey" type="uint8">
     <validValue name="K1" val="0" />
@@ -56,17 +56,17 @@ above looks like this:
 ```
 There are multiple important aspects that require a closer look and deeper understanding.
 
-- Every property is a **key**-**value** pair, which are bundled together by the **&lt;bundle&gt;** 
-  field definition to represent a **single** member field of the **&lt;variant&gt;**.
-- Every first (**key**) field inside such **&lt;bundle&gt;** must be of the same size and share
+- Every property is a **key**-**value** pair, which are bundled together by the `<bundle>`
+  field definition to represent a **single** member field of the `<variant>`.
+- Every first (**key**) field inside such `<bundle>` must be of the same size and share
   certain common properties. That's why external **PropKeyCommon** field was defined and all other
   **key** ones inherit (using **reuse** property) the common definition and then apply extra changes / modifications
   on top.
-- The **&lt;variant&gt;** field can hold **any** of its listed **&lt;bundle&gt;** members, but only
+- The `<variant>` field can hold **any** of its listed `<bundle>` members, but only
   single **one** at a time. Think of it as a [union](https://en.cppreference.com/w/cpp/language/union) of
-  **&lt;bundle&gt;** fields.
+  `<bundle>` fields.
 - The **logical** (not necessarily actually implemented in the same way) code flow when
-  reading such field is to attempt reading of the defined members (**&lt;bundle&gt;**-s) one
+  reading such field is to attempt reading of the defined members (`<bundle>`-s) one
   by one **in order** of their definition and stop reading once the read operation of the 
   member is successful. For that purpose there is a need to **fail** reading of the property if
   its **key** is not as expected. That's how the right one is found.
@@ -75,7 +75,7 @@ There are multiple important aspects that require a closer look and deeper under
   (defined in and reused from **PropKeyCommon** field).
 - In order to default construct a property with the correct key value without any need to implement
   boilerplate code that does so the **defaultValue** property is used to set the same value as a valid one.
-- The definition of the key valid values as a separate **&lt;enum&gt;** (PropKey) allows referencing its
+- The definition of the key valid values as a separate `<enum>` (PropKey) allows referencing its
   values by a name (instead of hard-coded numeric value) in the **defaultValue** and **validValue** properties.
 - Since release **v4.0** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
   and [commsdsl](https://github.com/commschamp/commsdsl) code generators it is possible to replace a 
@@ -83,7 +83,7 @@ There are multiple important aspects that require a closer look and deeper under
   it was done for the _Prop3_.
 
 Sometimes there is a need to combine such heterogeneous properties into a list. It is easy to do using
-a **&lt;list&gt;** covered in one of the earlier tutorials.
+a `<list>` covered in one of the earlier tutorials.
 ```xml
 <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
     <list name="F1" element="KeyValueProp">
@@ -94,7 +94,7 @@ a **&lt;list&gt;** covered in one of the earlier tutorials.
 </message>
 ```
 Note, that element field is defined in the global space in this example and hence can be 
-referenced by the **element** XML attribute rather than being defined inside **&lt;element&gt;** child.
+referenced by the **element** XML attribute rather than being defined inside `<element>` child.
 
 Another valid definition of such message could be like this:
 ```xml
@@ -123,12 +123,7 @@ public:
         prop2,
         prop3
     );
-    
-    comms::ErrorStatus read(TIter& iter, std::size_t len)
-    {
-        ...
-    }
-    
+
     ...
 };
 ```
@@ -138,7 +133,9 @@ class definition uses `COMMS_VARIANT_MEMBERS_NAMES()` macro to provide names to 
 might contain. For every such name **X** the following is defined:
 
 - `FieldIdx_X` - Numeric compile time known index of the member field **X** in order of members definition inside the schema.
-- `initField_X()` - Member function to (re)initialize the variant field to hold member **X**, returns reference to the initialized member.
+- `initField_X()` - Member function to initialize the variant field to hold member **X**, returns reference to the initialized member.
+  To be able to use this member function the variant mustn't contain other field before.
+- `deinitField_X()` - Member funttion to de-initialize (destruct) the help member **X**.
 - `accessField_X()` - Member function to access (via cast to appropriate type) held member of known type.
 
 Note, that `ValueType` inner type defined by every field class is a variant of 
@@ -147,14 +144,22 @@ accessed directly via usual `.value()` member function. Instead, generated `init
 `accessField_X()` member functions need to be used to access the storage and perform the cast to 
 the appropriate type.
 
-Another thing to pay attention to at this stage is an existence of custom `read()` member function which
-overrides a default one provided by the [comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
-itself. The default `read()` operation of the 
+It is important to understand that the defult implementation provided by the
+[comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html) class
+is sufficient to be used "as-is" without any extra functionality. However, it has to do a lot of
+meta-programming and regular code magic to translate runtime information of the detected member field
+to its type known at compile time. It creates a significant burden on the compiler increasing compilation
+time as well as memory consumption. The final code may also have sub-optimal performance.
+
+To workaround this issue, the **commsdsl2comms** code generator overrides most of the inherited member
+functions with better `switch` statement based implementation.
+
+For example, the `read()` member function. The default (inherited) `read()` operation of the
 [comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html) implements
-the logic mentioned earlier when definition of the **&lt;variant&gt;** field explained. It invokes `read()`
+the logic mentioned earlier when definition of the `<variant>` field explained. It invokes `read()`
 operation of every member **in order** of their definition and stops when the operation is successful. It 
 is quite inefficient. The [commsdsl2comms](https://github.com/commschamp/commsdsl) code generation utility
-analyses the way how the **&lt;variant&gt;** field is defined and generates more efficient code for `read()` when
+analyses the way how the `<variant>` field is defined and generates more efficient code for `read()` when
 appropriate. The generated code will read the first _key_ member and then will use `switch` statement to
 handle the rest of the read operation when actual type of the property is known. 
 ```cpp
@@ -213,14 +218,14 @@ when serialized).
 
 It is paramount to understand how the values are being assigned in the code above.
 
-- `listOfProps[0]` gives us a reference to the first **&lt;variant&gt;** field in the list (still not properly initialized).
-- `listOfProps[0].initField_prop1()` - initializes the first **&lt;variant&gt;** field to hold **Prop1**
-  ([tutorial4::field::KeyValuePropMembers<...>::Prop1](include/tutorial4/field/KeyValueProp.h)), which is a **&lt;bundle&gt;**
+- `listOfProps[0]` gives us a reference to the first `<variant>` field in the list (still not properly initialized).
+- `listOfProps[0].initField_prop1()` - initializes the first `<variant>` field to hold **Prop1**
+  ([tutorial4::field::KeyValuePropMembers<...>::Prop1](include/tutorial4/field/KeyValueProp.h)), which is a `<bundle>`
   having its own member fields, and gives a reference to initialized member.
-- `listOfProps[0].initField_prop1().field_val()` - access the **Val** member field (defined as **&lt;int&gt;**).
+- `listOfProps[0].initField_prop1().field_val()` - access the **Val** member field (defined as `<int>`).
 - `listOfProps[0].initField_prop1().field_val().value()` - provides a reference to actual value storage (of `std::uint16_t` type).
 
-The rest of the values are assigned in a similar way. The last **&lt;variant&gt;** in the list contains **Prop2**,
+The rest of the values are assigned in a similar way. The last `<variant>` in the list contains **Prop2**,
 which in turn contains floating point value. The code above assigns appropriate **infinity** value to it.
 It is important to understand how the actual type is chosen to be a template parameter for 
 `std::numeric_limits`. Of course, just by the look at the [dsl/schema.xml](dsl/schema.xml) it is clear that
@@ -229,20 +234,20 @@ boilerplate code which needs to be updated manually in case the property is chan
 hard-coding is not recommended.
 
 - `Msg1::Field_f1` - generated by the `COMMS_MSG_FIELDS_NAMES()` macro in the message definition and 
-  gives a type of the **F1** field which is a **&lt;list&gt;** 
+  gives a type of the **F1** field which is a `<list>`
   (extends [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)).
-- `Msg1::Field_f1::ValueType` - gives a storage type of the **&lt;list&gt;** which is `std::vector` of 
-  [tutorial4::field::KeyValueProp](include/tutorial4/field/KeyValueProp.h) **&lt;variant&gt;**-s.
+- `Msg1::Field_f1::ValueType` - gives a storage type of the `<list>` which is `std::vector` of
+  [tutorial4::field::KeyValueProp](include/tutorial4/field/KeyValueProp.h) `<variant>`-s.
 - `Msg1::Field_f1::ValueType::value_type` - gives a type of the held values 
   ([tutorial4::field::KeyValueProp](include/tutorial4/field/KeyValueProp.h)).
-- `Msg1::Field_f1::ValueType::value_type::Field_prop2` - gives us a type of **Prop2** (**&lt;bundle&gt;**
+- `Msg1::Field_f1::ValueType::value_type::Field_prop2` - gives us a type of **Prop2** (`<bundle>`
   defined as [tutorial4::field::KeyValuePropMembers<...>::Prop2](include/tutorial4/field/KeyValueProp.h)) generated
-  by `COMMS_VARIANT_MEMBERS_NAMES()` macro inside **&lt;variant&gt;** field class definition.
+  by `COMMS_VARIANT_MEMBERS_NAMES()` macro inside `<variant>` field class definition.
 - `Msg1::Field_f1::ValueType::value_type::Field_prop2::Field_val` - gives us a type of **Val** member of
   the **Prop2** ([tutorial4::field::KeyValuePropMembers<...>::Prop2Members::Val](include/tutorial4/field/KeyValueProp.h)),
-  which is **&lt;float&gt;** field (extends [comms::field::FloatValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1FloatValue.html)).
+  which is `<float>` field (extends [comms::field::FloatValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1FloatValue.html)).
 - `Msg1::Field_f1::ValueType::value_type::Field_prop2::Field_val::ValueType` - finally gives as a real storage type of
-  the used **&lt;float&gt;** field.
+  the used `<float>` field.
   
 The next stage is to understand how to properly process such variant fields. In this example the sent `Msg1` is
 echoed back by the server and processes inside `void ClientSession::handle(Msg1& msg)`.
@@ -253,18 +258,18 @@ void ClientSession::handle(Msg1& msg)
     auto& f1Vec = msg.field_f1().value();
     for (auto idx = 0U; idx < f1Vec.size(); ++idx) {
         const auto& elem = f1Vec[idx]; // access to the variant element
-        elem.currFieldExec(PropDispatchHelper(*this));
+        elem.currentFieldExec(PropDispatchHelper(*this));
     }
     ...
 }
 ```
-The code above iterates over received **&lt;variant&gt;** fields in the list and dispatches them for
-proper processing using `currFieldExec()` member function. Note, that at the time of the processing
+The code above iterates over received `<variant>` fields in the list and dispatches them for
+proper processing using `currentFieldExec()` member function. Note, that at the time of the processing
 the `read()` operation has been successfully completed and the index of the member (**0** based) in 
 order of their definition is held as a private data and can be retrieved using 
 [comms::field::Variant::currentField()](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
 member function. Please pay attention that this is a **run-time** (not compile-time) information and the
-actual type of the stored value (to cast to) needs to be determined at run-time. The `currFieldExec()`
+actual type of the stored value (to cast to) needs to be determined at run-time. The `currentFieldExec()`
 member function of the variant field receives a functor object, which is expected to define its `operator()` with
 appropriate signature, determines the correct type of the member for the cast and invokes `operator()` of the
 passed functor object with the correct reference to the held member. The definition of the `PropDispatchHelper` in
@@ -288,7 +293,7 @@ private:
     ClientSession& m_session;
 };
 ```
-See also the documentation on [comms::field::Variant::currFieldExec()](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html).
+See also the documentation on [comms::field::Variant::currentFieldExec()](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html).
 
 Note that `operator()` above in addition to actual type of the member receives also the index of the
 detected member as a template parameter, so the run-time information of the index becomes a compile-time
@@ -309,7 +314,7 @@ class ClientSession
     void handleProp(const Prop3& prop);
 };
 ```
-The `handleProp()` in turn prints the values of the detected property **&lt;bundle&gt;**. As the result
+The `handleProp()` in turn prints the values of the detected property `<bundle>`. As the result
 the output of `Msg1` handling looks like this:
 ```
 Received "Message 1" with ID=1
@@ -324,7 +329,7 @@ Received "Message 1" with ID=1
             Key = 2
             Val = inf
 ```
-The `currFieldExec()` member function provided by the 
+The `currentFieldExec()` member function provided by the 
 [comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html) field 
 implements static binary search (**O(log(n)** complexity) with similar logic to the code below to determine 
 the real type to cast to.
@@ -349,11 +354,11 @@ else {
 }
 ```
 It gets the job done, however the [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator
-overrode the definition of inherited `currFieldExec()` from [comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
+overrode the definition of inherited `currentFieldExec()` from [comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
 with a custom [implementation](include/tutorial4/field/KeyValueProp.h):
 ```cpp
 template <typename TFunc>
-void currFieldExec(TFunc&& func) 
+void currentFieldExec(TFunc&& func) 
 {
     switch (Base::currentField()) {
     case FieldIdx_prop1:
@@ -373,7 +378,7 @@ void currFieldExec(TFunc&& func)
 ```
 The modern compilers generate quite efficient binary code based on dispatch tables for handling 
 such `switch` statements with **O(1)** run-time complexity. As the result the code above usually
-gives a better performance.
+gives a better runtime as well as compile time performance.
 
 Note usage of `FieldIdx_X` compile time values as well as `accessField_X()` member functions. They
 get generated by the `COMMS_VARIANT_MEMBERS_NAMES()` macro. The `FieldIdx_X` gives us an index
@@ -382,7 +387,7 @@ of the detected member, while `accessField_X()` just gives as an access to the s
 with cast to the appropriate type.
 
 Similar `switch` statement based functionality for better compilation times as well as runtime performance
-is generated for other member functions like `write()`, `refresh()`, `length()`, and `valid()`.
+is generated for other member functions like `write()`, `refresh()`, `length()`, `valid()`, `reset()`, etc...
 ```cpp
 template <typename TIter>
 comms::ErrorStatus write(TIter& iter, std::size_t len) const
@@ -452,15 +457,15 @@ this tutorial.
 
 ----
 
-**SIDE NOTE**: In case the **&lt;variant&gt;** field contains other XML child nodes in addition to
-member fields definition (like **&lt;description&gt;** in the example above), the member fields need to
-be defined as children of **&lt;members&gt;** XML node.
+**SIDE NOTE**: In case the `<variant>` field contains other XML child nodes in addition to
+member fields definition (like `<description>` in the example above), the member fields need to
+be defined as children of `<members>` XML node.
 
 ----
 
-The definition of the **&lt;variant&gt;** field above very similar to [Key-Value Pairs](#key-value-pairs) 
+The definition of the `<variant>` field above very similar to [Key-Value Pairs](#key-value-pairs)
 explained earlier, but with additional
-**&lt;int&gt;** field of `Length` between the *Key* and *Val*. Note usage of `semanticType="length"`
+`<int>` field of `Length` between the *Key* and *Val*. Note usage of `semanticType="length"`
 property. It is very important to use in order to notify the code generator about special role of this field.
 
 **IMPORTANT**: The the value of the length field (the one with `semanticType="length"`) always contains
@@ -472,12 +477,12 @@ serialized value. It would be defined like this:
 <int name="Length" type="uint8" semanticType="length" serOffset="1" />
 ```
 
-Also note that the **&lt;string&gt;** value field inside `Prop6` does not require additional length prefix
+Also note that the `<string>` value field inside `Prop6` does not require additional length prefix
 (compared to previous **Key-Value** example). The preceding **Length** field does the job of limiting the
 length of the string.
 
 Many developers often wonder who and why would use **TLV** type of properties instead of **Key-Value** ones. If
-you take a look at `Prop4` definition, the length will always be **4** bytes (because there is **&lt;int&gt;** 
+you take a look at `Prop4` definition, the length will always be **4** bytes (because there is `<int>`
 4 bytes long field that follows). Hence, the preceding field of **length** seems to be redundant.
 
 The primary reason to prefer **TLV** properties over **Key-Value** ones is to allow future **forward** compatibility
@@ -490,7 +495,7 @@ ones.
 
 The example above allows ignoring and skipping over unknown properties by defining the **last** member (`Any`) with non-failing
 read operation on the `Key`. The latter in the example above doesn't specify which values are considered to be
-valid (hence all possible ones are valid). The `Val` in such property is defined to be **&lt;data&gt;**.
+valid (hence all possible ones are valid). The `Val` in such property is defined to be `<data>`.
 
 Th **TLV** type of properties also allows reducing serialization length of some value types. The example of
 is is the definition of `Prop7`. The default serialization length of its `Val` member value (of `uint64` type) is 8 bytes.
@@ -551,11 +556,11 @@ error-prone code.
 
 - The `doRefresh()` member function of the message object is a **non-virtual** one which iterates over all the member
   fields and calls their `refresh()` member function.
-- The `refresh()` member function of the **&lt;list&gt;** field will call `refresh()` member function of all the 
-  stored fields (**&lt;variant&gt;**-s).
-- The `refresh()` member function of the **&lt;variant&gt;** field will call `refresh()` member function of the 
-  actual member (**&lt;bundle&gt;**) it contains at the moment.
-- Every definition of such **&lt;bundle&gt;** member (inside [include/tutorial4/field/TlvProp.h](include/tutorial4/field/TlvProp.h))
+- The `refresh()` member function of the `<list>` field will call `refresh()` member function of all the
+  stored fields (`<variant>`-s).
+- The `refresh()` member function of the `<variant>` field will call `refresh()` member function of the
+  actual member (`<bundle>`) it contains at the moment.
+- Every definition of such `<bundle>` member (inside [include/tutorial4/field/TlvProp.h](include/tutorial4/field/TlvProp.h))
   uses `comms::option::def::RemLengthMemberField<>` option in their definition (generated as the result of
   `semanticType="length"` assignment). It notifies the 
   [COMMS Library](https://github.com/commschamp/comms) about the existence of the
@@ -593,12 +598,12 @@ result the function signature needs also to be changed to receive reference to *
 ----
 
 Handling of the `Msg2` inside `void ClientSession::handle(Msg2& msg)` is very similar to handling of
-the `Msg1` described earlier. It uses the same `PropDispatchHelper` with call to `currFieldExec()` to
+the `Msg1` described earlier. It uses the same `PropDispatchHelper` with call to `currentFieldExec()` to
 dispatch held property into appropriate `ClientSession::handleProp()` member function.
 
 ## Summary
 
-- The heterogeneous fields are defined using **&lt;variant&gt;** XML node of 
+- The heterogeneous fields are defined using `<variant>` XML node of
   [CommsDSL](https://github.com/commschamp/CommsDSL-Specification).
 - Usually the heterogeneous fields are defined as **Key-Value** pairs or **Type-Length-Value** (**TLV**)
   triplets.
@@ -615,18 +620,19 @@ dispatch held property into appropriate `ClientSession::handleProp()` member fun
 - When actual message object is not known (referenced by the interface class), the interface class needs to
   provide polymorphic refresh using `comms::option::app::RefreshInterface` option and then polymorphic call to the `refresh()` 
   member function of the interface becomes available.
-- All the **&lt;variant&gt;** fields are defined by extending 
+- All the `<variant>` fields are defined by extending
   [comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html) class.
 - All the member fields are named using `COMMS_VARIANT_MEMBERS_NAMES()` macro.
 - For every member name `X` there is compile-time known `FieldIdx_X` numeric index as well as 
   `initField_X()` member function used to initialize the member, and `accessField_X()` to access
-  the member that was properly initialized before.
+  the member that was properly initialized before. The `deinitField_X()` member functions are usually not
+  expected to be used by the client code, but by the `reset()` to be able to destruct the held member correctly.
 - At run-time after the successful **read** operation the index of the held member can be retrieved using
   [comms::field::Variant::currentField()](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
   member function.
 - To determine the type of the held member and dispatch it to the appropriate handler the 
-  `currFieldExec()` member function needs to be used (see 
-  [comms::field::Variant::currFieldExec()](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
+  `currentFieldExec()` member function needs to be used (see 
+  [comms::field::Variant::currentFieldExec()](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html)
   for documentation).
 
 [Read Previous Tutorial](../tutorial3) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial5) 

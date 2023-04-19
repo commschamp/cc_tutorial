@@ -4,7 +4,7 @@ Custom transport framing layers.
 So far, in all the previous tutorials every frame layer had a well defined single
 responsibility. However, there are protocols that may split the used field to 
 multiple parts where every part has its own influence on how the message is 
-decoded and/or handled. In most such cases, the **&lt;id&gt;** or **&lt;size&gt;**
+decoded and/or handled. In most such cases, the `<id>` or `<size>`
 layers allocate a couple of extra bits of its field to make some extra flags.
 
 This tutorial is quite similar to the [previous](../tutorial16) in terms of 
@@ -18,8 +18,8 @@ whether some fields exist in both `Msg1` and `Msg2`.
     </set>        
 </interface>    
 ```
-However instead of having separate **&lt;value&gt;** layer in its frame, both
-**&lt;id&gt;** and **&lt;size&gt;** layers have their fields split into actual 
+However instead of having separate `<value>` layer in its frame, both
+`<id>` and `<size>` layers have their fields split into actual 
 **id** and **size** values, but also having some extra flags bits.
 ```xml
     <frame name="Frame">
@@ -44,14 +44,14 @@ However instead of having separate **&lt;value&gt;** layer in its frame, both
 ```
 Please pay attention to the following details:
 
-- The default **&lt;id&gt;** and **&lt;size&gt;** do **NOT** support the intended split of the value into
-  multiple sub-fields. Hence the **&lt;custom&gt;** layer definition needs to be used instead.
-- The layer that replaces **&lt;id&gt;** must set **semanticLayerType** property to **id** to let
-  the code generator know which layer replaces original **&lt;id&gt;** layer.
-- Setting **semanticLayerType** for the layer that replaced **&lt;size&gt;** is not necessary
+- The default `<id>` and `<size>` do **NOT** support the intended split of the value into
+  multiple sub-fields. Hence the `<custom>` layer definition needs to be used instead.
+- The layer that replaces `<id>` must set **semanticLayerType** property to **id** to let
+  the code generator know which layer replaces original `<id>` layer.
+- Setting **semanticLayerType** for the layer that replaced `<size>` is not necessary
   at this stage of developement (the code generator doesn't produce any special code for such layer),
   but still recommended.
-- The **&lt;bitfield&gt;** field is used to split the field in multiple members.
+- The `<bitfield>` field is used to split the field in multiple members.
 - In this particular tutorial `SizeWithFlags` follows the `IdWithFlags`, i.e the frame is 
   ` ID (with flags) | SIZE (with flags) | PAYLOAD`. The opposite case where the size handling 
   precedes the id is also supported but it has its nuances. It will be covered in one of the **howto**-s.
@@ -60,7 +60,7 @@ Please pay attention to the following details:
 
 **SIDE NOTE**: Before **v5.0** of the [CommsDSL Specification](https://commschamp.github.io/commsdsl_spec/),
 the `IdWithFlags` custom layer had to use `idReplacement="true"` property to indicate that
-the layer replaces the original **&lt;id&gt;**. Since **v5.0** it is deprecated and **semanticLayerType**
+the layer replaces the original `<id>`. Since **v5.0** it is deprecated and **semanticLayerType**
 should be used instead.
 
 ----
@@ -71,7 +71,7 @@ It contains the following include statements:
 #include "tutorial17/frame/layer/IdWithFlags.h"
 #include "tutorial17/frame/layer/SizeWithFlags.h"
 ```
-The **&lt;custom&gt;** layers require custom implementation of the frame layer, because the code generator
+The `<custom>` layers require custom implementation of the frame layer, because the code generator
 doesn't produce them. If the relevant code is not injected, then the compilation of the protocol code will
 probably fail. The [dsl_src/include/tutorial17/frame/layer/IdWithFlags.h](dsl_src/include/tutorial17/frame/layer/IdWithFlags.h)
 and [dsl_src/include/tutorial17/frame/layer/SizeWithFlags.h](dsl_src/include/tutorial17/frame/layer/SizeWithFlags.h)
@@ -262,13 +262,13 @@ passed as a parameter as well. The `SizeWithFlags::prepareFieldForWrite()` funct
 called to properly set the size and the flags.
 
 ## Summary
-- Custom layers are defined using **&lt;custom&gt;** XML node.
-- The layer that replaces **&lt;id&gt;** needs to set **idReplacement** property to **true**.
-- To implement custom replacement of **&lt;id&gt;**, the custom layer code may extend 
+- Custom layers are defined using `<custom>` XML node.
+- The layer that replaces `<id>` needs to set **idReplacement** property to **true**.
+- To implement custom replacement of `<id>`, the custom layer code may extend 
   [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
   (see [Defining Custom Message ID Protocol Stack Layer ](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
   for details).
-- To implement custom replacement of **&lt;size&gt;**, the custom layer code may extend 
+- To implement custom replacement of `<size>`, the custom layer code may extend 
   [comms::protocol::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html)
   (see [Defining Custom Message Size Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
   for details).

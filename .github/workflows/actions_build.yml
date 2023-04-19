@@ -3,8 +3,8 @@ name: Github Actions Build
 on: [push]
 
 env:
-  COMMS_BRANCH: master
-  COMMSDSL_BRANCH: master
+  COMMS_BRANCH: v5.2
+  COMMSDSL_BRANCH: v6.1
 
 jobs:
 

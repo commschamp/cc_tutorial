@@ -116,8 +116,8 @@ void ClientSession::sendMsg2()
 ```
 
 ## Summary
-- To specify extra validity condition(s) use **validCond** property (or **&lt;validCond&gt;** child node).
+- To specify extra validity condition(s) use **validCond** property (or `<validCond>` child node).
 - The **validCond** property uses the same syntax / rules as **construct** and **readCond** described in [tutorial16](../tutorial16).
 - To discard message on invalid contents use **failOnInvalid** property.
 
-[Read Previous Tutorial](../tutorial23) &lt;-----------------------
+[Read Previous Tutorial](../tutorial23) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial25) 

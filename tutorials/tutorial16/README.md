@@ -105,7 +105,7 @@ they are known and message object is created, **before** the payload of the mess
 
 ----
 
-**SIDE NOTE**: When schema file does not contain any **&lt;interface&gt;** definition the 
+**SIDE NOTE**: When schema file does not contain any `<interface>` definition the 
 empty one is assumed having the `Message` **name**, i.e. equivalent to the following definition:
 ```xml
 <interface name="Message">
@@ -143,18 +143,18 @@ The message frame is defined like this:
 ```
 The [&lt;value&gt;](https://commschamp.github.io/commsdsl_spec/#frames-value) layer represents extra values
 to be re-assigned to the message interface. Note usage of **interfaceFieldName** property, which specifies 
-the **name** of the relevant field inside the **&lt;interface&gt;**, value of which needs to be assigned.
+the **name** of the relevant field inside the `<interface>`, value of which needs to be assigned.
 
 ----
 
 **SIDE NOTE**: The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) describes usage of **interfaces**
 property to specify the list of the interfaces it supports. It's applicable to the situation when the protocol schema
-file(s) contain multiple **&lt;interface&gt;** definitions. It is not the case for this tutorial, hence the 
+file(s) contain multiple `<interface>` definitions. It is not the case for this tutorial, hence the 
 usage of **interfaces** property is omitted.
 
 ----
 
-The **&lt;value&gt;** layer is implemented by extending 
+The `<value>` layer is implemented by extending 
 [comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
 (see [include/tutorial16/frame/Frame.h](include/tutorial16/frame/Frame.h)).
 ```cpp
@@ -177,13 +177,13 @@ struct FrameLayers
 
 ----
 
-**SIDE NOTE**: In this particular tutorial the **&lt;value&gt;** layer precedes the **&lt;id&gt;** one,
+**SIDE NOTE**: In this particular tutorial the `<value>` layer precedes the `<id>` one,
 which creates a situation when the extra transport value is known **before** the message object is created
-(by the **&lt;id&gt;** layer) and cannot be re-assigned to appropriate message object right away.
+(by the `<id>` layer) and cannot be re-assigned to appropriate message object right away.
 The [COMMS Library](https://github.com/commschamp/comms) contains inner 
 ~~magic~~ **compile-time** logic which identifies such scenario and results in some kind of `read()` multi-pass
-between the layers (excluding the **&lt;payload&gt;** one) to allow the **&lt;value&gt;** layer to assign the 
-transport values to the created message object **before** the `read()` operation is forwarded to the **&lt;payload&gt;**
+between the layers (excluding the `<payload>` one) to allow the `<value>` layer to assign the 
+transport values to the created message object **before** the `read()` operation is forwarded to the `<payload>`
 layer. It's just inner implementation details of the [COMMS Library](https://github.com/commschamp/comms) and 
 the integrating developer doesn't need to worry about it.
 
@@ -211,9 +211,9 @@ Now, let's dive into the definition of the messages themselves:
     </optional>        
 </message>   
 ```
-The `F3` field of the `Msg1` is defined as **&lt;optional&gt;** and is expected to exist only 
+The `F3` field of the `Msg1` is defined as `<optional>` and is expected to exist only 
 if `B0` inside the `Flags` is set. The `F2` of the `Msg` also defined as 
-**&lt;optional&gt;** and is expected to exist only if `B1` inside the `Flags` is set. 
+`<optional>` and is expected to exist only if `B1` inside the `Flags` is set. 
 Since version **v6.0** the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification)
 allows referencing interface fields prefixing the reference string with `%` character.
 
@@ -233,7 +233,7 @@ errors.
 **NOTE** that the **defaultMode** of the both optional fields are set to **missing** in order to allow
 default constructions of the message objects to end up being in the consistent state (without any 
 need for **refresh**), because the 
-default constructed `Flags` member field of the **&lt;interface&gt;** has its bits cleared.
+default constructed `Flags` member field of the `<interface>` has its bits cleared.
 
 Now let's take a look how the message(s) are prepared to be sent out by the [ClientSession](src/ClientSession.cpp):
 ```cpp
@@ -258,13 +258,13 @@ function of the message object to bring the message into a consistent state, whi
 updates mode of the `F3` field.
 
 When the whole message is serialized by the **frame**, the value of `Flags` is retrieved by the 
-**&lt;value&gt;** ([comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html))
+`<value>` ([comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html))
 and properly written in the correct place in the frame.
 
-In addition to allowing referencing of the **&lt;interface&gt;** fields in the **cond** properties,
+In addition to allowing referencing of the `<interface>` fields in the **cond** properties,
 the **v6.0** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
-allows using similar syntax to assign values to the **&lt;interface&gt;** fields in the
-constructor of the relevant **&lt;message&gt;** class using the **construct** property.
+allows using similar syntax to assign values to the `<interface>` fields in the
+constructor of the relevant `<message>` class using the **construct** property.
 ```xml
 <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name" construct="%Flags.B2" ...>
     <int name="F1" type="uint16" />
@@ -282,8 +282,8 @@ Msg3()
 The **construct** property use the same syntax as the **cond** one, but with limitations. Only bit references
 and equality statements are allowed.
 
-Multiple **construct** properties are supported as the **&lt;construct&gt;** child node with a single
-**&lt;and&gt;** child:
+Multiple **construct** properties are supported as the `<construct>` child node with a single
+`<and>` child:
 ```xml
 <message name="Msg4" id="MsgId.M4" displayName="^Msg4Name" ...>
     <construct>
@@ -306,14 +306,14 @@ Msg4()
 ```
 
 The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) also supports a check that the
-**&lt;interface&gt;** fields have particular value in the **read** operation before proceeding to
+`<interface>` fields have particular value in the **read** operation before proceeding to
 reading the message payload (inner fields). It is performed using the **readCond** property.
 ```xml
 <message name="Msg3" id="MsgId.M3" ... readCond="%Flags.B2">
     ...
 </message>
 ```
-The **readCond** property uses the same syntax as the previously mention **cond** of the **&lt;optional&gt;** field.
+The **readCond** property uses the same syntax as the previously mention **cond** of the `<optional>` field.
 The generated **read** functionality of the [Msg3](include/tutorial16/message/Msg3.h) looks like this:
 ```cpp
 /// @brief Generated read functionality.
@@ -382,15 +382,15 @@ comms::ErrorStatus doRead(TIter& iter, std::size_t len)
 
 ## Summary
 - When there is a common value for all the messages that resides in message framing, the 
-  **&lt;value&gt;** framing layer needs to be used.
-- The **&lt;value&gt;** framing layer is implemented by extending 
+  `<value>` framing layer needs to be used.
+- The `<value>` framing layer is implemented by extending 
   [comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html) class.
 - In many cases such transport value has an influence on how message payload is decoded and/or the message is handled.
-  To allow transfer of the information to message object custom **&lt;interface&gt;** needs to be defined.
-- The common fields defined as members of the **&lt;interface&gt;** are **NOT** getting serialized as part 
-  of message payload, only by the **&lt;value&gt;** framing layer.
-- Referencing **&lt;interface&gt;** fields is allowing using `%` character prefix.
-- Use **construct** property (or **&lt;construct&gt;** node) to specify extra construction requirements.
-- Use **readCond** property (or **&lt;readCond&gt;** node) to specify reading conditions that take place before reading of the payload.
+  To allow transfer of the information to message object custom `<interface>` needs to be defined.
+- The common fields defined as members of the `<interface>` are **NOT** getting serialized as part 
+  of message payload, only by the `<value>` framing layer.
+- Referencing `<interface>` fields is allowing using `%` character prefix.
+- Use **construct** property (or `<construct>` node) to specify extra construction requirements.
+- Use **readCond** property (or `<readCond>` node) to specify reading conditions that take place before reading of the payload.
 
 [Read Previous Tutorial](../tutorial15) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial17) 

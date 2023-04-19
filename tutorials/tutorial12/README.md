@@ -8,13 +8,13 @@ places where dynamic memory allocation is used:
 - Inside [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html) used
   by the [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
   when processing message numeric ID value and creating appropriate message object.
-- Default storage of **&lt;string&gt;** field (implemented by extending 
+- Default storage of `<string>` field (implemented by extending 
   [comms::field::String](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1String.html)) is
   `std::string`.
-- Default storage of **&lt;data&gt;** field (implemented by extending
+- Default storage of `<data>` field (implemented by extending
   [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)) is
   `std::vector<std::uint8_t>`.
-- Default storage of **&lt;list&gt;** field (implemented by extending 
+- Default storage of `<list>` field (implemented by extending 
   [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)) is
   `std::vector<ElementField>`.
   
@@ -207,13 +207,13 @@ The [server](src/ServerSession.cpp) doesn't have any other special aspects and
 everything operates normally, but without any dynamic memory allocation.
 
 One of the **important** aspects to understand is that for sequence fields like 
-**&lt;string&gt;**, or **&lt;data&gt;** the input data is constantly copied from the 
+`<string>`, or `<data>` the input data is constantly copied from the 
 **input** buffer to the internal storage of these fields, whether it is 
 `std::string`, `std::vector`, [comms::util::StaticString](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html),
 or [comms::util::StaticVector](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticVector.html).
 If we think about it a bit deeper, in most of the cases (all the previous tutorials so far) 
 the message object doesn't outlive the  input buffer . It would
-be beneficial if the storage type of the **&lt;string&gt;** and **&lt;data&gt;**
+be beneficial if the storage type of the `<string>` and `<data>`
 fields is some kind of "view" on input buffer. The 
 [COMMS Library](https://github.com/commschamp/comms)
 provides such an ability with [comms::option::app::OrigDataView](https://commschamp.github.io/comms_doc/options_8h.html)
@@ -224,13 +224,13 @@ if C++17 is been used to compile the source and the compiler actually supports i
 [comms::util::StringView](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StringView.html) is 
 chosen. Similar for the definition of the 
 [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html) with 
-`std::uint8_t` as its element type (used to define **&lt;data&gt;** field). If C++20 is used 
+`std::uint8_t` as its element type (used to define `<data>` field). If C++20 is used 
 to compile the source and the compiler supports it the 
 [std::span](https://en.cppreference.com/w/cpp/container/span) is used as the storage type.
 Otherwise the [comms::util::ArrayView](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1ArrayView.html)
 is chosen.
 
-**NOTE** that the data view **cannot** be used for the **&lt;list&gt;** field, because its 
+**NOTE** that the data view **cannot** be used for the `<list>` field, because its 
 element is a field, not raw data, which might use specific endian for its deserialization or 
 any other special decoding operation.
 
@@ -283,7 +283,7 @@ using DataViewBareMetalProtocolOptions = DataViewBareMetalProtocolOptionsT<>;
 Note that it expects a variant of 
 [tutorial12::options::DataViewDefaultOptionsT](include/tutorial12/options/DataViewDefaultOptions.h)
 to be passed as a template parameter. The fields of the `Msg3` are a variants of 
-**&lt;list&gt;** and cannot use a view on input buffer. In order to prevent the 
+`<list>` and cannot use a view on input buffer. In order to prevent the 
 storage type from been `std::vector` the `comms::option::app::FixedSizeStorage` or 
 `comms::option::app::SequenceFixedSizeUseFixedSizeStorage` option needs to be used.
 To prevent dynamic memory allocation, when message itself is created, the 
@@ -367,7 +367,7 @@ type, whether it is `std::string`, `std::string_view`, `comms::util::StaticStrin
 
 ----
 
-**SIDE NOTE**: Most bare metal metal applications avoid usage of dynamic memory 
+**SIDE NOTE**: Most bare metal applications avoid usage of dynamic memory 
 allocation, some also avoid virtual functions (due to code size limitations). Many also 
 exclude usage of standard C library altogether. 
 
@@ -394,7 +394,7 @@ section also contains useful information about the available error handling.
 - The default behavior of the framing is to dynamically allocate message object. 
 - It can be changed by passing `comms::option::app::InPlaceAllocation` option to the `ID` framing layer
   (implemented by the [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)).
-- The default storage of the fields like **&lt;string&gt;**, **&lt;data&gt;** and **&lt;list&gt;** can
+- The default storage of the fields like `<string>`, `<data>` and `<list>` can
   be changed by passing certain options.
 - Passing [comms::option::app::FixedSizeStorage](https://commschamp.github.io/comms_doc/options_8h.html) option
   will result in usage of [comms::util::StaticString](https://commschamp.github.io/comms_doc/classcomms_1_1util_1_1StaticString.html)
