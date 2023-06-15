@@ -2625,6 +2625,44 @@ void ClientSession::sendMsg14()
     sendMessage(msg);
 }
 ```
+
+Also since **v6.1** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification)
+specification it is allowed to check the size of the sequence fields like `<string>`, `<data>`,
+or `<list>` int the `<optional>` field conditions. To do so there is a need to use `#` character
+after the sibling field reference prefix `$`.
+The `Msg18` message  (defined inside [dsl/msg18.xml](dsl/msg18.xml) and implemented in
+[include/tutorial2/message/Msg18.h](include/tutorial2/message/Msg18.h)) demonstrates that.
+```xml
+<message name="Msg18" id="MsgId.M18" displayName="Message 18">
+    <string name="F1">
+        <lengthPrefix>
+            <int name="Length" type="uint8" />
+        </lengthPrefix>
+    </string>
+    <optional name="F2" cond="$#F1 != 0" defaultMode="missing">
+        <int name="ActF2" type="uint16" />
+    </optional>
+    ...
+</message>
+```
+In the example above the optional field `F2` exists if the size of the `F1` is not 0, i.e. 
+it is not empty.
+
+The **v6.1** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
+also allows check of whether the mode of the previously encountered `<optional>` field is **exists**.
+To do so there is a need to use `?` character after the sibling field reference prefix `$`.
+```xml
+<message name="Msg18" id="MsgId.M18" displayName="Message 18">
+    ...
+    <optional name="F2" cond="$#F1 != 0" defaultMode="missing">
+        <int name="ActF2" type="uint16" />
+    </optional>
+    <optional name="F3" cond="!$?F2" defaultMode="exists">
+        <int name="ActF3" type="uint8" />
+    </optional>
+</message>
+```
+In the example above the optional field `F3` exists if the `F2` does NOT exist (due to negation operator `!`).
   
 ## Reusing Fields Definitions
 In many cases some fields may share some portions of their definitions. To avoid various

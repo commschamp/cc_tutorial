@@ -346,6 +346,11 @@ void ClientSession::handle(Msg18& msg)
     }    
     std::cout << std::endl;
 
+    if (m_currentStage != CommsStage_Msg18) {
+        std::cerr << "ERROR: Unexpected message received: " << std::endl;
+        return;
+    }    
+
     doNextStage();        
 }
 
