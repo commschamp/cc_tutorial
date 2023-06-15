@@ -333,6 +333,22 @@ void ClientSession::handle(Msg17& msg)
     doNextStage();
 }
 
+void ClientSession::handle(Msg18& msg)
+{
+    std::cout << "Received \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n' <<
+        '\t' << msg.field_f1().name() << " = " << msg.field_f1().value() << '\n';
+    if (printOptionalField(msg.field_f2())) {
+        std::cout << "\t\t" << msg.field_f2().field().name() << " = " << msg.field_f2().field().value() << '\n';
+    }
+
+    if (printOptionalField(msg.field_f3())) {
+        std::cout << "\t\t" << msg.field_f3().field().name() << " = " << (unsigned)msg.field_f3().field().value() << '\n';
+    }    
+    std::cout << std::endl;
+
+    doNextStage();        
+}
+
 void ClientSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
@@ -430,6 +446,7 @@ void ClientSession::doNextStage()
         /* CommsStage_Msg15 */ &ClientSession::sendMsg15,
         /* CommsStage_Msg16 */ &ClientSession::sendMsg16,
         /* CommsStage_Msg17 */ &ClientSession::sendMsg17,
+        /* CommsStage_Msg18 */ &ClientSession::sendMsg18,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -719,6 +736,23 @@ void ClientSession::sendMsg17()
     f2.field_m1().value() = 0x1234;
     f2.field_m2().value() = 0x5678;
     f2.field_m2().value() = 0xdead;
+
+    sendMessage(msg);
+}
+
+void ClientSession::sendMsg18()
+{
+    Msg18 msg;
+
+    assert(msg.field_f2().isMissing());
+    assert(msg.field_f3().doesExist());
+
+    msg.field_f1().value() = "hello";
+    msg.field_f2().field().value() = 0xabcd;
+
+    msg.doRefresh(); // Bring message contents into consistent state
+    assert(msg.field_f2().doesExist());
+    assert(msg.field_f3().isMissing());
 
     sendMessage(msg);
 }

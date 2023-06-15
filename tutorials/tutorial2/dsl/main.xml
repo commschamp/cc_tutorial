@@ -19,6 +19,7 @@
             <validValue name="M15" val="15" />
             <validValue name="M16" val="16" />
             <validValue name="M17" val="17" />
+            <validValue name="M18" val="18" />
         </enum>
     </fields>
     
