@@ -2502,7 +2502,7 @@ Note, that [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_
 implementation of virtual `refreshImpl()` which constantly return false.
 
 The [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) is expected
-to implement **non-virtual** `doRefresh()` member function, which calls `refresh()` of every contained field.
+to implement **non-virtual** `doRefresh()` member function, which calls `refresh()` of every contained field
 and override **virtual** `refreshImpl()` when polymorphic refresh functionality is requested by the interface:
 ```cpp
 class comms::MessageBase<...>
@@ -2598,7 +2598,7 @@ The message definition above has the following logic for having `F3` field being
 ```
 Please note the following aspects:
 
-- The `<` and `>` comparisons cannot be used "as-is" in XML attributes / values. They need to be replaced with `&lt;` and `&gt;` respectively.
+- The `<` and `>` symbols cannot be used "as-is" in XML attributes / values. They need to be replaced with `&lt;` and `&gt;` respectively.
 - The wrapped field definition needs to be wrapped in `<field>` XML node when there are other nodes present (like `<or>` in
   the example above).
 - The logical **or** is represented by the `<or>` XML node while logical **and** is represented by the `<and>` XML
@@ -2625,6 +2625,44 @@ void ClientSession::sendMsg14()
     sendMessage(msg);
 }
 ```
+
+Since **v6.1** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification)
+specification it is allowed to check the size of the sequence fields like `<string>`, `<data>`,
+or `<list>` int the `<optional>` field conditions. To do so there is a need to use `#` character
+after the sibling field reference prefix `$`.
+The `Msg18` message  (defined inside [dsl/msg18.xml](dsl/msg18.xml) and implemented in
+[include/tutorial2/message/Msg18.h](include/tutorial2/message/Msg18.h)) demonstrates that.
+```xml
+<message name="Msg18" id="MsgId.M18" displayName="Message 18">
+    <string name="F1">
+        <lengthPrefix>
+            <int name="Length" type="uint8" />
+        </lengthPrefix>
+    </string>
+    <optional name="F2" cond="$#F1 != 0" defaultMode="missing">
+        <int name="ActF2" type="uint16" />
+    </optional>
+    ...
+</message>
+```
+In the example above the optional field `F2` exists if the size of the `F1` is not 0, i.e. 
+it is not empty.
+
+The **v6.1** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
+also allows check of whether the mode of the previously encountered `<optional>` field is **exists**.
+To do so there is a need to use `?` character after the sibling field reference prefix `$`.
+```xml
+<message name="Msg18" id="MsgId.M18" displayName="Message 18">
+    ...
+    <optional name="F2" cond="$#F1 != 0" defaultMode="missing">
+        <int name="ActF2" type="uint16" />
+    </optional>
+    <optional name="F3" cond="!$?F2" defaultMode="exists">
+        <int name="ActF3" type="uint8" />
+    </optional>
+</message>
+```
+In the example above the optional field `F3` exists if the `F2` does NOT exist (due to negation operator `!`).
   
 ## Reusing Fields Definitions
 In many cases some fields may share some portions of their definitions. To avoid various
@@ -2678,7 +2716,7 @@ The replacing of the member fields became available since **v5.0** of the
 - Reusing definition of one message to define another is possible using **copyFieldsFrom**
   property. The same property can be used to copy member fields from the definition of 
   the [&lt;bundle&gt;](#bundle-fields) field.
-- Reusing other fields definitions is possuble using **reuse** property.
+- Reusing other fields definitions is possible using **reuse** property.
 - The replacing of member fields in composite fields like `<bundle>` and `<bitfield>`
   is available since version **v5.0** of the **CommsDSL** using `<replace>` child node.
 - The fields are abstractions around actual value storage to provide common
@@ -2687,15 +2725,15 @@ The replacing of the member fields became available since **v5.0** of the
   is **value()**. It is used to access the value storage **by-reference**.
 - Every field has inner `ValueType` type, which defines type of the inner value storage.
   - `ValueType` of [&lt;enum&gt;](#enum-fields) is a relevant C++ enum class.
-  - `ValueType` of [&lt;int&gt;](#int-fields) is an appropriate integral type (`std::int8_t`,     
+  - `ValueType` of [&lt;int&gt;](#int-fields) is an appropriate integral type (`std::int8_t`,
     `std::uint8_t`, etc ...) 
-  - `ValueType` of [&lt;set&gt;](#set-fields) is an appropriate **unsigned** integral type 
+  - `ValueType` of [&lt;set&gt;](#set-fields) is an appropriate **unsigned** integral type
     (`std::uint8_t`, `std::uint16_t`, etc...).
   - `ValueType` of [&lt;float&gt;](#float-fields) is an appropriate floating point type (`float` or 
     `double`).
   - **Default** `ValueType` of [&lt;string&gt;](#string-fields) is `std::string`, but it can be changed 
     to better suit the application's needs.
-  - **Default** `ValueType` of [&lt;data&gt;](#data-fields) is `std::vector&lt;std::uint8_t&gt;`, but it 
+  - **Default** `ValueType` of [&lt;data&gt;](#data-fields) is `std::vector<std::uint8_t>`, but it 
     can be changed to better suit the application's needs.
   - `ValueType` of [&lt;bundle&gt;](#bundle-fields) is `std::tuple` of all its member fields.
   - `ValueType` of [&lt;bitfield&gt;](#bitfield-fields) is `std::tuple` of all its member fields.

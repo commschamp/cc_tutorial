@@ -3,8 +3,8 @@ name: Github Actions Build
 on: [push]
 
 env:
-  COMMS_BRANCH: v5.2
-  COMMSDSL_BRANCH: v6.1
+  COMMS_BRANCH: v5.2.1
+  COMMSDSL_BRANCH: v6.2
 
 jobs:
 
@@ -172,8 +172,8 @@ jobs:
         VERBOSE: 1 
 
 
-  build_clang_ubuntu_18_04:
-    runs-on: ubuntu-18.04
+  build_clang_old_ubuntu_20_04:
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -186,6 +186,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Add repositories
+      run: |
+        sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu/ bionic main'; \
+        sudo add-apt-repository 'deb http://archive.ubuntu.com/ubuntu/ bionic universe'         
 
     - name: Prepare Install
       run: sudo apt-get update --fix-missing    
