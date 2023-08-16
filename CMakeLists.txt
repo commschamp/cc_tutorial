@@ -7,7 +7,7 @@ option (FORCE_EXTRA_BOOST_LIBS "Force linking to extra boost libraries" OFF)
 option (USE_SANITIZERS "Compile with sanitizers." OFF)
 
 set (CMAKE_CXX_STANDARD 11 CACHE STRING "The C++ standard to use")
-set (MIN_COMMSDSL_VERSION "6.2")
+set (MIN_COMMSDSL_VERSION "6.2.1")
 
 include(GNUInstallDirs)
 

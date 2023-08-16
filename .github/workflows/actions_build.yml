@@ -4,7 +4,7 @@ on: [push]
 
 env:
   COMMS_BRANCH: v5.2.1
-  COMMSDSL_BRANCH: v6.2
+  COMMSDSL_BRANCH: v6.2.1
 
 jobs:
 
