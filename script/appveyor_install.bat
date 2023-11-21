@@ -31,7 +31,7 @@ IF "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2015" (
     )
 ) ELSE IF "%APPVEYOR_BUILD_WORKER_IMAGE%"=="Visual Studio 2022" (
     set TOOLCHAIN=msvc17
-    set BOOST_VER=1_77_0
+    set BOOST_VER=1_83_0
     IF "%PLATFORM%"=="x86" (
         echo Performing x86 build in VS2022
         call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars32.bat"
