@@ -1,6 +1,8 @@
 rem Input
 rem BUILD_DIR - Main build directory
 rem GENERATOR - CMake generator
+rem PLATFORM - CMake generator platform
+rem QTDIR - Path to Qt installation
 rem EXTERNALS_DIR - (Optional) Directory where externals need to be located
 rem COMMS_REPO - (Optional) Repository of the COMMS library
 rem COMMS_TAG - (Optional) Tag of the COMMS library
@@ -15,6 +17,8 @@ rem -----------------------------------------------------
 if [%BUILD_DIR%] == [] echo "BUILD_DIR hasn't been specified" & exit /b 1
 
 if [%GENERATOR%] == [] set GENERATOR="NMake Makefiles"
+
+if NOT [%PLATFORM%] == [] set PLATFORM_PARAM=-A %PLATFORM%
 
 if [%EXTERNALS_DIR%] == [] set EXTERNALS_DIR=%BUILD_DIR%/externals
 
@@ -41,50 +45,50 @@ if NOT [%COMMON_INSTALL_DIR%] == [] set COMMSDSL_INSTALL_DIR=%COMMON_INSTALL_DIR
 rem ----------------------------------------------------
 
 mkdir "%EXTERNALS_DIR%"
-if exist %COMMS_SRC_DIR%/.git goto comms_update
-echo "Cloning COMMS library..."
-git clone -b %COMMS_TAG% %COMMS_REPO% %COMMS_SRC_DIR%
-if %errorlevel% neq 0 exit /b %errorlevel%
-goto comms_build
+if exist %COMMS_SRC_DIR%/.git (
+    echo "Updating COMMS library..."
+    cd "%COMMS_SRC_DIR%"
+    git fetch --all
+    git checkout .    
+    git checkout %COMMS_TAG%
+    git pull --all
+    if %errorlevel% neq 0 exit /b %errorlevel%    
+) else (
+    echo "Cloning COMMS library..."
+    git clone -b %COMMS_TAG% %COMMS_REPO% %COMMS_SRC_DIR%
+    if %errorlevel% neq 0 exit /b %errorlevel%
+)
 
-:comms_update
-echo "Updating COMMS library..."
-cd "%COMMS_SRC_DIR%"
-git fetch --all
-git checkout .
-git checkout %COMMS_TAG%
-git pull --all
-if %errorlevel% neq 0 exit /b %errorlevel%
-
-:comms_build
 echo "Building COMMS library..."
 mkdir "%COMMS_BUILD_DIR%"
 cd %COMMS_BUILD_DIR%
-cmake -G %GENERATOR% -S %COMMS_SRC_DIR% -B %COMMS_BUILD_DIR% -DCMAKE_INSTALL_PREFIX=%COMMS_INSTALL_DIR% -DCMAKE_BUILD_TYPE=%COMMON_BUILD_TYPE% -DCMAKE_CXX_STANDARD=%COMMON_CXX_STANDARD%
+cmake -G %GENERATOR% %PLATFORM_PARAM% -S %COMMS_SRC_DIR% -B %COMMS_BUILD_DIR% -DCMAKE_INSTALL_PREFIX=%COMMS_INSTALL_DIR% ^
+    -DCMAKE_BUILD_TYPE=%COMMON_BUILD_TYPE% -DCMAKE_CXX_STANDARD=%COMMON_CXX_STANDARD%
 if %errorlevel% neq 0 exit /b %errorlevel%
 cmake --build %COMMS_BUILD_DIR% --config %COMMON_BUILD_TYPE% --target install
 if %errorlevel% neq 0 exit /b %errorlevel%
 
-if exist %COMMSDSL_SRC_DIR%/.git goto commsdsl_update
-echo "Cloning commsdsl ..."
-git clone -b %COMMSDSL_TAG% %COMMSDSL_REPO% %COMMSDSL_SRC_DIR%
-if %errorlevel% neq 0 exit /b %errorlevel%
-goto commsdsl_build
+rem ----------------------------------------------------
 
-:commsdsl_update
-echo "Updating commsdsl..."
-cd %COMMSDSL_SRC_DIR%
-git fetch --all
-git checkout .
-git checkout %COMMSDSL_TAG%
-git pull --all
+if exist %COMMSDSL_SRC_DIR%/.git (
+    echo "Updating commsdsl..."
+    cd %COMMSDSL_SRC_DIR%
+    git fetch --all
+    git checkout .
+    git checkout %COMMSDSL_TAG%
+    git pull --all
+) else (
+    echo "Cloning commsdsl ..."
+    git clone -b %COMMSDSL_TAG% %COMMSDSL_REPO% %COMMSDSL_SRC_DIR%
+    if %errorlevel% neq 0 exit /b %errorlevel%
+)
 
-:commsdsl_build
 echo "Building commsdsl ..."
 mkdir "%COMMSDSL_BUILD_DIR%"
 cd %COMMSDSL_BUILD_DIR%
-cmake -G %GENERATOR% -S %COMMSDSL_SRC_DIR% -B %COMMSDSL_BUILD_DIR% -DCMAKE_INSTALL_PREFIX=%COMMSDSL_INSTALL_DIR% -DCMAKE_BUILD_TYPE=%COMMON_BUILD_TYPE% ^
-    -DCOMMSDSL_INSTALL_LIBRARY=OFF 
+cmake -G %GENERATOR% %PLATFORM_PARAM% -S %COMMSDSL_SRC_DIR% -B %COMMSDSL_BUILD_DIR% ^
+    -DCMAKE_INSTALL_PREFIX=%COMMSDSL_INSTALL_DIR% -DCMAKE_BUILD_TYPE=%COMMON_BUILD_TYPE% ^
+    -DCOMMSDSL_INSTALL_LIBRARY=OFF
 if %errorlevel% neq 0 exit /b %errorlevel%
 cmake --build %COMMSDSL_BUILD_DIR% --config %COMMON_BUILD_TYPE% --target install
 if %errorlevel% neq 0 exit /b %errorlevel%
