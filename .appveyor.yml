@@ -1,7 +1,6 @@
 image:
     - Visual Studio 2022
     - Visual Studio 2019  
-    - Visual Studio 2017    
 
 init:
     - git config --global core.autocrlf input
@@ -29,10 +28,6 @@ environment:
 matrix:
     fast_finish: false
     exclude:
-        - image: Visual Studio 2015
-          CPP_STD: 17 
-        - image: Visual Studio 2015
-          CPP_STD: 20    
         - image: Visual Studio 2017
           CPP_STD: 20                           
         
