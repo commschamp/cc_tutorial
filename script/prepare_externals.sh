@@ -14,6 +14,8 @@
 # COMMON_INSTALL_DIR - (Optional) Common directory to perform installations
 # COMMON_BUILD_TYPE - (Optional) CMake build type
 # COMMON_CXX_STANDARD - (Optional) CMake C++ standard
+# COMMON_CMAKE_GENERATOR - (Optional) CMake generator
+# COMMON_CMAKE_PLATFORM - (Optional) CMake platform
 
 #####################################
 
@@ -91,7 +93,10 @@ function build_comms() {
 
     echo "Building COMMS library..."
     mkdir -p ${COMMS_BUILD_DIR}
-    cmake -S ${COMMS_SRC_DIR} -B ${COMMS_BUILD_DIR} -DCMAKE_INSTALL_PREFIX=${COMMS_INSTALL_DIR} -DCMAKE_BUILD_TYPE=${COMMON_BUILD_TYPE} -DCMAKE_CXX_STANDARD=${COMMON_CXX_STANDARD}
+    cmake \
+        ${COMMON_CMAKE_GENERATOR:+"-G ${COMMON_CMAKE_GENERATOR}"} ${COMMON_CMAKE_PLATFORM:+"-A ${COMMON_CMAKE_PLATFORM}"} \
+        -S ${COMMS_SRC_DIR} -B ${COMMS_BUILD_DIR} -DCMAKE_INSTALL_PREFIX=${COMMS_INSTALL_DIR} \
+        -DCMAKE_BUILD_TYPE=${COMMON_BUILD_TYPE} -DCMAKE_CXX_STANDARD=${COMMON_CXX_STANDARD}
     cmake --build ${COMMS_BUILD_DIR} --config ${COMMON_BUILD_TYPE} --target install ${procs_param}
 }
 
@@ -111,7 +116,8 @@ function build_commsdsl() {
 
     echo "Building commsdsl ..."
     mkdir -p ${COMMSDSL_BUILD_DIR}
-    CC=${CC_COMMSDSL} CXX=${CXX_COMMSDSL} cmake -S ${COMMSDSL_SRC_DIR} -B ${COMMSDSL_BUILD_DIR} \
+    CC=${CC_COMMSDSL} CXX=${CXX_COMMSDSL} cmake \
+        -S ${COMMSDSL_SRC_DIR} -B ${COMMSDSL_BUILD_DIR} \
         -DCMAKE_INSTALL_PREFIX=${COMMSDSL_INSTALL_DIR} -DCMAKE_BUILD_TYPE=${COMMON_BUILD_TYPE} \
         -DCOMMSDSL_INSTALL_LIBRARY=OFF 
     cmake --build ${COMMSDSL_BUILD_DIR} --config ${COMMON_BUILD_TYPE} --target install ${procs_param}

@@ -3,8 +3,8 @@ name: Github Actions Build
 on: [push]
 
 env:
-  COMMS_BRANCH: v5.2.1
-  COMMSDSL_BRANCH: v6.2.1
+  COMMS_BRANCH: v5.2.2
+  COMMSDSL_BRANCH: v6.3
 
 jobs:
 
@@ -127,6 +127,9 @@ jobs:
         type: [Debug, Release, MinSizeRel]
         cc_ver: [9, 10, 11, 12]
         cpp: [11, 14, 17, 20]
+        exclude:
+          - cc_ver: 12
+            cpp: 20
 
     steps:
     - uses: actions/checkout@v2
@@ -299,8 +302,16 @@ jobs:
       fail-fast: false
       matrix:
         type: [Debug, Release, MinSizeRel]
-        cc_ver: [12, 13, 14]
+        cc_ver: [12, 13, 14, 15]
         cpp: [11, 14, 17, 20]
+        exclude:
+          - cc_ver: 12
+            cpp: 20
+          - cc_ver: 13
+            cpp: 20
+          - cc_ver: 14
+            cpp: 20
+
 
     steps:
     - uses: actions/checkout@v2

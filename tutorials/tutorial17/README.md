@@ -263,7 +263,7 @@ called to properly set the size and the flags.
 
 ## Summary
 - Custom layers are defined using `<custom>` XML node.
-- The layer that replaces `<id>` needs to set **idReplacement** property to **true**.
+- The layer that replaces `<id>` needs to set **semanticLayerType** property to **id**.
 - To implement custom replacement of `<id>`, the custom layer code may extend 
   [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
   (see [Defining Custom Message ID Protocol Stack Layer ](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
