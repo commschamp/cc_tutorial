@@ -3,8 +3,8 @@ name: Github Actions Build
 on: [push]
 
 env:
-  COMMS_BRANCH: v5.2.2
-  COMMSDSL_BRANCH: v6.3
+  COMMS_BRANCH: v5.2.5
+  COMMSDSL_BRANCH: v6.3.3
 
 jobs:
 
@@ -355,3 +355,104 @@ jobs:
       run: cmake --build . --config ${{matrix.type}} --target install
       env:
         VERBOSE: 1         
+
+  build_msvc_2019:
+    runs-on: windows-2019
+    strategy:
+      fail-fast: false
+      matrix:
+        type: [Debug, Release, MinSizeRel]
+        arch: [Win32, x64]
+        cpp: [11, 14, 17]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build   
+
+    - name: Install Boost
+      shell: cmd
+      run: |
+        choco install boost-msvc-14.2           
+
+    - name: Prepare externals
+      shell: cmd
+      run: |
+        %GITHUB_WORKSPACE%\script\prepare_externals.bat
+      env:
+        BUILD_DIR: ${{runner.workspace}}/build
+        PLATFORM: ${{matrix.arch}}
+        EXTERNALS_DIR: ${{runner.workspace}}/externals
+        COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
+        COMMON_BUILD_TYPE: ${{matrix.type}}
+        COMMON_CXX_STANDARD: ${{matrix.cpp}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
+        COMMSDSL_PLATFORM: 'x64'
+
+    - name: Configure CMake
+      shell: cmd
+      working-directory: ${{runner.workspace}}/build
+      run: |
+        cmake %GITHUB_WORKSPACE% -A ${{matrix.arch}} -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install ^
+          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install" -DBoost_USE_STATIC_LIBS=ON ^
+          -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DOPT_FORCE_EXTRA_BOOST_LIBS=ON
+
+    - name: Build Target 
+      working-directory: ${{runner.workspace}}/build
+      shell: cmd
+      run: cmake --build . --config ${{matrix.type}} --target install
+      env:
+        VERBOSE: 1 
+
+  build_msvc_2022:
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        type: [Debug, Release, MinSizeRel]
+        arch: [x64]
+        cpp: [11, 14, 17, 20]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Create Build Environment
+      run: cmake -E make_directory ${{runner.workspace}}/build   
+
+    - name: Install Boost
+      if: matrix.arch == 'x64'
+      shell: cmd
+      run: |
+        choco install boost-msvc-14.3
+
+    - name: Prepare externals
+      shell: cmd
+      run: |
+        %GITHUB_WORKSPACE%\script\prepare_externals.bat
+      env:
+        BUILD_DIR: ${{runner.workspace}}/build
+        PLATFORM: ${{matrix.arch}}
+        EXTERNALS_DIR: ${{runner.workspace}}/externals
+        COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
+        COMMON_BUILD_TYPE: ${{matrix.type}}
+        COMMON_CXX_STANDARD: ${{matrix.cpp}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
+        COMMSDSL_PLATFORM: 'x64'
+
+    - name: Configure CMake
+      shell: cmd
+      working-directory: ${{runner.workspace}}/build
+      run: |
+        cmake %GITHUB_WORKSPACE% -A ${{matrix.arch}} -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install ^
+          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install" -DBoost_USE_STATIC_LIBS=ON ^
+          -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DOPT_FORCE_EXTRA_BOOST_LIBS=ON 
+
+    - name: Build Target 
+      working-directory: ${{runner.workspace}}/build
+      shell: cmd
+      run: cmake --build . --config ${{matrix.type}} --target install
+      env:
+        VERBOSE: 1
