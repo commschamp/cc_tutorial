@@ -16,6 +16,8 @@
 # COMMON_CXX_STANDARD - (Optional) CMake C++ standard
 # COMMON_CMAKE_GENERATOR - (Optional) CMake generator
 # COMMON_CMAKE_PLATFORM - (Optional) CMake platform
+# COMMON_USE_CCACHE - (Optional) Common "use ccache" parameter
+# COMMON_CCACHE_EXECUTABLE - (Optional) Common ccache executable
 
 #####################################
 
@@ -119,6 +121,8 @@ function build_commsdsl() {
     CC=${CC_COMMSDSL} CXX=${CXX_COMMSDSL} cmake \
         -S ${COMMSDSL_SRC_DIR} -B ${COMMSDSL_BUILD_DIR} \
         -DCMAKE_INSTALL_PREFIX=${COMMSDSL_INSTALL_DIR} -DCMAKE_BUILD_TYPE=${COMMON_BUILD_TYPE} \
+        ${COMMON_USE_CCACHE:+"-DCC_TOOLS_QT_USE_CCACHE=${COMMON_USE_CCACHE}"} \
+        ${COMMON_CCACHE_EXECUTABLE:+"-DCC_TOOLS_QT_CCACHE_EXECUTABLE=${COMMON_CCACHE_EXECUTABLE}"} \
         -DCOMMSDSL_INSTALL_LIBRARY=OFF 
     cmake --build ${COMMSDSL_BUILD_DIR} --config ${COMMON_BUILD_TYPE} --target install ${procs_param}
 }

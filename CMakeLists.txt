@@ -1,10 +1,15 @@
 cmake_minimum_required (VERSION 3.1)
 project ("cc_tutorial")
 
-option (WARN_AS_ERR "Treat warnings as error" ON)
-option (UNIX_USE_CCACHE "Treat warnings as error" ON)
-option (FORCE_EXTRA_BOOST_LIBS "Force linking to extra boost libraries" OFF)
-option (USE_SANITIZERS "Compile with sanitizers." OFF)
+option (OPT_WARN_AS_ERR "Treat warnings as error" ON)
+option (OPT_USE_CCACHE "Use ccache" OFF)
+option (OPT_FORCE_EXTRA_BOOST_LIBS "Force linking to extra boost libraries" OFF)
+option (OPT_USE_SANITIZERS "Compile with sanitizers." OFF)
+
+# Extra configuration variables
+# OPT_CCACHE_EXECUTABLE - Custom ccache executable
+
+#####################################################
 
 set (CMAKE_CXX_STANDARD 11 CACHE STRING "The C++ standard to use")
 set (MIN_COMMSDSL_VERSION "6.3.3")
@@ -13,7 +18,7 @@ include(GNUInstallDirs)
 
 find_package(Boost REQUIRED COMPONENTS system)
 
-if (FORCE_EXTRA_BOOST_LIBS)
+if (OPT_FORCE_EXTRA_BOOST_LIBS)
     set (EXTRA_BOOST_TARGETS Boost::date_time Boost::regex)
     find_package(Boost COMPONENTS REQUIRED date_time regex)
 endif ()    
@@ -34,29 +39,24 @@ set (COMMON_CLIENT_LIB "common_client")
 
 set (cc_compile_file ${LibComms_DIR}/CC_Compile.cmake)
 if (EXISTS ${cc_compile_file})
-    set (warn_as_err_opt)
-    if (WARN_AS_ERR)
-        set (warn_as_err_opt WARN_AS_ERR)
+    set (extra_opts)
+    if (OPT_WARN_AS_ERR)
+        list (APPEND extra_opts WARN_AS_ERR)
     endif()
 
-    set (ccache_opt)
-    if (UNIX_USE_CCACHE)
-        set (ccache_opt USE_CCACHE)
+    if (OPT_USE_CCACHE)
+        list (APPEND extra_opts USE_CCACHE)
+        if (NOT "${OPT_CCACHE_EXECUTABLE}" STREQUAL "")
+            list (APPEND extra_opts CCACHE_EXECTUABLE "${OPT_CCACHE_EXECUTABLE}")
+        endif ()
+    endif ()
+
+    if (OPT_USE_SANITIZERS)
+        list (APPEND extra_opts DEFAULT_SANITIZERS)
     endif ()
 
     include (${cc_compile_file})
-    cc_compile(${warn_as_err_opt} ${ccache_opt})
-endif ()
-
-set (CC_TUTORIAL_SANITIZER_OPTS)
-if (USE_SANITIZERS AND (NOT ${CMAKE_VERSION} VERSION_LESS "3.13") AND
-    ((CMAKE_COMPILER_IS_GNUCC) OR ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")))
-    set (CC_TUTORIAL_SANITIZER_OPTS 
-        -fno-omit-frame-pointer 
-        -fno-sanitize-recover=address 
-        -fsanitize=address
-        -fno-sanitize-recover=undefined
-        -fsanitize=undefined)
+    cc_compile(${extra_opts})
 endif ()
 
 #######################################################
@@ -117,7 +117,7 @@ function (bin_server type name)
     target_link_libraries(
         ${bin_name} PRIVATE ${COMMON_SERVER_LIB} cc::comms Boost::system Boost::boost ${CMAKE_THREAD_LIBS_INIT})
 
-    if (FORCE_EXTRA_BOOST_LIBS)
+    if (OPT_FORCE_EXTRA_BOOST_LIBS)
         target_link_libraries(
             ${bin_name} PRIVATE ${EXTRA_BOOST_TARGETS})
     endif () 
@@ -133,19 +133,11 @@ function (bin_server type name)
         ${bin_name} PRIVATE ${PROJECT_SOURCE_DIR}/${type}/${name}/include)        
 
     target_compile_options(${bin_name} PRIVATE
-        $<$<CXX_COMPILER_ID:GNU>:-Wno-old-style-cast -Wno-string-conversion ${CC_TUTORIAL_SANITIZER_OPTS}>
-        $<$<CXX_COMPILER_ID:Clang>:-Wno-old-style-cast -Wno-string-conversion ${CC_TUTORIAL_SANITIZER_OPTS}>
+        $<$<CXX_COMPILER_ID:GNU>:-Wno-old-style-cast -Wno-string-conversion>
+        $<$<CXX_COMPILER_ID:Clang>:-Wno-old-style-cast -Wno-string-conversion>
         $<$<CXX_COMPILER_ID:MSVC>:-D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS>
     )       
 
-
-    if (NOT "${CC_TUTORIAL_SANITIZER_OPTS}" STREQUAL "")
-        target_link_options(${bin_name} PRIVATE
-            $<$<CXX_COMPILER_ID:GNU>:${CC_TUTORIAL_SANITIZER_OPTS}>
-            $<$<CXX_COMPILER_ID:Clang>:${CC_TUTORIAL_SANITIZER_OPTS}>
-        )         
-    endif ()
-        
     install(TARGETS ${bin_name}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     )        
@@ -159,7 +151,7 @@ function (bin_client type name)
     target_link_libraries(
         ${bin_name} PRIVATE ${COMMON_CLIENT_LIB} cc::comms Boost::system Boost::boost ${CMAKE_THREAD_LIBS_INIT})
 
-    if (FORCE_EXTRA_BOOST_LIBS)
+    if (OPT_FORCE_EXTRA_BOOST_LIBS)
         target_link_libraries(
             ${bin_name} PRIVATE ${EXTRA_BOOST_TARGETS})
     endif ()         
