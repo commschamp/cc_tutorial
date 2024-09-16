@@ -396,7 +396,8 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       run: |
         cmake %GITHUB_WORKSPACE% -A ${{matrix.arch}} -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install ^
-          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install" -DBoost_USE_STATIC_LIBS=ON ^
+          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install" ^
+          -DCMAKE_POLICY_DEFAULT_CMP0167=OLD -DBoost_USE_STATIC_LIBS=ON ^
           -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DOPT_FORCE_EXTRA_BOOST_LIBS=ON
 
     - name: Build Target 
@@ -425,7 +426,7 @@ jobs:
       if: matrix.arch == 'x64'
       shell: cmd
       run: |
-        choco install boost-msvc-14.3
+        choco install boost-msvc-14.3 --version=1.85.0
 
     - name: Prepare externals
       shell: cmd
@@ -447,7 +448,8 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       run: |
         cmake %GITHUB_WORKSPACE% -A ${{matrix.arch}} -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install ^
-          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install" -DBoost_USE_STATIC_LIBS=ON ^
+          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install" ^
+          -DCMAKE_POLICY_DEFAULT_CMP0167=OLD -DBoost_USE_STATIC_LIBS=ON ^
           -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DOPT_FORCE_EXTRA_BOOST_LIBS=ON 
 
     - name: Build Target 

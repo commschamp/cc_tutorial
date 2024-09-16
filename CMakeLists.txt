@@ -11,8 +11,17 @@ option (OPT_USE_SANITIZERS "Compile with sanitizers." OFF)
 
 #####################################################
 
-set (CMAKE_CXX_STANDARD 11 CACHE STRING "The C++ standard to use")
 set (MIN_COMMSDSL_VERSION "6.3.4")
+
+if ("${CMAKE_CXX_STANDARD}" STREQUAL "")
+    set(CMAKE_CXX_STANDARD 11)
+endif ()
+
+if (("${CMAKE_VERSION}" VERSION_GREATER_EQUAL "3.30") AND
+    (NOT DEFINED CMAKE_POLICY_DEFAULT_CMP0167))
+    # Find boost cmake configuration from the boost installation
+    cmake_policy(SET CMP0167 NEW)
+endif ()
 
 include(GNUInstallDirs)
 
