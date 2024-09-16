@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.10)
 project ("cc_tutorial")
 
 option (OPT_WARN_AS_ERR "Treat warnings as error" ON)
@@ -12,7 +12,7 @@ option (OPT_USE_SANITIZERS "Compile with sanitizers." OFF)
 #####################################################
 
 set (CMAKE_CXX_STANDARD 11 CACHE STRING "The C++ standard to use")
-set (MIN_COMMSDSL_VERSION "6.3.3")
+set (MIN_COMMSDSL_VERSION "6.3.4")
 
 include(GNUInstallDirs)
 

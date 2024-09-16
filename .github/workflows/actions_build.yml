@@ -3,8 +3,8 @@ name: Github Actions Build
 on: [push]
 
 env:
-  COMMS_BRANCH: v5.2.5
-  COMMSDSL_BRANCH: v6.3.3
+  COMMS_TAG: develop
+  COMMSDSL_TAG: develop
 
 jobs:
 
@@ -47,8 +47,8 @@ jobs:
         COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
         COMMON_BUILD_TYPE: ${{matrix.type}}
         COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_BRANCH}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_BRANCH}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
 
     - name: Configure CMake
       shell: bash
@@ -99,8 +99,8 @@ jobs:
         COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
         COMMON_BUILD_TYPE: ${{matrix.type}}
         COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_BRANCH}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_BRANCH}}   
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}   
 
     - name: Configure CMake
       shell: bash
@@ -154,8 +154,8 @@ jobs:
         COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
         COMMON_BUILD_TYPE: ${{matrix.type}}
         COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_BRANCH}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_BRANCH}}   
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}   
 
     - name: Configure CMake
       shell: bash
@@ -217,8 +217,8 @@ jobs:
         COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
         COMMON_BUILD_TYPE: ${{matrix.type}}
         COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_BRANCH}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_BRANCH}}   
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}   
 
     - name: Configure CMake
       shell: bash
@@ -276,8 +276,8 @@ jobs:
         COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
         COMMON_BUILD_TYPE: ${{matrix.type}}
         COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_BRANCH}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_BRANCH}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
 
     - name: Configure CMake
       shell: bash
@@ -336,8 +336,8 @@ jobs:
         COMMON_INSTALL_DIR: ${{runner.workspace}}/build/install
         COMMON_BUILD_TYPE: ${{matrix.type}}
         COMMON_CXX_STANDARD: ${{matrix.cpp}}
-        COMMS_TAG: ${{env.COMMS_BRANCH}}
-        COMMSDSL_TAG: ${{env.COMMSDSL_BRANCH}}
+        COMMS_TAG: ${{env.COMMS_TAG}}
+        COMMSDSL_TAG: ${{env.COMMSDSL_TAG}}
 
     - name: Configure CMake
       shell: bash
