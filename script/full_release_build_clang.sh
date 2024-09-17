@@ -9,5 +9,5 @@ if [ -z "${CXX}" ]; then
 fi
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-exec ${SCRIPT_DIR}/full_debug_build.sh "$@"
+exec ${SCRIPT_DIR}/full_release_build.sh "$@"
 
