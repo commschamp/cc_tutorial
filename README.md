@@ -122,8 +122,7 @@ the code generators). There are also scripts (
 [script/prepare_externals.sh](script/prepare_externals.sh) for Linux and
 [script/prepare_externals.bat](script/prepare_externals.bat) for Windows)
 which can help in preparation of these dependencies. They are also used
-in configuration of the [github actions](.github/workflows/actions_build.yml) and
-[appveyor](.appveyor.yml).
+in configuration of the [github actions](.github/workflows/actions_build.yml).
 
 **NOTE**, that [Boost](https://www.boost.org) libraries are also required.
 In case Boost libraries are not installed in expected default location

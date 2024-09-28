@@ -75,6 +75,7 @@ void Session::doRead()
             auto bufLen = bytesCount;
             bool useVector = !m_inData.empty();
             if (useVector) {
+                m_inData.reserve(m_inData.size() + bufLen);
                 m_inData.insert(m_inData.end(), buf, buf + bufLen);
                 buf = &m_inData[0];
                 bufLen = m_inData.size();
