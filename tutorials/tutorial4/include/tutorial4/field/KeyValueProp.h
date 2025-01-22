@@ -44,8 +44,8 @@ struct KeyValuePropMembers
                 std::uint8_t,
                 comms::option::def::HasName,
                 comms::option::def::FailOnInvalid<>,
-                comms::option::def::ValidNumValue<0>,
-                comms::option::def::HasCustomRefresh
+                comms::option::def::FixedValue,
+                comms::option::def::ValidNumValue<0>
             >
         {
             using Base =
@@ -54,8 +54,8 @@ struct KeyValuePropMembers
                     std::uint8_t,
                     comms::option::def::HasName,
                     comms::option::def::FailOnInvalid<>,
-                    comms::option::def::ValidNumValue<0>,
-                    comms::option::def::HasCustomRefresh
+                    comms::option::def::FixedValue,
+                    comms::option::def::ValidNumValue<0>
                 >;
         public:
             /// @brief Re-definition of the value type.
@@ -71,17 +71,6 @@ struct KeyValuePropMembers
             static const char* name()
             {
                 return tutorial4::field::KeyValuePropMembersCommon::Prop1MembersCommon::KeyCommon::name();
-            }
-
-            /// @brief Generated refresh functionality.
-            bool refresh()
-            {
-                bool updated = Base::refresh();
-                if (Base::valid()) {
-                    return updated;
-                };
-                Base::setValue(0);
-                return true;
             }
         };
 
@@ -174,9 +163,9 @@ struct KeyValuePropMembers
                 std::uint8_t,
                 comms::option::def::HasName,
                 comms::option::def::FailOnInvalid<>,
+                comms::option::def::FixedValue,
                 comms::option::def::DefaultNumValue<2>,
-                comms::option::def::ValidNumValue<2>,
-                comms::option::def::HasCustomRefresh
+                comms::option::def::ValidNumValue<2>
             >
         {
             using Base =
@@ -185,9 +174,9 @@ struct KeyValuePropMembers
                     std::uint8_t,
                     comms::option::def::HasName,
                     comms::option::def::FailOnInvalid<>,
+                    comms::option::def::FixedValue,
                     comms::option::def::DefaultNumValue<2>,
-                    comms::option::def::ValidNumValue<2>,
-                    comms::option::def::HasCustomRefresh
+                    comms::option::def::ValidNumValue<2>
                 >;
         public:
             /// @brief Re-definition of the value type.
@@ -203,17 +192,6 @@ struct KeyValuePropMembers
             static const char* name()
             {
                 return tutorial4::field::KeyValuePropMembersCommon::Prop2MembersCommon::KeyCommon::name();
-            }
-
-            /// @brief Generated refresh functionality.
-            bool refresh()
-            {
-                bool updated = Base::refresh();
-                if (Base::valid()) {
-                    return updated;
-                };
-                Base::setValue(2);
-                return true;
             }
         };
 
@@ -319,9 +297,9 @@ struct KeyValuePropMembers
                 std::uint8_t,
                 comms::option::def::HasName,
                 comms::option::def::FailOnInvalid<>,
+                comms::option::def::FixedValue,
                 comms::option::def::DefaultNumValue<5>,
-                comms::option::def::ValidNumValue<5>,
-                comms::option::def::HasCustomRefresh
+                comms::option::def::ValidNumValue<5>
             >
         {
             using Base =
@@ -330,9 +308,9 @@ struct KeyValuePropMembers
                     std::uint8_t,
                     comms::option::def::HasName,
                     comms::option::def::FailOnInvalid<>,
+                    comms::option::def::FixedValue,
                     comms::option::def::DefaultNumValue<5>,
-                    comms::option::def::ValidNumValue<5>,
-                    comms::option::def::HasCustomRefresh
+                    comms::option::def::ValidNumValue<5>
                 >;
         public:
             /// @brief Re-definition of the value type.
@@ -348,17 +326,6 @@ struct KeyValuePropMembers
             static const char* name()
             {
                 return tutorial4::field::KeyValuePropMembersCommon::Prop3MembersCommon::KeyCommon::name();
-            }
-
-            /// @brief Generated refresh functionality.
-            bool refresh()
-            {
-                bool updated = Base::refresh();
-                if (Base::valid()) {
-                    return updated;
-                };
-                Base::setValue(5);
-                return true;
             }
         };
 
@@ -834,7 +801,8 @@ public:
             comms::field::IntValue<
                 tutorial4::field::FieldBase<>,
                 std::uint8_t,
-                comms::option::def::FailOnInvalid<>
+                comms::option::def::FailOnInvalid<>,
+                comms::option::def::FixedValue
             >;
         CommonKeyField commonKeyField;
 

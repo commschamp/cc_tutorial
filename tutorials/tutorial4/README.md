@@ -31,7 +31,7 @@ as stand-alone `<enum>` first.
 The definition of a heterogeneous field that can hold **any** (but one at a time) of the properties listed
 above looks like this:
 ```xml
-<int name="PropKeyCommon" type="uint8" failOnInvalid="true"/>
+<int name="PropKeyCommon" type="uint8" failOnInvalid="true" fixedValue="true" />
 
 <variant name="KeyValueProp">
     <bundle name="Prop1">
@@ -73,6 +73,9 @@ There are multiple important aspects that require a closer look and deeper under
 - To fail reading of the property on different **key** value the latter sets the **validValue**
   property to appropriate one and has **failOnInvalid** property set to **true** as well 
   (defined in and reused from **PropKeyCommon** field).
+- It is wise to forbid the application to modify the **key** field after the construction. To do so
+  the **fixedValue** property is set to **true**. Any attempt to set a value or grab a non-const reference
+  to such field's value will result in compilation error.
 - In order to default construct a property with the correct key value without any need to implement
   boilerplate code that does so the **defaultValue** property is used to set the same value as a valid one.
 - The definition of the key valid values as a separate `<enum>` (PropKey) allows referencing its
@@ -135,7 +138,7 @@ might contain. For every such name **X** the following is defined:
 - `FieldIdx_X` - Numeric compile time known index of the member field **X** in order of members definition inside the schema.
 - `initField_X()` - Member function to initialize the variant field to hold member **X**, returns reference to the initialized member.
   To be able to use this member function the variant mustn't contain other field before.
-- `deinitField_X()` - Member funttion to de-initialize (destruct) the help member **X**.
+- `deinitField_X()` - Member function to de-initialize (destruct) the help member **X**.
 - `accessField_X()` - Member function to access (via cast to appropriate type) held member of known type.
 
 Note, that `ValueType` inner type defined by every field class is a variant of 
@@ -144,7 +147,7 @@ accessed directly via usual `.value()` member function. Instead, generated `init
 `accessField_X()` member functions need to be used to access the storage and perform the cast to 
 the appropriate type.
 
-It is important to understand that the defult implementation provided by the
+It is important to understand that the default implementation provided by the
 [comms::field::Variant](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Variant.html) class
 is sufficient to be used "as-is" without any extra functionality. However, it has to do a lot of
 meta-programming and regular code magic to translate runtime information of the detected member field
@@ -415,7 +418,7 @@ this tutorial.
     <validValue name="K6" val="25" />
 </enum>
 
-<int name="PropKeyCommon" type="uint8" failOnInvalid="true"/>
+<int name="PropKeyCommon" type="uint8" failOnInvalid="true" fixedValue="true" />
 
 <variant name="TlvProp">
     <description>
@@ -447,7 +450,7 @@ this tutorial.
         </bundle>  
         
         <bundle name="Any">
-            <int reuse="PropKeyCommon" name="Key" failOnInvalid="false" />
+            <int reuse="PropKeyCommon" name="Key" failOnInvalid="false" fixedValue="false" />
             <int name="Length" type="uint8" semanticType="length" />
             <data name="Val" />
         </bundle>  
@@ -495,7 +498,12 @@ ones.
 
 The example above allows ignoring and skipping over unknown properties by defining the **last** member (`Any`) with non-failing
 read operation on the `Key`. The latter in the example above doesn't specify which values are considered to be
-valid (hence all possible ones are valid). The `Val` in such property is defined to be `<data>`.
+valid (hence all possible ones are valid). The `Val` in such property is defined to be `<data>`. Note
+that the **fixedValue** properties of the `Key` field is forcefully set to **false** to
+allow update of the value after the creation. It is necessary because
+`reuse="PropKeyCommon"` property resulted in setting it to **true**. Also note that forcing **failOnInvalid** property
+to **false** is not functionally necessary, it is just recommended for more efficient code (there is no need to invoke
+validity check during read operation).
 
 Th **TLV** type of properties also allows reducing serialization length of some value types. The example of
 is is the definition of `Prop7`. The default serialization length of its `Val` member value (of `uint64` type) is 8 bytes.
@@ -607,6 +615,7 @@ dispatch held property into appropriate `ClientSession::handleProp()` member fun
   [CommsDSL](https://github.com/commschamp/CommsDSL-Specification).
 - Usually the heterogeneous fields are defined as **Key-Value** pairs or **Type-Length-Value** (**TLV**)
   triplets.
+- The _key_/_type_ field is expected to have **failOnInvalid** and **fixedValue** properties set to **true**.
 - The **TLV** variant is usually chosen when **forward** compatibility of the protocol is important.
 - In **TLV** variant it is required to mark the `Length` field with `semanticType="length"` attribute.
 - The `Length` inside **TLV** always represents the **remaining** length of the value that follows **NOT**

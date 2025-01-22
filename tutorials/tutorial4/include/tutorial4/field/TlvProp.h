@@ -45,9 +45,9 @@ struct TlvPropMembers
                 std::uint8_t,
                 comms::option::def::HasName,
                 comms::option::def::FailOnInvalid<>,
+                comms::option::def::FixedValue,
                 comms::option::def::DefaultNumValue<10>,
-                comms::option::def::ValidNumValue<10>,
-                comms::option::def::HasCustomRefresh
+                comms::option::def::ValidNumValue<10>
             >
         {
             using Base =
@@ -56,9 +56,9 @@ struct TlvPropMembers
                     std::uint8_t,
                     comms::option::def::HasName,
                     comms::option::def::FailOnInvalid<>,
+                    comms::option::def::FixedValue,
                     comms::option::def::DefaultNumValue<10>,
-                    comms::option::def::ValidNumValue<10>,
-                    comms::option::def::HasCustomRefresh
+                    comms::option::def::ValidNumValue<10>
                 >;
         public:
             /// @brief Re-definition of the value type.
@@ -74,17 +74,6 @@ struct TlvPropMembers
             static const char* name()
             {
                 return tutorial4::field::TlvPropMembersCommon::Prop4MembersCommon::KeyCommon::name();
-            }
-
-            /// @brief Generated refresh functionality.
-            bool refresh()
-            {
-                bool updated = Base::refresh();
-                if (Base::valid()) {
-                    return updated;
-                };
-                Base::setValue(10);
-                return true;
             }
         };
 
@@ -214,9 +203,9 @@ struct TlvPropMembers
                 std::uint8_t,
                 comms::option::def::HasName,
                 comms::option::def::FailOnInvalid<>,
+                comms::option::def::FixedValue,
                 comms::option::def::DefaultNumValue<15>,
-                comms::option::def::ValidNumValue<15>,
-                comms::option::def::HasCustomRefresh
+                comms::option::def::ValidNumValue<15>
             >
         {
             using Base =
@@ -225,9 +214,9 @@ struct TlvPropMembers
                     std::uint8_t,
                     comms::option::def::HasName,
                     comms::option::def::FailOnInvalid<>,
+                    comms::option::def::FixedValue,
                     comms::option::def::DefaultNumValue<15>,
-                    comms::option::def::ValidNumValue<15>,
-                    comms::option::def::HasCustomRefresh
+                    comms::option::def::ValidNumValue<15>
                 >;
         public:
             /// @brief Re-definition of the value type.
@@ -243,17 +232,6 @@ struct TlvPropMembers
             static const char* name()
             {
                 return tutorial4::field::TlvPropMembersCommon::Prop5MembersCommon::KeyCommon::name();
-            }
-
-            /// @brief Generated refresh functionality.
-            bool refresh()
-            {
-                bool updated = Base::refresh();
-                if (Base::valid()) {
-                    return updated;
-                };
-                Base::setValue(15);
-                return true;
             }
         };
 
@@ -396,9 +374,9 @@ struct TlvPropMembers
                 std::uint8_t,
                 comms::option::def::HasName,
                 comms::option::def::FailOnInvalid<>,
+                comms::option::def::FixedValue,
                 comms::option::def::DefaultNumValue<25>,
-                comms::option::def::ValidNumValue<25>,
-                comms::option::def::HasCustomRefresh
+                comms::option::def::ValidNumValue<25>
             >
         {
             using Base =
@@ -407,9 +385,9 @@ struct TlvPropMembers
                     std::uint8_t,
                     comms::option::def::HasName,
                     comms::option::def::FailOnInvalid<>,
+                    comms::option::def::FixedValue,
                     comms::option::def::DefaultNumValue<25>,
-                    comms::option::def::ValidNumValue<25>,
-                    comms::option::def::HasCustomRefresh
+                    comms::option::def::ValidNumValue<25>
                 >;
         public:
             /// @brief Re-definition of the value type.
@@ -425,17 +403,6 @@ struct TlvPropMembers
             static const char* name()
             {
                 return tutorial4::field::TlvPropMembersCommon::Prop6MembersCommon::KeyCommon::name();
-            }
-
-            /// @brief Generated refresh functionality.
-            bool refresh()
-            {
-                bool updated = Base::refresh();
-                if (Base::valid()) {
-                    return updated;
-                };
-                Base::setValue(25);
-                return true;
             }
         };
 
@@ -556,9 +523,9 @@ struct TlvPropMembers
                 std::uint8_t,
                 comms::option::def::HasName,
                 comms::option::def::FailOnInvalid<>,
+                comms::option::def::FixedValue,
                 comms::option::def::DefaultNumValue<30>,
-                comms::option::def::ValidNumValue<30>,
-                comms::option::def::HasCustomRefresh
+                comms::option::def::ValidNumValue<30>
             >
         {
             using Base =
@@ -567,9 +534,9 @@ struct TlvPropMembers
                     std::uint8_t,
                     comms::option::def::HasName,
                     comms::option::def::FailOnInvalid<>,
+                    comms::option::def::FixedValue,
                     comms::option::def::DefaultNumValue<30>,
-                    comms::option::def::ValidNumValue<30>,
-                    comms::option::def::HasCustomRefresh
+                    comms::option::def::ValidNumValue<30>
                 >;
         public:
             /// @brief Re-definition of the value type.
@@ -585,17 +552,6 @@ struct TlvPropMembers
             static const char* name()
             {
                 return tutorial4::field::TlvPropMembersCommon::Prop7MembersCommon::KeyCommon::name();
-            }
-
-            /// @brief Generated refresh functionality.
-            bool refresh()
-            {
-                bool updated = Base::refresh();
-                if (Base::valid()) {
-                    return updated;
-                };
-                Base::setValue(30);
-                return true;
             }
         };
 
@@ -1262,7 +1218,8 @@ public:
             comms::field::IntValue<
                 tutorial4::field::FieldBase<>,
                 std::uint8_t,
-                comms::option::def::FailOnInvalid<>
+                comms::option::def::FailOnInvalid<>,
+                comms::option::def::FixedValue
             >;
         CommonKeyField commonKeyField;
 
