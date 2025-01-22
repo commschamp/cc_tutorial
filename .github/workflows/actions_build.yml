@@ -3,8 +3,8 @@ name: Github Actions Build
 on: [push]
 
 env:
-  COMMS_TAG: v5.2.7
-  COMMSDSL_TAG: v6.3.4
+  COMMS_TAG: v5.3
+  COMMSDSL_TAG: v7.0.2
 
 jobs:
 
@@ -473,7 +473,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        type: [Debug, Release, MinSizeRel]
+        type: [Debug, Release]
         arch: [x64]
         cpp: [11, 14, 17]
 
@@ -524,7 +524,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        type: [Debug, Release, MinSizeRel]
+        type: [Debug, Release]
         arch: [x64]
         cpp: [11, 14, 17, 20]
 

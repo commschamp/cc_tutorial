@@ -11,7 +11,7 @@ option (OPT_USE_SANITIZERS "Compile with sanitizers." OFF)
 
 #####################################################
 
-set (MIN_COMMSDSL_VERSION "6.3.4")
+set (MIN_COMMSDSL_VERSION "7.0.2")
 
 if ("${CMAKE_CXX_STANDARD}" STREQUAL "")
     set(CMAKE_CXX_STANDARD 11)
