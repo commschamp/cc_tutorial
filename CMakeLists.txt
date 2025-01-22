@@ -97,23 +97,14 @@ function (dsl_parse type name)
     string(REPLACE ";" "\n" schema_files "${DSL_PARSE_SCHEMAS}")
     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${name}/schema_files.txt "${schema_files}")
     
-    add_custom_target(${name}_prot_rm 
-        COMMAND ${CMAKE_COMMAND} -E remove_directory ${output_dir}
-    )
-
-    add_custom_command(
-        OUTPUT ${output_dir}
-        DEPENDS ${DSL_PARSE_SCHEMAS} ${src_files} ${name}_prot_rm 
+    add_custom_target(${name}_dsl ALL
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${output_dir}
         COMMAND ${COMMSDSL2COMMS} --warn-as-err ${multi_schema_param} ${code_input_param} "--comms-tag=${CC_COMMS_TAG}" 
-            -o ${output_dir} -i ${CMAKE_CURRENT_BINARY_DIR}/${name}/schema_files.txt
-    )
-
-    add_custom_target(${name}_dsl ALL
+            -o ${output_dir} -i ${CMAKE_CURRENT_BINARY_DIR}/${name}/schema_files.txt    
         COMMAND ${CMAKE_COMMAND}
             -DGENERATED="${output_dir}/include" -DOUTPUT="${PROJECT_SOURCE_DIR}/${type}/${name}/include"
             -P "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake"
-        DEPENDS ${name}_prot_rm ${output_dir} "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake" ${DSL_PARSE_SCHEMAS} ${src_files}  
+        DEPENDS ${output_dir} "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake" ${DSL_PARSE_SCHEMAS} ${src_files}  
     )
     
 endfunction ()
