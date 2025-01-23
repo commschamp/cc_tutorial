@@ -8,6 +8,7 @@
 #include <tuple>
 #include "tutorial14/message/Msg1.h"
 #include "tutorial14/message/Msg2.h"
+#include "tutorial14/message/Msg3.h"
 #include "tutorial14/options/DefaultOptions.h"
 
 namespace tutorial14
@@ -23,7 +24,8 @@ template <typename TBase, typename TOpt = tutorial14::options::DefaultOptions>
 using ClientInputMessages =
     std::tuple<
         tutorial14::message::Msg1<TBase, TOpt>,
-        tutorial14::message::Msg2<TBase, TOpt>
+        tutorial14::message::Msg2<TBase, TOpt>,
+        tutorial14::message::Msg3<TBase, TOpt>
     >;
 
 } // namespace input
@@ -37,7 +39,8 @@ using ClientInputMessages =
 /// @param opts_ Type of the used protocol definition options.
 #define TUTORIAL14_ALIASES_FOR_CLIENT_INPUT_MESSAGES(prefix_, suffix_, interface_, opts_) \
     using prefix_ ## Msg1 ## suffix_ = tutorial14::message::Msg1<interface_, opts_>; \
-    using prefix_ ## Msg2 ## suffix_ = tutorial14::message::Msg2<interface_, opts_>;
+    using prefix_ ## Msg2 ## suffix_ = tutorial14::message::Msg2<interface_, opts_>; \
+    using prefix_ ## Msg3 ## suffix_ = tutorial14::message::Msg3<interface_, opts_>;
 
 /// @brief Create type aliases for the client input messages of the protocol using default options.
 /// @param prefix_ Prefix of the alias message type.

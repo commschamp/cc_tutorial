@@ -28,7 +28,7 @@ class MsgId : public
         tutorial14::field::MsgIdCommon::ValueType,
         TExtraOpts...,
         comms::option::def::HasName,
-        comms::option::def::ValidNumValueRange<1, 2>
+        comms::option::def::ValidNumValueRange<1, 3>
     >
 {
     using Base =
@@ -37,7 +37,7 @@ class MsgId : public
             tutorial14::field::MsgIdCommon::ValueType,
             TExtraOpts...,
             comms::option::def::HasName,
-            comms::option::def::ValidNumValueRange<1, 2>
+            comms::option::def::ValidNumValueRange<1, 3>
         >;
 public:
     /// @brief Re-definition of the value type.

@@ -57,6 +57,11 @@ auto dispatchClientInputMessage(
         using MsgType = tutorial14::message::Msg2<InterfaceType, TProtOptions>;
         return handler.handle(static_cast<MsgType&>(msg));
     }
+    case tutorial14::MsgId_M3:
+    {
+        using MsgType = tutorial14::message::Msg3<InterfaceType, TProtOptions>;
+        return handler.handle(static_cast<MsgType&>(msg));
+    }
     default:
         break;
     };
