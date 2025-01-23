@@ -104,7 +104,7 @@ function (dsl_parse type name)
         COMMAND ${CMAKE_COMMAND}
             -DGENERATED="${output_dir}/include" -DOUTPUT="${PROJECT_SOURCE_DIR}/${type}/${name}/include"
             -P "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake"
-        DEPENDS ${output_dir} "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake" ${DSL_PARSE_SCHEMAS} ${src_files}  
+        DEPENDS "${PROJECT_SOURCE_DIR}/CopyGenerated.cmake" ${DSL_PARSE_SCHEMAS} ${src_files}  
     )
     
 endfunction ()
