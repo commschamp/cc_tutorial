@@ -256,6 +256,22 @@ The `Msg1` definition of the schema uses these properties:
     ...
 </message>
 ```
+
+To avoid an explicit implementation of the function signature the **v7.0** of the [commsdsl2comms](https://github.com/commschamp/commsdsl)
+allows usage of the **&lt;class&gt;.h.&lt;op&gt;_body** files (instead of **&lt;class&gt;.h.&lt;op&gt;** ones) contents
+of which is expected to be only a body of the function without the signature.
+
+- **.read_body** - Overwrites default read function body.
+- **.write_body** - Overwrites default write function body.
+- **.length_body** - Overwrites default serialization length function body.
+- **.valid_body** - Overwrites default validity check function body.
+- **.refresh_body** - Overwrites default refresh function body.
+- **.name_body** - Overwrites default name retrieval function body.
+
+There are multiple **Msg3.h.X_body** files inside [dsl_src/include/tutorial14/message](dsl_src/include/tutorial14/message) folder that
+demonstrate usage of the suffixes above and the injected code finds its way to
+[include/tutorial14/message/Msg3.h](include/tutorial14/message/Msg3.h).
+
 ----
 
 ## Summary

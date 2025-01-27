@@ -3,8 +3,10 @@ name: Github Actions Build
 on: [push]
 
 env:
-  COMMS_TAG: v5.2.7
-  COMMSDSL_TAG: v6.3.4
+  COMMS_TAG: v5.3
+  COMMSDSL_TAG: v7.0.2
+  WIN_BOOST_VERSION: "1.87.0"
+  WIN_BOOST_DIR: "C:/local/boost_1_87_0"
 
 jobs:
 
@@ -473,8 +475,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        type: [Debug, Release, MinSizeRel]
-        arch: [Win32, x64]
+        type: [Debug, Release]
+        arch: [x64]
         cpp: [11, 14, 17]
 
     steps:
@@ -486,7 +488,8 @@ jobs:
     - name: Install Boost
       shell: cmd
       run: |
-        choco install boost-msvc-14.2           
+        choco install boost-msvc-14.2 --version=${{env.WIN_BOOST_VERSION}}
+        echo BOOST_DIR=${{env.WIN_BOOST_DIR}}/lib64-msvc-14.2/cmake >>%GITHUB_ENV%       
 
     - name: Prepare externals
       shell: cmd
@@ -508,8 +511,8 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       run: |
         cmake %GITHUB_WORKSPACE% -A ${{matrix.arch}} -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install ^
-          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install" ^
-          -DCMAKE_POLICY_DEFAULT_CMP0167=OLD -DBoost_USE_STATIC_LIBS=ON ^
+          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install;${{env.BOOST_DIR}}" ^
+          -DCMAKE_POLICY_DEFAULT_CMP0167=NEW ^
           -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DOPT_FORCE_EXTRA_BOOST_LIBS=ON
 
     - name: Build Target 
@@ -524,7 +527,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        type: [Debug, Release, MinSizeRel]
+        type: [Debug, Release]
         arch: [x64]
         cpp: [11, 14, 17, 20]
 
@@ -538,7 +541,8 @@ jobs:
       if: matrix.arch == 'x64'
       shell: cmd
       run: |
-        choco install boost-msvc-14.3 --version=1.85.0
+        choco install boost-msvc-14.3 --version=${{env.WIN_BOOST_VERSION}}
+        echo BOOST_DIR=${{env.WIN_BOOST_DIR}}/lib64-msvc-14.3/cmake >>%GITHUB_ENV%
 
     - name: Prepare externals
       shell: cmd
@@ -560,8 +564,8 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       run: |
         cmake %GITHUB_WORKSPACE% -A ${{matrix.arch}} -DCMAKE_BUILD_TYPE=${{matrix.type}} -DCMAKE_INSTALL_PREFIX=install ^
-          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install" ^
-          -DCMAKE_POLICY_DEFAULT_CMP0167=OLD -DBoost_USE_STATIC_LIBS=ON ^
+          -DCMAKE_PREFIX_PATH="${{runner.workspace}}/build/install;${{env.BOOST_DIR}}" ^
+          -DCMAKE_POLICY_DEFAULT_CMP0167=NEW ^
           -DCMAKE_CXX_STANDARD=${{matrix.cpp}} -DOPT_FORCE_EXTRA_BOOST_LIBS=ON 
 
     - name: Build Target 

@@ -19,7 +19,7 @@
             <validValue name="K7" val="30" />
         </enum>
         
-        <int name="PropKeyCommon" type="uint8" failOnInvalid="true"/>
+        <int name="PropKeyCommon" type="uint8" failOnInvalid="true" fixedValue="true" />
         
         <variant name="KeyValueProp">
             <bundle name="Prop1">
@@ -72,7 +72,7 @@
                 </bundle>                 
                 
                 <bundle name="Any">
-                    <int reuse="PropKeyCommon" name="Key" failOnInvalid="false" />
+                    <int reuse="PropKeyCommon" name="Key" failOnInvalid="false" fixedValue="false" />
                     <int name="Length" type="uint8" semanticType="length" />
                     <data name="Val" />
                 </bundle>  

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schema>
     <fields>
-        <bundle name="B8_1">
+        <bundle name="B8_1" validateMinLength="6">
             <int name="M1" type="uint16" />
             <enum name="M2" type="uint8">
                 <validValue name="V1" val="0" />

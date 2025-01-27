@@ -1,0 +1,2 @@
+std::cout << "Call of custom " << __FUNCTION__ << std::endl;
+return Base::doRead(iter, len);

@@ -29,7 +29,7 @@ bool TcpServer::start(PortType port)
     }
 
 
-    m_acceptor.listen(boost::asio::socket_base::max_connections, ec);
+    m_acceptor.listen(boost::asio::socket_base::max_listen_connections, ec);
     if (ec) {
         std::cerr << "ERROR: Failed to put acceptor in the listen state with error: " << ec.message() << std::endl;
         m_acceptor.close(ec);

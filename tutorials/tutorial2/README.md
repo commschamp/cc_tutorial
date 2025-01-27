@@ -160,6 +160,20 @@ property is optional and was introduced in **v4.0** of the
 **NOTE**, that the value of the **validateMinLength** property is expected to be the 
 serialization length of the message fields, **not** including the message transport framing.
 
+Since **v7.0** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
+the serialization length of the composite fields like [&lt;bundle&gt;](#bundle-fields)
+can also be verified (from [dsl/msg8.xml](dsl/msg8.xml)):
+```xml
+<bundle name="B8_1" validateMinLength="6">
+    <int name="M1" type="uint16" />
+    <enum name="M2" type="uint8">
+        <validValue name="V1" val="0" />
+        <validValue name="V2" val="1" />
+    </enum>
+    <string name="M3" length="3" />
+</bundle>
+```
+
 ## Client / Server Sessions
 Both server and client sessions are very similar to the ones 
 presented in [tutorial1](../tutorial1). The **server** is just the simple
