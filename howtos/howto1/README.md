@@ -55,7 +55,7 @@ for details:
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
 class SizeWithFlags : public
-    comms::protocol::MsgSizeLayer<...>
+    comms::frame::MsgSizeLayer<...>
 {
 
 public:

@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <iterator>
 
-#include "comms/protocol/TransportValueLayer.h"
+#include "comms/frame/TransportValueLayer.h"
 #include "comms/options.h"
 
 #include "howto10/Interface.h"
@@ -21,7 +21,7 @@ namespace layer
 /// @brief Customizing the TransportValueLayer
 template<typename TField, typename TNextLayer, typename... TOptions>
 class Flags : public
-    comms::protocol::TransportValueLayer<
+    comms::frame::TransportValueLayer<
         TField,
         Interface<>::TransportFieldIdx_flags,
         TNextLayer,
@@ -32,7 +32,7 @@ class Flags : public
 {
     // Repeat base type
     using Base = 
-        comms::protocol::TransportValueLayer<
+        comms::frame::TransportValueLayer<
             TField,
             Interface<>::TransportFieldIdx_flags,
             TNextLayer,

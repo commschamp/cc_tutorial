@@ -1,6 +1,6 @@
 #pragma once
 
-#include "comms/protocol/MsgSizeLayer.h"
+#include "comms/frame/MsgSizeLayer.h"
 #include "comms/options.h"
 
 namespace howto1
@@ -15,7 +15,7 @@ namespace layer
 /// @brief Customizing the size layer
 template<typename TField, typename TNextLayer, typename... TOptions>
 class SizeWithFlags : public
-    comms::protocol::MsgSizeLayer<
+    comms::frame::MsgSizeLayer<
         TField,
         TNextLayer,
         TOptions...,
@@ -24,7 +24,7 @@ class SizeWithFlags : public
 {
     // Repeat base type
     using Base = 
-        comms::protocol::MsgSizeLayer<
+        comms::frame::MsgSizeLayer<
             TField,
             TNextLayer,
             TOptions...,

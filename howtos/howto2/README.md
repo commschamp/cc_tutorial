@@ -31,17 +31,17 @@ The [dsl_src/include/howto2/frame/layer/IdWithSize.h](dsl_src/include/howto2/fra
 in the generated code) implements the required functionality.
 
 Due to the fact of this class is a replacement to the `<id>` layer it must extend 
-the [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+the [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
 and implement its member functions that allow set / get of the message ID value out of the 
 field object 
 ```cpp
 template<typename TField, typename TMessage, typename TAllMessages, typename TNextLayer, typename... TOptions>
 class IdWithSize : public
-    comms::protocol::MsgIdLayer<...>
+    comms::frame::MsgIdLayer<...>
 {
     // Repeat base type
     using Base = 
-        comms::protocol::MsgIdLayer<...>;
+        comms::frame::MsgIdLayer<...>;
 
 public:
     // Repeat some types from the base class
@@ -67,7 +67,7 @@ public:
 Note that the remaining size information is also updated inside the `prepareFieldForWrite()` member function.
 
 Now comes the tricky part. Every default layer implementation class (including 
-[comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html))
+[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html))
 defines `doRead()` member function which is invoked by the `read()` and `readFieldsCached()` ones, which are used
 to drive the framing read functionality. The `doRead()` function is expected to read the field's value 
 (ID of the message), do relevant operation(s) (allocate message object) and forward the read operation to the 
@@ -77,10 +77,10 @@ redefined.
 ```cpp
 template<typename TField, typename TMessage, typename TAllMessages, typename TNextLayer, typename... TOptions>
 class IdWithSize : public
-    comms::protocol::MsgIdLayer<...>
+    comms::frame::MsgIdLayer<...>
 {
     using Base = 
-        comms::protocol::MsgIdLayer<...>;
+        comms::frame::MsgIdLayer<...>;
 
 public:
     // Repeat some types from the base class
@@ -127,7 +127,7 @@ public:
 };
 ```
 Once the actual remaining length (`remLen`) is known, the default `doRead()` of the base class 
-([comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html))
+([comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html))
 is invoked to properly handle the message creation, but with new length value.
 
 In order to properly test the message separation this tutorial defines `Msg1` and `Msg3` to be bound only 

@@ -89,13 +89,13 @@ The mismatch between having a single field in the `<frame>` and two separate
 fields in the `<interface>` prevents us from using standard `<value>`
 layer in the frame definition. There is a need to inject a custom
 layer code, which can still use 
-[comms::protocol::TransportLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html) (used to implement
+[comms::frame::TransportLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html) (used to implement
 standard `value` layer), but with extra customization (see
 [dsl_src/include/howto5/frame/layer/VersionWithFlags.h](dsl_src/include/howto5/frame/layer/VersionWithFlags.h)).
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
 class VersionWithFlags : public
-    comms::protocol::TransportValueLayer<
+    comms::frame::TransportValueLayer<
         TField,
         std::numeric_limits<std::size_t>::max(), // Not used, the value doesn't matter
         TNextLayer,
@@ -126,7 +126,7 @@ public:
 **NOTE**, that the code above uses 
 [Curiously Recurring Template Pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern) 
 to provide the base
-[comms::protocol::TransportLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html) class with the 
+[comms::frame::TransportLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html) class with the 
 actual extending layer type using **comms::option::def::ExtendingClass** option.
 
 In addition it overrides the default implementation of the **reassignFieldValueToMsg()**

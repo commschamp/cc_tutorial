@@ -28,8 +28,8 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
                 msg, 
                 iter, 
                 remLen, 
-                comms::protocol::msgId(msgId),
-                comms::protocol::msgIndex(msgIdx));
+                comms::frame::msgId(msgId),
+                comms::frame::msgIndex(msgIdx));
 
         ...
 
@@ -51,9 +51,9 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
 The [read()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
 member function of every protocol layer receives a variadic `extraValues` last parameter, which can be 
 used to add several output parameters to the function. In this example the 
-[comms::protocol::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html) is used 
+[comms::frame::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html) is used 
 to add `msgId` local variable as an output parameter for the message numeric ID. Also the 
-[comms::protocol::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html)
+[comms::frame::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html)
 is used to add `msgIdx` local variable as an output parameter for the index of the message (offset in 
 the tuple of the input messages starting from the first message sharing the same ID).
 Later down the code both `msgId` and `msgIdx` values are used to dispatch message object into the 
@@ -143,7 +143,7 @@ member function can be used to access appropriate field in the cached fields tup
 Note that the inner field of the `<payload>` layer is 
 [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html) of 
 raw `std::uint8_t` bytes (equivalent to being `<data>`). The options passed to 
-[comms::protocol::MsgDataLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgDataLayer.html)
+[comms::frame::MsgDataLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgDataLayer.html)
 are passed to the field definition. If no special options are passed then the whole payload will be 
 **copied** to the cached field. It is highly recommended to pass 
 [comms::option::app::OridDataView](https://commschamp.github.io/comms_doc/options_8h.html) to it to 
@@ -177,8 +177,8 @@ struct DataViewDefaultOptionsT : public TBase
 - The [COMMS Library](https://github.com/commschamp/comms) provides multiple ways to access 
   some or all of the framing fields.
 - The `read()` member function can receive and update selected output parameters via 
-  [comms::protocol::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html), 
-  [comms::protocol::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html), etc...
+  [comms::frame::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html), 
+  [comms::frame::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html), etc...
 - In order to get **all** the frame fields the 
   [readFieldsCached()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
   member function needs to be used.

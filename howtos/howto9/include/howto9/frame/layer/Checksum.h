@@ -4,10 +4,10 @@
 #include <cstddef>
 #include <iterator>
 
-#include "comms/protocol/ChecksumPrefixLayer.h"
+#include "comms/frame/ChecksumPrefixLayer.h"
 #include "comms/options.h"
-#include "comms/protocol/checksum/BasicSum.h"
-#include "comms/protocol/checksum/Crc.h"
+#include "comms/frame/checksum/BasicSum.h"
+#include "comms/frame/checksum/Crc.h"
 
 #include "howto9/field/SyncFieldCommon.h"
 #include "howto9/field/SizeFieldCommon.h"
@@ -25,9 +25,9 @@ namespace layer
 /// @brief Customizing the ChecksumLayer
 template<typename TField, typename TNextLayer, typename... TOptions>
 class Checksum : public
-    comms::protocol::ChecksumPrefixLayer<
+    comms::frame::ChecksumPrefixLayer<
         TField,
-        comms::protocol::checksum::Crc_16, 
+        comms::frame::checksum::Crc_16, 
         TNextLayer,
         TOptions...,
         comms::option::def::ChecksumLayerVerifyBeforeRead,
@@ -36,9 +36,9 @@ class Checksum : public
 {
     // Repeat base type
     using Base = 
-        comms::protocol::ChecksumPrefixLayer<
+        comms::frame::ChecksumPrefixLayer<
             TField,
-            comms::protocol::checksum::Crc_16,
+            comms::frame::checksum::Crc_16,
             TNextLayer,
             TOptions...,
             comms::option::def::ChecksumLayerVerifyBeforeRead,
@@ -48,7 +48,7 @@ class Checksum : public
 public:
     // Repeat types defined in the base class (not visible by default)
     using Field = typename Base::Field; 
-    using Calc = comms::protocol::checksum::Crc_16;
+    using Calc = comms::frame::checksum::Crc_16;
  
     // Override default way of calculating checksum
     template <typename TMsg, typename TIter>

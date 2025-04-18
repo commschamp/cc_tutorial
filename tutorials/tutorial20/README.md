@@ -84,7 +84,7 @@ The pseudo `<value>` layer is defined with usage of
 [comms::option::def::PseudoValue](https://commschamp.github.io/comms_doc/options_8h.html) option.
 ```cpp
 using Version =
-    comms::protocol::TransportValueLayer<
+    comms::frame::TransportValueLayer<
         tutorial20::field::Version<TOpt, comms::option::def::EmptySerialization>,
         0U,
         Data,
@@ -92,7 +92,7 @@ using Version =
     >;
 ```
 When the `comms::option::def::PseudoValue` option is passed to the 
-[comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
+[comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
 it creates `pseudoField()` member functions to access the field stored in the private data members.
 The code above (`m_frame.layer_version().pseudoField()`) accesses it and assigns the reported 
 version.

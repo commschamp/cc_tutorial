@@ -4,9 +4,9 @@ Dealing with big protocols.
 Most of the binary communication protocols use numeric message ID information reported in the
 message frame. The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
 provides [&lt;id&gt;](https://commschamp.github.io/commsdsl_spec/#frames-id) framing layer for this purpose, while the generated code uses
-[comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) class
+[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) class
 to implement the required functionality. During the **read** operation the
-[comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) class
+[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) class
 is responsible to provide the functionality for reading the message ID and create appropriate message object before forwarding
 the request to the next framing layer. The
 default mapping of the numeric message ID to the actual message type is implemented using
@@ -34,13 +34,13 @@ The **DynMem** part of the name implies dynamic memory allocation.
 Note that in this tutorial **sender** property hasn't been used, i.e. all the messages are sent both ways. It means that all the message factories
 mentioned above contain the same code. For the cases when uni-directional messages are present they'll differ.
 
-The [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) layer provided by the
+The [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) layer provided by the
 [COMMS Library](https://github.com/commschamp/comms) allows replacing the default message factory
 ([comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html))
 using the **comms::option::app::MsgFactory** or **comms::option::app::MsgFactoryTempl** application specific customization options.
 
 The **v6.1** of the **commsdsl2comms** code generator also generates extra protocol options that can be used to apply the relevant
-option to the [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) class:
+option to the [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) class:
 
 - [&lt;protocol_namespace&gt;::optoins::AllMessagesDynMemMsgFactoryDefaultOptions](include/tutorial25/options/AllMessagesDynMemMsgFactoryDefaultOptions.h) - the options forcing usage
   of the [&lt;protocol_namespace&gt;::<zero-width space>factory::AllMessagesDynMemMsgFactory](include/tutorial25/factory/AllMessagesDynMemMsgFactory.h).

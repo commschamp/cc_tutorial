@@ -48,7 +48,7 @@ using AllMessages =
         ...
     >;
 ```
-The `Id` layer of the framing (implemented by [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html))
+The `Id` layer of the framing (implemented by [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html))
 identifies all the message types with the same numeric ID, creates appropriate message object (in order of their definition inside the 
 input tuple) and invokes its `read()` operation. If the latter is successful, then the appropriate message is considered to be found and 
 returned without any additional attempt to create other messages. If the message payload `read()` operation fails, then the next message type 
@@ -155,9 +155,9 @@ starting from the first message having the same numeric ID. In other word the in
 
 ---- 
 
-**SIDE NOTE**: The [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+**SIDE NOTE**: The [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
 used by the framing is capable of returning the detected index / offset information via special extra parameters
-(see [comms::protocol::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html)). These parameters 
+(see [comms::frame::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html)). These parameters 
 are used by the processing functions from [comms/process.h](https://commschamp.github.io/comms_doc/process_8h.html) to 
 get the numeric message ID and the index (offset) information in order to perform the message dispatch. Extracting this 
 information is a bit out of scope for this tutorial and will be covered in other later one.

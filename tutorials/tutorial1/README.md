@@ -112,7 +112,7 @@ All the defined message classes (`Msg1` and `Msg2`) reside in
 **message** namespace and in [include/tutorial1/message](include/tutorial1/message) folder.
 Every [MsgX.h](include/tutorial1/message/Msg1.h) file contains class definition of 
 the relevant message and its fields. The corresponding
-[MsgXCommon.h](https://github.com/commschamp/cc_tutorial/blob/master/tutorial1/include/tutorial1/message/Msg1Common.h)
+[MsgXCommon.h](include/tutorial1/message/Msg1Common.h)
 file contains common, template-parameter independent definitions relevant to the message
 and its fields. 
 

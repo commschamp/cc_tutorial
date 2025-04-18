@@ -6,7 +6,7 @@ The [COMMS Library](https://github.com/commschamp/comms) has several
 places where dynamic memory allocation is used:
 
 - Inside [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html) used
-  by the [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+  by the [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
   when processing message numeric ID value and creating appropriate message object.
 - Default storage of `<string>` field (implemented by extending 
   [comms::field::String](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1String.html)) is
@@ -18,7 +18,7 @@ places where dynamic memory allocation is used:
   [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)) is
   `std::vector<ElementField>`.
   
-The dynamic allocation inside [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+The dynamic allocation inside [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
 and [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html) can be resolved
 by using [comms::option::app::InPlaceAllocation](https://commschamp.github.io/comms_doc/options_8h.html) option. 
 If forces usage of an uninitialized storage area (as private data member), big
@@ -125,7 +125,7 @@ instead of `std::vector`.
 
 **SIDE NOTE**: The `Data` layer of the protocol framing receives an option which is passed to the 
 payload field. The latter is used **only** when framing fields are cached in some external structure
-(see documentation of [comms::protocol::ProtocolLayerBase::readFieldsCached()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html))
+(see documentation of [comms::frame::ProtocolLayerBase::readFieldsCached()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html))
 which is **irrelevant** for this tutorial and should be ignored.
 ```cpp
 template <typename TBase = tutorial12::options::DefaultOptions>
@@ -393,7 +393,7 @@ section also contains useful information about the available error handling.
 ## Summary
 - The default behavior of the framing is to dynamically allocate message object. 
 - It can be changed by passing `comms::option::app::InPlaceAllocation` option to the `ID` framing layer
-  (implemented by the [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)).
+  (implemented by the [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)).
 - The default storage of the fields like `<string>`, `<data>` and `<list>` can
   be changed by passing certain options.
 - Passing [comms::option::app::FixedSizeStorage](https://commschamp.github.io/comms_doc/options_8h.html) option
