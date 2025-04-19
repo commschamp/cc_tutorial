@@ -127,10 +127,8 @@ in configuration of the [github actions](.github/workflows/actions_build.yml).
 **NOTE**, that [Boost](https://www.boost.org) libraries are also required.
 In case Boost libraries are not installed in expected default location
 (mostly happens on Windows systems), use variables described in 
-[CMake documentation](https://cmake.org/cmake/help/v3.8/module/FindBoost.html) 
+[FindBoost](https://cmake.org/cmake/help/latest/module/FindBoost.html) documentation
 to help CMake find required libraries and headers.
-It is recommended to use `-DBoost_USE_STATIC_LIBS=ON` parameter to force
-linkage with static Boost libraries.
 
 ### Linux Build
 ```
