@@ -64,7 +64,7 @@ template <typename TMsgBase, typename TOpt = tutorial24::options::DefaultOptions
 class Msg1 : public
     comms::MessageBase<
         TMsgBase,
-        comms::option::def::StaticNumIdImpl<tutorial24::MsgId_M1>,
+        comms::option::def::StaticNumIdImpl<1 /* 0x1 */>,
         comms::option::def::FieldsImpl<typename Msg1Fields<TOpt>::All>,
         comms::option::def::MsgType<Msg1<TMsgBase, TOpt> >,
         comms::option::def::HasName,

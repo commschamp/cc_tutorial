@@ -96,16 +96,16 @@ One other extra thing which is worth paying attention to is how the `switch` bas
 (see [include/tutorial13/dispatch/DispatchMessage.h](include/tutorial13/dispatch/DispatchMessage.h)) 
 is implemented.
 ```cpp
-template<typename TProtOptions, typename TMsg, typename THandler>
+template<typename TProtOptions, typename TId, typename TMsg, typename THandler>
 auto dispatchMessage(
-    tutorial13::MsgId id,
+    TId id,
     std::size_t idx,
     TMsg& msg,
     THandler& handler) -> decltype(handler.handle(msg))
 {
     using InterfaceType = typename std::decay<decltype(msg)>::type;
-    switch(id) {
-    case tutorial13::MsgId_M1:
+    switch(static_cast<std::intmax_t>(id)) {
+    case 1 /* 0x1 */:
     {
         switch (idx) {
         case 0U:
@@ -120,7 +120,7 @@ auto dispatchMessage(
         ...
         break;
     }
-    case tutorial13::MsgId_M2:
+    case 2 /* 0x2 */:
     {
         switch (idx) {
         case 0U:

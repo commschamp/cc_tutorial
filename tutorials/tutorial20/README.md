@@ -102,20 +102,6 @@ As the result, for all the messages that follow, the `Version` member field
 the `read()` operation is forwarded to the `<payload>` layer, which in turn invokes `read()` operation of 
 the message object. 
 
-----
-
-**SIDE NOTE**: If [CommsChampion Tools](https://github.com/commschamp/cc_tools_qt/wiki/How-to-Use-CommsChampion-Tools)
-are intended to be used for the protocol visualization and/or debugging, it is better to hide the `Version` field 
-inside the transport framing from being displayed altogether (because it's not really there). In such case it is
-recommended to slightly update the definition of the `<value>` layer above into the following:
-```xml
-<value name="Version" interfaceFieldName="Version" pseudo="true">
-    <ref field="Version" displayHidden="true" />
-</value>
-```
-
----
-
 Note that in this tutorial the client is also compiled to have the default version **5** (the default state of all the 
 fields in all the messages is valid for version **5**). In order to emulate version **4** client the 
 field of the pseudo `Version` `<value>` layer is modified when `Connect` message is sent:

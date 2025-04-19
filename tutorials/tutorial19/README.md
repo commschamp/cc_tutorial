@@ -325,7 +325,7 @@ template <typename TMsgBase, typename TOpt = tutorial19::options::DefaultOptions
 class Msg3 : public
     comms::MessageBase<
         TMsgBase,
-        comms::option::def::StaticNumIdImpl<tutorial19::MsgId_M3>,
+        comms::option::def::StaticNumIdImpl<3 /* 0x3 */>,
         comms::option::def::FieldsImpl<typename Msg3Fields<TOpt>::All>,
         comms::option::def::MsgType<Msg3<TMsgBase, TOpt> >,
         comms::option::def::HasName,

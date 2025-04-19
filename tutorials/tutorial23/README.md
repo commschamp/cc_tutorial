@@ -109,7 +109,7 @@ using ServerProtocolOptions =
 Without using options from the `t23_ext::options` the compilation will fail because
 `t23_ext::ns1::field::S1` [field](include/t23_ext/ns1/field/S1.h) attempts to
 access the options referencing `typename TOpt::t23_ext::ns1::field::S1`, which
-does not existing in the options provided by the `tutorial23`.
+does not exist in the options provided by the `tutorial23`.
 
 ```cpp
 template <typename TOpt = t23_ext::options::DefaultOptions, typename... TExtraOpts>
