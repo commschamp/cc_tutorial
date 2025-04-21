@@ -39,7 +39,7 @@ and communicated to other interested parties (like `CHECKSUM` layer) via message
 ```
 
 Before proceeding to the actual `<frame>` definition explanation please take a closer look at the
-[Protocol Stack Definition Tutorial](https://commschamp.github.io/comms_doc/page_prot_stack_tutorial.html)
+[Frame Definition Tutorial](https://commschamp.github.io/comms_doc/page_frame_tutorial.html)
 page from the [COMMS Library](https://github.com/commschamp/comms) documentation.
 
 It explains that the checksum layer class needs to wrap all the other layers checksum on which needs to be
@@ -151,7 +151,7 @@ In cases where the checksum length remains the same, but different algorithms ar
 default implement of the **doReadField()**, **doWriteField()** and **doFieldLength()** becomes non necessary.
 
 The **COMMS** library tutorial contains a separate page
-called [Defining Custom Checksum Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_checksum_layer.html)
+called [Defining Custom Checksum Frame Layer](https://commschamp.github.io/comms_doc/page_custom_checksum_layer.html)
 with a bit more details on the available customization.
 
 Let's also take a look how the [client](src/ClientSession.cpp) prepares message to be sent:

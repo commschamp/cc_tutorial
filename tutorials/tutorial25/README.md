@@ -132,4 +132,4 @@ void ClientSession::sendMsg2()
 - The files containing definitions of relevant input messages in the **&lt;protocol_namespace&gt;/input** folder also contain
   definition of the macros helping with message type aliasing.
 
-[Read Previous Tutorial](../tutorial24) &lt;-----------------------
+[Read Previous Tutorial](../tutorial24) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial26) 

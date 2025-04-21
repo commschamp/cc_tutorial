@@ -99,7 +99,7 @@ class IdWithFlags : public
 ```
 It extends [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html).
 The latter supports its extension and customization to support cases like in this tutorial. It is
-properly described in [Defining Custom Message ID Protocol Stack Layer ](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
+properly described in [Defining Custom Message ID Frame Layer](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
 tutorial page of the [COMMS Library](https://github.com/commschamp/comms) documentation.
 
 Please note usage of [comms::option::def::ExtendingClass](https://commschamp.github.io/comms_doc/options_8h.html) option 
@@ -165,7 +165,7 @@ class SizeWithFlags : public
 {
 }
 ```
-The [Defining Custom Message Size Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
+The [Defining Custom Message Size Frame Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
 tutorial page of the [COMMS Library](https://github.com/commschamp/comms) documentation provides a lot 
 of details on how define such layer.
 
@@ -266,11 +266,11 @@ called to properly set the size and the flags.
 - The layer that replaces `<id>` needs to set **semanticLayerType** property to **id**.
 - To implement custom replacement of `<id>`, the custom layer code may extend 
   [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
-  (see [Defining Custom Message ID Protocol Stack Layer ](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
+  (see [Defining Custom Message ID Frame Layer](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
   for details).
 - To implement custom replacement of `<size>`, the custom layer code may extend 
   [comms::frame::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html)
-  (see [Defining Custom Message Size Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
+  (see [Defining Custom Message Size Frame Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
   for details).
 
 

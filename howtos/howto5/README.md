@@ -133,7 +133,7 @@ In addition it overrides the default implementation of the **reassignFieldValueT
 member function to re-assign the read field values to the message object as
 well as **prepareFieldForWrite()** to prepare the field being written when
 the message is serialized. The **COMMS** library tutorial contains a separate page
-called [Defining Custom Transport Value Protocol Stack Layer ](https://commschamp.github.io/comms_doc/page_custom_transport_value_layer.html)
+called [Defining Custom Transport Value Frame Layer](https://commschamp.github.io/comms_doc/page_custom_transport_value_layer.html)
 with a bit more details on the available customization.
 
 Other aspects of this howto are described in more details in the:

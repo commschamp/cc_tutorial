@@ -122,7 +122,7 @@ The `Flags` layer class is also expected to provide `setFieldPreset()` and
 For more details on available customization of the 
 [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
 please refer to 
-[Defining Custom Message ID Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
+[Defining Custom Message ID Frame Layer](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
 COMMS library tutorial page.
 
 The [Flags](dsl_src/include/howto8/frame/layer/Flags.h) is implemented by extending
@@ -213,7 +213,7 @@ the `prepareFieldForWrite()`.
 For more details on available customization of the 
 [comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
 please refer to 
-[Defining Custom Transport Value Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_transport_value_layer.html)
+[Defining Custom Transport Value Frame Layer](https://commschamp.github.io/comms_doc/page_custom_transport_value_layer.html)
 COMMS library tutorial page.
 
 

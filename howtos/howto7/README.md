@@ -98,5 +98,5 @@ class AlternatingSync : public
 };
 ```
 The **COMMS** library tutorial contains a separate page
-called [Defining Custom Sync Prefix Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_sync_prefix_layer.html)
+called [Defining Custom Sync Prefix Frame Layer](https://commschamp.github.io/comms_doc/page_custom_sync_prefix_layer.html)
 with a bit more details on the available customization.
