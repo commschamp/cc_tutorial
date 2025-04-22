@@ -180,6 +180,7 @@ $> nmake install
 - [tutorial23](../../tree/master/tutorials/tutorial23) - Reusing definitions from other schemas.
 - [tutorial24](../../tree/master/tutorials/tutorial24) - Extra validity verification of message payload.
 - [tutorial25](../../tree/master/tutorials/tutorial25) - Dealing with big protocols.
+- [tutorial26](../../tree/master/tutorials/tutorial26) - Stateful messages sequence.
 
 
 # How-Tos

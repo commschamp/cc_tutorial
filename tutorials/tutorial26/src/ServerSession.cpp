@@ -50,13 +50,17 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
     assert(m_msg);
     auto* prev = buf;
-    auto es = comms::processSingleWithDispatch(buf, bufLen, m_frame, *m_msg, *this);
-    if (es != comms::ErrorStatus::Success) {
-        std::cerr << "ERROR: unexpected protocol sequence" << std::endl;
-        return bufLen;
-    }
+    auto consumed = 0U;
+    while (consumed < bufLen) {
+        auto es = comms::processSingleWithDispatch(buf, bufLen, m_frame, *m_msg, *this);
+        if (es != comms::ErrorStatus::Success) {
+            std::cerr << "ERROR: unexpected protocol sequence" << std::endl;
+            return consumed;
+        }
 
-    return static_cast<std::size_t>(std::distance(prev, buf));
+        consumed += static_cast<std::size_t>(std::distance(prev, buf));
+    }
+    return consumed;
 }
 
 void ServerSession::sendMessage(const Message& msg)

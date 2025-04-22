@@ -28,13 +28,17 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
     assert(m_msg);
     auto* prev = buf;
-    auto es = comms::processSingleWithDispatch(buf, bufLen, m_frame, *m_msg, *this);
-    if (es != comms::ErrorStatus::Success) {
-        std::cerr << "ERROR: unexpected protocol sequence" << std::endl;
-        return bufLen;
-    }
+    auto consumed = 0U;
+    while (consumed < bufLen) {
+        auto es = comms::processSingleWithDispatch(buf, bufLen, m_frame, *m_msg, *this);
+        if (es != comms::ErrorStatus::Success) {
+            std::cerr << "ERROR: unexpected protocol sequence" << std::endl;
+            return consumed;
+        }
 
-    return static_cast<std::size_t>(std::distance(prev, buf));
+        consumed += static_cast<std::size_t>(std::distance(prev, buf));
+    }
+    return consumed;
 }
 
 void ClientSession::sendMessage(const Message& msg)
@@ -107,19 +111,19 @@ void ClientSession::doNextStage()
 void ClientSession::sendMsg1()
 {
     m_msg.reset(new Msg1);
-    sendMessage(*m_msg); // Should get received and echoed back
+    sendMessage(*m_msg);
 }
 
 void ClientSession::sendMsg2()
 {
     m_msg.reset(new Msg2);
-    sendMessage(*m_msg); // Should get received and echoed back
+    sendMessage(*m_msg);
 }
 
 void ClientSession::sendMsg3()
 {
     m_msg.reset(new Msg3);
-    sendMessage(*m_msg); // Should get received and echoed back
+    sendMessage(*m_msg);
 }
 
 SessionPtr Session::createClient(boost_wrap::io& io)
