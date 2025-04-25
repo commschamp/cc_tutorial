@@ -147,7 +147,7 @@ struct FrameLayers
             Flags<TMessage, TAllMessages>
         >;
 
-    /// @brief Final protocol stack definition.
+    /// @brief Final framing layers stack definition.
     template<typename TMessage, typename TAllMessages>
     using Stack = Size<TMessage, TAllMessages>;
 };

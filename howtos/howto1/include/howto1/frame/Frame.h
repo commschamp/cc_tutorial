@@ -204,7 +204,7 @@ struct FrameLayers
             typename TOpt::frame::FrameLayers::SizeWithFlags
         >;
 
-    /// @brief Final protocol stack definition.
+    /// @brief Final framing layers stack definition.
     template<typename TMessage, typename TAllMessages>
     using Stack = SizeWithFlags<TMessage, TAllMessages>;
 };

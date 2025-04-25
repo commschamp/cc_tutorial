@@ -137,8 +137,8 @@ struct ClientInputMsgDispatcher
     /// @param[in] msg Reference to message object.
     /// @param[in] handler Reference to handler object.
     /// @return What the @ref dispatchClientInputMessage() function returns.
-    template <typename TMsg, typename THandler>
-    static auto dispatch(howto4::MsgId id, std::size_t idx, TMsg& msg, THandler& handler) ->
+    template <typename TId, typename TMsg, typename THandler>
+    static auto dispatch(TId id, std::size_t idx, TMsg& msg, THandler& handler) ->
         decltype(howto4::dispatch::dispatchClientInputMessage<TProtOptions>(id, idx, msg, handler))
     {
         return howto4::dispatch::dispatchClientInputMessage<TProtOptions>(id, idx, msg, handler);
@@ -147,8 +147,8 @@ struct ClientInputMsgDispatcher
     /// @brief Complementary dispatch function.
     /// @details Same as other dispatch without @b TAllMessages template parameter,
     ///     used by  @b comms::processAllWithDispatchViaDispatcher().
-    template <typename TAllMessages, typename TMsg, typename THandler>
-    static auto dispatch(howto4::MsgId id, std::size_t idx, TMsg& msg, THandler& handler) ->
+    template <typename TAllMessages, typename TId, typename TMsg, typename THandler>
+    static auto dispatch(TId id, std::size_t idx, TMsg& msg, THandler& handler) ->
         decltype(dispatch(id, idx, msg, handler))
     {
         return dispatch(id, idx, msg, handler);
@@ -160,8 +160,8 @@ struct ClientInputMsgDispatcher
     /// @param[in] msg Reference to message object.
     /// @param[in] handler Reference to handler object.
     /// @return What the @ref dispatchClientInputMessage() function returns.
-    template <typename TMsg, typename THandler>
-    static auto dispatch(howto4::MsgId id, TMsg& msg, THandler& handler) ->
+    template <typename TId, typename TMsg, typename THandler>
+    static auto dispatch(TId id, TMsg& msg, THandler& handler) ->
         decltype(howto4::dispatch::dispatchClientInputMessage<TProtOptions>(id, msg, handler))
     {
         return howto4::dispatch::dispatchClientInputMessage<TProtOptions>(id, msg, handler);
@@ -170,8 +170,8 @@ struct ClientInputMsgDispatcher
     /// @brief Complementary dispatch function.
     /// @details Same as other dispatch without @b TAllMessages template parameter,
     ///     used by  @b comms::processAllWithDispatchViaDispatcher().
-    template <typename TAllMessages, typename TMsg, typename THandler>
-    static auto dispatch(howto4::MsgId id, TMsg& msg, THandler& handler) ->
+    template <typename TAllMessages, typename TId, typename TMsg, typename THandler>
+    static auto dispatch(TId id, TMsg& msg, THandler& handler) ->
         decltype(dispatch(id, msg, handler))
     {
         return dispatch(id, msg, handler);

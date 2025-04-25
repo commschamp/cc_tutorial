@@ -182,8 +182,8 @@ struct ServerInputMsgDispatcher
     /// @param[in] msg Reference to message object.
     /// @param[in] handler Reference to handler object.
     /// @return What the @ref dispatchServerInputMessage() function returns.
-    template <typename TMsg, typename THandler>
-    static auto dispatch(tutorial25::MsgId id, std::size_t idx, TMsg& msg, THandler& handler) ->
+    template <typename TId, typename TMsg, typename THandler>
+    static auto dispatch(TId id, std::size_t idx, TMsg& msg, THandler& handler) ->
         decltype(tutorial25::dispatch::dispatchServerInputMessage<TProtOptions>(id, idx, msg, handler))
     {
         return tutorial25::dispatch::dispatchServerInputMessage<TProtOptions>(id, idx, msg, handler);
@@ -192,8 +192,8 @@ struct ServerInputMsgDispatcher
     /// @brief Complementary dispatch function.
     /// @details Same as other dispatch without @b TAllMessages template parameter,
     ///     used by  @b comms::processAllWithDispatchViaDispatcher().
-    template <typename TAllMessages, typename TMsg, typename THandler>
-    static auto dispatch(tutorial25::MsgId id, std::size_t idx, TMsg& msg, THandler& handler) ->
+    template <typename TAllMessages, typename TId, typename TMsg, typename THandler>
+    static auto dispatch(TId id, std::size_t idx, TMsg& msg, THandler& handler) ->
         decltype(dispatch(id, idx, msg, handler))
     {
         return dispatch(id, idx, msg, handler);
@@ -205,8 +205,8 @@ struct ServerInputMsgDispatcher
     /// @param[in] msg Reference to message object.
     /// @param[in] handler Reference to handler object.
     /// @return What the @ref dispatchServerInputMessage() function returns.
-    template <typename TMsg, typename THandler>
-    static auto dispatch(tutorial25::MsgId id, TMsg& msg, THandler& handler) ->
+    template <typename TId, typename TMsg, typename THandler>
+    static auto dispatch(TId id, TMsg& msg, THandler& handler) ->
         decltype(tutorial25::dispatch::dispatchServerInputMessage<TProtOptions>(id, msg, handler))
     {
         return tutorial25::dispatch::dispatchServerInputMessage<TProtOptions>(id, msg, handler);
@@ -215,8 +215,8 @@ struct ServerInputMsgDispatcher
     /// @brief Complementary dispatch function.
     /// @details Same as other dispatch without @b TAllMessages template parameter,
     ///     used by  @b comms::processAllWithDispatchViaDispatcher().
-    template <typename TAllMessages, typename TMsg, typename THandler>
-    static auto dispatch(tutorial25::MsgId id, TMsg& msg, THandler& handler) ->
+    template <typename TAllMessages, typename TId, typename TMsg, typename THandler>
+    static auto dispatch(TId id, TMsg& msg, THandler& handler) ->
         decltype(dispatch(id, msg, handler))
     {
         return dispatch(id, msg, handler);
