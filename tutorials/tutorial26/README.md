@@ -122,6 +122,22 @@ the actual message object (extends [comms::MessageBase](https://commschamp.githu
 the latter the code will attempt to invoke non-virtual member functions of the message object, such as `doRead()` instead of polymorphic
 `read()`.
 
+Another **important** aspect of the stateful message sequence support is the **necessity** to use polymorphic message dispatch.
+```cpp
+using Message =
+    tutorial26::Message<
+        ...
+        comms::option::app::Handler<ServerSession> // Polymorphic dispatch
+    >;
+```
+The dispatch also needs be **without** usage of the dispatcher.
+```cpp
+auto es = comms::processSingleWithDispatch(buf, bufLen, m_frame, *m_msg, *this);
+```
+To be able to dispatch message to handling via the dispatcher object there is a need to know both numeric message ID as well as
+index (offset) of the message type within the used [input messages tuple](include/tutorial26/input/ServerInputMessages.h) among
+other message types reporting the same ID. When the input message is pre-allocated there is no way to detect the relevant information.
+
 ## Summary
 
 - The transport framing allows deserialization of the pre-allocated message object, which allows implementation of the
@@ -129,5 +145,8 @@ stateful sequence of messages.
 - The processing functions from the [comms/process.h](https://commschamp.github.io/comms_doc/process_8h.html) wrap the
 frame function(s) invocations and allow transparent passing of the same message parameter to the frame function,
 whether it is a reference to the message object itself or a reference to a smart pointer to the message object.
+- It is necessary to use polymorphic dispatch (using `comms::option::app::Handler` option) functionality.
+- When dispatching the message object for handling, the polymorphic dispatch functionality needs to be used and
+not the dispatcher object.
 
-[Read Previous Tutorial](../tutorial25) &lt;-----------------------
+[Read Previous Tutorial](../tutorial25) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial27)
