@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="tutorial27" endian="big" nonUniqueMsgIdAllowed="true">
+    <fields>
+        <string name="Msg1Name" defaultValue="Message 1" />
+        <string name="Msg2Name" defaultValue="Message 2" />
+        <string name="Msg3Name" defaultValue="Message 3" />
+        <string name="Msg4Name" defaultValue="Message 4" />
+        <string name="Msg5Name" defaultValue="Message 5" />
+        <string name="Msg6Name" defaultValue="Message 6" />
+    </fields>
+
+    <ns name="sub1">
+        <fields>
+            <enum name="MsgId" type="uint8" semanticType="messageId">
+                <validValue name="M0" val="0" displayName="^Msg1Name" />
+            </enum>    
+        </fields>
+
+        <frame name="Frame">
+            <size name="Size">
+                <int name="SizeField" type="uint16" />
+            </size>
+            <id name="Id">
+                <int name="IdField" type="uint8" pseudo="true" />
+            </id>
+            <payload name="Data" />
+        </frame>
+    
+        <message name="Msg1" id="sub1.MsgId.M0" order="0" displayName="^Msg1Name" />
+        <message name="Msg2" id="sub1.MsgId.M0" order="1" displayName="^Msg2Name" />
+        <message name="Msg3" id="sub1.MsgId.M0" order="2" displayName="^Msg3Name" />
+    </ns>
+
+    <ns name="sub2">
+        <fields>
+            <enum name="MsgId" type="uint8" semanticType="messageId">
+                <validValue name="M4" val="1" displayName="^Msg1Name" />
+                <validValue name="M5" val="2" displayName="^Msg2Name" />
+                <validValue name="M6" val="3" displayName="^Msg3Name" />
+            </enum>    
+        </fields>
+
+        <frame name="Frame">
+            <size name="Size">
+                <int name="SizeField" type="uint16" />
+            </size>
+            <id name="Id" field="sub2.MsgId" />
+            <payload name="Data" />
+        </frame>
+    
+        <message name="Msg4" id="sub2.MsgId.M4" displayName="^Msg4Name" />
+        <message name="Msg5" id="sub2.MsgId.M5" displayName="^Msg5Name" />
+        <message name="Msg6" id="sub2.MsgId.M6" displayName="^Msg6Name" />
+    </ns>    
+</schema>
