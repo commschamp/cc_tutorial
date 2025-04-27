@@ -28,7 +28,7 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
     assert(m_msg);
     auto* prev = buf;
-    auto consumed = 0U;
+    std::size_t consumed = 0U;
     while (consumed < bufLen) {
         auto es = comms::processSingleWithDispatch(buf, bufLen, m_frame, *m_msg, *this);
         if (es != comms::ErrorStatus::Success) {
