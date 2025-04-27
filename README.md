@@ -181,6 +181,7 @@ $> nmake install
 - [tutorial24](../../tree/master/tutorials/tutorial24) - Extra validity verification of message payload.
 - [tutorial25](../../tree/master/tutorials/tutorial25) - Dealing with big protocols.
 - [tutorial26](../../tree/master/tutorials/tutorial26) - Stateful messages sequence.
+- [tutorial27](../../tree/master/tutorials/tutorial27) - Sub-protocols (using namespaces).
 
 
 # How-Tos
