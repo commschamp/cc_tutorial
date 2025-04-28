@@ -50,7 +50,7 @@ std::size_t ClientSession::processInputSub1(const std::uint8_t* buf, std::size_t
 {
     assert(m_sub1Msg);
     auto* prev = buf;
-    auto consumed = 0U;
+    std::size_t consumed = 0U;
     while (consumed < bufLen) {
         auto es = comms::processSingleWithDispatch(buf, bufLen, m_sub1Frame, *m_sub1Msg, *this);
         if (es != comms::ErrorStatus::Success) {
