@@ -195,5 +195,5 @@ $> nmake install
 - [howto8](../../tree/master/howtos/howto8) - Optional fields in message framing.
 - [howto9](../../tree/master/howtos/howto9) - Frame with checksum of the header.
 - [howto10](../../tree/master/howtos/howto10) - Dealing with "Read split is disallowed by at least one of the inner layers" static assertion.
+- [howto11](../../tree/master/howtos/howto11) - Replacing `<variant>` with sub-protocol.
 
-`

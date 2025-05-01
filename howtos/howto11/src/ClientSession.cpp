@@ -48,8 +48,9 @@ void ClientSession::handle(Msg1& msg)
     auto readIter = keyValuePropsData.begin();
 
     for (auto idx = 0U; idx < msg.field_count().value(); ++idx) {
+        auto consumed = static_cast<std::size_t>(std::distance(keyValuePropsData.begin(), readIter));
         KeyValuePropFrame::MsgPtr propPtr;
-        auto es = comms::processSingleWithDispatch(readIter, keyValuePropsData.size(), keyValueFrame, propPtr, *this);
+        auto es = comms::processSingleWithDispatch(readIter, keyValuePropsData.size() - consumed, keyValueFrame, propPtr, *this);
         if (es != comms::ErrorStatus::Success) {
             std::cerr << "ERROR: encountered unexpected property" << std::endl;
         }
