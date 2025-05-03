@@ -45,10 +45,10 @@ void ClientSession::handle(Msg1& msg)
 
     KeyValuePropFrame keyValueFrame;
     auto& keyValuePropsData = msg.field_keyValueProps().value();
-    auto readIter = keyValuePropsData.begin();
+    auto readIter = keyValuePropsData.data();
 
     for (auto idx = 0U; idx < msg.field_count().value(); ++idx) {
-        auto consumed = static_cast<std::size_t>(std::distance(keyValuePropsData.begin(), readIter));
+        auto consumed = static_cast<std::size_t>(std::distance(keyValuePropsData.data(), readIter));
         KeyValuePropFrame::MsgPtr propPtr;
         auto es = comms::processSingleWithDispatch(readIter, keyValuePropsData.size() - consumed, keyValueFrame, propPtr, *this);
         if (es != comms::ErrorStatus::Success) {
@@ -72,7 +72,7 @@ void ClientSession::handle(Msg2& msg)
 
     TlvPropFrame tlvFrame;
     auto& tlvPropsData = msg.field_tlvProps().value();
-    auto readIter = tlvPropsData.begin();
+    auto readIter = tlvPropsData.data();
 
     comms::processAllWithDispatch(readIter, tlvPropsData.size(), tlvFrame, *this);
     std::cout << std::endl;
