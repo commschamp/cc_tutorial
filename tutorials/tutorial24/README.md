@@ -59,7 +59,7 @@ can be used for messages, not only fields.
 
 The generated [Msg1](include/tutorial24/message/Msg1.h) class uses **comms::option::def::FailOnInvalid** option in the
 message class definition.
-```
+```cpp
 template <typename TMsgBase, typename TOpt = tutorial24::options::DefaultOptions>
 class Msg1 : public
     comms::MessageBase<

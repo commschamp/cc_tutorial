@@ -3,7 +3,7 @@ Stateful messages sequence.
 
 There are protocols that don't differentiate messages by their IDs. Instead, the sequence of the messages is pre-determined.
 In this particular tutorial (see [schema](dsl/schema.xml)) all the messages are the same, i.e. have the same ID and without any fields.
-```
+```xml
 <message name="Msg1" id="0" order="0" displayName="^Msg1Name" />
 <message name="Msg2" id="0" order="1" displayName="^Msg2Name" />
 <message name="Msg3" id="0" order="2" displayName="^Msg3Name" />
@@ -11,7 +11,7 @@ In this particular tutorial (see [schema](dsl/schema.xml)) all the messages are 
 Please note usage of the `nonUniqueMsgIdAllowed="true"` in the schema definition as well as **order** property for each `<message>`
 
 The frame is defined like this:
-```
+```xml
 <frame name="Frame">
     <size name="Size">
         <int name="SizeField" type="uint16" />

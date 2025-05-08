@@ -6,7 +6,7 @@ the [tutorial27](../../tutorials/tutorial27) presented sub-protocols definition.
 to define variant fields from the [tutorial4](../../tutorials/tutorial4) as sub-protocol messages.
 
 The `KeyValueProp` `<variant>` field is replaced by the sub-protocol defined in the `var1` namespace.
-```
+```xml
 <ns name="var1">
     <fields>
         <enum name="PropKey" type="uint8" semanticType="messageId">
@@ -44,7 +44,7 @@ The frame is implemented as a pair of `<id>` and `<payload>` layers. Every prope
 separate `<message>` with a single **Val** field.
 
 Similarly the `TlvProp` `<variant>` field is replaced by the sub-protocol defined in the `var2` namespace.
-```
+```xml
 <ns name="var2">
     <fields>
         <enum name="PropKey" type="uint8" semanticType="messageId">
@@ -87,7 +87,7 @@ Similarly the `TlvProp` `<variant>` field is replaced by the sub-protocol define
 The frame in this case is implemented as `<id>`, `<size>` and `<payload>` triplet.
 
 The original protocol definition was moved into the `prot` namespace.
-```
+```xml
 <ns name="prot">
     <fields>
         <string name="Msg1Name" defaultValue="Message 1" />
@@ -127,7 +127,7 @@ decode the sub-protocol messages, it just echoes back raw data.
 
 The [client](ClientSession.cpp) on the other hand has to introduce some extra smarts. The
 original `Msg1` is defined having a count prefixed list of the `KeyValueProp` `<variant>` field.
-```
+```xml
 <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
     <list name="F1" element="KeyValueProp">
         <countPrefix>
@@ -171,7 +171,7 @@ void ClientSession::handle(Msg2& msg)
 ```
 
 Another important aspect to notice is the way the protocol options are defined.
-```
+```cpp
 using ProtOpts =
     howto11::options::DataViewDefaultOptionsT<
         howto11::options::ClientDefaultOptions

@@ -164,9 +164,11 @@ struct DataViewDefaultOptionsT : public TBase
     struct frame : public TBase::frame
     {
         struct FrameLayers : public TBase::frame::FrameLayers
+        {
             using Data = std::tuple<
                 comms::option::app::OrigDataView,
                 typename TBase::frame::FrameLayers::Data
+            >;
             
         }; // struct FrameLayers
     }; // struct frame

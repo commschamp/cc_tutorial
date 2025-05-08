@@ -3,7 +3,7 @@ Sub-protocols (using namespaces)
 
 Some protocols can be divided to two or more sub-protocols with usually different framing and different messages.
 It is recommended to use different namespaces (using `<ns>` XML node) in the schema definition (see [schema](dsl/schema.xml)).
-```
+```xml
 <ns name="sub1">
     ...
 </ns>
@@ -14,7 +14,7 @@ It is recommended to use different namespaces (using `<ns>` XML node) in the sch
 ```
 When using namespaces in the schema definition, the [CommsDSL Specification](https://commschamp.github.io/commsdsl_spec) requires
 full path when referencing fields or other components even if the referenced element resides in the same namespace:
-```
+```xml
 <message name="Msg1" id="sub1.MsgId.M0" order="0" displayName="^Msg1Name" />
 ...
 <message name="Msg4" id="sub2.MsgId.M4" displayName="^Msg4Name" />

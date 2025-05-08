@@ -280,7 +280,7 @@ public:
 
 Just by using these member functions it is possible to access the fields while
 providing the index of the field.
-```
+```cpp
 auto& msgFields = msg.fields();
 auto& f1 = std::get<0>(msgFields);
 auto& f2 = std::get<1>(msgFields);
@@ -653,7 +653,7 @@ on the right side of the assignment operation to appropriate type and assigns it
 to the value specified on the left side. It eliminates the necessity to explicitly specify
 cast type. To use the `comms::cast_assign()` function it is necessary to
 include [comms/cast.h](https://commschamp.github.io/comms_doc/cast_8h.html) header file.
-```
+```cpp
 #include "comms/cast.h"
 ```
 

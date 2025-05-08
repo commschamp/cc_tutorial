@@ -102,6 +102,11 @@ struct BareMetalDefaultOptionsT : public TBase
 };
 
 using BareMetalDefaultOptions = BareMetalDefaultOptionsT<>;
+
+} // namespace options
+
+} // namespace tutorial12
+
 ```
 As was explained earlier, the `comms::option::app::InPlaceAllocation` option passed to
 the `Id` framing layer results in placement rather than dynamic memory allocation.
