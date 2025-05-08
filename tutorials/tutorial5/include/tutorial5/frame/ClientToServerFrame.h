@@ -232,7 +232,7 @@ class ClientToServerFrame : public
         ClientToServerFrameLayers<TOpt>::template Stack<TMessage, TAllMessages>;
 public:
     /// @brief Allow access to frame definition layers.
-    /// @details See definition of @b COMMS_PROTOCOL_LAYERS_NAMES macro
+    /// @details See definition of @b COMMS_FRAME_LAYERS_NAMES macro
     ///     from COMMS library for details.
     ///
     ///     The generated types and functions are:
@@ -246,7 +246,7 @@ public:
     ///         for @ref ClientToServerFrameLayers::Checksum layer.
     ///     @li @b Layer_sync type and @b layer_sync() function
     ///         for @ref ClientToServerFrameLayers::Sync layer.
-    COMMS_PROTOCOL_LAYERS_NAMES(
+    COMMS_FRAME_LAYERS_NAMES(
         data,
         id,
         size,

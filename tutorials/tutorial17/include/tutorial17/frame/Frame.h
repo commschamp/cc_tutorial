@@ -349,7 +349,7 @@ class Frame : public
         FrameLayers<TOpt>::template Stack<TMessage, TAllMessages>;
 public:
     /// @brief Allow access to frame definition layers.
-    /// @details See definition of @b COMMS_PROTOCOL_LAYERS_NAMES macro
+    /// @details See definition of @b COMMS_FRAME_LAYERS_NAMES macro
     ///     from COMMS library for details.
     ///
     ///     The generated types and functions are:
@@ -359,7 +359,7 @@ public:
     ///         for @ref FrameLayers::SizeWithFlags layer.
     ///     @li @b Layer_idWithFlags type and @b layer_idWithFlags() function
     ///         for @ref FrameLayers::IdWithFlags layer.
-    COMMS_PROTOCOL_LAYERS_NAMES(
+    COMMS_FRAME_LAYERS_NAMES(
         data,
         sizeWithFlags,
         idWithFlags

@@ -136,7 +136,7 @@ class TlvProp : public
         TlvPropLayers<TOpt>::template Stack<TMessage, TAllMessages>;
 public:
     /// @brief Allow access to frame definition layers.
-    /// @details See definition of @b COMMS_PROTOCOL_LAYERS_NAMES macro
+    /// @details See definition of @b COMMS_FRAME_LAYERS_NAMES macro
     ///     from COMMS library for details.
     ///
     ///     The generated types and functions are:
@@ -146,7 +146,7 @@ public:
     ///         for @ref TlvPropLayers::Length layer.
     ///     @li @b Layer_key type and @b layer_key() function
     ///         for @ref TlvPropLayers::Key layer.
-    COMMS_PROTOCOL_LAYERS_NAMES(
+    COMMS_FRAME_LAYERS_NAMES(
         val,
         length,
         key
