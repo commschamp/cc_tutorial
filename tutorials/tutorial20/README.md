@@ -92,7 +92,7 @@ using Version =
     >;
 ```
 When the `comms::option::def::PseudoValue` option is passed to the 
-[comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
+[comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html)
 it creates `pseudoField()` member functions to access the field stored in the private data members.
 The code above (`m_frame.layer_version().pseudoField()`) accesses it and assigns the reported 
 version.

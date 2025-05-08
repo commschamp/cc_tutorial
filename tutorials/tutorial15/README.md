@@ -67,7 +67,7 @@ option.
 **SIDE NOTE**: As was already explained in one of the previous tutorials, it's actually 
 [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html)
 class that is responsible to create message objects. It is used by the 
-[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html). 
+[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html). 
 All the options passed to the later are forwarded to the former. As the result if 
 the tuple of **input** messages doesn't contain any class with specified message ID, then the specified `GenericMessage` is 
 created and returned instead.
@@ -144,7 +144,7 @@ It contains definition of the `doName()` which results in printing "Generic Mess
   provides [comms::GenericMessage](https://commschamp.github.io/comms_doc/classcomms_1_1GenericMessage.html).
 - To support creation of the `GenericMessage` object instead of unrecognized messages the 
   [comms::option::app::SupportGenericMessage](https://commschamp.github.io/comms_doc/options_8h.html)
-  option needs to be passed the Id framing layer ([comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html))
+  option needs to be passed the Id framing layer ([comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html))
 - It is recommended to also pass `comms::option::app::OrigDataView` option to the inner field definition of 
   the `GenericMessage` to avoid unnecessary copy of the data from the **input** buffer, unless the 
   input buffer is not sequential and/or the message object outlives the input buffer.

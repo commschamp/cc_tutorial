@@ -155,7 +155,7 @@ usage of **interfaces** property is omitted.
 ----
 
 The `<value>` layer is implemented by extending 
-[comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
+[comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html)
 (see [include/tutorial16/frame/Frame.h](include/tutorial16/frame/Frame.h)).
 ```cpp
 template <typename TOpt = tutorial16::options::DefaultOptions>
@@ -258,7 +258,7 @@ function of the message object to bring the message into a consistent state, whi
 updates mode of the `F3` field.
 
 When the whole message is serialized by the **frame**, the value of `Flags` is retrieved by the 
-`<value>` ([comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html))
+`<value>` ([comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html))
 and properly written in the correct place in the frame.
 
 In addition to allowing referencing of the `<interface>` fields in the **cond** properties,
@@ -384,7 +384,7 @@ comms::ErrorStatus doRead(TIter& iter, std::size_t len)
 - When there is a common value for all the messages that resides in message framing, the 
   `<value>` framing layer needs to be used.
 - The `<value>` framing layer is implemented by extending 
-  [comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html) class.
+  [comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html) class.
 - In many cases such transport value has an influence on how message payload is decoded and/or the message is handled.
   To allow transfer of the information to message object custom `<interface>` needs to be defined.
 - The common fields defined as members of the `<interface>` are **NOT** getting serialized as part 

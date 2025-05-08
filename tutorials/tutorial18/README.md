@@ -48,7 +48,7 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
     return consumed;
 }
 ```
-The [read()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+The [read()](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ProtocolLayerBase.html)
 member function of every protocol layer receives a variadic `extraValues` last parameter, which can be 
 used to add several output parameters to the function. In this example the 
 [comms::frame::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1frame.html) is used 
@@ -102,12 +102,12 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
     return consumed;
 }
 ```
-Every [layer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html) defines
+Every [layer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ProtocolLayerBase.html) defines
 `AllFields` inner type which is `std::tuple` of all the fields starting from the layer 
 being defined and down to the bottom (`<payload>`) one. As the result the `AllFields` type of the outermost layer 
 (which is also used as a full frame) is a tuple of all the framing fields.
 
-Also every layer defines [readFieldsCached()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+Also every layer defines [readFieldsCached()](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ProtocolLayerBase.html)
 member function, which is similar to `read()` used so far, but receives the tuple of all the fields it needs to update as 
 its first parameter. After the read operation is complete the provided `transportFields` tuple will have updated values which 
 can be accessed later.
@@ -137,13 +137,13 @@ public:
 };
 ```
 Once the layer object is accesses its 
-[accessCachedField()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+[accessCachedField()](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ProtocolLayerBase.html)
 member function can be used to access appropriate field in the cached fields tuple.
 
 Note that the inner field of the `<payload>` layer is 
 [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html) of 
 raw `std::uint8_t` bytes (equivalent to being `<data>`). The options passed to 
-[comms::frame::MsgDataLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgDataLayer.html)
+[comms::frame::MsgDataLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgDataLayer.html)
 are passed to the field definition. If no special options are passed then the whole payload will be 
 **copied** to the cached field. It is highly recommended to pass 
 [comms::option::app::OridDataView](https://commschamp.github.io/comms_doc/options_8h.html) to it to 
@@ -180,10 +180,10 @@ struct DataViewDefaultOptionsT : public TBase
   [comms::frame::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1frame.html), 
   [comms::frame::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1frame.html), etc...
 - In order to get **all** the frame fields the 
-  [readFieldsCached()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+  [readFieldsCached()](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ProtocolLayerBase.html)
   member function needs to be used.
 - The frame definition allows access of various inner layers using `layer_*()` member function.
-- Every layer provides [accessCachedField()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+- Every layer provides [accessCachedField()](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ProtocolLayerBase.html)
   member function to access appropriate field from the cached tuple.
 
 [Read Previous Tutorial](../tutorial17) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial19) 

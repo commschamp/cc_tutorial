@@ -173,7 +173,7 @@ using Frame = tutorial6::frame::Frame<Message>;
 ```
 
 The much better approach would be to reuse `AllMessages` inner type defined by the
-[comms::frame::FrameLayerBase](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
+[comms::frame::FrameLayerBase](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ProtocolLayerBase.html)
 class which serves as a base type of any framing **layer**. The better code would be:
 ```cpp
 using AllMessages = Frame::AllMessages;

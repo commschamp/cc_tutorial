@@ -36,7 +36,7 @@ by the code generator.
 
 The [AlternatingSync](dsl_src/include/howto7/frame/layer/AlternatingSync.h) layer
 is implemented by extending 
-[comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html).
+[comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html).
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
 class AlternatingSync : public
@@ -55,7 +55,7 @@ class AlternatingSync : public
 **NOTE**, that the code above uses 
 [Curiously Recurring Template Pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern) 
 to provide the base
-[comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html) class with the 
+[comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html) class with the 
 actual extending layer type using **comms::option::def::ExtendingClass** option. It makes the customization 
 of the default operations possible.
 

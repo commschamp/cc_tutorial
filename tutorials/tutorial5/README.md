@@ -127,7 +127,7 @@ layer that doesn't have any inner field that represents framing value.
 <payload name="Data" />
 ```
 Such layer is implemented by extending or aliasing 
-[comms::frame::MsgDataLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgDataLayer.html).
+[comms::frame::MsgDataLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgDataLayer.html).
 ```cpp
 using Data =
     comms::frame::MsgDataLayer<
@@ -145,7 +145,7 @@ Note that the `MsgId` field is defined in the global space and is used to enumer
 with **field** property rather than defining a field as XML child element. 
 
 Such layer is implemented by extending or aliasing 
-[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html),
+[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html),
 which is responsible to read the numeric message ID and create (allocate) appropriate message object.
 ```cpp
 template <typename TMessage, typename TAllMessages>
@@ -173,7 +173,7 @@ the `ID` layer is expected to recognize and create relevant object during **read
 
 ----
 
-**SIDE NOTE**: The last template parameter passed to the [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+**SIDE NOTE**: The last template parameter passed to the [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html)
 is actually a compile time configuration parameter that can be used by the end-application to configure the
 behavior of the layer, such as replace default dynamic memory allocation of message objects with in-place allocation more 
 suitable for bare-metal development. Such compile time configuration is a subject for another a bit later tutorial.
@@ -202,7 +202,7 @@ value displayed in [CommsChampion Tools](https://github.com/commschamp/cc_tools_
 not really relevant to this tutorial.
 
 The `<size>` layer is implemented by extending or aliasing 
-[comms::frame::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html).
+[comms::frame::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgSizeLayer.html).
 ```cpp
 template <typename TMessage, typename TAllMessages>
 using Size =
@@ -242,8 +242,8 @@ usage of `<checksum>` layer as prefix to the area on which the checksum needs to
 calculated. In this case the **until** property needs to be used.
 
 The suffix `<checksum>` layer is implemented by extending or aliasing 
-[comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
-or [comms::frame::ChecksumPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumPrefixLayer.html)
+[comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html)
+or [comms::frame::ChecksumPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumPrefixLayer.html)
 depending on whether the checksum follows or precedes the data used for checksum
 calculation.
 ```cpp
@@ -267,7 +267,7 @@ needs to be used to define the synchronization value.
 </sync>
 ```
 The `<sync>` layer is implemented by extending or aliasing 
-[comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html).
+[comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html).
 ```cpp
 template <typename TMessage, typename TAllMessages>
 using Sync =
@@ -278,7 +278,7 @@ using Sync =
 ```
 Note, that there is no real need to use **validValue** and/or **failOnInvalid** properties for the definition 
 of the `SyncField` to force the read operation to fail on invalid value. The implementation of the
-[comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html)
+[comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html)
 just compares the read field with the default constructed one and fails the read operation if they are
 not equal. During write operation the layer will just invoke `write()` member function on
 the default constructed field, which will write the correct value thanks to 
@@ -315,7 +315,7 @@ public:
 };
 ```
 As the result the documentation of the last layer type 
-([comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html) 
+([comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html) 
 for the current example) can be used for reference on available framing API.
 
 The final definition of `ClientToServerFrame` frame class uses `COMMS_FRAME_LAYERS_NAMES()`
@@ -360,7 +360,7 @@ Similar situation may occur when the interface class doesn't expose polymorphic
 `length()` member function (the `comms::option::app::LengthInfoInterface` option
 has **NOT** been provided). In such case when `SIZE` value needs to be written the
 proper value cannot be retrieved (because length of message payload is not known).
-In this case the [comms::frame::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html)
+In this case the [comms::frame::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgSizeLayer.html)
 will write a dummy value and force a return of `commms::ErrorStatus::UpdateRequired`.
 After that when the `update()` is called, the layer will calculate size of the written 
 code and update previously written dummy value with the correct one.

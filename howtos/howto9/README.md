@@ -38,7 +38,7 @@ and copied to the protocol definition
 ([include/howto9/frame/layer/Checksum.h](include/howto9/frame/layer/Checksum.h)) 
 by the code generator.
 
-It extends [comms::frame::ChecksumPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumPrefixLayer.html)
+It extends [comms::frame::ChecksumPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumPrefixLayer.html)
 because the checksum field is located before the message payload.
 
 Also note the usage of 
@@ -62,10 +62,10 @@ class Checksum : public
 ```
 
 The default implementation of the checksum calculation functionality inside the 
-[comms::frame::ChecksumPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumPrefixLayer.html)
+[comms::frame::ChecksumPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumPrefixLayer.html)
 proceeds forward to the payload calculation. However, the protocol specification demands calculation of the checksum on
 the preceding framing header instead. The customization of the default behaviour is possible by overriding the 
-[comms::frame::ChecksumPrefixLayer::calculateChecksum()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumPrefixLayer.html) member function.
+[comms::frame::ChecksumPrefixLayer::calculateChecksum()](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumPrefixLayer.html) member function.
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
 class Checksum : public comms::frame::ChecksumPrefixLayer<...>

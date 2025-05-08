@@ -72,7 +72,7 @@ For this tutorial such directory is [dsl_src](dsl_src). The
 will be copied to the output directory and eventually will be available as 
 [include/tutorial14/frame/checksum/PlusOneSum.h](include/tutorial14/frame/checksum/PlusOneSum.h).
 The checksum calculation class needs to be implemented in a certain way with proper public interface. Please refer to
-the [comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html) for 
+the [comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html) for 
 details. The `PlusOneSum` class is implemented inside the required `tutorial14::frame::checksum` namespace.
 
 In addition to the custom checksum, there may be some extravagant protocols for which current out-of-the box

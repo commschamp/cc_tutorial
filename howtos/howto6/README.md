@@ -78,7 +78,7 @@ copied to the protocol definition
 by the code generator.
 
 The `Checksum` layer is implemented by extending the 
-[comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
+[comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html)
 class provided by the [COMMS Library](https://github.com/commschamp/comms), and
 customizing various operations.
 ```cpp
@@ -99,7 +99,7 @@ class Checksum : public
 **NOTE**, that the code above uses 
 [Curiously Recurring Template Pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern) 
 to provide the base
-[comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html) class with the 
+[comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html) class with the 
 actual extending layer type using **comms::option::def::ExtendingClass** option. It makes the customization 
 of the default operations possible.
 

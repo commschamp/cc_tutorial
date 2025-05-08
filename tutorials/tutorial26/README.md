@@ -29,10 +29,10 @@ Note that the field for the message ID is marked with `pseudo="true"`, i.e it is
 
 In most of the previous tutorials the messages were decoded and dispatched using the [comms::processAllWithDispatch()](https://commschamp.github.io/comms_doc/process_8h.html)
 function, which internally invoked the `read()` member function of the outermost
-[framing layer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html).
+[framing layer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgSizeLayer.html).
 The first parameter to the function can be a reference to a smart pointer (a variant of the `std::unique_ptr`) to the message object or a
 reference to the message object itself. When a smart pointer invocation is used the message object is dynamically allocated by the
-[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) framing layer. However,
+[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html) framing layer. However,
 when a reference to already allocated message object is used it cannot be changed and the processed message ID information must match
 the ID reported by the message object. The [comms::processAllWithDispatch()](https://commschamp.github.io/comms_doc/process_8h.html) function
 used in previous tutorial internally uses the reference to a smart pointer invocation variant. To be able to support stateful sequence of message
@@ -116,7 +116,7 @@ Processing input: 0 0
 Received message "Message 3"
 ```
 
-Note that the `read()` member function of a [frame](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) can
+Note that the `read()` member function of a [frame](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html) can
 receive a reference to the interface class (extends [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html)) or
 the actual message object (extends [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)). In case of
 the latter the code will attempt to invoke non-virtual member functions of the message object, such as `doRead()` instead of polymorphic
