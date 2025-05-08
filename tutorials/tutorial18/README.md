@@ -51,9 +51,9 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
 The [read()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
 member function of every protocol layer receives a variadic `extraValues` last parameter, which can be 
 used to add several output parameters to the function. In this example the 
-[comms::frame::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html) is used 
+[comms::frame::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1frame.html) is used 
 to add `msgId` local variable as an output parameter for the message numeric ID. Also the 
-[comms::frame::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html)
+[comms::frame::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1frame.html)
 is used to add `msgIdx` local variable as an output parameter for the index of the message (offset in 
 the tuple of the input messages starting from the first message sharing the same ID).
 Later down the code both `msgId` and `msgIdx` values are used to dispatch message object into the 
@@ -177,8 +177,8 @@ struct DataViewDefaultOptionsT : public TBase
 - The [COMMS Library](https://github.com/commschamp/comms) provides multiple ways to access 
   some or all of the framing fields.
 - The `read()` member function can receive and update selected output parameters via 
-  [comms::frame::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html), 
-  [comms::frame::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html), etc...
+  [comms::frame::msgId()](https://commschamp.github.io/comms_doc/namespacecomms_1_1frame.html), 
+  [comms::frame::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1frame.html), etc...
 - In order to get **all** the frame fields the 
   [readFieldsCached()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)
   member function needs to be used.

@@ -412,12 +412,12 @@ when the code is recompiled.
 - Every `<frame>` uses internal layers to specify transport fields and their 
   roles.
 - The generated C++ code of the frame(s) resides in [include/&lt;namespace&gt;/frame](include/tutorial5/frame) folder and
-  uses classes from [comms::frame](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html)
+  uses classes from [comms::frame](https://commschamp.github.io/comms_doc/namespacecomms_1_1frame.html)
   namespace to define the layers.
 - The defined framing layers wrap one another, as the result the outermost layer is used 
   to handle the whole transport framing.
 - For available frame API reference open the documentation of the 
-  [outermost layer](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html) type.
+  [outermost layer](https://commschamp.github.io/comms_doc/namespacecomms_1_1frame.html) type.
 - The polymorphic behavior of the common interface class may influence the ability of the 
   frame to perform its `write()` operation. 
 - When write operation returns [commms::ErrorStatus::UpdateRequired](https://commschamp.github.io/comms_doc/ErrorStatus_8h.html)

@@ -157,7 +157,7 @@ starting from the first message having the same numeric ID. In other word the in
 
 **SIDE NOTE**: The [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
 used by the framing is capable of returning the detected index / offset information via special extra parameters
-(see [comms::frame::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1protocol.html)). These parameters 
+(see [comms::frame::msgIndex()](https://commschamp.github.io/comms_doc/namespacecomms_1_1frame.html)). These parameters 
 are used by the processing functions from [comms/process.h](https://commschamp.github.io/comms_doc/process_8h.html) to 
 get the numeric message ID and the index (offset) information in order to perform the message dispatch. Extracting this 
 information is a bit out of scope for this tutorial and will be covered in other later one.
