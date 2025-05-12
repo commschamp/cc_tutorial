@@ -609,6 +609,16 @@ Handling of the `Msg2` inside `void ClientSession::handle(Msg2& msg)` is very si
 the `Msg1` described earlier. It uses the same `PropDispatchHelper` with call to `currentFieldExec()` to
 dispatch held property into appropriate `ClientSession::handleProp()` member function.
 
+---
+
+**SIDE NOTE**: The implementation of the `<variant>` field can be a bit heavy on the compiler. Having a
+`<variant>` field with a lot of members can cause a significant slow down of compilation times and consume
+a lot of memory during the compilation process. If it becomes a problem consider replacing a `<variant>`
+field definition with a sub-protocol (tought in the [tutorial27](../tutorial27)) as shown in the
+[howto11](../../howtos/howto11).
+
+---
+
 ## Summary
 
 - The heterogeneous fields are defined using `<variant>` XML node of

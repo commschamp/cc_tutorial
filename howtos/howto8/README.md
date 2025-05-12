@@ -63,11 +63,11 @@ and the `Flags` layer is implemented inside
 (copied by the code generator to [include/howto8/frame/layer/Flags.h](include/howto8/frame/layer/Flags.h))
 
 The [Id](dsl_src/include/howto8/frame/layer/Id.h) is implemented by extending
-and customizing [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html).
+and customizing [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html).
 ```cpp
 template<typename TField, typename TMessage, typename TAllMessages, typename TNextLayer, typename... TOptions>
 class Id : public
-    comms::protocol::MsgIdLayer<
+    comms::frame::MsgIdLayer<
         TField,
         TMessage,
         TAllMessages,
@@ -112,7 +112,7 @@ public:
 };
 ```
 **NOTE** that the inner (wrapped) layers like `Flags` can be accessed using a 
-sequence of [nextLayer()](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+sequence of [nextLayer()](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html)
 member functions invocations (`Base::nextLayer().nextLayer().nextLayer()....`). 
 In this case the `Flags` is actually the next one and only single invocation needs to be used.
 
@@ -120,18 +120,18 @@ The `Flags` layer class is also expected to provide `setFieldPreset()` and
 `isFieldPresent()` member functions.
 
 For more details on available customization of the 
-[comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html)
 please refer to 
-[Defining Custom Message ID Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
+[Defining Custom Message ID Frame Layer](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
 COMMS library tutorial page.
 
 The [Flags](dsl_src/include/howto8/frame/layer/Flags.h) is implemented by extending
 and customizing 
-[comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html).
+[comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html).
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
 class Flags : public
-    comms::protocol::TransportValueLayer<
+    comms::frame::TransportValueLayer<
         TField,
         0, // Index of the "flags" extra transport fields in the interface
         TNextLayer,
@@ -211,9 +211,9 @@ The write operation is performed normally due to the mode preparation is done in
 the `prepareFieldForWrite()`.
 
 For more details on available customization of the 
-[comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
+[comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html)
 please refer to 
-[Defining Custom Transport Value Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_transport_value_layer.html)
+[Defining Custom Transport Value Frame Layer](https://commschamp.github.io/comms_doc/page_custom_transport_value_layer.html)
 COMMS library tutorial page.
 
 

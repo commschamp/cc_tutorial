@@ -37,7 +37,7 @@ consequence the limitations of the latter.
 The [tutorial5](../../tutorials/tutorial5) explains that the 
 [COMMS Library](https://github.com/commschamp/comms) implements framing
 by they "layer" classes wrapping one another, while the 
-[comms::protocol::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
+[comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html)
 (defined using [&lt;checksum&gt;](https://commschamp.github.io/commsdsl_spec/#frames-checksum) in the schema)
 wraps all the layers, checksum on which needs to be implemented. In this particular case it is only the
 `PAYLOAD`. So the wrapping looks something like that:
@@ -46,7 +46,7 @@ SYNC( SIZE( FLAGS( ID( CHECKSUM( PAYLOAD ) ) ) ) )
 ```
 Now, let's take a closer look at the `FLAGS` layer. The [&lt;value&gt;](https://commschamp.github.io/commsdsl_spec/#frames-value)
 definition is implemented using 
-[comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
+[comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html)
 class, which is expected to re-assign the read field's value to the message object. However, in this particular scenario
 the message object hasn't been created yet, because the `ID` information hasn't been processed yet. To help with 
 such cases the [COMMS Library](https://github.com/commschamp/comms) has compile-time
@@ -54,7 +54,7 @@ meta-programming logic to recognize the scenario and automatically forces splitt
 "from the payload". When such split occurs, the relevant flags field is re-assigned to message object right before the read 
 operation is forwarded to process the message payload.
 
-The [comms::protocol::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
+The [comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html)
 (implements [&lt;checksum&gt;](https://commschamp.github.io/commsdsl_spec/#frames-checksum)) on the other hand
 disallows such split of read operation to "until" and "from" payload, because in order to finalize its read operation the
 payload processing needs to be complete.
@@ -84,7 +84,7 @@ serialized. The definition of the `PseudoFlags` in the
 [generated code](include/howto10/frame/Frame.h) uses `comms::option::def::PseudoValue` option to ensure that.
 ```cpp
 using PseudoFlags =
-    comms::protocol::TransportValueLayer<
+    comms::frame::TransportValueLayer<
         howto10::field::Flags<TOpt, comms::option::def::EmptySerialization>,
         0U,
         Checksum,
@@ -98,11 +98,11 @@ The **real** `Flags` field needs to be customized beyond the current capabilitie
 ```
 The actual code, defined in [dsl_src/include/howto10/frame/layer/Flags.h](dsl_src/include/howto10/frame/layer/Flags.h) and
 copied to [include/howto10/frame/layer/Flags.h](include/howto10/frame/layer/Flags.h) by the code generator, extends the
-[comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html).
+[comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html).
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
 class Flags : public
-    comms::protocol::TransportValueLayer<
+    comms::frame::TransportValueLayer<
         TField,
         Interface<>::TransportFieldIdx_flags,
         TNextLayer,

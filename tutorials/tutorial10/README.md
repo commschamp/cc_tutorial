@@ -127,7 +127,7 @@ Note that passing multiple options are supported via bundling them in `std::tupl
 
 **SIDE NOTE**: All the options inside [include/&lt;namespace&gt;/options](include/tutorial10/options)
 folder are implemented to allow their combinations. For example:
-```
+```cpp
 using BareMetalServerOptions = 
     tutorial10::options::BareMetalDefaultOptionsT<
         tutorial10::options::ServerDefaultOptions
@@ -205,6 +205,7 @@ protected:
     {
         return comms::ErrorStatus::NotSupported;
     }
+};    
 ```
 In case `comms::option::app::NoWriteImpl` is passed to the 
 [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) when

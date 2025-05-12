@@ -2,7 +2,7 @@
 
 #include <limits>
 
-#include "comms/protocol/MsgIdLayer.h"
+#include "comms/frame/MsgIdLayer.h"
 #include "comms/options.h"
 
 namespace howto8
@@ -17,7 +17,7 @@ namespace layer
 /// @brief Customizing the MsgIdLayer
 template<typename TField, typename TMessage, typename TAllMessages, typename TNextLayer, typename... TOptions>
 class Id : public
-    comms::protocol::MsgIdLayer<
+    comms::frame::MsgIdLayer<
         TField,
         TMessage,
         TAllMessages,
@@ -28,7 +28,7 @@ class Id : public
 {
     // Repeat base type
     using Base = 
-        comms::protocol::MsgIdLayer<
+        comms::frame::MsgIdLayer<
             TField,
             TMessage,
             TAllMessages,

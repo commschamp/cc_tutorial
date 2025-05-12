@@ -75,7 +75,7 @@ void ServerSession::handle(ConnectMsg& msg)
 }
 ```
 **REMINDER**: The [frame](include/tutorial20/frame/Frame.h) definition uses 
-`COMMS_PROTOCOL_LAYERS_NAMES()` macro which assigns names to the used framing layers.
+`COMMS_FRAME_LAYERS_NAMES()` macro which assigns names to the used framing layers.
 The macro also generates `layer_*()` member functions for all the provided names to 
 access relevant layer. As the result `m_frame.layer_version()` provides an access to the
 `Version` layer.
@@ -84,7 +84,7 @@ The pseudo `<value>` layer is defined with usage of
 [comms::option::def::PseudoValue](https://commschamp.github.io/comms_doc/options_8h.html) option.
 ```cpp
 using Version =
-    comms::protocol::TransportValueLayer<
+    comms::frame::TransportValueLayer<
         tutorial20::field::Version<TOpt, comms::option::def::EmptySerialization>,
         0U,
         Data,
@@ -92,7 +92,7 @@ using Version =
     >;
 ```
 When the `comms::option::def::PseudoValue` option is passed to the 
-[comms::protocol::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1TransportValueLayer.html)
+[comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html)
 it creates `pseudoField()` member functions to access the field stored in the private data members.
 The code above (`m_frame.layer_version().pseudoField()`) accesses it and assigns the reported 
 version.
@@ -101,20 +101,6 @@ As the result, for all the messages that follow, the `Version` member field
 (in the `<interface>`) will be assigned the right value before
 the `read()` operation is forwarded to the `<payload>` layer, which in turn invokes `read()` operation of 
 the message object. 
-
-----
-
-**SIDE NOTE**: If [CommsChampion Tools](https://github.com/commschamp/cc_tools_qt/wiki/How-to-Use-CommsChampion-Tools)
-are intended to be used for the protocol visualization and/or debugging, it is better to hide the `Version` field 
-inside the transport framing from being displayed altogether (because it's not really there). In such case it is
-recommended to slightly update the definition of the `<value>` layer above into the following:
-```xml
-<value name="Version" interfaceFieldName="Version" pseudo="true">
-    <ref field="Version" displayHidden="true" />
-</value>
-```
-
----
 
 Note that in this tutorial the client is also compiled to have the default version **5** (the default state of all the 
 fields in all the messages is valid for version **5**). In order to emulate version **4** client the 

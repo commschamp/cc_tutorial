@@ -1,6 +1,6 @@
 #pragma once
 
-#include "comms/protocol/MsgIdLayer.h"
+#include "comms/frame/MsgIdLayer.h"
 #include "comms/options.h"
 
 namespace tutorial17
@@ -15,7 +15,7 @@ namespace layer
 /// @brief Customizing the Id layer
 template<typename TField, typename TMessage, typename TAllMessages, typename TNextLayer, typename... TOptions>
 class IdWithFlags : public
-    comms::protocol::MsgIdLayer<
+    comms::frame::MsgIdLayer<
         TField,
         TMessage,
         TAllMessages,
@@ -26,7 +26,7 @@ class IdWithFlags : public
 {
     // Repeat base type
     using Base = 
-        comms::protocol::MsgIdLayer<
+        comms::frame::MsgIdLayer<
             TField,
             TMessage,
             TAllMessages,

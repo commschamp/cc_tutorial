@@ -2,7 +2,7 @@
 
 #include <limits>
 
-#include "comms/protocol/SyncPrefixLayer.h"
+#include "comms/frame/SyncPrefixLayer.h"
 #include "comms/options.h"
 
 namespace howto7
@@ -17,7 +17,7 @@ namespace layer
 /// @brief Customizing the SyncPrefixLayer
 template<typename TField, typename TNextLayer, typename... TOptions>
 class AlternatingSync : public
-    comms::protocol::SyncPrefixLayer<
+    comms::frame::SyncPrefixLayer<
         TField,
         TNextLayer,
         TOptions...,
@@ -26,7 +26,7 @@ class AlternatingSync : public
 {
     // Repeat base type
     using Base = 
-        comms::protocol::SyncPrefixLayer<
+        comms::frame::SyncPrefixLayer<
             TField,
             TNextLayer,
             TOptions...,

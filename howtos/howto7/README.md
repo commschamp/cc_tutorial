@@ -36,11 +36,11 @@ by the code generator.
 
 The [AlternatingSync](dsl_src/include/howto7/frame/layer/AlternatingSync.h) layer
 is implemented by extending 
-[comms::protocol::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html).
+[comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html).
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
 class AlternatingSync : public
-    comms::protocol::SyncPrefixLayer<
+    comms::frame::SyncPrefixLayer<
         TField,
         TNextLayer,
         TOptions...,
@@ -55,7 +55,7 @@ class AlternatingSync : public
 **NOTE**, that the code above uses 
 [Curiously Recurring Template Pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern) 
 to provide the base
-[comms::protocol::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1SyncPrefixLayer.html) class with the 
+[comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html) class with the 
 actual extending layer type using **comms::option::def::ExtendingClass** option. It makes the customization 
 of the default operations possible.
 
@@ -63,7 +63,7 @@ In order to support alternating synchronization prefix the following member func
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
 class AlternatingSync : public
-    comms::protocol::SyncPrefixLayer<...>
+    comms::frame::SyncPrefixLayer<...>
 {
 public:
     // Repeat types defined in the base class (not visible by default)
@@ -90,7 +90,7 @@ In case it needs to update any private member data, the latter must be declared 
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
 class AlternatingSync : public
-    comms::protocol::SyncPrefixLayer<...>
+    comms::frame::SyncPrefixLayer<...>
 {
     ...
     unsigned m_inputCount = 0;
@@ -98,5 +98,5 @@ class AlternatingSync : public
 };
 ```
 The **COMMS** library tutorial contains a separate page
-called [Defining Custom Sync Prefix Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_sync_prefix_layer.html)
+called [Defining Custom Sync Prefix Frame Layer](https://commschamp.github.io/comms_doc/page_custom_sync_prefix_layer.html)
 with a bit more details on the available customization.

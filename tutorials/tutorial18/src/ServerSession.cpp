@@ -36,8 +36,8 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
                 msg, 
                 iter, 
                 remLen, 
-                comms::protocol::msgId(msgId),
-                comms::protocol::msgIndex(msgIdx));
+                comms::frame::msgId(msgId),
+                comms::frame::msgIndex(msgIdx));
 
         if (es == comms::ErrorStatus::NotEnoughData) {
             // Some more data needs to be received

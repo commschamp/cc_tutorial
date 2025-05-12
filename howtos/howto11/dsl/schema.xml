@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema name="howto11" endian="big">
+    <ns name="var1">
+        <fields>
+            <enum name="PropKey" type="uint8" semanticType="messageId">
+                <validValue name="K1" val="0" />
+                <validValue name="K2" val="2" />
+                <validValue name="K3" val="5" />
+            </enum>        
+        </fields>
+
+        <interface name="Interface" />
+
+        <frame name="KeyValueProp">
+            <id name="Key" field="var1.PropKey" />
+            <payload name="Val" />
+        </frame>
+
+        <message name="Prop1" id="var1.PropKey.K1">
+            <int name="Val" type="uint16" />
+        </message>     
+
+        <message name="Prop2" id="var1.PropKey.K2">
+            <float name="Val" type="float" defaultValue="nan" />
+        </message>   
+
+        <message name="Prop3" id="var1.PropKey.K3">
+            <string name="Val">
+                <lengthPrefix>
+                    <int name="Length" type="uint8" />
+                </lengthPrefix>
+            </string>
+        </message> 
+    </ns>
+
+    <ns name="var2">
+        <fields>
+            <enum name="PropKey" type="uint8" semanticType="messageId">
+                <validValue name="K4" val="10" />
+                <validValue name="K5" val="15" />
+                <validValue name="K6" val="25" />
+                <validValue name="K7" val="30" />
+            </enum>        
+        </fields>
+
+        <interface name="Interface" />
+
+        <frame name="TlvProp">
+            <id name="Key" field="var2.PropKey" />
+            <size name="Length">
+                <int name="LengthField" type="uint8"/>
+            </size>
+            <payload name="Val" />
+        </frame>  
+
+        <interface name="Message" />
+
+        <message name="Prop4" id="var2.PropKey.K4">
+            <int name="Val" type="uint32" />
+        </message>
+
+        <message name="Prop5" id="var2.PropKey.K5">
+            <float name="Val" type="double" defaultValue="inf" />
+        </message>     
+
+        <message name="Prop6" id="var2.PropKey.K6">
+            <string name="Val" />
+        </message> 
+
+        <message name="Prop7" id="var2.PropKey.K7">
+            <int name="Val" type="uint64" availableLengthLimit="true" />
+        </message>        
+    </ns>
+
+    <ns name="prot">
+        <fields>
+            <string name="Msg1Name" defaultValue="Message 1" />
+            <string name="Msg2Name" defaultValue="Message 2" />
+
+            <enum name="MsgId" type="uint8" semanticType="messageId">
+                <validValue name="M1" val="1" displayName="^prot.Msg1Name" />
+                <validValue name="M2" val="2" displayName="^prot.Msg2Name" />
+            </enum>
+        </fields>
+
+        <interface name="Message" />
+
+        <frame name="Frame">
+            <size name="Size">
+                <int name="SizeField" type="uint16" />
+            </size>
+            <id name="ID" field="prot.MsgId" />
+            <payload name="Data" />
+        </frame>
+
+        <message name="Msg1" id="prot.MsgId.M1" displayName="^prot.Msg1Name">
+            <int name="Count" type="uint8" />
+            <data name="KeyValueProps" />
+        </message>       
+
+        <message name="Msg2" id="prot.MsgId.M2" displayName="^prot.Msg2Name">
+            <data name="TlvProps" />
+        </message>          
+    </ns>
+</schema>

@@ -85,7 +85,7 @@ is actually implemented.
 ```cpp
 template<typename TField, typename TMessage, typename TAllMessages, typename TNextLayer, typename... TOptions>
 class IdWithFlags : public
-    comms::protocol::MsgIdLayer<
+    comms::frame::MsgIdLayer<
         TField,
         TMessage,
         TAllMessages,
@@ -97,9 +97,9 @@ class IdWithFlags : public
     ...
 };
 ```
-It extends [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html).
+It extends [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html).
 The latter supports its extension and customization to support cases like in this tutorial. It is
-properly described in [Defining Custom Message ID Protocol Stack Layer ](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
+properly described in [Defining Custom Message ID Frame Layer](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
 tutorial page of the [COMMS Library](https://github.com/commschamp/comms) documentation.
 
 Please note usage of [comms::option::def::ExtendingClass](https://commschamp.github.io/comms_doc/options_8h.html) option 
@@ -112,12 +112,12 @@ C++ idiom. The extending class is expected to override the following member func
 - `prepareFieldForWrite()` - update the field's value (assign provided message ID and other field members) before it is written.
 
 Please refer to the API documentation of the 
-[comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html)
 class for the full information on the functions' signatures.
 ```cpp
 template<typename TField, typename TMessage, typename TAllMessages, typename TNextLayer, typename... TOptions>
 class IdWithFlags : public
-    comms::protocol::MsgIdLayer<...>
+    comms::frame::MsgIdLayer<...>
 {
     ...
 public:
@@ -151,12 +151,12 @@ public:
 
 The [include/tutorial17/frame/layer/SizeWithFlags.h](include/tutorial17/frame/layer/SizeWithFlags.h)
 is implemented in very similar way, but extending 
-[comms::protocol::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html).
+[comms::frame::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgSizeLayer.html).
 ```cpp
 /// @brief Customizing the size layer
 template<typename TField, typename TNextLayer, typename... TOptions>
 class SizeWithFlags : public
-    comms::protocol::MsgSizeLayer<
+    comms::frame::MsgSizeLayer<
         TField,
         TNextLayer,
         TOptions...,
@@ -165,7 +165,7 @@ class SizeWithFlags : public
 {
 }
 ```
-The [Defining Custom Message Size Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
+The [Defining Custom Message Size Frame Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
 tutorial page of the [COMMS Library](https://github.com/commschamp/comms) documentation provides a lot 
 of details on how define such layer.
 
@@ -179,12 +179,12 @@ The extending class is expected to override the following member functions:
 - `prepareFieldForWrite()` - update the field's value (assign remaining message size and other field members) before it is written.
 
 Please refer to the API documentation of the 
-[comms::protocol::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html)
+[comms::frame::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgSizeLayer.html)
 class for the full information on the functions' signatures.
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
 class SizeWithFlags : public
-    comms::protocol::MsgSizeLayer<
+    comms::frame::MsgSizeLayer<
         TField,
         TNextLayer,
         TOptions...,
@@ -265,12 +265,12 @@ called to properly set the size and the flags.
 - Custom layers are defined using `<custom>` XML node.
 - The layer that replaces `<id>` needs to set **semanticLayerType** property to **id**.
 - To implement custom replacement of `<id>`, the custom layer code may extend 
-  [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
-  (see [Defining Custom Message ID Protocol Stack Layer ](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
+  [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html)
+  (see [Defining Custom Message ID Frame Layer](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
   for details).
 - To implement custom replacement of `<size>`, the custom layer code may extend 
-  [comms::protocol::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgSizeLayer.html)
-  (see [Defining Custom Message Size Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
+  [comms::frame::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgSizeLayer.html)
+  (see [Defining Custom Message Size Frame Layer](https://commschamp.github.io/comms_doc/page_custom_size_layer.html)
   for details).
 
 

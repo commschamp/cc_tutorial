@@ -2,7 +2,7 @@
 
 #include <limits>
 
-#include "comms/protocol/TransportValueLayer.h"
+#include "comms/frame/TransportValueLayer.h"
 #include "comms/options.h"
 
 namespace howto5
@@ -17,7 +17,7 @@ namespace layer
 /// @brief Customizing the TransportValueLayer
 template<typename TField, typename TNextLayer, typename... TOptions>
 class VersionWithFlags : public
-    comms::protocol::TransportValueLayer<
+    comms::frame::TransportValueLayer<
         TField,
         std::numeric_limits<std::size_t>::max(), // Not used, the value doesn't matter
         TNextLayer,
@@ -27,7 +27,7 @@ class VersionWithFlags : public
 {
     // Repeat base type
     using Base = 
-        comms::protocol::TransportValueLayer<
+        comms::frame::TransportValueLayer<
             TField,
             std::numeric_limits<std::size_t>::max(),
             TNextLayer,

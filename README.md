@@ -127,10 +127,8 @@ in configuration of the [github actions](.github/workflows/actions_build.yml).
 **NOTE**, that [Boost](https://www.boost.org) libraries are also required.
 In case Boost libraries are not installed in expected default location
 (mostly happens on Windows systems), use variables described in 
-[CMake documentation](https://cmake.org/cmake/help/v3.8/module/FindBoost.html) 
+[FindBoost](https://cmake.org/cmake/help/latest/module/FindBoost.html) documentation
 to help CMake find required libraries and headers.
-It is recommended to use `-DBoost_USE_STATIC_LIBS=ON` parameter to force
-linkage with static Boost libraries.
 
 ### Linux Build
 ```
@@ -182,6 +180,8 @@ $> nmake install
 - [tutorial23](../../tree/master/tutorials/tutorial23) - Reusing definitions from other schemas.
 - [tutorial24](../../tree/master/tutorials/tutorial24) - Extra validity verification of message payload.
 - [tutorial25](../../tree/master/tutorials/tutorial25) - Dealing with big protocols.
+- [tutorial26](../../tree/master/tutorials/tutorial26) - Stateful messages sequence.
+- [tutorial27](../../tree/master/tutorials/tutorial27) - Sub-protocols (using namespaces).
 
 
 # How-Tos
@@ -195,5 +195,5 @@ $> nmake install
 - [howto8](../../tree/master/howtos/howto8) - Optional fields in message framing.
 - [howto9](../../tree/master/howtos/howto9) - Frame with checksum of the header.
 - [howto10](../../tree/master/howtos/howto10) - Dealing with "Read split is disallowed by at least one of the inner layers" static assertion.
+- [howto11](../../tree/master/howtos/howto11) - Replacing `<variant>` with sub-protocol.
 
-`

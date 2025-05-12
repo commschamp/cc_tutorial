@@ -50,22 +50,22 @@ may be created. To avoid that there is a need to request "static-binary-search" 
 process as well. In order to understand how to do it there is a need to dive a little bit into the 
 [COMMS Library](https://github.com/commschamp/comms) internals.
 
-The framing uses [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+The framing uses [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html)
 which is responsible to read received numeric message ID and create appropriate message object.
 In order to create such object the 
-[comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html)
+[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html)
 contains [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html) in its
 private data members. The 
 contained [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html)
 can be configured to use appropriate dispatch logic via its options. The relevant options are:
 `comms::option::app::ForceDispatchPolymorphic`, `comms::option::app::ForceDispatchStaticBinSearch`, or 
 `comms::option::app::ForceDispatchLinearSwitch`. The 
-[comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) 
+[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html) 
 has its own supported options which it processes. The ones it doesn't expect are passed to the 
 [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html).
 It means in order to avoid creation of virtual functions inside 
 [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html) the
-[comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) 
+[comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html) 
 needs to receive `comms::option::app::ForceDispatchStaticBinSearch` option.
 
 The used `Frame` inside the [include/tutorial11/frame/Frame.h](include/tutorial11/frame/Frame.h) is defined
@@ -78,7 +78,7 @@ struct FrameLayers
     /// @brief Definition of layer "Id".
     template <typename TMessage, typename TAllMessages>
     using Id =
-        comms::protocol::MsgIdLayer<
+        comms::frame::MsgIdLayer<
             ...,
             typename TOpt::frame::FrameLayers::Id
         >;
@@ -192,7 +192,7 @@ private:
 Another curious thing to notice is a lack of virtual destructor for the common message interface 
 class (due to the lack of any polymorphic behaviour). During the `read()` operation the frame 
 dynamically allocates proper message object and holds it by the `std::unique_ptr` to the 
-**common message interface** class (see [Frame::MsgPtr](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ProtocolLayerBase.html)). 
+**common message interface** class (see [Frame::MsgPtr](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ProtocolLayerBase.html)). 
 After reading these statements any experienced C++ developer should scream about 
 incorrect message destruction and potential memory leaks. **HOWEVER**, this is not the case
 with the [COMMS Library](https://github.com/commschamp/comms). It 
@@ -319,11 +319,11 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
   to the common message interface class, but with a custom deleter which insures
   correct destruction and de-allocation of the object.
 - The framing layer responsible for allocation of the message object is 
-  [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html), which
+  [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html), which
   uses [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html) in its 
   private data members to allocate appropriate message object when the ID value is known.
 - The message allocation options passed to the 
-  [comms::protocol::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1MsgIdLayer.html) are
+  [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html) are
   also forwarded to [comms::MsgFactory](https://commschamp.github.io/comms_doc/classcomms_1_1MsgFactory.html). They
   can be used to force a particular dispatch policy for mapping numeric message ID into the message type.
 - In order to forcefully avoid generation on polymorphic dispatch table inside 

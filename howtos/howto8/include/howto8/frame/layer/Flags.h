@@ -2,7 +2,7 @@
 
 #include <limits>
 
-#include "comms/protocol/TransportValueLayer.h"
+#include "comms/frame/TransportValueLayer.h"
 #include "comms/options.h"
 
 namespace howto8
@@ -17,7 +17,7 @@ namespace layer
 /// @brief Customizing the TransportValueLayer
 template<typename TField, typename TNextLayer, typename... TOptions>
 class Flags : public
-    comms::protocol::TransportValueLayer<
+    comms::frame::TransportValueLayer<
         TField,
         0, // Index of the "flags" extra transport fields in the interface
         TNextLayer,
@@ -27,7 +27,7 @@ class Flags : public
 {
     // Repeat base type
     using Base = 
-        comms::protocol::TransportValueLayer<
+        comms::frame::TransportValueLayer<
             TField,
             0,
             TNextLayer,

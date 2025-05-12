@@ -39,7 +39,7 @@ and communicated to other interested parties (like `CHECKSUM` layer) via message
 ```
 
 Before proceeding to the actual `<frame>` definition explanation please take a closer look at the
-[Protocol Stack Definition Tutorial](https://commschamp.github.io/comms_doc/page_prot_stack_tutorial.html)
+[Frame Definition Tutorial](https://commschamp.github.io/comms_doc/page_frame_tutorial.html)
 page from the [COMMS Library](https://github.com/commschamp/comms) documentation.
 
 It explains that the checksum layer class needs to wrap all the other layers checksum on which needs to be
@@ -78,15 +78,15 @@ copied to the protocol definition
 by the code generator.
 
 The `Checksum` layer is implemented by extending the 
-[comms::protocol::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html)
+[comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html)
 class provided by the [COMMS Library](https://github.com/commschamp/comms), and
 customizing various operations.
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
 class Checksum : public
-    comms::protocol::ChecksumLayer<
+    comms::frame::ChecksumLayer<
         TField,
-        comms::protocol::checksum::Crc_32, // Not really used, but the parameter needs to be populated
+        comms::frame::checksum::Crc_32, // Not really used, but the parameter needs to be populated
         TNextLayer,
         TOptions...,
         comms::option::def::ExtendingClass<Checksum<TField, TNextLayer, TOptions...> >
@@ -99,7 +99,7 @@ class Checksum : public
 **NOTE**, that the code above uses 
 [Curiously Recurring Template Pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern) 
 to provide the base
-[comms::protocol::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1protocol_1_1ChecksumLayer.html) class with the 
+[comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html) class with the 
 actual extending layer type using **comms::option::def::ExtendingClass** option. It makes the customization 
 of the default operations possible.
 
@@ -107,7 +107,7 @@ In order to support different checksum algorithms the following default operatio
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
 class Checksum : public
-    comms::protocol::ChecksumLayer<...>
+    comms::frame::ChecksumLayer<...>
 {
 public:
 
@@ -151,7 +151,7 @@ In cases where the checksum length remains the same, but different algorithms ar
 default implement of the **doReadField()**, **doWriteField()** and **doFieldLength()** becomes non necessary.
 
 The **COMMS** library tutorial contains a separate page
-called [Defining Custom Checksum Protocol Stack Layer](https://commschamp.github.io/comms_doc/page_custom_checksum_layer.html)
+called [Defining Custom Checksum Frame Layer](https://commschamp.github.io/comms_doc/page_custom_checksum_layer.html)
 with a bit more details on the available customization.
 
 Let's also take a look how the [client](src/ClientSession.cpp) prepares message to be sent:
