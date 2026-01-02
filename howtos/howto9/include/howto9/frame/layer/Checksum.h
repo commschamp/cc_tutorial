@@ -30,7 +30,7 @@ class Checksum : public
         comms::frame::checksum::Crc_16, 
         TNextLayer,
         TOptions...,
-        comms::option::def::ChecksumLayerVerifyBeforeRead,
+        comms::option::def::FrameLayerVerifyBeforeRead,
         comms::option::def::ExtendingClass<Checksum<TField, TNextLayer, TOptions...> >
     >
 {
@@ -41,7 +41,7 @@ class Checksum : public
             comms::frame::checksum::Crc_16,
             TNextLayer,
             TOptions...,
-            comms::option::def::ChecksumLayerVerifyBeforeRead,
+            comms::option::def::FrameLayerVerifyBeforeRead,
             comms::option::def::ExtendingClass<Checksum<TField, TNextLayer, TOptions...> >
         >;
 

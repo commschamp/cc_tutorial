@@ -42,7 +42,7 @@ It extends [comms::frame::ChecksumPrefixLayer](https://commschamp.github.io/comm
 because the checksum field is located before the message payload.
 
 Also note the usage of 
-[comms::option::def::ChecksumLayerVerifyBeforeRead](https://commschamp.github.io/comms_doc/structcomms_1_1option_1_1def_1_1ChecksumLayerVerifyBeforeRead.html) 
+[comms::option::def::FrameLayerVerifyBeforeRead](https://commschamp.github.io/comms_doc/structcomms_1_1option_1_1def_1_1FrameLayerVerifyBeforeRead.html) 
 option to the class definition. It insures that 
 the checksum is actually calculated and compared to the expected value **before** proceeding to reading the payload.
 ```cpp
@@ -53,7 +53,7 @@ class Checksum : public
         comms::frame::checksum::Crc_16, 
         TNextLayer,
         TOptions...,
-        comms::option::def::ChecksumLayerVerifyBeforeRead,
+        comms::option::def::FrameLayerVerifyBeforeRead,
         comms::option::def::ExtendingClass<Checksum<TField, TNextLayer, TOptions...> >
     >
 {
