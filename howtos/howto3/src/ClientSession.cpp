@@ -11,29 +11,48 @@
 namespace cc_tutorial
 {
 
-void ClientSession::handle(Msg1& msg)
+void ClientSession::handle(Prot1PseudoMsg& msg)
+{
+    std::cout << "Received message \"" << msg.doName() << '\n';
+
+    MsgBuf prot2ProcessBuf;
+    dropEscapes(msg.field_data().value().data(), msg.field_data().value().size(), prot2ProcessBuf);
+
+    std::cout << "post-processed input: " << std::hex;
+    std::copy(prot2ProcessBuf.begin(), prot2ProcessBuf.end(), std::ostream_iterator<unsigned>(std::cout, " "));
+    std::cout << std::dec << std::endl;
+
+    comms::processAllWithDispatch(prot2ProcessBuf.data(), prot2ProcessBuf.size(), m_prot2Frame, *this);
+}
+
+void ClientSession::handle(Prot1Interface& msg)
+{
+    std::cerr << "ERROR: Received unexpected PROT1 message \"" << msg.name() << " with ID=" << (unsigned)msg.getId() << std::endl;
+}
+
+void ClientSession::handle(Prot2Msg1& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
     printString(msg.field_f1());
     doNextStage();
 }
 
-void ClientSession::handle(Msg2& msg)
+void ClientSession::handle(Prot2Msg2& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
     printDataField(msg.field_f1());
 }
 
-void ClientSession::handle(Msg3& msg)
+void ClientSession::handle(Prot2Msg3& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
     printIntField(msg.field_f1());
     doNextStage();
 }
 
-void ClientSession::handle(Message& msg)
+void ClientSession::handle(Prot2Interface& msg)
 {
-    std::cerr << "ERROR: Received unexpected message \"" << msg.name() << " with ID=" << (unsigned)msg.getId() << std::endl;
+    std::cerr << "ERROR: Received unexpected PROT2 message \"" << msg.name() << " with ID=" << (unsigned)msg.getId() << std::endl;
 }
 
 bool ClientSession::startImpl()
@@ -48,42 +67,23 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
     std::copy_n(buf, bufLen, std::ostream_iterator<unsigned>(std::cout, " "));
     std::cout << std::dec << std::endl;
 
-    // Process reported input, create relevant message objects and
-    // dispatch all the created messages
-    // to this object for handling (appropriate handle() member function will be called)
-
-    std::size_t consumed = 0;
-    while (true) {
-        MsgBuf msgBuf;
-        auto consumedTmp = preProcessInput(buf + consumed, bufLen - consumed, msgBuf);
-
-        if (consumedTmp == 0) {
-            // Empty buffer or incomplete message remaining
-            break;
-        }
-
-        consumed += consumedTmp;
-
-        if (!msgBuf.empty()) {
-            comms::processAllWithDispatch(&msgBuf[0], msgBuf.size(), m_frame, *this);
-        }
-    }
-
-    return consumed;
+    return comms::processAllWithDispatch(buf, bufLen, m_prot1Frame, *this);
 }
 
-void ClientSession::writeMessage(const Message& msg, MsgBuf& output)
+void ClientSession::writeMessage(const Prot2Interface& msg, MsgBuf& output)
 {
+    MsgBuf outputTmp;
+
     // Serialize message into the buffer (including framing)
     // The serialization uses polymorphic write functionality.
-    auto writeIter = std::back_inserter(output);
+    auto writeIter = std::back_inserter(outputTmp);
 
     // The frame will use polymorphic message ID retrieval to
-    // prefix message payload with message ID
-    auto es = m_frame.write(msg, writeIter, output.max_size());
+    // prot1fix message payload with message ID
+    auto es = m_prot2Frame.write(msg, writeIter, outputTmp.max_size());
     if (es == comms::ErrorStatus::UpdateRequired) {
-        auto updateIter = &output[0];
-        es = m_frame.update(msg, updateIter, output.size());
+        auto updateIter = &outputTmp[0];
+        es = m_prot2Frame.update(msg, updateIter, outputTmp.size());
     }
 
     if (es != comms::ErrorStatus::Success) {
@@ -92,7 +92,24 @@ void ClientSession::writeMessage(const Message& msg, MsgBuf& output)
     }    
 
     // Introduce special characters
-    postProcessOutput(output);
+    addEscapes(outputTmp);
+
+    Prot1PseudoMsg pseudoMsg;
+    comms::util::assign(pseudoMsg.field_data().value(), outputTmp.begin(), outputTmp.end());
+
+    auto finalWriteIter = std::back_inserter(output);
+
+    auto sizeBeforeWrite = output.size();
+    es = m_prot1Frame.write(pseudoMsg, finalWriteIter, output.max_size());
+    if (es == comms::ErrorStatus::UpdateRequired) {
+        auto updateIter = &output[sizeBeforeWrite];
+        es = m_prot1Frame.update(pseudoMsg, updateIter, output.size() - sizeBeforeWrite);
+    }
+
+    if (es != comms::ErrorStatus::Success) {
+        assert(!"Write operation failed unexpectedly");
+        return;
+    }       
 }
 
 void ClientSession::doNextStage()
@@ -120,7 +137,7 @@ void ClientSession::doNextStage()
     using NextSendFunc = void (ClientSession::*)();
     static const NextSendFunc Map[] = {
         /* CommsStage_Msg1 */ &ClientSession::sendMsg1,
-        /* CommsStage_Msg2Msg3 */ &ClientSession::sendMsg2Msg3,
+        /* CommsStage_Msg2 */ &ClientSession::sendMsg2Msg3,
     };
     static const std::size_t MapSize = std::extent<decltype(Map)>::value;
     static_assert(MapSize == CommsStage_NumOfValues, "Invalid Map");
@@ -132,12 +149,10 @@ void ClientSession::doNextStage()
 void ClientSession::sendMsg1()
 {
     MsgBuf output;
-    Msg1 msg1;
+    Prot2Msg1 msg1;
     msg1.field_f1().value() = "hello";
     writeMessage(msg1, output);
-
-    // Send serialized message 
-    sendOutput(&output[0], output.size());
+    sendOutput(output.data(), output.size());
 }
 
 void ClientSession::sendMsg2Msg3()
@@ -147,19 +162,15 @@ void ClientSession::sendMsg2Msg3()
     };
 
     MsgBuf output;
-    Msg2 msg2;
+    Prot2Msg2 msg2;
     comms::util::assign(msg2.field_f1().value(), std::begin(Buf), std::end(Buf));
     writeMessage(msg2, output);
 
-    MsgBuf outputTmp;
-    Msg3 msg3;
+    Prot2Msg3 msg3;
     msg3.field_f1().value() = 0xabcd;
-    writeMessage(msg3, outputTmp);
+    writeMessage(msg3, output);
 
-    // Concatenate buffers
-    output.insert(output.end(), outputTmp.begin(), outputTmp.end());
-
-    // Send serialized message 
+    // Send serialized messages
     sendOutput(&output[0], output.size());
 }
 

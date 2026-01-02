@@ -20,47 +20,93 @@ struct EmptyOptions {};
 template <typename TBase = EmptyOptions>
 struct DefaultOptionsT : public TBase
 {
-    /// @brief Extra options for messages.
-    struct message
+    /// @brief Extra options for namespace.
+    struct prot1
     {
-        /// @brief Extra options for fields of
-        ///     @ref howto3::message::Msg1 message.
-        struct Msg1Fields
+        /// @brief Extra options for messages.
+        struct message
         {
-            /// @brief Extra options for @ref
-            ///     howto3::message::Msg1Fields::F1 field.
-            using F1 = comms::option::app::EmptyOption;
-        };
-
-        /// @brief Extra options for fields of
-        ///     @ref howto3::message::Msg2 message.
-        struct Msg2Fields
-        {
-            /// @brief Extra options for @ref
-            ///     howto3::message::Msg2Fields::F1 field.
-            using F1 = comms::option::app::EmptyOption;
-        };
-    }; // struct message
-
-    /// @brief Extra options for frames.
-    struct frame
-    {
-        /// @brief Extra options for layers of
-        ///     @ref howto3::frame::Frame frame.
-        struct FrameLayers
-        {
-            /// @brief Extra options for @ref
-            ///     howto3::frame::FrameLayers::DataMembers::Field field.
-            struct DataMembers
+            /// @brief Extra options for fields of
+            ///     @ref howto3::prot1::message::Prot1PseudoMsg message.
+            struct Prot1PseudoMsgFields
             {
-                using Field = comms::option::app::EmptyOption;
-            }; // struct DataMembers
+                /// @brief Extra options for @ref
+                ///     howto3::prot1::message::Prot1PseudoMsgFields::Data
+                ///     field.
+                using Data = comms::option::app::EmptyOption;
+            };
+        }; // struct message
 
-            /// @brief Extra options for @ref
-            ///     howto3::frame::FrameLayers::Id layer.
-            using Id = comms::option::app::EmptyOption;
-        }; // struct FrameLayers
-    }; // struct frame
+        /// @brief Extra options for frames.
+        struct frame
+        {
+            /// @brief Extra options for layers of
+            ///     @ref howto3::prot1::frame::Prot1Frame frame.
+            struct Prot1FrameLayers
+            {
+                /// @brief Extra options for @ref
+                ///     howto3::prot1::frame::Prot1FrameLayers::DataMembers::Field field.
+                struct DataMembers
+                {
+                    using Field = comms::option::app::EmptyOption;
+                }; // struct DataMembers
+
+                /// @brief Extra options for @ref
+                ///     howto3::prot1::frame::Prot1FrameLayers::Id
+                ///     layer.
+                using Id = comms::option::app::EmptyOption;
+            }; // struct Prot1FrameLayers
+        }; // struct frame
+    }; // struct prot1
+
+    /// @brief Extra options for namespace.
+    struct prot2
+    {
+        /// @brief Extra options for messages.
+        struct message
+        {
+            /// @brief Extra options for fields of
+            ///     @ref howto3::prot2::message::Msg1 message.
+            struct Msg1Fields
+            {
+                /// @brief Extra options for @ref
+                ///     howto3::prot2::message::Msg1Fields::F1
+                ///     field.
+                using F1 = comms::option::app::EmptyOption;
+            };
+
+            /// @brief Extra options for fields of
+            ///     @ref howto3::prot2::message::Msg2 message.
+            struct Msg2Fields
+            {
+                /// @brief Extra options for @ref
+                ///     howto3::prot2::message::Msg2Fields::F1
+                ///     field.
+                using F1 = comms::option::app::EmptyOption;
+            };
+        }; // struct message
+
+        /// @brief Extra options for frames.
+        struct frame
+        {
+            /// @brief Extra options for layers of
+            ///     @ref howto3::prot2::frame::Prot2Frame frame.
+            struct Prot2FrameLayers
+            {
+                /// @brief Extra options for @ref
+                ///     howto3::prot2::frame::Prot2FrameLayers::DataMembers::Field field.
+                struct DataMembers
+                {
+                    using Field = comms::option::app::EmptyOption;
+                }; // struct DataMembers
+
+                /// @brief Extra options for @ref
+                ///     howto3::prot2::frame::Prot2FrameLayers::Id
+                ///     layer.
+                using Id = comms::option::app::EmptyOption;
+            }; // struct Prot2FrameLayers
+        }; // struct frame
+    }; // struct prot2
 };
 
 /// @brief Default (empty) options of the protocol.

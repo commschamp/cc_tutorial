@@ -23,7 +23,7 @@ bool TcpClient::start(PortType port)
     boost::system::error_code ec;
     socket->connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port), ec);
     if (ec) {
-        std::cerr << "ERROR: Failed to connect with error: " << ec.message();
+        std::cerr << "ERROR: Failed to connect with error: " << ec.message() << std::endl;
         return false;
     }
 
