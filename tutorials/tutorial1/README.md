@@ -15,7 +15,7 @@ a default main namespace of the protocol code. The code generated has a
 command line option to overwrite it.
 - The protocol endian is defined as **endian="big"** property of
 the main `<schema>` XML node.
-- The global fields (that can be references by messages and/or other 
+- The global fields (that can be references by messages and/or other
 fields) are defined as members of `<fields>` XML node.
 - The `enum` field is defined by `<enum>` XML node.
 - When `enum` is used to define numeric message IDs it needs to be marked
@@ -25,12 +25,12 @@ as such using **semanticType="messageId"** property assignment.
 
 ----
 
-**SIDE NOTE**: Almost every element in 
-[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) schema has one or more 
-[properties](https://commschamp.github.io/commsdsl_spec/#intro-properties), 
-such as **name**. Any property can be defined using multiple ways. In can be useful 
-when an element has too many properties to specify in a single line for a convenient 
-reading. Any of the described below supported ways of defining a single property 
+**SIDE NOTE**: Almost every element in
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) schema has one or more
+[properties](https://commschamp.github.io/commsdsl_spec/#intro-properties),
+such as **name**. Any property can be defined using multiple ways. In can be useful
+when an element has too many properties to specify in a single line for a convenient
+reading. Any of the described below supported ways of defining a single property
 can be used for any element in the schema.
 
 The property can be defined as an XML attribute.
@@ -70,9 +70,9 @@ It is allowed to mix ways of defining properties for a single element
 ----
 
 ## Generated Code
-In general, the generated code uses 
+In general, the generated code uses
 [COMMS Library](https://github.com/commschamp/comms),
-which was designed to allow having single and functionally correct 
+which was designed to allow having single and functionally correct
 protocol definition for all possible applications, while allowing the
 latter to **compile-time** customize their data structures, polymorphic interfaces, and/or
 relevant / efficient message processing logic.
@@ -83,8 +83,8 @@ The numeric message IDs find their way to `MsgId` enum definition inside
 [include/tutorial1/MsgId.h](include/tutorial1/MsgId.h).
 
 To allow polymorphic behavior of the message objects, there is a need for
-a common interface class for all the messages. 
-The relevant interface class for **all** the messages resides in 
+a common interface class for all the messages.
+The relevant interface class for **all** the messages resides in
 [include/tutorial1/Message.h](include/tutorial1/Message.h). Please take a
 look at its definition.
 ```cpp
@@ -98,7 +98,7 @@ using Message =
 ```
 It uses [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) class
 definition and allows extension of its default functionality with various **options**. The options
-that are intended to be used for **protocol definition** reside in 
+that are intended to be used for **protocol definition** reside in
 [comms::option::def](https://commschamp.github.io/comms_doc/namespacecomms_1_1option_1_1def.html)
 namespace, while options that are intended to be used by the end application for its customization are defined
 in [comms::option::app](https://commschamp.github.io/comms_doc/namespacecomms_1_1option_1_1app.html)
@@ -108,13 +108,13 @@ template parameter allows introducing additional **application specific** custom
 options. In this specific tutorial they are going to be used to introduce
 polymorphic interface (virtual functions) for protocol message objects.
 
-All the defined message classes (`Msg1` and `Msg2`) reside in 
+All the defined message classes (`Msg1` and `Msg2`) reside in
 **message** namespace and in [include/tutorial1/message](include/tutorial1/message) folder.
-Every [MsgX.h](include/tutorial1/message/Msg1.h) file contains class definition of 
+Every [MsgX.h](include/tutorial1/message/Msg1.h) file contains class definition of
 the relevant message and its fields. The corresponding
 [MsgXCommon.h](include/tutorial1/message/Msg1Common.h)
 file contains common, template-parameter independent definitions relevant to the message
-and its fields. 
+and its fields.
 
 The message definition class
 receives its common interface (base) class as the **first** template parameter.
@@ -126,10 +126,10 @@ class Msg1 : public
         ... /* irrelevant for now */
     >
 ```
-The defined message class extends 
+The defined message class extends
 [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html), which in
-turn re-uses the first template parameter passed to extending class `Msg1` as its first template parameter. 
-It causes the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) to extend 
+turn re-uses the first template parameter passed to extending class `Msg1` as its first template parameter.
+It causes the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) to extend
 the provided interface class passed as first template parameter.
 
 The inheritance hierarchy looks like this:
@@ -143,23 +143,23 @@ extension options. In case the application doesn't really customize the common m
 (The `TOpt` variadic template parameter is empty) the message object is like a `struct` of
 stored fields without any polymorphic behavior.
 
-The transport framing of the message payload is defined inside 
+The transport framing of the message payload is defined inside
 [include/tutorial1/frame/Frame.h](include/tutorial1/frame/Frame.h) file. It manages all wrap / unwrap
-of the message payload with extra transport fields. This tutorial just prefixes it with 
+of the message payload with extra transport fields. This tutorial just prefixes it with
 numeric message ID, more complex framing will be introduced and demonstrated in
 later tutorial(s).
 
 ## Client / Server Sessions
-Every tutorial (not just this one) uses common I/O management code, which operates on 
+Every tutorial (not just this one) uses common I/O management code, which operates on
 [Session](../../lib/include/Session.h) object(s). Every **tutorialX** / **howtoX** is expected
 to extend it and implement all the relevant virtual functions to make the common code function
 properly. The sessions are split into **server** and **client** ones. The **server**
-side code is implemented in [src/SeverSession.h](src/ServerSession.h) and 
+side code is implemented in [src/SeverSession.h](src/ServerSession.h) and
 [src/ServerSession.cpp](src/ServerSession.cpp). The **client**
-side code is implemented in [src/ClientSession.h](src/ClientSession.h) and 
-[src/ClientSession.cpp](src/ClientSession.cpp) respectively. 
+side code is implemented in [src/ClientSession.h](src/ClientSession.h) and
+[src/ClientSession.cpp](src/ClientSession.cpp) respectively.
 
-**NOTE** that these client / server session classes are part of the 
+**NOTE** that these client / server session classes are part of the
 **end applications** and perform their own application specific compile time
 configurations. They are **NOT** actual part of the
 [CommsChampion Ecosystem](https://commschamp.github.io) and do **NOT** necessarily
@@ -181,44 +181,44 @@ The generated **tutorial1::Message** common interface class is extended
 with multiple options, which create various function with **polymorphic**
 behavior.
 
----- 
+----
 
 **SIDE NOTE**: **Polymorphic** behavior implies usage of `virtual` function(s).
-To implement it the **COMMS Library** uses 
-[Non-Virtual Interface Idiom](https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Non-Virtual_Interface). 
+To implement it the **COMMS Library** uses
+[Non-Virtual Interface Idiom](https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Non-Virtual_Interface).
 Something like:
 ```
-class Message 
+class Message
 {
 public:
     void someFunc()
     {
         someFuncImpl();
     }
-    
+
 protected:
     virtual void someFuncImpl() = 0;
 };
 ```
 
----- 
+----
 
 #### Polymorphic Read
-Usage of `comms::option::app::ReadIterator` option adds the following type and 
+Usage of `comms::option::app::ReadIterator` option adds the following type and
 functions to the message interface.
 ```cpp
-class Message 
+class Message
 {
-public: 
+public:
     // Type of the iterator used for reading
     using ReadIterator = const std::uint8_t*;
-    
+
     // Polymorphic read functionality
     comms::ErrorStatus read(ReadIterator& iter, std::size_t len)
     {
         return readImpl(iter, len);
     }
-    
+
 protected:
     // To be provided by the derived class
     virtual comms::ErrorStatus readImpl(ReadIterator& iter, std::size_t len) = 0;
@@ -246,21 +246,21 @@ static_assert(Message::hasRead(), "Missing polymorphic read");
 ```
 
 #### Polymorphic Write
-Usage of `comms::option::app::WriteIterator` option adds the following type and 
+Usage of `comms::option::app::WriteIterator` option adds the following type and
 function to the message interface.
 ```cpp
-class Message 
+class Message
 {
-public: 
+public:
     // Type of the iterator used for writing
     using WriteIterator = std::uint8_t*;
-    
+
     // Polymorphic write functionality
     comms::ErrorStatus write(WriteIterator& iter, std::size_t len) const
     {
         return writeImpl(iter, len);
     }
-    
+
 protected:
     // To be provided by the derived class
     virtual comms::ErrorStatus write(WriteIterator& iter, std::size_t len) const = 0;
@@ -271,7 +271,7 @@ It is very similar to the **polymorphic read** mentioned earlier.
 - The **write()** function is **polymorphic**.
 - The success / failure status is reported via **comms::ErrorStatus** return value.
 - The iterator passed to **write()** function is advanced during write operation. The
-caller is responsible to maintain output data buffer and provides only an iterator 
+caller is responsible to maintain output data buffer and provides only an iterator
 to it for message object to perform its write.
 - The call to **write()** member function is not expected to change the message
 object, that's why it's defined to be **const**.
@@ -287,15 +287,15 @@ static_assert(Message::hasWrite(), "Missing polymorphic write");
 Usage of `comms::option::app::LengthInfoInterface` option adds the following interface
 function to the defined class.
 ```cpp
-class Message 
+class Message
 {
-public: 
+public:
     // Polymorphic serialization length calculation
     std::size_t length() const
     {
         return lengthImpl();
     }
-    
+
 protected:
     // To be provided by the derived class
     virtual std::size_t lengthImpl() const = 0;
@@ -316,18 +316,18 @@ static_assert(Message::hasLength(), "Missing polymorphic length");
 Usage of `comms::option::app::IdInfoInterface` option adds the following type and interface
 function to the defined class.
 ```cpp
-class Message 
+class Message
 {
-public: 
+public:
     // Define type used to report message ID
     using MsgIdType = tutorial1::MsgId;
-    
+
     // Polymorphic numeric ID retrieval
     MsgIdType getId() const
     {
         return getIdImpl();
     }
-    
+
 protected:
     // To be provided by the derived class
     virtual MsgIdType getIdImpl() const = 0;
@@ -344,24 +344,24 @@ static_assert(Message::hasGetId(), "Missing polymorphic getId");
 ```
 
 #### Polymorphic Message Name Retrieval
-Usage of `comms::option::app::NameInterface` option adds the following 
+Usage of `comms::option::app::NameInterface` option adds the following
 function to the message interface.
 ```cpp
-class Message 
+class Message
 {
-public: 
+public:
     // Polymorphic name retrieval
     const char* name() const
     {
         return nameImpl();
     }
-    
+
 protected:
     // To be provided by the derived class
-    virtual const char* name() const = 0;    
+    virtual const char* name() const = 0;
 };
 ```
-The polymorphic name retrieval can be used in application when there is a 
+The polymorphic name retrieval can be used in application when there is a
 need to print human readable name of the message. Note that such name
 is provided as `displayName` property of the message definition inside
 [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) schema.
@@ -391,12 +391,12 @@ along the way buy other tutorials when needed.
 
 #### Processing I/O Input
 The `turorial1::ServerSession::processInputImpl()` virtual function is invoked
-by the driving common I/O library to report unprocessed input. The arguments are 
-pointer to the input buffer and its size. The function is expected to 
+by the driving common I/O library to report unprocessed input. The arguments are
+pointer to the input buffer and its size. The function is expected to
 return number of consumed bytes. To help with such task **COMMS Library** provides
-`comms::processAllWithDispatch()` function (requires 
-"[comms/process.h](https://commschamp.github.io/comms_doc/process_8h.html)" to be 
-included). 
+`comms::processAllWithDispatch()` function (requires
+"[comms/process.h](https://commschamp.github.io/comms_doc/process_8h.html)" to be
+included).
 ```cpp
 std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t bufLen)
 {
@@ -411,9 +411,9 @@ parameter is reference to the handling object, which must implement
 this particular tutorial `ServerSession` implement one common function for
 all the messages `void ServerSession::handle(Message& msg)`.
 
-The handling function (`void ServerSession::handle(Message& msg)`) 
+The handling function (`void ServerSession::handle(Message& msg)`)
 uses **polymorphic** interface to report what message was
-received (using `msg.name()` and `msg.getId()` calls), 
+received (using `msg.name()` and `msg.getId()` calls),
 serialize it into output buffer and send the same message
 back. In other words it's a simple "echo" server.
 
@@ -482,24 +482,24 @@ option. The template parameter specifies type of the handling object. Usage
 of this object results in adding the following type and polymorphic member
 function to the message interface class.
 ```cpp
-class Message 
+class Message
 {
-public: 
+public:
     // Handler class (parameter passed to comms::option::app::Handler)
     using Handler = tutorial1::ClientSession;
-    
+
     // Polymorphic dispatch
     void dispatch(Handler& handler)
     {
         return dispatchImpl(handler);
     }
-    
+
 protected:
     virtual void dispatchImpl(Handler& handler) = 0;
 };
 ```
 The handler class (`tutorial::ClientSession`) is expected to define
-`handle()` member function for any message type it is expected to handle. 
+`handle()` member function for any message type it is expected to handle.
 It also needs to define `handle()` member function for the common interface class
 which is going to be called when there is no appropriate `handle()` member
 function being defined for the real message type.
@@ -519,7 +519,7 @@ public:
     void handle(Msg1& msg);
     void handle(Msg2& msg);
     void handle(Message& msg);
-    
+
     ... // Irrelevant code
 };
 ```
@@ -531,18 +531,18 @@ time to determine whether the interface class defines polymorphic dispatch funct
 static_assert(Message::hasDispatch(), "Missing polymorphic dispatch");
 ```
 
----- 
+----
 
 **SIDE NOTE**: The **COMMS Library** provides an ability to return values
 from message handling (`handle()`) member functions, but this is subject
 for another tutorial.
 
----- 
+----
 
 #### Processing I/O Input
 The `turorial1::ClientSession::processInputImpl()` virtual function is invoked
-by the driving common I/O library to report unprocessed input. The arguments are 
-pointer to the input buffer and its size. The function is expected to 
+by the driving common I/O library to report unprocessed input. The arguments are
+pointer to the input buffer and its size. The function is expected to
 return number of consumed bytes. It is possible to invoke `comms::processAllWithDispatch()`
 function provided by the **COMMS Library**, which will strip off the transport
 framing, create appropriate message object and will dispatch it to appropriate
@@ -565,7 +565,7 @@ this option is not provided different dispatch method is used. Various dispatch
 methods will be covered in details in later tutorial(s).
 
 #### Non-Polymorphic Message Interface
-As was mentioned earlier the 
+As was mentioned earlier the
 [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
 class is used (inherited from) to define proper message definition class.
 As the result the latter automatically defines the following **NON-polymorphic** (non-virtual)
@@ -578,24 +578,24 @@ public:
     // NON-polymorphic read of payload
     template <typename TIter>
     comms::ErrorStatus doRead(TIter& iter, std::size_t len);
-    
+
     // NON-polymorphic write of payload
     template <typename TIter>
     comms::ErrorStatus doWrite(TIter& iter, std::size_t len) const;
-    
+
     // NON-polymorphic message ID retrieval
     MsgIdType doGetId() const;
-    
+
     // NON-polymorphic payload serialization length calculation
     std::size_t doLength() const;
-    
+
     // NON-polymorphic human readable name of the message
     static const char* doName();
-    
+
     // NON-polymorphic validity check
     bool doValid() const;
-    
-    // NON-polymorphic bring message to consistent state 
+
+    // NON-polymorphic bring message to consistent state
     // (will be covered in later tutorial(s).
     bool doRefresh();
 }
@@ -613,7 +613,7 @@ void ClientSession::handle(Msg1& msg)
 
 In addition to providing the **NON-polymorphic** (non-virtual) member functions
 the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
-**automatically** implements all the virtual functions inherited from the 
+**automatically** implements all the virtual functions inherited from the
 interface definition by redirecting them to the non-polymorphic ones:
 ```cpp
 class Msg1 : public comms::MessageBase<...>
@@ -623,44 +623,43 @@ protected:
     {
         return doRead(iter, len);
     }
-    
+
     virtual comms::ErrorStatus writeImpl(ReadIterator& iter, std::size_t len) const override
     {
         return doWrite(iter, len);
-    }    
-    
+    }
+
     virtual std::size_t lengthImpl() const override
     {
         return doLength();
     }
-    
+
     virtual MsgIdType getIdImpl() const override
     {
         return doGetId();
     }
-    
+
     virtual const char* nameImpl() const override
     {
         return doName();
     }
-    
+
     virtual bool validImpl() const override
     {
         return doValid();
     }
-    
+
     virtual bool refreshImpl() override
     {
         return doRefresh();
     }
-    
+
     virtual void dispatchImpl(Handler& handler) override
     {
         return handler.handle(*this);
     }
 }
 ```
-
 
 ## Summary
 
@@ -680,13 +679,13 @@ input / output data.
 How to modify this default behavior will be explained in one of the later
 tutorials.
 - The common message interface class, specific for the application is defined
-  by passing relevant options to the definition of the 
+  by passing relevant options to the definition of the
   [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html)  class.
-- Every message class is defined by extending 
-  [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html), 
-  which automatically defines non-polymorphic interface to operate on 
+- Every message class is defined by extending
+  [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html),
+  which automatically defines non-polymorphic interface to operate on
   message fields as well as **automatically** implements all the necessary
-  virtual functions, presence of which is controlled by the defined interface 
+  virtual functions, presence of which is controlled by the defined interface
   class.
 - Every message object has also non-polymorphic interface functions named
 `doX()`, which should be used when real message type is known to avoid

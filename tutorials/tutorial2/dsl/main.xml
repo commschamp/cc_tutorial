@@ -22,7 +22,7 @@
             <validValue name="M18" val="18" />
         </enum>
     </fields>
-    
+
     <frame name="Frame">
         <size name="Size">
             <int name="SizeField" type="uint16" />

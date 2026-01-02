@@ -42,9 +42,8 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
     assert(idx < ProcMapSize);
 
     auto func = ProcMap[idx];
-    return (this->*func)(buf, bufLen);    
+    return (this->*func)(buf, bufLen);
 }
-
 
 std::size_t ClientSession::processInputSub1(const std::uint8_t* buf, std::size_t bufLen)
 {
@@ -101,7 +100,7 @@ void ClientSession::sendMessage(const Message& msg)
     if (es != comms::ErrorStatus::Success) {
         assert(!"Write operation failed unexpectedly");
         return;
-    }       
+    }
 
     // Send serialized message back
     sendOutput(&output[0], output.size());

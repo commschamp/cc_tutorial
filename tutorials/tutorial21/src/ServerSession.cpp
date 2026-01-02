@@ -10,7 +10,7 @@ namespace cc_tutorial
 
 void ServerSession::handle(Message& msg)
 {
-    std::cout << "Received message \"" << msg.name() << 
+    std::cout << "Received message \"" << msg.name() <<
         "\" with ID=" << (unsigned)msg.getId() << std::endl;
     sendMessage(msg);
 }

@@ -3,12 +3,12 @@
     <fields>
         <string name="Msg1Name" defaultValue="Message 1" />
         <string name="Msg2Name" defaultValue="Message 2" />
-            
+
         <enum name="MsgId" type="uint8" semanticType="messageId">
             <validValue name="M1" val="1" displayName="^Msg1Name" />
             <validValue name="M2" val="2" displayName="^Msg2Name" />
         </enum>
-        
+
         <enum name="PropKey" type="uint8">
             <validValue name="K1" val="0" />
             <validValue name="K2" val="2" />
@@ -18,20 +18,20 @@
             <validValue name="K6" val="25" />
             <validValue name="K7" val="30" />
         </enum>
-        
+
         <int name="PropKeyCommon" type="uint8" failOnInvalid="true" fixedValue="true" />
-        
+
         <variant name="KeyValueProp">
             <bundle name="Prop1">
                 <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K1" validValue="PropKey.K1" />
                 <int name="Val" type="uint16" />
             </bundle>
-            
+
             <bundle name="Prop2">
                 <int reuse="PropKeyCommon" name="Key" defaultValue="PropKey.K2" validValue="PropKey.K2" />
                 <float name="Val" type="float" defaultValue="nan" />
-            </bundle>            
-            
+            </bundle>
+
             <bundle name="Prop3">
                 <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K3" />
                 <string name="Val">
@@ -39,9 +39,9 @@
                         <int name="Length" type="uint8" />
                     </lengthPrefix>
                 </string>
-            </bundle>    
+            </bundle>
         </variant>
-        
+
         <variant name="TlvProp">
             <description>
                 Type-Length-Value Property
@@ -52,35 +52,35 @@
                     <int name="Length" type="uint8" semanticType="length" />
                     <int name="Val" type="uint32" />
                 </bundle>
-                
+
                 <bundle name="Prop5">
                     <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K5" />
                     <int name="Length" type="uint8" semanticType="length" />
                     <float name="Val" type="double" defaultValue="inf" />
-                </bundle>            
-                
+                </bundle>
+
                 <bundle name="Prop6">
                     <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K6" />
                     <int name="Length" type="uint8" semanticType="length" />
                     <string name="Val" />
-                </bundle>   
+                </bundle>
 
                 <bundle name="Prop7">
                     <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K7" />
                     <int name="Length" type="uint8" semanticType="length" />
                     <int name="Val" type="uint64" availableLengthLimit="true" />
-                </bundle>                 
-                
+                </bundle>
+
                 <bundle name="Any">
                     <int reuse="PropKeyCommon" name="Key" failOnInvalid="false" fixedValue="false" />
                     <int name="Length" type="uint8" semanticType="length" />
                     <data name="Val" />
-                </bundle>  
+                </bundle>
             </members>
         </variant>
-        
+
     </fields>
-    
+
     <frame name="Frame">
         <size name="Size">
             <int name="SizeField" type="uint16" />
@@ -88,7 +88,7 @@
         <id name="ID" field="MsgId" />
         <payload name="Data" />
     </frame>
-    
+
     <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
         <list name="F1" element="KeyValueProp">
             <countPrefix>
@@ -96,8 +96,8 @@
             </countPrefix>
         </list>
     </message>
-    
+
     <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
         <list name="F1" element="TlvProp" />
-    </message>      
+    </message>
 </schema>

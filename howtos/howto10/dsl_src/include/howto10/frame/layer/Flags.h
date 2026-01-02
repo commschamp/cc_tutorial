@@ -31,7 +31,7 @@ class Flags : public
     >
 {
     // Repeat base type
-    using Base = 
+    using Base =
         comms::frame::TransportValueLayer<
             TField,
             Interface<>::TransportFieldIdx_flags,
@@ -44,8 +44,8 @@ class Flags : public
 public:
     using Field = typename Base::Field;
 
-    // Override the default functionaly of re-assigning the 
-    // field value to the message object. Instead 
+    // Override the default functionaly of re-assigning the
+    // field value to the message object. Instead
     // let the pseudo layer that follows the ID processing
     // to assign it when the message object is created.
     template <typename TMsg>
@@ -56,17 +56,16 @@ public:
         auto& idLayer = Base::nextLayer();
         auto& psedoFlagsLayer = idLayer.nextLayer();
 
-        // Re-assign the field to the pseudo layer, which is going to 
+        // Re-assign the field to the pseudo layer, which is going to
         // assign it to the message object
         psedoFlagsLayer.pseudoField().value() = field.value();
         return true;
     }
 };
-   
+
 } // namespace layer
 
 } // namespace frame
 
 } // namespace howto10
-
 

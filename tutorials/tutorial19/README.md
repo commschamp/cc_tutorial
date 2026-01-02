@@ -1,14 +1,14 @@
 # Tutorial 19
 Introduction to protocol version support.
 
-Many protocols allow extensions by adding new messages and/or new fields to the existing messages 
-in the future versions of the protocols. In order to properly support forward / backward 
-compatibility of the protocol there may be a report of the used version number in the message 
-frame and/or in one of the exchanged messages. This tutorial will focus on the case which 
-reports a version of every message in the frame (because it's simpler), the case of reporting 
+Many protocols allow extensions by adding new messages and/or new fields to the existing messages
+in the future versions of the protocols. In order to properly support forward / backward
+compatibility of the protocol there may be a report of the used version number in the message
+frame and/or in one of the exchanged messages. This tutorial will focus on the case which
+reports a version of every message in the frame (because it's simpler), the case of reporting
 a protocol version in one of the messages will be covered in the [next](../tutorial20) tutorial.
 
-The protocol version support starts with declaring the current (latest) version of the 
+The protocol version support starts with declaring the current (latest) version of the
 protocol as the [schema](dsl/schema.xml) **version** property.
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -16,10 +16,10 @@ protocol as the [schema](dsl/schema.xml) **version** property.
     ...
 </schema>
 ```
-The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) defines value of the **version** property 
-as [unsigned numeric](https://commschamp.github.io/commsdsl_spec/#intro-numeric) one. If there is a need 
-to define a version as [semantic](https://semver.org/) one, then it is recommended to mentally split the 
-version number into bytes and use something like `version="0x105` (for version 1.5) or 
+The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) defines value of the **version** property
+as [unsigned numeric](https://commschamp.github.io/commsdsl_spec/#intro-numeric) one. If there is a need
+to define a version as [semantic](https://semver.org/) one, then it is recommended to mentally split the
+version number into bytes and use something like `version="0x105` (for version 1.5) or
 `version=0x10502` (for version 1.5.2).
 
 The version information can be added to message fields using **sinceVersion** and **deprecated** properties:
@@ -30,10 +30,10 @@ The version information can be added to message fields using **sinceVersion** an
     <int name="F3" type="uint16" sinceVersion="5" />
 </message>
 ```
-Note that value of the **sinceVersion** may not exceed the value of the schema's **version** property, 
-and value of the **deprecated** must be greater than the value of the **sinceVersion**. 
+Note that value of the **sinceVersion** may not exceed the value of the schema's **version** property,
+and value of the **deprecated** must be greater than the value of the **sinceVersion**.
 
-The omitted **sinceVersion** value defaults to **0**, i.e. first version of the protocol or the 
+The omitted **sinceVersion** value defaults to **0**, i.e. first version of the protocol or the
 first version when the message was added to the protocol.
 
 **IMPORTANT**: The **deprecated** fields are **NOT** removed from the serialization in order to properly
@@ -44,22 +44,22 @@ removing deprecated field may break backward compatibility of the protocol.
 The **sinceVersion** and **deprecated** properties are applicable to the whole messages as well:
 ```xml
 <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name" sinceVersion="2">
-    ... 
+    ...
     <int name="F4" type="uint16" sinceVersion="3" />
-</message> 
+</message>
 ```
-In such case the value of the **sinceVersion** applied to the member field must be greater than the 
+In such case the value of the **sinceVersion** applied to the member field must be greater than the
 value of the **sinceVersion** applied to the message definition.
 
-The version dependent presence of the fields requires knowledge of the reported version number attached 
-to the message object before the message payload is deserialized (fields are read). The usual way of 
+The version dependent presence of the fields requires knowledge of the reported version number attached
+to the message object before the message payload is deserialized (fields are read). The usual way of
 attaching such information is to have a common interface class with extra fields being defined:
 ```xml
 <interface name="Interface" description="Common Interface for all the messages.">
     <int name="Version" type="uint16" semanticType="version" />
-</interface> 
+</interface>
 ```
-Note usage of **semanticType** property, which specifies the special role of the field. In this case 
+Note usage of **semanticType** property, which specifies the special role of the field. In this case
 the field is used to hold protocol version. The message payload deserialization will take it
 into account when needed.
 
@@ -78,14 +78,14 @@ struct Version : public
 
 ----
 
-**SIDE NOTE**: In case the defined `<interface>` does not have version field (marked 
-with `semanticType="version"`) the generated code won't be really version dependent, and all 
+**SIDE NOTE**: In case the defined `<interface>` does not have version field (marked
+with `semanticType="version"`) the generated code won't be really version dependent, and all
 **sinceVersion** and **deprecated** properties will be ignored.
 
 ----
 
-As was already mentioned earlier this tutorial will report a version for every message as part of the 
-message framing. In order to re-assign the value from the frame to the message object usual 
+As was already mentioned earlier this tutorial will report a version for every message as part of the
+message framing. In order to re-assign the value from the frame to the message object usual
 `<value>` layer can be used:
 ```xml
 <frame name="Frame">
@@ -94,15 +94,15 @@ message framing. In order to re-assign the value from the frame to the message o
     </size>
     <value name="Version" interfaceFieldName="Version">
         <int name="Field" type="uint16" semanticType="version" displayName="Version"/>
-    </value>        
+    </value>
     <id name="Id" field="MsgId" />
     <payload name="Data" />
 </frame>
 ```
-**REMINDER**: The value of **interfaceFieldName** property needs to contain a name of the 
+**REMINDER**: The value of **interfaceFieldName** property needs to contain a name of the
 field inside the `<interface>` to which it needs to be re-assigned.
 
-Now it's time to take a closer look at the generated code. Let's take a look at the 
+Now it's time to take a closer look at the generated code. Let's take a look at the
 generated common interface class:
 ```cpp
 template <typename... TOpt>
@@ -122,11 +122,11 @@ public:
 };
 ```
 Please note the usage of [comms::option::def::VersionInExtraTransportFields](https://commschamp.github.io/comms_doc/options_8h.html)
-option. It is used to specify index of the transport field containing the version information. 
-It also creates [version()](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) member function which is 
+option. It is used to specify index of the transport field containing the version information.
+It also creates [version()](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) member function which is
 basically an alias to `transportField_version().value()`. They can be used interchangeably.
 
-Now let's take a look how version dependent fields are defined in the generated code. Let's take a look at 
+Now let's take a look how version dependent fields are defined in the generated code. Let's take a look at
 the definition of `F2` inside [include/tutorial19/message/Msg1.h](include/tutorial19/message/Msg1.h).
 ```cpp
 struct F2Field : public
@@ -140,7 +140,7 @@ struct F2Field : public
     {
         return tutorial19::message::Msg1FieldsCommon::F2Common::name();
     }
-    
+
 };
 
 struct F2 : public
@@ -157,9 +157,9 @@ struct F2 : public
     }
 };
 ```
-Due to the fact that the version dependent field may or may not exist then it has to be defined as 
+Due to the fact that the version dependent field may or may not exist then it has to be defined as
 [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html).
-Its version information since which the field must exist is defined using 
+Its version information since which the field must exist is defined using
 [comms::option::def::ExistsSinceVersion](https://commschamp.github.io/comms_doc/options_8h.html) option.
 The actual field being wrapped by the [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
 is defined as `F2Field` (**Field** suffix is added to the field's name). It is equivalent to the following pseudo definition:
@@ -179,7 +179,7 @@ void ClientSession::sendMsg1()
     // The version based optional fields must exist by default
     assert(msg.field_f2().doesExist());
     assert(msg.field_f3().doesExist());
-    
+
     msg.field_f1().value() = 1111;
     msg.field_f2().field().value() = 2222;
     msg.field_f3().field().value() = 3333;
@@ -188,16 +188,16 @@ void ClientSession::sendMsg1()
     msg.doRefresh(); // Update version fields;
 
     assert(msg.field_f2().doesExist());
-    assert(msg.field_f3().isMissing()); // Does not exist for version 3    
-    
+    assert(msg.field_f3().isMissing()); // Does not exist for version 3
+
     sendMessage(msg);
 }
 ```
-Note that every message is default constructed to the valid state of the latest (current) 
-version of the schema. In this tutorial the version of the message which is going to be 
-sent out is forcefully set to be **3**. After call to `doRefresh()`, which brings message to 
-the consistent state, the `F3` field is marked as "missing". The message is echoed back 
-by the **server** and successfully received by the **client** and processed by the 
+Note that every message is default constructed to the valid state of the latest (current)
+version of the schema. In this tutorial the version of the message which is going to be
+sent out is forcefully set to be **3**. After call to `doRefresh()`, which brings message to
+the consistent state, the `F3` field is marked as "missing". The message is echoed back
+by the **server** and successfully received by the **client** and processed by the
 `void ClientSession::handle(Msg1& msg)`. The printed output is correct:
 ```
 Received message "Message 1" with ID=1 and version=3
@@ -215,22 +215,22 @@ Let's also take a closer look at the definition of `Msg2`.
         <validValue name="V1" val="1" sinceVersion="3" deprecated="5" />
         <validValue name="V2" val="2" sinceVersion="4" />
     </enum>
-    
+
     <enum name="F2" type="uint8" sinceVersion="3" validCheckVersion="true">
         <validValue name="V0" val="0" />
         <validValue name="V1" val="1" sinceVersion="4" deprecated="5" />
         <validValue name="V2" val="2" sinceVersion="5" />
-    </enum>        
+    </enum>
 </message>
 ```
-Every `<validValue>` of the `<enum>` field can also have 
+Every `<validValue>` of the `<enum>` field can also have
 version information specified with **sinceVersion** and/or **deprecated** properties.
-In most cases such version information is for documentation purposes only and doesn't 
-have any influence on the generated code, i.e. all the deprecated and 
-newly introduced `<validValue>` are considered valid ones 
-**unless** **validCheckVersion** property is set to **true**. In such case 
-(`F2` in the example above) the code generator creates special code for the 
-`valid()` member function of the field to check the validity of the value 
+In most cases such version information is for documentation purposes only and doesn't
+have any influence on the generated code, i.e. all the deprecated and
+newly introduced `<validValue>` are considered valid ones
+**unless** **validCheckVersion** property is set to **true**. In such case
+(`F2` in the example above) the code generator creates special code for the
+`valid()` member function of the field to check the validity of the value
 based on the reported protocol version:
 ```cpp
 template <typename TOpt = tutorial19::options::DefaultOptions>
@@ -247,9 +247,9 @@ struct Msg2Fields
     {
         ...
     };
-    
+
     ...
-    
+
     class F2Field : public
         comms::field::EnumValue<
             tutorial19::field::FieldBase<>,
@@ -260,44 +260,44 @@ struct Msg2Fields
     {
 
     public:
-        
+
         /// @brief Validity check function.
         bool valid() const
         {
             if (Base::valid()) {
                 return true;
             }
-        
+
             if (3U <= Base::getVersion()) {
                 if (Base::value() == static_cast<typename Base::ValueType>(0)) {
                     return true;
                 }
             }
-            
+
             if ((4U <= Base::getVersion()) &&
                 (Base::getVersion() < 5U)) {
                 if (Base::value() == static_cast<typename Base::ValueType>(1)) {
                     return true;
                 }
             }
-            
+
             if (5U <= Base::getVersion()) {
                 if (Base::value() == static_cast<typename Base::ValueType>(2)) {
                     return true;
                 }
             }
-            
+
             return false;
         }
-        
+
     };
-    
+
     ...
 };
 ```
-The same thing is applicable to the `<set>` field with its `<bit>`-s. 
-Every specified `<bit>` (regardless of the version it has been introduced) is 
-considered to be valid (non-reserved) unless **validCheckVersion** property is set, 
+The same thing is applicable to the `<set>` field with its `<bit>`-s.
+Every specified `<bit>` (regardless of the version it has been introduced) is
+considered to be valid (non-reserved) unless **validCheckVersion** property is set,
 which will result is the generation of the special `valid()` member function.
 
 Another important aspect is demonstrated by the `Msg3`:
@@ -312,13 +312,13 @@ Another important aspect is demonstrated by the `Msg3`:
     </optional>
     <optional name="F3" cond="$F1.B1" defaultMode="missing">
         <int name="Field" type="uint16" displayName="F3" />
-    </optional>   
+    </optional>
     <int name="F4" type="uint16" sinceVersion="3" />
-</message> 
+</message>
 ```
-In this example the presence of `F2` and `F3` depends on the values of bits 
-inside `F1` (unrelated to the protocol version) while the 
-presence of the `F4` depends on the reported protocol version. Such message definition requires 
+In this example the presence of `F2` and `F3` depends on the values of bits
+inside `F1` (unrelated to the protocol version) while the
+presence of the `F4` depends on the reported protocol version. Such message definition requires
 custom `Msg3::doRead()` member function generation.
 ```cpp
 template <typename TMsgBase, typename TOpt = tutorial19::options::DefaultOptions>
@@ -332,33 +332,33 @@ class Msg3 : public
         comms::option::def::HasCustomRefresh
     >
 {
-    
+
 public:
     ...
     template <typename TIter>
     comms::ErrorStatus doRead(TIter& iter, std::size_t len)
     {
         Base::doFieldsVersionUpdate();
-        
+
         ...
     }
-    
+
     ... // Code that properly deserializes fields
-    
+
 };
 ```
-Note the call of the `doFieldsVersionUpdate()` provided by the 
+Note the call of the `doFieldsVersionUpdate()` provided by the
 [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html).
 It updates the modes of all the version based [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
-fields. It means that in case **custom** read code functionality is injected to the code 
-generator, it needs to call `Base::doFieldsVersionUpdate()` at the beginning of the function in 
+fields. It means that in case **custom** read code functionality is injected to the code
+generator, it needs to call `Base::doFieldsVersionUpdate()` at the beginning of the function in
 case there are version dependent fields.
 
 ----
 
-**SIDE NOTE**: The [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator 
+**SIDE NOTE**: The [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator
 allows selecting a [minimal remote version](https://github.com/commschamp/commsdsl/blob/master/doc/Manual_commsdsl2comms.md#selecting-minimal-remote-version),
-which means all the possible remote endpoints won't use any earlier version then specified. In such 
+which means all the possible remote endpoints won't use any earlier version then specified. In such
 case all version dependent fields that where introduced before the specified version will be implemented
 as normal fields, not as [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
 ones for improved run-time and code size performance.
@@ -375,17 +375,16 @@ ones for improved run-time and code size performance.
   code, the `<interface>` needs to contain a field marked as version (having `semanticType="version"`
   property assignment).
 - Use usual `<value>` framing layer when version is reported as a field inside the transport frame.
-- All the version dependent fields are implemented as 
+- All the version dependent fields are implemented as
   [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html) fields.
-- All the `<validValue>`-s of the `<enum>` field are considered to be valid (regardless of 
-  the version they where introduced or their deprecation status) as well as all the `<bit>`-s of the 
-  `<set>` field are considered to be not reserved unless **validCheckVersion** property is set to 
+- All the `<validValue>`-s of the `<enum>` field are considered to be valid (regardless of
+  the version they where introduced or their deprecation status) as well as all the `<bit>`-s of the
+  `<set>` field are considered to be not reserved unless **validCheckVersion** property is set to
   **true**. In this case the generated `valid()` member function will take the version into account.
 - When custom `doRead()` member function is injected into the version dependent message, it must call
   [Base::doFieldsVersionUpdate()](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
-  to properly update the modes of the version dependent 
+  to properly update the modes of the version dependent
   [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
   fields.
 
-
-[Read Previous Tutorial](../tutorial18) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial20) 
+[Read Previous Tutorial](../tutorial18) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial20)

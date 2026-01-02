@@ -10,8 +10,8 @@ namespace cc_tutorial
 
 void ServerSession::handle(ConnectMsg& msg)
 {
-    std::cout << "Received message \"" << msg.doName() << 
-        "\" with ID=" << (unsigned)msg.getId() << 
+    std::cout << "Received message \"" << msg.doName() <<
+        "\" with ID=" << (unsigned)msg.getId() <<
         " and version=" << (unsigned)msg.version() << std::endl;
 
     // Assign version for all future messages.

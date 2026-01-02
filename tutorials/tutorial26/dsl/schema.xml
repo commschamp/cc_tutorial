@@ -14,7 +14,7 @@
         </id>
         <payload name="Data" />
     </frame>
-    
+
     <message name="Msg1" id="0" order="0" displayName="^Msg1Name" />
     <message name="Msg2" id="0" order="1" displayName="^Msg2Name" />
     <message name="Msg3" id="0" order="2" displayName="^Msg3Name" />

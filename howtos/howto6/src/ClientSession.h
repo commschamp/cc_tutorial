@@ -20,24 +20,24 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message = 
+    using Message =
         howto6::Interface<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
             comms::option::app::IdInfoInterface, // Polymorphic message ID retrieval
             comms::option::app::LengthInfoInterface, // Polymorphic length retrieval
             comms::option::app::NameInterface, // Polymorphic name retrieval
-            comms::option::app::Handler<ClientSession> // Polymorphic dispatch        
+            comms::option::app::Handler<ClientSession> // Polymorphic dispatch
         >;
 
     // Protocol options for client
     using ClientProtocolOptions = howto6::options::ClientDefaultOptions;
-        
+
     // Definition of all the used message classes
     using Msg1 = howto6::message::Msg1<Message, ClientProtocolOptions>;
     using Msg2 = howto6::message::Msg2<Message, ClientProtocolOptions>;
     using Msg3 = howto6::message::Msg3<Message, ClientProtocolOptions>;
-    
+
     // Handling functions for all the dispatched message objects
     void handle(Msg1& msg);
     void handle(Msg2& msg);
@@ -50,7 +50,7 @@ protected:
 
 private:
     using ChecksumType = howto6::field::ChecksumTypeCommon::ValueType;
-    
+
     enum CommsStage
     {
         CommsStage_Msg1,
@@ -65,8 +65,8 @@ private:
     void sendMsg2();
     void sendMsg3();
 
-    // Client specific frame 
-    using Frame = 
+    // Client specific frame
+    using Frame =
         howto6::frame::Frame<
             Message,
             howto6::input::ClientInputMessages<Message, ClientProtocolOptions>,

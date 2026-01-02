@@ -13,8 +13,7 @@ const std::uint8_t StartByte = 0x02;
 const std::uint8_t EndByte = 0x03;
 const std::uint8_t EscByte = 0x10;
 
-
-std::size_t findMsgStart(const std::uint8_t* buf, std::size_t bufLen)    
+std::size_t findMsgStart(const std::uint8_t* buf, std::size_t bufLen)
 {
     std::size_t pos = 0;
     bool escaped = false;
@@ -24,20 +23,20 @@ std::size_t findMsgStart(const std::uint8_t* buf, std::size_t bufLen)
             break;
         }
 
-        ++pos;        
+        ++pos;
 
         if ((ch == EscByte) && (!escaped)) {
             escaped = true;
             continue;
         }
-            
+
         escaped = false;
     }
 
     return pos;
 }
 
-std::size_t findMsgEnd(const std::uint8_t* buf, std::size_t bufLen, std::size_t from)    
+std::size_t findMsgEnd(const std::uint8_t* buf, std::size_t bufLen, std::size_t from)
 {
     auto pos = from;
     bool escaped = false;
@@ -47,13 +46,13 @@ std::size_t findMsgEnd(const std::uint8_t* buf, std::size_t bufLen, std::size_t 
             break;
         }
 
-        ++pos;        
+        ++pos;
 
         if ((ch == EscByte) && (!escaped)) {
             escaped = true;
             continue;
         }
-            
+
         escaped = false;
     }
 
@@ -61,9 +60,9 @@ std::size_t findMsgEnd(const std::uint8_t* buf, std::size_t bufLen, std::size_t 
 }
 
 void copyMsg(
-    const std::uint8_t* buf, 
-    std::size_t startPos, 
-    std::size_t endPos, 
+    const std::uint8_t* buf,
+    std::size_t startPos,
+    std::size_t endPos,
     CommonSessionBase::MsgBuf& outBuf)
 {
     auto pos = startPos + 1;
@@ -82,10 +81,10 @@ void copyMsg(
     }
 }
 
-}    
+}
 
 std::size_t CommonSessionBase::preProcessInput(
-    const std::uint8_t* buf, 
+    const std::uint8_t* buf,
     std::size_t bufLen,
     MsgBuf& outBuf)
 {
@@ -93,13 +92,13 @@ std::size_t CommonSessionBase::preProcessInput(
     auto startPos = findMsgStart(buf, bufLen);
     if (bufLen <= startPos) {
         // No start has been found, report consumed all input data
-        return bufLen; 
+        return bufLen;
     }
 
     auto endPos = findMsgEnd(buf, bufLen, startPos);
     if (bufLen <= endPos) {
         // No end has been found, report consumed until start
-        return startPos; 
+        return startPos;
     }
 
     outBuf.reserve(endPos - startPos);

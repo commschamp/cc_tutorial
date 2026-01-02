@@ -9,7 +9,7 @@
             </enum>
             <string name="M3" length="3" />
         </bundle>
-        
+
         <bundle name="B8_2">
             <description>Some Field Description</description>
             <members>
@@ -26,7 +26,7 @@
             </members>
         </bundle>
     </fields>
-    
+
     <message name="Msg8" id="MsgId.M8" displayName="Message 8">
         <ref name="F1" field="B8_1" />
         <ref name="F2" field="B8_2" />

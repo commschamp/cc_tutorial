@@ -21,28 +21,28 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message = 
+    using Message =
         howto2::Message<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
             comms::option::app::IdInfoInterface, // Polymorphic message ID retrieval
             comms::option::app::LengthInfoInterface, // Polymorphic length retrieval
             comms::option::app::NameInterface, // Polymorphic name retrieval
-            comms::option::app::Handler<ClientSession> // Polymorphic dispatch        
+            comms::option::app::Handler<ClientSession> // Polymorphic dispatch
         >;
 
     // Protocol options for client
-    using ClientProtocolOptions = 
+    using ClientProtocolOptions =
         howto2::options::DataViewDefaultOptionsT<
             howto2::options::ClientDefaultOptions
         >;
-        
+
     // Definition of all the used message classes
     using Msg1 = howto2::message::Msg1<Message, ClientProtocolOptions>;
     using Msg2 = howto2::message::Msg2<Message, ClientProtocolOptions>;
     using Msg3 = howto2::message::Msg3<Message, ClientProtocolOptions>;
     using Msg4 = howto2::message::Msg4<Message, ClientProtocolOptions>;
-    
+
     // Handling functions for all the dispatched message objects
     void handle(Msg1& msg);
     void handle(Msg2& msg);
@@ -70,8 +70,8 @@ private:
     void sendMsg1Msg2();
     void sendMsg3Msg4();
 
-    // Client specific frame 
-    using Frame = 
+    // Client specific frame
+    using Frame =
         howto2::frame::Frame<
             Message,
             howto2::input::ClientInputMessages<Message, ClientProtocolOptions>,

@@ -12,7 +12,7 @@
             <description value="Year as offset since 2000" />
         </int>
     </fields>
-    
+
     <message name="Msg3" id="MsgId.M3" displayName="Message 3">
         <ref name="F1" field="I3_1" />
         <ref name="F2" field="I3_2" />

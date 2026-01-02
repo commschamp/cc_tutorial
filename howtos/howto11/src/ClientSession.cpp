@@ -10,7 +10,7 @@
 namespace cc_tutorial
 {
 
-namespace 
+namespace
 {
 
 template <typename TMsg, typename TFrame>
@@ -36,8 +36,7 @@ void writeVar2Prop(const ClientSession::Var2Interface& prop, ClientSession::TlvP
     writePropInternal(prop, frame, output);
 }
 
-} // namespace 
-    
+} // namespace
 
 void ClientSession::handle(Msg1& msg)
 {
@@ -54,14 +53,14 @@ void ClientSession::handle(Msg1& msg)
         if (es != comms::ErrorStatus::Success) {
             std::cerr << "ERROR: encountered unexpected property" << std::endl;
         }
-    }    
+    }
 
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg1) {
         std::cerr << "ERROR: Unexpected message received" << std::endl;
         return;
-    }    
+    }
 
     doNextStage();
 }

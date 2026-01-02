@@ -44,7 +44,7 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
     // Force switch statement based
     using Dispatcher =
-        tutorial12::dispatch::ServerInputMsgDispatcher<ServerProtocolOptions>;    
+        tutorial12::dispatch::ServerInputMsgDispatcher<ServerProtocolOptions>;
 
     // Process reported input, create relevant message objects and
     // dispatch all the created messages

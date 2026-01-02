@@ -33,7 +33,6 @@ public:
             comms::option::app::Handler<ClientSession> // Polymorphic dispatch
         >;
 
-
     // Definition of all the used message classes
     using Msg1 = tutorial8::message::Msg1<Message>;
     using Msg2 = tutorial8::message::Msg2<Message>;

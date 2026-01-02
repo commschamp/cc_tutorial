@@ -1,14 +1,14 @@
 # Tutorial 22
 Complex length fields.
 
-Up until **v5.0** of the [CommsDSL Specification](https://commschamp.github.io/commsdsl_spec/) the 
+Up until **v5.0** of the [CommsDSL Specification](https://commschamp.github.io/commsdsl_spec/) the
 `semanticType="length"` property was allowed to be assinged only for `<int>` fields. Since **v5.0**
 it is allowed for complex fields, such as `<bundle>` or `<bitfield>`. However,
-the custom code is required to be injected which implements the functionality of 
+the custom code is required to be injected which implements the functionality of
 setting and retrieving numeric length values.
 
 This tutorial demonstrates using the length field, which is serialized as one byte in case the
-remaining length value is `254` or lower. Otherwise is is serialized as 3 bytes, where the 
+remaining length value is `254` or lower. Otherwise is is serialized as 3 bytes, where the
 first one is special value `0xff (255)`, followed by the 2 bytes of real length.
 
 The [schema](dsl/schema.xml) file defines the `Length` field as the following `<bundle>`:
@@ -18,17 +18,17 @@ The [schema](dsl/schema.xml) file defines the `Length` field as the following `<
         <special name="LongForm" val="0xff" />
     </int>
     <optional name="Long" cond="$Short = 0xff" defaultMode="missing">
-        <int name="ActLong" type="uint16" /> 
+        <int name="ActLong" type="uint16" />
     </optional>
 </bundle>
 ```
-Usage of **valueOverride** property ensures that the custom code 
+Usage of **valueOverride** property ensures that the custom code
 of value retrieval is injected into the code generation.
 
 The custom code itself
 (residing in [dsl_src/include/tutorial22/field/Length.h.value](dsl_src/include/tutorial22/field/Length.h.value)
-and finding its way to the actual code in 
-[include/tutorial22/field/Length.h](include/tutorial22/field/Length.h)) 
+and finding its way to the actual code in
+[include/tutorial22/field/Length.h](include/tutorial22/field/Length.h))
 defines three functions:
 ```cpp
 /// @brief Get length value
@@ -111,5 +111,4 @@ is used, while for the second one the **long** form is in place.
 - In most cases custom length retrieval functionality also requires providing `maxValue()`
   static constexpr function, which provides maximal remaining length value.
 
-
-[Read Previous Tutorial](../tutorial21) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial23) 
+[Read Previous Tutorial](../tutorial21) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial23)

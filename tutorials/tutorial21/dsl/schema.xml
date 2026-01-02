@@ -4,7 +4,7 @@
         <string name="Msg1Name" defaultValue="Message 1" />
         <string name="Msg2Name" defaultValue="Message 2" />
         <string name="Msg3Name" defaultValue="Message 3" />
-            
+
         <enum name="MsgId" type="uint8" semanticType="messageId">
             <validValue name="M1" val="1" displayName="^Msg1Name" />
             <validValue name="M2" val="2" displayName="^Msg2Name" />
@@ -27,14 +27,14 @@
                 <validValue name="V3" val="3" />
             </enum>
             <int name="IntMem" type="uint8" bitLength="6" />
-        </bitfield>        
-        
+        </bitfield>
+
     </fields>
-    
+
     <interface name="Interface" description="Common Interface for all the messages.">
         <ref field="BasicFlags" name="Flags" />
-    </interface>    
-        
+    </interface>
+
     <frame name="Frame">
         <size name="Size">
             <int name="Field" type="uint16" displayName="Size" />
@@ -43,9 +43,9 @@
         <value name="Flags" field="BasicFlags" interfaceFieldName="Flags" />
         <payload name="Data" />
     </frame>
-    
+
     <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name" />
-    
+
     <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name" />
-    
+
 </schema>

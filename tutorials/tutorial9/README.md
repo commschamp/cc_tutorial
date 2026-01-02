@@ -4,7 +4,7 @@ Dealing with multiple uni-directional messages.
 Some protocols define uni-directional messages that always travel one direction and never back,
 i.e. only sent or only received, but never both.
 
-The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows specifying the 
+The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows specifying the
 direction of the message using **sender** property. The available values are
 "client", "server", and "both" (default). All the previous tutorials didn't use this property and
 as the result were assumed to be bi-directional.
@@ -19,15 +19,15 @@ The [schema](dsl/schema.xml) of this tutorial defines the following messages:
 In this particular tutorial the **client** sends `Msg1` and `Msg3` to the **server**,
 which responds with `Msg2` and `Msg4` respectively.
 
-All the previous tutorials defined a single interface class for all the messages that implemented 
+All the previous tutorials defined a single interface class for all the messages that implemented
 various polymorphic behaviors including **read** and **write**. If such approach is
 taken for this particular case, then all the messages will have various virtual
 functions that are never really used. For example **client** application will never
 invoke polymorphic `read()` of `Msg1` and `Msg3`, while **server** will never invoke
 polymorphic `write()` of these messages.
 
-For cases like this, where majority of messages are uni-directional, it is highly 
-recommended to split the messages into **input** and **output** ones and 
+For cases like this, where majority of messages are uni-directional, it is highly
+recommended to split the messages into **input** and **output** ones and
 have different polymorphic interfaces for them defined. It will improve the
 generated code size as well as compilation speed.
 
@@ -40,7 +40,7 @@ using InMessage =
         comms::option::app::Handler<ServerSession> // Polymorphic message dispatch
     >;
 ```
-It requires only polymorphic read and polymorphic dispatch. The input messages are 
+It requires only polymorphic read and polymorphic dispatch. The input messages are
 defined as:
 ```cpp
 using InMsg1 = tutorial9::message::Msg1<InMessage>;
@@ -61,13 +61,13 @@ While the output messages themselves are:
 using OutMsg2 = tutorial9::message::Msg2<OutMessage>;
 using OutMsg4 = tutorial9::message::Msg4<OutMessage>;
 ```
-There is also an important thing to note. The 
+There is also an important thing to note. The
 [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator produces
-[include/tutorial9/input/ClientInputMessages.h](include/tutorial9/input/ClientInputMessages.h) and 
+[include/tutorial9/input/ClientInputMessages.h](include/tutorial9/input/ClientInputMessages.h) and
 [include/tutorial9/input/ServerInputMessages.h](include/tutorial9/input/ServerInputMessages.h) which define input messages
 for the **client** and **server** sides respectively.
 
-Please also pay closer attention to the frame class definition inside 
+Please also pay closer attention to the frame class definition inside
 [include/tutorial9/frame/Frame.h](include/tutorial9/frame/Frame.h).
 ```cpp
 template <
@@ -77,11 +77,11 @@ template <
 >
 class Frame ...
 ```
-All the previous tutorials provided only the common message interface class as 
+All the previous tutorials provided only the common message interface class as
 the first template parameter while leaving all others as default. The
-second template parameter specifies all **input** messages the frame is 
-expected to recognize in order to properly create message object. The 
-default configuration is to use all the defined messages 
+second template parameter specifies all **input** messages the frame is
+expected to recognize in order to properly create message object. The
+default configuration is to use all the defined messages
 (defined in [include/tutorial9/input/AllMessages.h](include/tutorial9/input/AllMessages.h)).
 
 In this tutorial the **server** needs to recognize only limited number of messages,
@@ -105,7 +105,7 @@ class ClientSession : public Session
 public:
 
     ...
-    
+
     using InMessage =
         tutorial9::Message<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
@@ -143,7 +143,7 @@ private:
 Please pay attention that the frame uses [tutorial9::input::ClientInputMessages](include/tutorial9/input/ClientInputMessages.h)
 as the list of input messages suitable for the **client**.
 
-Now it's time to take a closer look at the **client** code that sends the 
+Now it's time to take a closer look at the **client** code that sends the
 messages out to the **server**.
 ```cpp
 void ClientSession::sendMsg1()
@@ -170,7 +170,7 @@ void ClientSession::sendMsg3()
     sendMessage(msg);
 }
 ```
-Although `Msg2` and `Msg4` are marked as sent only by the **server** and 
+Although `Msg2` and `Msg4` are marked as sent only by the **server** and
 never by the **client**, nothing prevents us from creating such output
 messages by the **client** and successfully send them to the **server**.
 The latter however does **NOT** include `Msg2` and `Msg4` as its input
@@ -183,21 +183,21 @@ functionality of the **frame** supports any type of message interface class and
 does **NOT** care about a list of supported **output** messages.
 
 ## Summary
-- The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows definition 
+- The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows definition
   of the direction of the message using **sender** property.
 - When majority of the protocol messages are uni-directional it is highly recommended
   to split the common interface class into two for **input** and **output** messages
   to avoid generation of unnecessary virtual functions.
 - The [frame](include/tutorial/frame/Frame.h) definition requires information about
-  **input** message interface as well as list of supported **input** messages and 
+  **input** message interface as well as list of supported **input** messages and
   does **NOT** care how the **output** messages are defined.
-- The generated code contains 
+- The generated code contains
   [include/&lt;namespace&gt;/input/ClientInputMessages.h](/include/tutorial9/input/ClientInputMessages.h)
   and [include/&lt;namespace&gt;/input/ServerInputMessages.h](/include/tutorial9/input/ServerInputMessages.h)
   to define list of **input** messages relevant for **client** and **server** respectively.
 - The default list of **input** messages for the [frame](include/tutorial/frame/Frame.h) is
-  [include/&lt;namespace&gt;/input/AllMessages.h](/include/tutorial9/input/AllMessages.h). 
+  [include/&lt;namespace&gt;/input/AllMessages.h](/include/tutorial9/input/AllMessages.h).
   It is highly recommended to replace it with more appropriate one depending on the
   end application logic.
 
-[Read Previous Tutorial](../tutorial8) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial10) 
+[Read Previous Tutorial](../tutorial8) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial10)

@@ -5,7 +5,7 @@ comms::ErrorStatus doRead(TIter& iter, std::size_t len)
     field_f1().setExists();
     field_f2().setMissing();
     field_f3().setMissing();
-    
+
     auto es = Base::doRead(iter, len);
     if (es != comms::ErrorStatus::Success) {
         return es;
@@ -18,6 +18,6 @@ comms::ErrorStatus doRead(TIter& iter, std::size_t len)
         field_f2().setExists();
         field_f3().setExists();
     }
-    
+
     return es;
 }

@@ -9,14 +9,14 @@
 
         <message name="Prot1PseudoMsg" id="0">
             <data name="Data" />
-        </message>        
+        </message>
 
         <frame name="Prot1Frame">
             <sync name="Prefix" seekField="true" escField="prot1.EscField">
                 <field>
                     <int name="SyncField" type="uint8" defaultValue="0x02" />
                 </field>
-            </sync>        
+            </sync>
             <id name="Id">
                 <int name="IdField" type="uint8" defaultValue="0" pseudo="true" />
             </id>
@@ -25,8 +25,8 @@
                 <field>
                     <int name="SyncField" type="uint8" defaultValue="0x03" />
                 </field>
-            </sync>        
-        </frame>        
+            </sync>
+        </frame>
     </ns>
 
     <ns name="prot2">
@@ -35,7 +35,7 @@
             <string name="Msg2Name" defaultValue="Message 2" />
             <string name="Msg3Name" defaultValue="Message 3" />
             <string name="Msg4Name" defaultValue="Message 4" />
-                
+
             <enum name="MsgId" type="uint8" semanticType="messageId">
                 <validValue name="M1" val="1" displayName="^prot2.Msg1Name" />
                 <validValue name="M2" val="2" displayName="^prot2.Msg2Name" />
@@ -43,21 +43,21 @@
                 <validValue name="M4" val="4" displayName="^prot2.Msg4Name" />
             </enum>
         </fields>
-        
+
         <frame name="Prot2Frame">
             <id name="Id" field="prot2.MsgId" />
             <payload name="Data" />
         </frame>
 
         <interface name="Prot2Interface" />
-        
+
         <message name="Msg1" id="prot2.MsgId.M1" displayName="^prot2.Msg1Name">
             <string name="F1" />
         </message>
-        
+
         <message name="Msg2" id="prot2.MsgId.M2" displayName="^prot2.Msg2Name">
             <data name="F1" />
-        </message>    
+        </message>
 
         <message name="Msg3" id="prot2.MsgId.M3" displayName="^prot2.Msg3Name">
             <int name="F1" type="uint16" />

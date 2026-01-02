@@ -133,7 +133,7 @@ public:
         return "Custom Message2";
     }
 
-    /// @brief Custom read 
+    /// @brief Custom read
     template <typename TIter>
     comms::ErrorStatus doRead(TIter& iter, std::size_t len)
     {
@@ -141,7 +141,7 @@ public:
         return Base::doRead(iter, len);
     }
 
-    /// @brief Custom write 
+    /// @brief Custom write
     template <typename TIter>
     comms::ErrorStatus doWrite(TIter& iter, std::size_t len) const
     {

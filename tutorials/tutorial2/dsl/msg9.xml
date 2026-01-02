@@ -12,7 +12,7 @@
                 <bit name="B5" idx="5" />
             </set>
         </bitfield>
-        
+
         <bitfield name="B9_2">
             <description>Some Field Description</description>
             <members>
@@ -29,7 +29,7 @@
             </members>
         </bitfield>
     </fields>
-    
+
     <message name="Msg9" id="MsgId.M9" displayName="Message 9">
         <ref name="F1" field="B9_1" />
         <ref name="F2" field="B9_2" />

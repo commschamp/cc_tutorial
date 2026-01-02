@@ -89,7 +89,7 @@ void ClientSession::writeMessage(const Prot2Interface& msg, MsgBuf& output)
     if (es != comms::ErrorStatus::Success) {
         assert(!"Write operation failed unexpectedly");
         return;
-    }    
+    }
 
     // Introduce special characters
     addEscapes(outputTmp);
@@ -109,7 +109,7 @@ void ClientSession::writeMessage(const Prot2Interface& msg, MsgBuf& output)
     if (es != comms::ErrorStatus::Success) {
         assert(!"Write operation failed unexpectedly");
         return;
-    }       
+    }
 }
 
 void ClientSession::doNextStage()

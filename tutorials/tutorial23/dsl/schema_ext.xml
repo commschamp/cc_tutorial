@@ -7,7 +7,7 @@
                     <special name="LongForm" val="0xff" />
                 </int>
                 <optional name="Long" cond="$Short = 0xff" defaultMode="missing">
-                    <int name="ActLong" type="uint16" /> 
+                    <int name="ActLong" type="uint16" />
                 </optional>
             </bundle>
 
@@ -17,7 +17,7 @@
 
             <string name="S1">
                 <lengthPrefix>
-                    <int name="LengthPrefix" type="uint8" /> 
+                    <int name="LengthPrefix" type="uint8" />
                 </lengthPrefix>
             </string>
         </fields>

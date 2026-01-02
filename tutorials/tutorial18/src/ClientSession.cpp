@@ -16,7 +16,7 @@ namespace
 template <typename TField>
 void printIntFieldHex(const TField& field, const std::string& prefix = std::string())
 {
-    std::cout << '\t' << prefix << field.name() << " = " << 
+    std::cout << '\t' << prefix << field.name() << " = " <<
         std::hex << "0x" << std::setfill('0') << std::setw(sizeof(typename TField::ValueType) * 2) << field.value() << std::dec << '\n';
 }
 
@@ -148,11 +148,11 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
         Frame::MsgPtr msg;
         Frame::AllFields transportFields;
 
-        auto es = 
+        auto es =
             m_frame.readFieldsCached(
                 transportFields,
-                msg, 
-                iter, 
+                msg,
+                iter,
                 remLen);
 
         if (es == comms::ErrorStatus::NotEnoughData) {
@@ -205,7 +205,7 @@ void ClientSession::sendMessage(const Message& msg)
     // The frame will use polymorphic message ID retrieval to
     // prefix message payload with message ID
     auto es = m_frame.write(msg, writeIter, output.max_size());
-    
+
     if (es == comms::ErrorStatus::UpdateRequired) {
         auto updateIter = &output[0];
         es = m_frame.update(updateIter, output.size());

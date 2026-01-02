@@ -6,7 +6,7 @@
                 <validValue name="K1" val="0" />
                 <validValue name="K2" val="2" />
                 <validValue name="K3" val="5" />
-            </enum>        
+            </enum>
         </fields>
 
         <interface name="Interface" />
@@ -18,11 +18,11 @@
 
         <message name="Prop1" id="var1.PropKey.K1">
             <int name="Val" type="uint16" />
-        </message>     
+        </message>
 
         <message name="Prop2" id="var1.PropKey.K2">
             <float name="Val" type="float" defaultValue="nan" />
-        </message>   
+        </message>
 
         <message name="Prop3" id="var1.PropKey.K3">
             <string name="Val">
@@ -30,7 +30,7 @@
                     <int name="Length" type="uint8" />
                 </lengthPrefix>
             </string>
-        </message> 
+        </message>
     </ns>
 
     <ns name="var2">
@@ -40,7 +40,7 @@
                 <validValue name="K5" val="15" />
                 <validValue name="K6" val="25" />
                 <validValue name="K7" val="30" />
-            </enum>        
+            </enum>
         </fields>
 
         <interface name="Interface" />
@@ -51,7 +51,7 @@
                 <int name="LengthField" type="uint8"/>
             </size>
             <payload name="Val" />
-        </frame>  
+        </frame>
 
         <interface name="Message" />
 
@@ -61,15 +61,15 @@
 
         <message name="Prop5" id="var2.PropKey.K5">
             <float name="Val" type="double" defaultValue="inf" />
-        </message>     
+        </message>
 
         <message name="Prop6" id="var2.PropKey.K6">
             <string name="Val" />
-        </message> 
+        </message>
 
         <message name="Prop7" id="var2.PropKey.K7">
             <int name="Val" type="uint64" availableLengthLimit="true" />
-        </message>        
+        </message>
     </ns>
 
     <ns name="prot">
@@ -96,10 +96,10 @@
         <message name="Msg1" id="prot.MsgId.M1" displayName="^prot.Msg1Name">
             <int name="Count" type="uint8" />
             <data name="KeyValueProps" />
-        </message>       
+        </message>
 
         <message name="Msg2" id="prot.MsgId.M2" displayName="^prot.Msg2Name">
             <data name="TlvProps" />
-        </message>          
+        </message>
     </ns>
 </schema>

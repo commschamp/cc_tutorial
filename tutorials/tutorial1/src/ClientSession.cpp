@@ -165,7 +165,6 @@ void ClientSession::sendMsg2()
     sendMessage(msg);
 }
 
-
 SessionPtr Session::createClient(boost_wrap::io& io)
 {
     return SessionPtr(new ClientSession(io));

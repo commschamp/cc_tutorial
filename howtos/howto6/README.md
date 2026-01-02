@@ -1,8 +1,8 @@
 # How-To 6
 Multiple run-time determined checksum algorithms in the same protocol.
 
-Some protocols use multiple checksum algorithms with possibly different checksum lengths 
-in their framing and use some extra runtime information in their framing to specify type 
+Some protocols use multiple checksum algorithms with possibly different checksum lengths
+in their framing and use some extra runtime information in their framing to specify type
 of the checksum being used.
 
 This howto uses the following frame
@@ -30,12 +30,12 @@ and communicated to other interested parties (like `CHECKSUM` layer) via message
         <validValue name="Sum8" val="0" />
         <validValue name="Crc16" val="1" />
         <validValue name="Crc32" val="2" />
-    </enum>    
+    </enum>
 </fields>
 
 <interface name="Interface" description="Common Interface for all the messages.">
     <ref field="ChecksumType" />
-</interface> 
+</interface>
 ```
 
 Before proceeding to the actual `<frame>` definition explanation please take a closer look at the
@@ -49,14 +49,14 @@ Also due to the fact that the checksum calculation in this howto scenario is not
 use `<checksum>` layer, instead must be defined as `<custom>` and custom implementation is provided. Although
 checksum value is written after the message payload, the [CommsDSL](https://commschamp.github.io/commsdsl_spec/)
 does NOT support definition of the `<custom>` layer after the `<payload>`. Instead the `<custom>` checksum
-layer must precede all other layers which participate in the checksum calculation. In this howto the 
+layer must precede all other layers which participate in the checksum calculation. In this howto the
 checksum is calculated on the whole frame, as the result the `<custom>` checksum calculation layer must
 be the first one in the frame definition:
 ```xml
 <frame name="Frame">
     <custom name="Checksum">
         <int name="ChecksumField" type="uint32" />
-    </custom>    
+    </custom>
     <sync name="Sync">
         <int name="SyncField" type="uint16" defaultValue="0xabcd" />
     </sync>
@@ -71,13 +71,13 @@ be the first one in the frame definition:
 **NOTE** that the field used for the `Checksum` layer is defined to contain `uint32` types to be able
 to fit all the used checksums.
 
-The implementation of the `Checksum` layer resides in 
+The implementation of the `Checksum` layer resides in
 [dsl_src/include/howto6/frame/layer/Checksum.h](dsl_src/include/howto6/frame/layer/Checksum.h) and
-copied to the protocol definition 
-([include/howto6/frame/layer/Checksum.h](include/howto6/frame/layer/Checksum.h)) 
+copied to the protocol definition
+([include/howto6/frame/layer/Checksum.h](include/howto6/frame/layer/Checksum.h))
 by the code generator.
 
-The `Checksum` layer is implemented by extending the 
+The `Checksum` layer is implemented by extending the
 [comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html)
 class provided by the [COMMS Library](https://github.com/commschamp/comms), and
 customizing various operations.
@@ -96,11 +96,11 @@ class Checksum : public
     using Base = ...;
 };
 ```
-**NOTE**, that the code above uses 
-[Curiously Recurring Template Pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern) 
+**NOTE**, that the code above uses
+[Curiously Recurring Template Pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
 to provide the base
-[comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html) class with the 
-actual extending layer type using **comms::option::def::ExtendingClass** option. It makes the customization 
+[comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html) class with the
+actual extending layer type using **comms::option::def::ExtendingClass** option. It makes the customization
 of the default operations possible.
 
 In order to support different checksum algorithms the following default operations are overridden:
@@ -116,8 +116,8 @@ public:
     static typename Field::ValueType calculateChecksum(const TMsg* msgPtr, TIter& iter, std::size_t len, bool& checksumValid)
     {
         ... // Use transportField_checksumType() to determine type of the required algorithm.
-    }    
- 
+    }
+
     // Due to the fact that the used checksums have different lengths, the
     // functionality of reading a field's value also needs to be customized.
     template <typename TMsg, typename TIter>
@@ -126,7 +126,7 @@ public:
         ... // Use transportField_checksumType() to determine type of the required field serialization length
             // and perform read operation accordingly
     }
- 
+
     // Due to the fact that the used checksums have different lengths, the
     // functionality of reading a field's value also needs to be customized.
     template <typename TMsg, typename TIter>
@@ -135,7 +135,7 @@ public:
         ... // Use transportField_checksumType() to determine type of the required field serialization length
             // and perform write operation accordingly
     }
- 
+
     // Due to the fact that the used checksums have different lengths, the
     // functionality of calculating the field's length needs to be overridden
     template <typename TMsg>
@@ -168,6 +168,6 @@ void ClientSession::sendMsg1()
     sendMessage(msg);
 }
 ```
-Having the checksum type information being part of every `<interface>`, i.e. every message object it 
-allows the sender to decide (based on some criteria) the checksum algorithm to use when preparing the 
+Having the checksum type information being part of every `<interface>`, i.e. every message object it
+allows the sender to decide (based on some criteria) the checksum algorithm to use when preparing the
 message to be sent out.

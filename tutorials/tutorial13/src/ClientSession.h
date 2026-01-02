@@ -20,19 +20,19 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message = 
+    using Message =
         tutorial13::Message<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
             comms::option::app::LengthInfoInterface, // Polymorphic length calculation
             comms::option::app::IdInfoInterface, // Polymorphic message ID retrieval
             comms::option::app::NameInterface, // Polymorphic name retrieval
-            comms::option::app::Handler<ClientSession> // Polymorphic dispatch        
+            comms::option::app::Handler<ClientSession> // Polymorphic dispatch
         >;
 
     // Protocol options for client
     using ClientProtocolOptions = tutorial13::options::ClientDefaultOptions;
-        
+
     // Definition of all the used message classes
     using Msg1_1 = tutorial13::message::Msg1_1<Message, ClientProtocolOptions>;
     using Msg1_2 = tutorial13::message::Msg1_2<Message, ClientProtocolOptions>;
@@ -40,7 +40,7 @@ public:
     using Msg2_1 = tutorial13::message::Msg2_1<Message, ClientProtocolOptions>;
     using Msg2_2 = tutorial13::message::Msg2_2<Message, ClientProtocolOptions>;
     using Msg2_3 = tutorial13::message::Msg2_3<Message, ClientProtocolOptions>;
-    
+
     // Handling functions for all the dispatched message objects
     void handle(Msg1_1& msg);
     void handle(Msg1_2& msg);
@@ -75,8 +75,8 @@ private:
     void sendMsg2_2();
     void sendMsg2_3();
 
-    // Client specific frame 
-    using Frame = 
+    // Client specific frame
+    using Frame =
         tutorial13::frame::Frame<
             Message,
             tutorial13::input::ClientInputMessages<Message, ClientProtocolOptions>,

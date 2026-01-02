@@ -18,7 +18,7 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message = 
+    using Message =
         tutorial18::Message<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::uint8_t*>, // Polymorphic write
@@ -28,11 +28,11 @@ public:
         >;
 
     // Protocol options for server
-    using ServerProtocolOptions = 
+    using ServerProtocolOptions =
         tutorial18::options::DataViewDefaultOptionsT<
             tutorial18::options::ServerDefaultOptions
         >;
-        
+
     // Handle all the received messages in a single function
     template <typename TMsg>
     void handle(TMsg& msg)
@@ -49,11 +49,11 @@ protected:
 
 private:
     // Server input messages
-    using ServerInputMessages = 
+    using ServerInputMessages =
         tutorial18::input::ServerInputMessages<Message, ServerProtocolOptions>;
 
-    // Server specific frame 
-    using Frame = 
+    // Server specific frame
+    using Frame =
         tutorial18::frame::Frame<
             Message,
             ServerInputMessages,

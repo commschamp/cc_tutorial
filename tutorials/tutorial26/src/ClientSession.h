@@ -22,22 +22,22 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message = 
+    using Message =
         tutorial26::Message<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
             comms::option::app::LengthInfoInterface, // Polymorphic length calculation
             comms::option::app::IdInfoInterface, // Polymorphic message ID retrieval
             comms::option::app::NameInterface, // Polymorphic name retrieval
-            comms::option::app::Handler<ClientSession> // Polymorphic dispatch        
+            comms::option::app::Handler<ClientSession> // Polymorphic dispatch
         >;
 
     // Protocol options for client
     using ClientProtocolOptions = tutorial26::options::ClientDefaultOptions;
-        
+
     // Definition of all the used message classes
     TUTORIAL26_ALIASES_FOR_ALL_MESSAGES(,,Message,ClientProtocolOptions);
-    
+
     // Handling functions for all the dispatched message objects
     template <typename TMsg>
     void handle(TMsg& msg)
@@ -67,8 +67,8 @@ private:
     void sendMsg2();
     void sendMsg3();
 
-    // Client specific frame 
-    using Frame = 
+    // Client specific frame
+    using Frame =
         tutorial26::frame::Frame<
             Message,
             tutorial26::input::ClientInputMessages<Message, ClientProtocolOptions>,

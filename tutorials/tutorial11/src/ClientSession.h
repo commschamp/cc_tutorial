@@ -24,11 +24,11 @@ public:
     using Message = tutorial11::Message<>;
 
     // Protocol options for client
-    using ClientProtocolOptions = 
+    using ClientProtocolOptions =
         ProtocolOptionsT<
             tutorial11::options::ClientDefaultOptions
-        >;        
-        
+        >;
+
     // Definition of all the used message classes
     using Msg1 = tutorial11::message::Msg1<Message, ClientProtocolOptions>;
     using Msg2 = tutorial11::message::Msg2<Message, ClientProtocolOptions>;
@@ -90,8 +90,8 @@ private:
     void sendMsg2();
     void sendMsg3();
 
-    // Client specific frame 
-    using Frame = 
+    // Client specific frame
+    using Frame =
         tutorial11::frame::Frame<
             Message,
             tutorial11::input::ClientInputMessages<Message, ClientProtocolOptions>,

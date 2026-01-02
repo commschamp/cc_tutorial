@@ -78,7 +78,7 @@ void ServerSession::sendMessage(const Prot2Interface& msg)
     if (es != comms::ErrorStatus::Success) {
         assert(!"Write operation failed unexpectedly");
         return;
-    }    
+    }
 
     // Send (re)serialized message back
     sendOutput(&finalOutput[0], finalOutput.size());

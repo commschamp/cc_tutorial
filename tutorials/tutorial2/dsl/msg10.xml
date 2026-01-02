@@ -46,7 +46,7 @@
         </list>
 
     </fields>
-    
+
     <message name="Msg10" id="MsgId.M10" displayName="Message 10">
         <ref name="F1" field="L10_1" />
         <ref name="F2" field="L10_2" />

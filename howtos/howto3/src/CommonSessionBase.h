@@ -14,6 +14,6 @@ struct CommonSessionBase
     static void postProcessOutput(MsgBuf& buf);
     static void dropEscapes(const std::uint8_t* buf, std::size_t bufLen, MsgBuf& outBuf);
     static void addEscapes(MsgBuf& buf);
-}; 
+};
 
 }

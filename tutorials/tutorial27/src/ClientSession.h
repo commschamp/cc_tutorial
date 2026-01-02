@@ -12,7 +12,6 @@
 #include "tutorial27/sub2/frame/Frame.h"
 #include "tutorial27/sub2/input/ClientInputMessages.h"
 
-
 #include "Session.h"
 
 namespace cc_tutorial
@@ -25,23 +24,23 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message = 
+    using Message =
         tutorial27::Message<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
             comms::option::app::LengthInfoInterface, // Polymorphic length calculation
             comms::option::app::IdInfoInterface, // Polymorphic message ID retrieval
             comms::option::app::NameInterface, // Polymorphic name retrieval
-            comms::option::app::Handler<ClientSession> // Polymorphic dispatch        
+            comms::option::app::Handler<ClientSession> // Polymorphic dispatch
         >;
 
     // Protocol options for client
     using ClientProtocolOptions = tutorial27::options::ClientDefaultOptions;
-        
+
     // Definition of all the used message classes
     TUTORIAL27_SUB1_ALIASES_FOR_ALL_MESSAGES(,,Message,ClientProtocolOptions);
     TUTORIAL27_SUB2_ALIASES_FOR_ALL_MESSAGES(,,Message,ClientProtocolOptions);
-    
+
     // Handling functions for all the dispatched message objects
     template <typename TMsg>
     void handle(TMsg& msg)
@@ -83,19 +82,19 @@ private:
     void sendMsg5();
     void sendMsg6();
 
-    // Client specific frame 
-    using Sub1Frame = 
+    // Client specific frame
+    using Sub1Frame =
         tutorial27::sub1::frame::Frame<
             Message,
             tutorial27::sub1::input::ClientInputMessages<Message, ClientProtocolOptions>,
             ClientProtocolOptions
         >;
-    using Sub2Frame = 
+    using Sub2Frame =
         tutorial27::sub2::frame::Frame<
             Message,
             tutorial27::sub2::input::ClientInputMessages<Message, ClientProtocolOptions>,
             ClientProtocolOptions
-        >;        
+        >;
 
     Sub1Frame m_sub1Frame;
     Sub1Frame::MsgPtr m_sub1Msg;

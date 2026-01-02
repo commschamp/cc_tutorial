@@ -13,7 +13,7 @@ struct BareMetalProtocolOptionsT : public TBase
     {
         struct Msg1Fields : public TBase::message::Msg1Fields
         {
-            using F1 = 
+            using F1 =
                 std::tuple<
                     comms::option::app::FixedSizeStorage<8>,
                     typename TBase::message::Msg1Fields::F1

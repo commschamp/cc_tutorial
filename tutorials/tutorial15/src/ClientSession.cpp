@@ -13,7 +13,7 @@ namespace cc_tutorial
 void ClientSession::handle(Msg2& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
-    
+
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg1Msg2) {

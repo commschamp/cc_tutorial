@@ -27,7 +27,7 @@ class Id : public
     >
 {
     // Repeat base type
-    using Base = 
+    using Base =
         comms::frame::MsgIdLayer<
             TField,
             TMessage,
@@ -39,7 +39,7 @@ class Id : public
 
 public:
     // Repeat some types from the base class
-    using Field = typename Base::Field;    
+    using Field = typename Base::Field;
     using MsgIdType = typename Base::MsgIdType;
     using MsgIdParamType = typename Base::MsgIdParamType;
 
@@ -51,13 +51,13 @@ public:
 
     // Before forwarding read to the next layer let the flags layer know
     // whether its field is present
-    template<typename TMsg> 
+    template<typename TMsg>
     void beforeRead(const Field& field, TMsg& msg)
     {
         static_cast<void>(msg);
         bool hasFlags = field.field_ctrl().getBitValue_HasFlags();
         Base::nextLayer().setFieldPreset(hasFlags);
-    } 
+    }
 
     // Prepare field value to be written
     template <typename TMsg>
@@ -68,12 +68,10 @@ public:
         field.field_ctrl().setBitValue_HasFlags(hasFlags);
     }
 };
-   
+
 } // namespace layer
 
 } // namespace frame
 
 } // namespace howto8
-
-
 

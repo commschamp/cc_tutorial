@@ -45,14 +45,14 @@ public:
 };
 ```
 The message interface class defines support for polymorphic dispatch
-(thanks to `comms::option::app::Handler` option). The handler class is 
+(thanks to `comms::option::app::Handler` option). The handler class is
 `ClientSession` itself. It also defines `RetType` inner type which
-specifies the return type of the `handle()` member functions. 
+specifies the return type of the `handle()` member functions.
 
 There is a **compile-time** meta-programming logic inside the
 [COMMS Library](https://github.com/commschamp/comms) which
-determines the return type of the 
-[comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html)'s 
+determines the return type of the
+[comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html)'s
 `dispatch()` member function. If the used handler type defines `RetType` inner type, then
 it is taken and defined as return type of the `dispatch()` member function.
 
@@ -66,18 +66,18 @@ public:
     {
         return dispatchImpl(ClientSession& handler)
     }
-    
+
 protected:
     virtual bool dispatchImpl(ClientSession& handler) = 0;
 };
 ```
-The [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html), 
+The [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html),
 which serves as the base class for every message implements the virtual function taking
 the return type into account:
 ```cpp
 class comms::MessageBase
 {
-    
+
 protected:
     virtual bool dispatchImpl(ClientSession& handler) override
     {
@@ -88,7 +88,7 @@ protected:
 
 ----
 
-**SIDE NOTE**: One of the previous tutorials showed that the handler type may be 
+**SIDE NOTE**: One of the previous tutorials showed that the handler type may be
 forward declared before the definition of the common message interface class.
 It is important to understand that in such case the presence of the `RetType` inner type
 inside the handler class cannot be determined. As the result `void` as the
@@ -114,8 +114,8 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
 }
 ```
 If the call to `dispatch()` returned false, then the client's execution is interrupted.
-In this particular tutorial the **client** sends 3 messages (`Msg1`, `Msg2`, and `Msg3`) 
-to the **server** which echoes them back. 
+In this particular tutorial the **client** sends 3 messages (`Msg1`, `Msg2`, and `Msg3`)
+to the **server** which echoes them back.
 
 Also the client defines the following handling functions:
 ```cpp
@@ -146,8 +146,7 @@ one of these functions need to be used instead.
 - The [comms::Message::dispatch()](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html)
   as well as all `comms::dispatchMsg*()` functions in [comms/dispatch.h](https://commschamp.github.io/comms_doc/dispatch_8h.html)
   use the inner `RetType` of the handler class to define their own return types.
-- In case the handler class is forward declared, the automatic determination of the return 
+- In case the handler class is forward declared, the automatic determination of the return
   type is not possible and as the result `void` is assumed.
 
-
-[Read Previous Tutorial](../tutorial7) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial9) 
+[Read Previous Tutorial](../tutorial7) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial9)

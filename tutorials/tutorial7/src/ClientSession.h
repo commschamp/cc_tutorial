@@ -46,12 +46,11 @@ public:
     };
 
     using HandlerPtr = std::unique_ptr<HandlerBase>;
-        
+
     // Definition of all the used message classes
     using Msg1 = tutorial7::message::Msg1<Message>;
     using Msg2 = tutorial7::message::Msg2<Message>;
     using Msg3 = tutorial7::message::Msg3<Message>;
-
 
     class Handler1 : public HandlerBase
     {

@@ -30,13 +30,13 @@ The naive and straightforward way to implement such frame would be something lik
 </frame>
 ```
 Such definition will cause the error being explained here. In order to understand the error and the solution,
-the developer needs to understand some aspects of the 
-[COMMS Library](https://github.com/commschamp/comms) architecture and as a 
+the developer needs to understand some aspects of the
+[COMMS Library](https://github.com/commschamp/comms) architecture and as a
 consequence the limitations of the latter.
 
-The [tutorial5](../../tutorials/tutorial5) explains that the 
+The [tutorial5](../../tutorials/tutorial5) explains that the
 [COMMS Library](https://github.com/commschamp/comms) implements framing
-by they "layer" classes wrapping one another, while the 
+by they "layer" classes wrapping one another, while the
 [comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html)
 (defined using [&lt;checksum&gt;](https://commschamp.github.io/commsdsl_spec/#frames-checksum) in the schema)
 wraps all the layers, checksum on which needs to be implemented. In this particular case it is only the
@@ -45,13 +45,13 @@ wraps all the layers, checksum on which needs to be implemented. In this particu
 SYNC( SIZE( FLAGS( ID( CHECKSUM( PAYLOAD ) ) ) ) )
 ```
 Now, let's take a closer look at the `FLAGS` layer. The [&lt;value&gt;](https://commschamp.github.io/commsdsl_spec/#frames-value)
-definition is implemented using 
+definition is implemented using
 [comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html)
 class, which is expected to re-assign the read field's value to the message object. However, in this particular scenario
-the message object hasn't been created yet, because the `ID` information hasn't been processed yet. To help with 
+the message object hasn't been created yet, because the `ID` information hasn't been processed yet. To help with
 such cases the [COMMS Library](https://github.com/commschamp/comms) has compile-time
-meta-programming logic to recognize the scenario and automatically forces splitting its read operation to "until the payload" and 
-"from the payload". When such split occurs, the relevant flags field is re-assigned to message object right before the read 
+meta-programming logic to recognize the scenario and automatically forces splitting its read operation to "until the payload" and
+"from the payload". When such split occurs, the relevant flags field is re-assigned to message object right before the read
 operation is forwarded to process the message payload.
 
 The [comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html)
@@ -60,7 +60,7 @@ disallows such split of read operation to "until" and "from" payload, because in
 payload processing needs to be complete.
 
 Such contradiction creates a conflict, which is manifested by the static assertion mentioned in the subject of this howto. In
-order to resolve it, the framing definition needs to be modified as if the `FLAGS` resides **after** the `ID`. The 
+order to resolve it, the framing definition needs to be modified as if the `FLAGS` resides **after** the `ID`. The
 [schema](dsl/schema.xml) of this howto does exactly that:
 ```xml
 <frame name="Frame">
@@ -80,7 +80,7 @@ order to resolve it, the framing definition needs to be modified as if the `FLAG
 </frame>
 ```
 Note, that `PseudoFlags` layer is marked with `pseudo="true"` to indicate that its field is not really
-serialized. The definition of the `PseudoFlags` in the 
+serialized. The definition of the `PseudoFlags` in the
 [generated code](include/howto10/frame/Frame.h) uses `comms::option::def::PseudoValue` option to ensure that.
 ```cpp
 using PseudoFlags =
@@ -91,7 +91,7 @@ using PseudoFlags =
         comms::option::def::PseudoValue
     >;
 ```
-The **real** `Flags` field needs to be customized beyond the current capabilities of the 
+The **real** `Flags` field needs to be customized beyond the current capabilities of the
 [CommsDSL](https://github.com/commschamp/CommsDSL-Specification). It requires defining &lt;custom&gt; layer:
 ```xml
 <custom name="Flags" field="Flags" />
@@ -121,16 +121,16 @@ public:
         auto& idLayer = Base::nextLayer();
         auto& psedoFlagsLayer = idLayer.nextLayer();
 
-        // Re-assign the field to the pseudo layer, which is going to 
+        // Re-assign the field to the pseudo layer, which is going to
         // assign it to the message object
         psedoFlagsLayer.pseudoField().value() = field.value();
         return true;
     }
 };
 ```
-Note usage of the `comms::option::def::ProtocolLayerSuppressReadUntilDataSplitForcing` option is forcefully passed to the 
+Note usage of the `comms::option::def::ProtocolLayerSuppressReadUntilDataSplitForcing` option is forcefully passed to the
 base class to suppress the described earlier attempt to split the read operation into two stages. The class definition also overrides
-the default implementation of the `reassignFieldValueToMsg()` to assign the read field's value to the pseudo layer, 
-which follows the `ID` instead of assigning the value to the message object, which doesn't exist at this stage yet. 
+the default implementation of the `reassignFieldValueToMsg()` to assign the read field's value to the pseudo layer,
+which follows the `ID` instead of assigning the value to the message object, which doesn't exist at this stage yet.
 The pseudo layer will assign the read value to the message object when its turn comes.
 

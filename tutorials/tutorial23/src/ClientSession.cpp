@@ -17,7 +17,6 @@ void ClientSession::handle(Msg1& msg)
         '\t' << msg.field_f2().name() << " = " << msg.field_f2().value() << '\n' <<
         std::endl;
 
-
     if (m_currentStage != CommsStage_Msg1) {
         std::cerr << "ERROR: Unexpected stage" << std::endl;
         return;

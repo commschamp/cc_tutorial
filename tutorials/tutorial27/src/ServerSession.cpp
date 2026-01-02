@@ -25,7 +25,7 @@ void ServerSession::handle(Msg2& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\"" << std::endl;
     assert(m_protStage == ProtStage_sub1);
-    sendMessage(msg);    
+    sendMessage(msg);
     m_sub1Msg.reset(new Msg3);
 }
 
@@ -33,7 +33,7 @@ void ServerSession::handle(Msg3& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\"" << std::endl;
     assert(m_protStage == ProtStage_sub1);
-    sendMessage(msg);    
+    sendMessage(msg);
     m_sub1Msg.reset();
     m_protStage = ProtStage_sub2;
 }
@@ -49,14 +49,14 @@ void ServerSession::handle(Msg5& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\"" << std::endl;
     assert(m_protStage == ProtStage_sub2);
-    sendMessage(msg);    
+    sendMessage(msg);
 }
 
 void ServerSession::handle(Msg6& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\"" << std::endl;
     assert(m_protStage == ProtStage_sub2);
-    sendMessage(msg);    
+    sendMessage(msg);
 }
 
 void ServerSession::handle(Message& msg)
@@ -117,7 +117,7 @@ void ServerSession::sendMessage(const Message& msg)
     if (es != comms::ErrorStatus::Success) {
         assert(!"Write operation failed unexpectedly");
         return;
-    }    
+    }
 
     // Send (re)serialized message back
     sendOutput(&output[0], output.size());

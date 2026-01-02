@@ -20,7 +20,7 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message = 
+    using Message =
         tutorial15::Message<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::uint8_t*>, // Polymorphic write
@@ -31,13 +31,13 @@ public:
         >;
 
     // Generic message
-    using GenericMessage = 
+    using GenericMessage =
         comms::GenericMessage<
             Message,
             comms::option::app::OrigDataView // Passed to raw data storage field
         >;
 
-    using ServerProtocolOptionsBase = 
+    using ServerProtocolOptionsBase =
         tutorial15::options::DataViewDefaultOptionsT<
             tutorial15::options::ServerDefaultOptions
         >;
@@ -52,7 +52,7 @@ public:
             struct FrameLayers : public Base::frame::FrameLayers
             {
                 // Extra options for tutorial15::frame::FrameLayers::Id layer.
-                using Id = 
+                using Id =
                     std::tuple<
                         comms::option::app::SupportGenericMessage<GenericMessage>,
                         Base::frame::FrameLayers::Id
@@ -65,11 +65,11 @@ public:
     using Msg1 = tutorial15::message::Msg1<Message, ServerProtocolOptions>;
 
     // Relevant input messages
-    using InputMessages = 
+    using InputMessages =
         std::tuple<
             Msg1
         >;
-        
+
     // Handle all the received messages
     void handle(Msg1& msg);
     void handle(GenericMessage& msg);
@@ -79,8 +79,8 @@ protected:
     virtual std::size_t processInputImpl(const std::uint8_t* buf, std::size_t bufLen) override final;
 
 private:
-    // Server specific frame 
-    using Frame = 
+    // Server specific frame
+    using Frame =
         tutorial15::frame::Frame<
             Message,
             InputMessages,

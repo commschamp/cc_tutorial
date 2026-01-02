@@ -29,7 +29,7 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
 void ServerSession::sendMessage(const Message& msg)
 {
-    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << std::endl;    
+    std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << std::endl;
     std::vector<std::uint8_t> output;
 
     // Use polymorphic serialization length calculation to create

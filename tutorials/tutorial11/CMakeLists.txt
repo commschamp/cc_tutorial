@@ -12,7 +12,6 @@ set (client_src
     src/ClientSession.cpp
 )
 
-
 dsl_tutorial_parse(${name} SCHEMAS ${schema_files} SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dsl_src)
 
 bin_tutorial_server(${name} ${server_src})

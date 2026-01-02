@@ -25,7 +25,7 @@ class IdWithSize : public
     >
 {
     // Repeat base type
-    using Base = 
+    using Base =
         comms::frame::MsgIdLayer<
             TField,
             TMessage,
@@ -37,18 +37,18 @@ class IdWithSize : public
 
 public:
     // Repeat some types from the base class
-    using Field = typename Base::Field;    
+    using Field = typename Base::Field;
     using MsgIdType = typename Base::MsgIdType;
     using MsgIdParamType = typename Base::MsgIdParamType;
 
     // Replacement of comms::MsgIdLayer::doRead
     template <typename TMsg, typename TIter, typename TNextLayerReader, typename... TExtraValues>
     comms::ErrorStatus doRead(
-        Field& field, 
-        TMsg& msg, 
-        TIter& iter, 
-        std::size_t size, 
-        TNextLayerReader&& nextLayerReader, 
+        Field& field,
+        TMsg& msg,
+        TIter& iter,
+        std::size_t size,
+        TNextLayerReader&& nextLayerReader,
         TExtraValues... extraValues)
     {
         auto iterTmp = iter;
@@ -56,25 +56,25 @@ public:
 
         auto es = fieldTmp.read(iterTmp, size);
         if (es != comms::ErrorStatus::Success) {
-            return 
+            return
                 Base::doRead(
-                    field, 
-                    msg, 
-                    iter, 
-                    size, 
-                    std::forward<TNextLayerReader>(nextLayerReader), 
+                    field,
+                    msg,
+                    iter,
+                    size,
+                    std::forward<TNextLayerReader>(nextLayerReader),
                     extraValues...);
         }
 
         auto lenInField = static_cast<std::size_t>(fieldTmp.field_size().value());
         auto remLen = std::min(size, lenInField + fieldTmp.length());
-        return 
+        return
             Base::doRead(
-                field, 
-                msg, 
-                iter, 
-                remLen, 
-                std::forward<TNextLayerReader>(nextLayerReader), 
+                field,
+                msg,
+                iter,
+                remLen,
+                std::forward<TNextLayerReader>(nextLayerReader),
                 extraValues...);
     }
 
@@ -98,6 +98,4 @@ public:
 } // namespace frame
 
 } // namespace howto2
-
-
 

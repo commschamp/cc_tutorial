@@ -31,11 +31,11 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
         tutorial18::MsgId msgId = tutorial18::MsgId_ValuesLimit;
         std::size_t msgIdx = std::numeric_limits<std::size_t>::max();
-        auto es = 
+        auto es =
             m_frame.read(
-                msg, 
-                iter, 
-                remLen, 
+                msg,
+                iter,
+                remLen,
                 comms::frame::msgId(msgId),
                 comms::frame::msgIndex(msgIdx));
 
@@ -53,7 +53,7 @@ std::size_t ServerSession::processInputImpl(const std::uint8_t* buf, std::size_t
         if (es == comms::ErrorStatus::Success) {
             assert(msg); // Message object must be allocated
 
-            std::cout << "Detected message: ID=" << (unsigned)msgId << "; idx=" << msgIdx << std::endl; 
+            std::cout << "Detected message: ID=" << (unsigned)msgId << "; idx=" << msgIdx << std::endl;
 
             // Dispatch using id + index to map to real type
             comms::dispatchMsg<ServerInputMessages>(msgId, msgIdx, *msg, *this);

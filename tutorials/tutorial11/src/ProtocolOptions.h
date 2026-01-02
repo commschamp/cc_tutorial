@@ -12,14 +12,14 @@ struct ProtocolOptionsT : public TBase
     {
         struct FrameLayers : public TBase::frame::FrameLayers
         {
-            using Id = 
+            using Id =
                 std::tuple<
                     comms::option::app::ForceDispatchStaticBinSearch,
                     typename TBase::frame::FrameLayers::Id
                 >;
-            
+
         }; // struct FrameLayers
-        
+
     }; // struct frame
 };
 

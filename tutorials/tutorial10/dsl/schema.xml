@@ -6,7 +6,7 @@
         <string name="Msg3Name" defaultValue="Message 3" />
         <string name="Msg4Name" defaultValue="Message 4" />
         <string name="Msg5Name" defaultValue="Message 5" />
-            
+
         <enum name="MsgId" type="uint8" semanticType="messageId">
             <validValue name="M1" val="1" displayName="^Msg1Name" />
             <validValue name="M2" val="2" displayName="^Msg2Name" />
@@ -15,7 +15,7 @@
             <validValue name="M5" val="5" displayName="^Msg5Name" />
         </enum>
     </fields>
-        
+
     <frame name="Frame">
         <size name="Size">
             <int name="SizeField" type="uint16" />
@@ -23,11 +23,11 @@
         <id name="Id" field="MsgId" />
         <payload name="Data" />
     </frame>
-    
+
     <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name" sender="client" />
     <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name" sender="server" />
     <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name" />
     <message name="Msg4" id="MsgId.M4" displayName="^Msg4Name" />
     <message name="Msg5" id="MsgId.M5" displayName="^Msg5Name" />
-    
+
 </schema>

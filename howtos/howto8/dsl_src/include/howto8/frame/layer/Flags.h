@@ -26,7 +26,7 @@ class Flags : public
     >
 {
     // Repeat base type
-    using Base = 
+    using Base =
         comms::frame::TransportValueLayer<
             TField,
             0,
@@ -37,12 +37,12 @@ class Flags : public
 
 public:
     // Repeat types defined in the base class (not visible by default)
-    using Field = typename Base::Field; 
+    using Field = typename Base::Field;
 
     // Extra public functions
     void setFieldPreset(bool value)
     {
-        m_hasFlagsOnRead = value;    
+        m_hasFlagsOnRead = value;
     }
 
     template <typename TMsg>
@@ -71,7 +71,7 @@ public:
         assert(msgPtr != nullptr);
         msgPtr->transportField_flags().value() = field.field().value();
         return true;
-    }    
+    }
 
     // Overriding default field preparation functionality
     template <typename TMsg>
@@ -83,7 +83,7 @@ public:
             mode = comms::field::OptionalMode::Exists;
         }
         field.setMode(mode);
-    } 
+    }
 
     template <typename TMsg>
     static std::size_t doFieldLength(const TMsg& msg)
@@ -93,17 +93,15 @@ public:
         }
 
         return Field::minLength(); // returns 0
-    }    
-    
+    }
+
 private:
-    bool m_hasFlagsOnRead = false;    
+    bool m_hasFlagsOnRead = false;
 };
-   
+
 } // namespace layer
 
 } // namespace frame
 
 } // namespace howto8
-
-
 
