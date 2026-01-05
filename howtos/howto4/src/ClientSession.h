@@ -24,14 +24,14 @@ public:
     using Message = howto4::Message<>;
 
     // Protocol options for client
-    using ClientProtocolOptions = 
+    using ClientProtocolOptions =
         howto4::options::DataViewDefaultOptionsT<
             howto4::options::ClientDefaultOptions
         >;
-        
+
     // Definition of all the used message classes
     using Msg = howto4::message::Msg<Message, ClientProtocolOptions>;
-    
+
     // Handling functions for all the dispatched message objects
     void handle(Msg& msg);
     void handle(Message& msg);
@@ -63,8 +63,8 @@ private:
     void doNextStage();
     void sendMsg();
 
-    // Client specific frame 
-    using Frame = 
+    // Client specific frame
+    using Frame =
         howto4::frame::Frame<
             Message,
             howto4::input::ClientInputMessages<Message, ClientProtocolOptions>,

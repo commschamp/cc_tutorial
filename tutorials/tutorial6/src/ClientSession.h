@@ -26,7 +26,7 @@ public:
             comms::option::app::IdInfoInterface, // Polymorphic message ID retrieval
             comms::option::app::NameInterface // Polymorphic message name retrieval
         >;
-        
+
     // Definition of all the used message classes
     using Msg1 = tutorial6::message::Msg1<Message>;
     using Msg2 = tutorial6::message::Msg2<Message>;

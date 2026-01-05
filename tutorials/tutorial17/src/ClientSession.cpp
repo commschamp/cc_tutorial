@@ -34,7 +34,7 @@ void ClientSession::handle(Msg2& msg)
     printString(msg.field_f1());
     if (printOptionalField(msg.field_f2())) {
         printIntField(msg.field_f2().field(), "\t");
-    }    
+    }
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg2) {
@@ -142,7 +142,7 @@ void ClientSession::sendMsg1()
 
     msg.doRefresh(); // Bring everything into consistent state
     assert(msg.field_f3().doesExist()); // F3 must exist after refresh
-    
+
     sendMessage(msg);
 }
 
@@ -156,7 +156,7 @@ void ClientSession::sendMsg2()
     msg.transportField_flags().setBitValue_B1(true);
 
     msg.doRefresh(); // Bring everything into consistent state
-    assert(msg.field_f2().doesExist()); // F2 must exist after refresh    
+    assert(msg.field_f2().doesExist()); // F2 must exist after refresh
     sendMessage(msg);
 }
 

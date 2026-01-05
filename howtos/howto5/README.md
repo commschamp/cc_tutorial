@@ -1,15 +1,15 @@
 # How-To 5
 Custom transport value containing protocol version and extra flags.
 
-This howto demonstrates having protocol version information in message framing sharing 
-its 2 bytes with extra flags which influence the way message payload is read. 
+This howto demonstrates having protocol version information in message framing sharing
+its 2 bytes with extra flags which influence the way message payload is read.
 
 The protocol message framing for this howto is defined to be:
 ```
 SIZE (2 bytes) | ID (1 byte) | VERSION (12 bits) + FLAGS (4 bits) | PAYLOAD
 ```
 
-Having values (version and flags) in the message framing which influence how 
+Having values (version and flags) in the message framing which influence how
 message payload is read and/or how message is processed requires definition of common message interface (see [schema](dsl/schema.xml)):
 ```xml
 <fields>
@@ -18,13 +18,13 @@ message payload is read and/or how message is processed requires definition of c
     <set name="InterfaceFlags" length="1">
         <bit name="B0" idx="0" />
         <bit name="B1" idx="1" />
-    </set>        
+    </set>
 </fields>
 
 <interface name="Interface" description="Common Interface for all the messages.">
     <ref field="Version" />
     <ref field="InterfaceFlags" name="Flags" />
-</interface>    
+</interface>
 ```
 As a reminder to the reader the current protocol version is defined as the version of the
 schema:
@@ -47,9 +47,9 @@ struct Version : public
     ...
 };
 ```
-In order to make the messages version dependent the generated interface code 
+In order to make the messages version dependent the generated interface code
 (see [include/howto5/Interface.h](include/howto5/Interface.h)) uses
-**comms::option::def::VersionInExtraTransportFields** option to specify index 
+**comms::option::def::VersionInExtraTransportFields** option to specify index
 of the field containing the protocol version:
 ```cpp
 template <typename... TOpt>
@@ -73,7 +73,7 @@ of a `<bitfield>` like one defined and used for framing.
     <bitfield name="VersionWithFlags">
         <ref field="Version" bitLength="12"/>
         <ref field="InterfaceFlags" name="Flags" bitLength="4" />
-    </bitfield>  
+    </bitfield>
 </fields>
 
 <frame name="Frame">
@@ -88,7 +88,7 @@ of a `<bitfield>` like one defined and used for framing.
 The mismatch between having a single field in the `<frame>` and two separate
 fields in the `<interface>` prevents us from using standard `<value>`
 layer in the frame definition. There is a need to inject a custom
-layer code, which can still use 
+layer code, which can still use
 [comms::frame::TransportLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html) (used to implement
 standard `value` layer), but with extra customization (see
 [dsl_src/include/howto5/frame/layer/VersionWithFlags.h](dsl_src/include/howto5/frame/layer/VersionWithFlags.h)).
@@ -103,7 +103,7 @@ class VersionWithFlags : public
         comms::option::def::ExtendingClass<VersionWithFlags<TField, TNextLayer, TOptions...> >
     >
 {
-public:     
+public:
     // Re-assign the values from the field to message object
     template <typename TMsg>
     static bool reassignFieldValueToMsg(const Field& field, TMsg* msgPtr)
@@ -112,7 +112,7 @@ public:
         msgPtr->transportField_version().value() = field.field_version().value();
         msgPtr->transportField_flags().value() = field.field_flags().value();
         return true;
-    }  
+    }
 
     // Prepare field value to be written
     template <typename TMsg>
@@ -120,13 +120,13 @@ public:
     {
         field.field_version().value() = msg.transportField_version().value();
         field.field_flags().value() = msg.transportField_flags().value();
-    }      
+    }
 };
 ```
-**NOTE**, that the code above uses 
-[Curiously Recurring Template Pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern) 
+**NOTE**, that the code above uses
+[Curiously Recurring Template Pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
 to provide the base
-[comms::frame::TransportLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html) class with the 
+[comms::frame::TransportLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html) class with the
 actual extending layer type using **comms::option::def::ExtendingClass** option.
 
 In addition it overrides the default implementation of the **reassignFieldValueToMsg()**
@@ -142,5 +142,4 @@ Other aspects of this howto are described in more details in the:
 presence of the fields in the messages' payloads.
 - [tutorial19](../../tutorials/tutorial19) - influence of the protocol version on the
 presence of some fields in the messages' payloads.
-
 

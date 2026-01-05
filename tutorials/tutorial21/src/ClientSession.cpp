@@ -146,7 +146,7 @@ void ClientSession::sendMsg1()
 
     // Assign the flags
     msg.transportField_flags() = comms::field_cast<Message::TransportField_flags>(flags);
-    
+
     sendMessage(msg);
 }
 
@@ -162,7 +162,7 @@ void ClientSession::sendMsg2()
 
     // Assign the flags
     msg.transportField_flags() = comms::field_cast<Message::TransportField_flags>(flags);
-    
+
     sendMessage(msg);
 }
 

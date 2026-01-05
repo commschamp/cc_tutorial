@@ -25,14 +25,14 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message = 
+    using Message =
         tutorial27::Message<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
             comms::option::app::LengthInfoInterface, // Polymorphic length calculation
             comms::option::app::IdInfoInterface, // Polymorphic message ID retrieval
             comms::option::app::NameInterface, // Polymorphic name retrieval
-            comms::option::app::Handler<ServerSession> // Polymorphic dispatch        
+            comms::option::app::Handler<ServerSession> // Polymorphic dispatch
         >;
 
     using ServerProtocolOptions = tutorial27::options::ServerDefaultOptions;
@@ -62,19 +62,19 @@ private:
         ProtStage_numOfValues
     };
 
-    // Server specific frames 
-    using Sub1Frame = 
+    // Server specific frames
+    using Sub1Frame =
         tutorial27::sub1::frame::Frame<
             Message,
             tutorial27::sub1::input::ServerInputMessages<Message, ServerProtocolOptions>,
             ServerProtocolOptions
         >;
-    using Sub2Frame = 
+    using Sub2Frame =
         tutorial27::sub2::frame::Frame<
             Message,
             tutorial27::sub2::input::ServerInputMessages<Message, ServerProtocolOptions>,
             ServerProtocolOptions
-        >;        
+        >;
 
     using WriteIter = std::back_insert_iterator<std::vector<std::uint8_t> >;
 

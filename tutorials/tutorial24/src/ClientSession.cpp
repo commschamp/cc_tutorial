@@ -28,7 +28,7 @@ void ClientSession::handle(Msg2& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
     printIntField(msg.field_f1());
-    printIntField(msg.field_f2());    
+    printIntField(msg.field_f2());
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg2) {
@@ -146,7 +146,7 @@ void ClientSession::sendMsg2()
     Msg2 msg;
     assert(!msg.doValid()); // F2 is invalid when default constructed
     sendMessage(msg); // Invalid message can be sent, but should be ignored on reception
-    
+
     msg.field_f1().value() = 5;
     msg.field_f2().value() = 10;
     assert(msg.doValid());

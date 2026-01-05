@@ -20,14 +20,14 @@ void ServerSession::handle(Msg1& msg)
 void ServerSession::handle(Msg2& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\"" << std::endl;
-    sendMessage(msg);    
+    sendMessage(msg);
     m_msg.reset(new Msg3);
 }
 
 void ServerSession::handle(Msg3& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\"" << std::endl;
-    sendMessage(msg);    
+    sendMessage(msg);
     m_msg.reset(new Msg1);
 }
 

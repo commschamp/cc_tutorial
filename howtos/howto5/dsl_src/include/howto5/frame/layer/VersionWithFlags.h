@@ -26,7 +26,7 @@ class VersionWithFlags : public
     >
 {
     // Repeat base type
-    using Base = 
+    using Base =
         comms::frame::TransportValueLayer<
             TField,
             std::numeric_limits<std::size_t>::max(),
@@ -37,7 +37,7 @@ class VersionWithFlags : public
 
 public:
     // Repeat some types from the base class
-    using Field = typename Base::Field;    
+    using Field = typename Base::Field;
 
     // Re-assign the values from the field to message object
     template <typename TMsg>
@@ -47,7 +47,7 @@ public:
         msgPtr->transportField_version().value() = field.field_version().value();
         msgPtr->transportField_flags().value() = field.field_flags().value();
         return true;
-    }  
+    }
 
     // Prepare field value to be written
     template <typename TMsg>
@@ -55,7 +55,7 @@ public:
     {
         field.field_version().value() = msg.transportField_version().value();
         field.field_flags().value() = msg.transportField_flags().value();
-    }      
+    }
 };
 
 } // namespace layer
@@ -63,6 +63,4 @@ public:
 } // namespace frame
 
 } // namespace howto5
-
-
 

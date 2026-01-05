@@ -4,7 +4,7 @@
         <string name="Msg1Name" defaultValue="Message 1" />
         <string name="Msg2Name" defaultValue="Message 2" />
         <string name="Msg3Name" defaultValue="Message 3" />
-            
+
         <enum name="MsgId" type="uint8" semanticType="messageId">
             <validValue name="M1" val="1" displayName="^Msg1Name" />
             <validValue name="M2" val="2" displayName="^Msg2Name" />
@@ -12,7 +12,7 @@
         </enum>
 
     </fields>
-        
+
     <frame name="Frame">
         <sync name="Sync">
             <int name="SyncField" type="uint16" defaultValue="0xabcd" />
@@ -24,9 +24,9 @@
         <payload name="Data" />
         <checksum name="Checksum" alg="custom" algName="PlusOneSum" from="Size" >
             <int name="ChecksumField" type="uint16" />
-        </checksum>        
+        </checksum>
     </frame>
-    
+
     <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name" readOverride="replace" refreshOverride="replace">
         <optional name="F1" defaultMode="exists" >
             <int name="F1" type="uint32" />
@@ -39,18 +39,18 @@
         <optional name="F3" defaultMode="missing">
             <int name="F3" type="uint16" />
         </optional>
-        
+
         <set name="Flags" length="1">
             <bit name="F2F3" idx="0" />
         </set>
     </message>
-    
+
     <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
         <int name="F1" type="uint16" />
-    </message>  
+    </message>
 
     <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name">
         <int name="F1" type="uint32" />
-    </message>        
-    
+    </message>
+
 </schema>

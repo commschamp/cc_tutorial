@@ -30,7 +30,6 @@ set (client_src
     src/ClientSession.cpp
 )
 
-
 dsl_tutorial_parse(${name} SCHEMAS ${schema_files})
 
 bin_tutorial_server(${name} ${server_src})

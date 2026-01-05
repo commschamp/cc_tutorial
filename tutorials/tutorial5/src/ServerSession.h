@@ -24,7 +24,7 @@ public:
             comms::option::app::IdInfoInterface, // Polymorphic message ID retrieval
             comms::option::app::NameInterface // Polymorphic message name retrieval
         >;
-        
+
     // Handle all the received messages in a single function
     void handle(Message& msg);
 

@@ -31,7 +31,7 @@ private:
     ClientSession& m_session;
 };
 
-} // namespace    
+} // namespace
 
 void ClientSession::handle(Msg1& msg)
 {
@@ -44,7 +44,7 @@ void ClientSession::handle(Msg1& msg)
         elem.currentFieldExec(PropDispatchHelper(*this));
     }
 
-    std::cout << std::endl;    
+    std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg1) {
         std::cerr << "ERROR: Unexpected stage" << std::endl;
@@ -58,7 +58,6 @@ void ClientSession::handle(Message& msg)
 {
     std::cerr << "ERROR: Received unexpected message \"" << msg.name() << " with ID=" << (unsigned)msg.getId() << std::endl;
 }
-
 
 void ClientSession::handleProp(const Prop1& prop)
 {
@@ -86,7 +85,6 @@ void ClientSession::handleProp(const AnyProp& prop)
     std::copy(prop.field_val().value().begin(), prop.field_val().value().end(), std::ostream_iterator<unsigned>(std::cout, " "));
     std::cout << std::dec << '\n';
 }
-
 
 bool ClientSession::startImpl()
 {
@@ -184,7 +182,7 @@ void ClientSession::sendMsg1()
     listOfProps[0].initField_prop1().field_val().value() = 0x12;
     listOfProps[1].initField_prop2().field_val().value().assign(300, 'a'); // Force long length form.
 
-    msg.doRefresh(); // Bring message to a consistent state    
+    msg.doRefresh(); // Bring message to a consistent state
     sendMessage(msg);
 }
 

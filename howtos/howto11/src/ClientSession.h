@@ -16,7 +16,6 @@
 #include "howto11/var2/frame/TlvProp.h"
 #include "howto11/var2/input/ClientInputMessages.h"
 
-
 #include "Session.h"
 
 namespace cc_tutorial
@@ -39,7 +38,7 @@ public:
             comms::option::app::Handler<ClientSession> // Polymorphic dispatch
         >;
 
-    using ProtOpts = 
+    using ProtOpts =
         howto11::options::DataViewDefaultOptionsT<
             howto11::options::ClientDefaultOptions
         >;
@@ -47,7 +46,7 @@ public:
     // Definition of all the used message classes
     HOWTO11_PROT_ALIASES_FOR_ALL_MESSAGES(,,ProtMessage,ProtOpts)
 
-    using Var1Interface = 
+    using Var1Interface =
         howto11::var1::Interface<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
@@ -57,7 +56,7 @@ public:
             comms::option::app::Handler<ClientSession> // Polymorphic dispatch
         >;
 
-    using Var2Interface = 
+    using Var2Interface =
         howto11::var2::Interface<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::back_insert_iterator<std::vector<std::uint8_t> > >, // Polymorphic write
@@ -65,7 +64,7 @@ public:
             comms::option::app::IdInfoInterface, // Polymorphic message ID retrieval
             comms::option::app::NameInterface, // Polymorphic message name retrieval
             comms::option::app::Handler<ClientSession> // Polymorphic dispatch
-        >;        
+        >;
 
     using PropsOpts = howto11::options::DefaultOptions;
 

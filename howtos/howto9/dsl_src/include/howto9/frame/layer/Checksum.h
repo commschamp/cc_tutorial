@@ -27,29 +27,29 @@ template<typename TField, typename TNextLayer, typename... TOptions>
 class Checksum : public
     comms::frame::ChecksumPrefixLayer<
         TField,
-        comms::frame::checksum::Crc_16, 
+        comms::frame::checksum::Crc_16,
         TNextLayer,
         TOptions...,
-        comms::option::def::ChecksumLayerVerifyBeforeRead,
+        comms::option::def::FrameLayerVerifyBeforeRead,
         comms::option::def::ExtendingClass<Checksum<TField, TNextLayer, TOptions...> >
     >
 {
     // Repeat base type
-    using Base = 
+    using Base =
         comms::frame::ChecksumPrefixLayer<
             TField,
             comms::frame::checksum::Crc_16,
             TNextLayer,
             TOptions...,
-            comms::option::def::ChecksumLayerVerifyBeforeRead,
+            comms::option::def::FrameLayerVerifyBeforeRead,
             comms::option::def::ExtendingClass<Checksum<TField, TNextLayer, TOptions...> >
         >;
 
 public:
     // Repeat types defined in the base class (not visible by default)
-    using Field = typename Base::Field; 
+    using Field = typename Base::Field;
     using Calc = comms::frame::checksum::Crc_16;
- 
+
     // Override default way of calculating checksum
     template <typename TMsg, typename TIter>
     static typename Field::ValueType calculateChecksum(const TMsg* msgPtr, TIter& iter, std::size_t len, bool& checksumValid)
@@ -57,12 +57,12 @@ public:
         static_cast<void>(msgPtr); // Not used
         static_cast<void>(len); // Not used
 
-        static const std::size_t CalcAreaSize = 
-                sizeof(howto9::field::SyncFieldCommon::ValueType) + 
-                sizeof(howto9::field::SizeFieldCommon::ValueType) + 
+        static const std::size_t CalcAreaSize =
+                sizeof(howto9::field::SyncFieldCommon::ValueType) +
+                sizeof(howto9::field::SizeFieldCommon::ValueType) +
                 sizeof(howto9::field::MsgIdCommon::ValueType);
 
-        static const std::size_t HeaderSize = 
+        static const std::size_t HeaderSize =
             CalcAreaSize + Field::maxLength();
 
         checksumValid = true;
@@ -71,14 +71,12 @@ public:
         std::advance(iter, -static_cast<std::ptrdiff_t>(HeaderSize));
 
         return Calc()(fromIter, CalcAreaSize);
-    }    
+    }
 };
-   
+
 } // namespace layer
 
 } // namespace frame
 
 } // namespace howto9
-
-
 

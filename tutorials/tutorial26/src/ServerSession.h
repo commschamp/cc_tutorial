@@ -19,7 +19,7 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message = 
+    using Message =
         tutorial26::Message<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::uint8_t*>, // Polymorphic write
@@ -45,8 +45,8 @@ protected:
     virtual std::size_t processInputImpl(const std::uint8_t* buf, std::size_t bufLen) override final;
 
 private:
-    // Server specific frame 
-    using Frame = 
+    // Server specific frame
+    using Frame =
         tutorial26::frame::Frame<
             Message,
             tutorial26::input::ServerInputMessages<Message, ServerProtocolOptions>,

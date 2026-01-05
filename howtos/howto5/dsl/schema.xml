@@ -3,31 +3,31 @@
     <fields>
         <string name="Msg1Name" defaultValue="Message 1" />
         <string name="Msg2Name" defaultValue="Message 2" />
-            
+
         <enum name="MsgId" type="uint8" semanticType="messageId">
             <validValue name="M1" val="1" displayName="^Msg1Name" />
             <validValue name="M2" val="2" displayName="^Msg2Name" />
         </enum>
 
         <int name="Version" type="uint16" semanticType="version" />
-        
+
         <set name="InterfaceFlags" length="1">
             <bit name="B0" idx="0" />
             <bit name="B1" idx="1" />
-        </set>    
+        </set>
 
         <bitfield name="VersionWithFlags">
             <ref field="Version" bitLength="12"/>
             <ref field="InterfaceFlags" name="Flags" bitLength="4" />
-        </bitfield>            
-        
+        </bitfield>
+
     </fields>
-    
+
     <interface name="Interface" description="Common Interface for all the messages.">
         <ref field="Version" />
         <ref field="InterfaceFlags" name="Flags" />
-    </interface>    
-        
+    </interface>
+
     <frame name="Frame">
         <size name="Size">
             <int name="SizeField" type="uint16" />
@@ -36,7 +36,7 @@
         <custom name="VersionWithFlags" field="VersionWithFlags" />
         <payload name="Data" />
     </frame>
-    
+
     <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
         <int name="F1" type="uint16" />
         <optional name="F2" defaultMode="missing">
@@ -49,14 +49,14 @@
         </optional>
         <int name="F3" type="uint16" sinceVersion="5" />
     </message>
-    
+
     <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
         <string name="F1" defaultValue="hello">
             <lengthPrefix>
                 <int name="Length" type="uint8" />
             </lengthPrefix>
         </string>
-        
+
         <optional name="F2" defaultMode="missing">
             <description>
                 The field exists only when B1 in interface flags is set.
@@ -64,9 +64,9 @@
             <field>
                 <int name="Field" type="uint16" displayName="F2" />
             </field>
-        </optional>  
+        </optional>
 
-        <int name="F3" type="uint16" sinceVersion="3" />      
-    </message>    
-    
+        <int name="F3" type="uint16" sinceVersion="3" />
+    </message>
+
 </schema>

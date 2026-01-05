@@ -3,12 +3,12 @@ Working with scaling and units in numeric fields.
 
 ## Scaling
 Many protocols need to report non-integral values but don't allow usage of floating point encoding when serializing their fields.
-Usually such values are serialized as integral ones which treated as 
-[fixed point values](https://en.wikipedia.org/wiki/Fixed-point_arithmetic) with predefined scaling multiplier, i.e. predefined 
+Usually such values are serialized as integral ones which treated as
+[fixed point values](https://en.wikipedia.org/wiki/Fixed-point_arithmetic) with predefined scaling multiplier, i.e. predefined
 number of digits after decimal points.
 
 To help with such cases [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) has
-**scaling** property applicable to `<int>` fields. Message `Msg1` (defined in [dsl/schema.xml](dsl/schema.xml) 
+**scaling** property applicable to `<int>` fields. Message `Msg1` (defined in [dsl/schema.xml](dsl/schema.xml)
 and implemented inside [include/tutorial3/message/Msg1.h](include/tutorial3/message/Msg1.h)) comes to
 demonstrate definition of such fields.
 
@@ -20,7 +20,7 @@ The message and its fields are defined in the following way:
 </message>
 ```
 The **scaling** property defines rational number fraction by which the stored integral value needs to get
-multiplied in order the receive required floating point value. Also the 
+multiplied in order the receive required floating point value. Also the
 [comms::field::IntValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) class
 used to implement defined `<int>` fields provides `getScaled()` and `setScaled()` member functions
 which allow retrieving and setting proper floating point values taking the scaling ratio into account.
@@ -42,7 +42,7 @@ Note that field's stored value (accessed by `.value()`) is an integral one. When
 gets assigned using `.setScaled()` member function, then it's automatically divided by the scaling
 ratio and then cast to the storage integral type which drops the remaining fraction part if such exists.
 
-Also note that the scaling fraction is a meta-information of the protocol definition and it does 
+Also note that the scaling fraction is a meta-information of the protocol definition and it does
 **NOT** get reported to the other side anywhere in the field / message payload.
 
 The `void ClientSession::handle(Msg1& msg)` function prints the received message contents echoed back from the server.
@@ -66,7 +66,7 @@ Received "Message 1" with ID=1
     <string name="Msg1Name" defaultValue="Message 1" />
     <string name="Msg2Name" defaultValue="Message 2" />
     <string name="Msg3Name" defaultValue="Message 3" />
-        
+
     <enum name="MsgId" type="uint8" semanticType="messageId">
         <validValue name="M1" val="1" displayName="^Msg1Name" />
         <validValue name="M2" val="2" displayName="^Msg2Name" />
@@ -80,29 +80,29 @@ Received "Message 1" with ID=1
 
 <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
     ...
-</message>  
+</message>
 
 <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name">
     ...
-</message>       
+</message>
 ```
 The **id** property of every message is expected to be a numeric value. However, the
-[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows usage of 
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows usage of
 reference strings as well. In the case above they reference the defined `<validValue>`-s
 of the `MsgId` field. The value of the **displayName** property needs to be
 as string. [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows
-referencing of common definitions for strings as well. 
+referencing of common definitions for strings as well.
 There must be a way to differentiate between an actual string value and a reference to other
 field. The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specifies that
 a reference to other field in such case (when value needs to be a string) is prefixed with
-`^` character. 
+`^` character.
 
-As the result the `Msg1` and `MsgId.M1` (`Msg2` and `MsgId.M2`, `Msg3` and `MsgId.M3`) 
+As the result the `Msg1` and `MsgId.M1` (`Msg2` and `MsgId.M2`, `Msg3` and `MsgId.M3`)
 have the same **displayName** property value. The change to **defaultValue** of `Msg1Name` (`Msg2Name`, `Msg3Name`)
 automatically propagates to relevant fields.
 
-Also note that `Msg1Name`, `Msg2Name`, `Msg3Name` are there to define some common string values used by other fields, 
-they are **NOT** **really** referenced and/or aliased by other fields. As the result the generated code does 
+Also note that `Msg1Name`, `Msg2Name`, `Msg3Name` are there to define some common string values used by other fields,
+they are **NOT** **really** referenced and/or aliased by other fields. As the result the generated code does
 **NOT** have definitions for these fields.
 
 ---
@@ -120,14 +120,14 @@ The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows usag
 defining `<int>` and `<float>` fields. The list of supported values can be found in
 the [specification](https://commschamp.github.io/commsdsl_spec/#appendix-units).
 
-Message `Msg2` (defined in [dsl/schema.xml](dsl/schema.xml) 
+Message `Msg2` (defined in [dsl/schema.xml](dsl/schema.xml)
 and implemented inside [include/tutorial3/message/Msg2.h](include/tutorial3/message/Msg2.h)) comes to
 demonstrate usage of **units** property.
 ```xml
 <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name">
     <int name="F1" type="uint32" units="sec" />
     <float name="F2" type="double" units="mm" />
-</message> 
+</message>
 ```
 In the example above the `F1` field is defined to contain **seconds** while `F2` is defined to contain
 millimeters.
@@ -149,7 +149,7 @@ struct Msg2Fields
     {
         ...
     };
-    
+
     struct F2 : public
         comms::field::FloatValue<
             ...,
@@ -158,7 +158,7 @@ struct Msg2Fields
     {
         ...
     };
-        
+
     ...
 };
 ```
@@ -182,7 +182,7 @@ class of the field which in turn contains the meta-information of what actual un
 contain. The required math is automatically implemented by the compiler.
 
 Also note that [COMMS Library](https://github.com/commschamp/comms) contains compile-time
-checks of whether units being assigned are compatible with the ones that field contains, i.e. attempt to 
+checks of whether units being assigned are compatible with the ones that field contains, i.e. attempt to
 assign say **meters** to **seconds** will result in compile time error.
 
 The `void ClientSession::handle(Msg2& msg)` function uses multiple `comms::units::get*()` functions to
@@ -210,7 +210,7 @@ If units are changed in the protocol definition (schema), such code doesn't need
 **NOTE** that [CommsChampion Ecosystem](https://commschamp.github.io) is about binary protocol definition, not
 efficient and/or convenient work with units. The support for the units is very limited and definitely incomplete, but
 still useful in many cases.
-If the support for new units is desired please [get in touch](https://commschamp.github.io/contact/) and request what you need. 
+If the support for new units is desired please [get in touch](https://commschamp.github.io/contact/) and request what you need.
 There are multiple available libraries (like Boost.Units) for proper work with units.
 
 In order to support usage of third party units libraries the [COMMS Library](https://github.com/commschamp/comms)
@@ -230,14 +230,14 @@ void ClientSession::handle(Msg2& msg)
 
 ## Combining Scaling and Units
 The [scaling](#scaling) and [units](#units) can easily be combined together as
-`Msg3` (defined in [dsl/schema.xml](dsl/schema.xml) 
+`Msg3` (defined in [dsl/schema.xml](dsl/schema.xml)
 and implemented inside [include/tutorial3/message/Msg3.h](include/tutorial3/message/Msg3.h)) demonstrates.
 ```xml
 <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name">
     <int name="F1" type="uint32" units="cm" scaling="1/100000" />
 </message>
 ```
-All the previously introduced `comms::units::set*()` and `comms::units::get*()` functions also seamlessly 
+All the previously introduced `comms::units::set*()` and `comms::units::get*()` functions also seamlessly
 work with scaling and do the proper math before assigning field's actual value:
 ```cpp
 void ClientSession::sendMsg3()
@@ -262,7 +262,7 @@ Received "Message 3" with ID=3
 ## Summary
 
 - The string values can reference other fields with '^' prefix.
-- The [fixed point values](https://en.wikipedia.org/wiki/Fixed-point_arithmetic) are defined as `<int>` and 
+- The [fixed point values](https://en.wikipedia.org/wiki/Fixed-point_arithmetic) are defined as `<int>` and
   use **scaling** property to define their scaling ratio.
 - The [comms::field::IntValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) class
   used to define `<int>` fields provides **getScaled()** and **setScaled()** member functions to get / set
@@ -271,11 +271,11 @@ Received "Message 3" with ID=3
 - List of supported units can be found in the CommsDSL [specification](https://commschamp.github.io/commsdsl_spec/#appendix-units).
 - Functions that allow working with units reside in [comms::units](https://commschamp.github.io/comms_doc/namespacecomms_1_1units.html)
   namespace and require `#include "comms/units.h"` statement.
-- The `comms::units::set*()` and `comms::units::get*()` stand alone functions are used to set particular units and  
+- The `comms::units::set*()` and `comms::units::get*()` stand alone functions are used to set particular units and
   require reference to the **field** object itself (not its **value**) to use appropriate assignment math.
 - The support for units is very basic and limited. There are **compile-time** inquiry `comms::units::is*()` functions
   which allow check of units assumption before introducing boilerplate code of units conversions.
-- All the units conversion functions in [comms::units](https://commschamp.github.io/comms_doc/namespacecomms_1_1units.html) 
+- All the units conversion functions in [comms::units](https://commschamp.github.io/comms_doc/namespacecomms_1_1units.html)
   work seamlessly with [scaling](#scaling).
 
-[Read Previous Tutorial](../tutorial2) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial4) 
+[Read Previous Tutorial](../tutorial2) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial4)

@@ -24,13 +24,13 @@ public:
     using Message = tutorial12::Message<>;
 
     // Protocol options for client
-    using ClientProtocolOptions = 
+    using ClientProtocolOptions =
         DataViewBareMetalProtocolOptionsT<
             tutorial12::options::DataViewDefaultOptionsT<
                 tutorial12::options::ClientDefaultOptions
             >
-        >;        
-        
+        >;
+
     // Definition of all the used message classes
     using Msg1 = tutorial12::message::Msg1<Message, ClientProtocolOptions>;
     using Msg2 = tutorial12::message::Msg2<Message, ClientProtocolOptions>;
@@ -59,7 +59,7 @@ private:
     template <typename TMsg>
     void sendMessage(const TMsg& msg)
     {
-        std::cout << "Sending message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << std::endl;        
+        std::cout << "Sending message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << std::endl;
 
         // The statement below uses polymorphic message name and ID retrievals.
         std::vector<std::uint8_t> output;
@@ -89,8 +89,8 @@ private:
     void sendMsg2();
     void sendMsg3();
 
-    // Client specific frame 
-    using Frame = 
+    // Client specific frame
+    using Frame =
         tutorial12::frame::Frame<
             Message,
             tutorial12::input::ClientInputMessages<Message, ClientProtocolOptions>,

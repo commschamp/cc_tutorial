@@ -12,7 +12,6 @@ set (client_src
     src/ClientSession.cpp
 )
 
-
 dsl_howto_parse(${name} SCHEMAS ${schema_files})
 
 bin_howto_server(${name} ${server_src})

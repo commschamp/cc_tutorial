@@ -4,7 +4,7 @@
         <string name="Msg1Name" defaultValue="Message 1" />
         <string name="Msg2Name" defaultValue="Message 2" />
         <string name="Msg3Name" defaultValue="Message 3" />
-            
+
         <enum name="MsgId" type="uint8" semanticType="messageId">
             <validValue name="M1" val="1" displayName="^Msg1Name" />
             <validValue name="M2" val="2" displayName="^Msg2Name" />
@@ -16,7 +16,7 @@
                 <special name="LongForm" val="0xff" />
             </int>
             <optional name="Long" cond="$Short = 0xff" defaultMode="missing">
-                <int name="ActLong" type="uint16" /> 
+                <int name="ActLong" type="uint16" />
             </optional>
         </bundle>
 
@@ -25,9 +25,9 @@
             <validValue name="K2" val="2" />
             <validValue name="K3" val="5" />
         </enum>
-        
+
         <int name="PropKeyCommon" type="uint8" failOnInvalid="true" fixedValue="true" />
-        
+
         <variant name="TlvProp">
             <description>
                 Type-Length-Value Property
@@ -38,23 +38,23 @@
                     <ref field="Length" semanticType="length" />
                     <int name="Val" type="uint32" availableLengthLimit="true" />
                 </bundle>
-                
+
                 <bundle name="Prop2">
                     <int reuse="PropKeyCommon" name="Key" defaultValidValue="PropKey.K2" />
                     <ref field="Length" semanticType="length" />
                     <string name="Val" />
-                </bundle>   
+                </bundle>
 
                 <bundle name="Any">
                     <int reuse="PropKeyCommon" name="Key" failOnInvalid="false" fixedValue="false" />
                     <int name="Length" type="uint8" semanticType="length" />
                     <data name="Val" />
-                </bundle>  
+                </bundle>
             </members>
-        </variant>        
-        
+        </variant>
+
     </fields>
-    
+
     <frame name="Frame">
         <sync name="Sync">
             <int name="SyncField" type="uint16" defaultValue="0xabdc" />
@@ -63,7 +63,7 @@
         <id name="Id" field="MsgId" />
         <payload name="Data" />
     </frame>
-    
+
     <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name">
         <list name="F1" element="TlvProp" />
     </message>

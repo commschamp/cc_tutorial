@@ -21,11 +21,11 @@ public:
     using Message = tutorial11::Message<>;
 
     // Protocol options for server
-    using ServerProtocolOptions = 
+    using ServerProtocolOptions =
         ProtocolOptionsT<
             tutorial11::options::ServerDefaultOptions
         >;
-        
+
     // Handle all the received messages in a common generic fuctnion
     template <typename TMsg>
     void handle(TMsg& msg)
@@ -62,10 +62,10 @@ private:
         assert(output.size() == static_cast<std::size_t>(std::distance(&output[0], writeIter)));
 
         // Send (re)serialized message back
-        sendOutput(&output[0], output.size());        
+        sendOutput(&output[0], output.size());
     }
 
-    using Frame = 
+    using Frame =
         tutorial11::frame::Frame<
             Message,
             tutorial11::input::ServerInputMessages<Message, ServerProtocolOptions>,

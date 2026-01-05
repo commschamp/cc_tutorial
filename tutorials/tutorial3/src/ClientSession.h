@@ -27,7 +27,7 @@ public:
             comms::option::app::NameInterface, // Polymorphic message name retrieval
             comms::option::app::Handler<ClientSession> // Polymorphic dispatch
         >;
-        
+
     // Definition of all the used message classes
     using Msg1 = tutorial3::message::Msg1<Message>;
     using Msg2 = tutorial3::message::Msg2<Message>;

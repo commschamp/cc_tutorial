@@ -15,7 +15,7 @@ void ClientSession::handle(Msg1& msg)
     printIntField(msg.field_f1());
     if (printOptionalField(msg.field_f2())) {
         printIntField(msg.field_f2().field(), "\t");
-    }    
+    }
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg1) {
@@ -32,7 +32,7 @@ void ClientSession::handle(Msg2& msg)
     printIntField(msg.field_f1());
     if (printOptionalField(msg.field_f2())) {
         printIntField(msg.field_f2().field(), "\t");
-    }      
+    }
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg2) {
@@ -153,7 +153,7 @@ void ClientSession::sendMsg2()
 
     // Check that the default constructed message is in consisten state
     assert(!msg.transportField_flags().getBitValue_B1());
-    assert(msg.field_f2().isMissing());    
+    assert(msg.field_f2().isMissing());
     sendMessage(msg);
 }
 

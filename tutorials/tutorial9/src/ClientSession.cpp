@@ -148,5 +148,4 @@ SessionPtr Session::createClient(boost_wrap::io& io)
     return SessionPtr(new ClientSession(io));
 }
 
-
 } // namespace cc_tutorial

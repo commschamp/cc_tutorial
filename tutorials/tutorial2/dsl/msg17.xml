@@ -7,7 +7,7 @@
             <int name="M2" type="uint32" />
         </bundle>
     </fields>
-    
+
     <message name="Msg17" id="MsgId.M17" displayName="Message 17" validateMinLength="10">
         <int name="F1" reuse="I17_1" defaultValue="S1">
             <special name="S1" val="10" />

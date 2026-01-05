@@ -1,19 +1,19 @@
 # How-To 4
 Single message protocol without message ID in framing.
 
-There are some protocols which don't have multiple types of messages. Usually such protocols use a 
+There are some protocols which don't have multiple types of messages. Usually such protocols use a
 single list of TLV (type-length-value) triplets wrapped in some extra
 framing. This example protocol has the following form:
 ```
 SYNC (0xabcd) | LENGTH (2 bytes) | TLV1 | TLV2 | .... | TLVN | CHECKSUM (CRC-CCITT)
 ```
 
-Although the protocol specification might not define any particular message structure there is still a 
+Although the protocol specification might not define any particular message structure there is still a
 need to define a `<message>` with some dummy numeric ID.
 ```xml
 <fields>
     <string name="MsgName" defaultValue="Message" />
-        
+
     <enum name="MsgId" type="uint8" semanticType="messageId">
         <validValue name="M0" val="0" displayName="^MsgName" />
     </enum>
@@ -24,7 +24,7 @@ need to define a `<message>` with some dummy numeric ID.
     ...
 </message>
 ```
-The TLV triplets are defined using `<variant>` field and are described in detail in the 
+The TLV triplets are defined using `<variant>` field and are described in detail in the
 [tutorial4](../../tutorials/tutorial4).
 ```xml
 <fields>
@@ -56,8 +56,8 @@ The message frame is defined the following way:
 </frame>
 ```
 **NOTE**, that `<id>` layer is still present, but its field has **pseudo** property set (`pseudo="true"`).
-It means that the field is not really written / read during serialization / deserialization. 
-The field is [defined](include/howto4/frame/Frame.h) using 
+It means that the field is not really written / read during serialization / deserialization.
+The field is [defined](include/howto4/frame/Frame.h) using
 [comms::option::def::EmptySerialization](https://commschamp.github.io/comms_doc/structcomms_1_1option_1_1def_1_1EmptySerialization.html)
 option.
 ```cpp
@@ -75,17 +75,17 @@ struct FrameLayers
         {
             ...
         };
-        
+
     };
 };
 ```
 When input data is processed, the `<id>` field is assumed to read the default value, which is **0**.
 
-Now let's take a look at the handling code. The [server](src/ServerSession.h) is defined in its usual way, 
+Now let's take a look at the handling code. The [server](src/ServerSession.h) is defined in its usual way,
 using polymorphic interface:
 ```cpp
 // Common interface class for all the messages
-using Message = 
+using Message =
     howto4::Message<
         comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
         comms::option::app::WriteIterator<std::uint8_t*>, // Polymorphic write
@@ -111,7 +111,7 @@ void ClientSession::sendMsg()
     propsVec[0].initField_prop1().field_val().value() = 0x12345678;
     propsVec[1].initField_prop2().field_val().value() = 1.23;
     propsVec[2].initField_prop3().field_val().value() = "hello";
-    
+
     msg.doRefresh(); // Update the length fields.
 
     std::vector<std::uint8_t> output;
@@ -126,7 +126,7 @@ void ClientSession::sendMsg()
     sendOutput(&output[0], output.size());
 }
 ```
-**NOTE**, that the frame receives a reference to the actual message, not the 
-interface, and as the 
+**NOTE**, that the frame receives a reference to the actual message, not the
+interface, and as the
 result is capable of finding all the necessary non-polymorphic functions needed
 to calculate required length and perform actual write.

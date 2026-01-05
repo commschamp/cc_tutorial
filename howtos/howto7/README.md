@@ -2,7 +2,7 @@
 Alternating values in synchronization framing prefix.
 
 There are protocols for which the provided `<sync>` framing layer is insufficient.
-Some extra customization will be required. For example the synchronization prefix 
+Some extra customization will be required. For example the synchronization prefix
 values are alternating, i.e. for every first message the synchronization prefix
 is expected to be `0xabcd` and every second one is `0xdead`.
 
@@ -28,14 +28,14 @@ The [schema](dsl/schema.xml) defines the following frame
 The synchronization prefix layer cannot use the provide `<sync>` one and must
 use `<custom>` one.
 
-The provided custom layer is implemented inside 
+The provided custom layer is implemented inside
 [dsl_src/include/howto7/frame/layer/AlternatingSync.h](dsl_src/include/howto7/frame/layer/AlternatingSync.h) and
-copied to the protocol definition 
-([include/howto7/frame/layer/AlternatingSync.h](include/howto7/frame/layer/AlternatingSync.h)) 
+copied to the protocol definition
+([include/howto7/frame/layer/AlternatingSync.h](include/howto7/frame/layer/AlternatingSync.h))
 by the code generator.
 
 The [AlternatingSync](dsl_src/include/howto7/frame/layer/AlternatingSync.h) layer
-is implemented by extending 
+is implemented by extending
 [comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html).
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
@@ -52,11 +52,11 @@ class AlternatingSync : public
     ...
 };
 ```
-**NOTE**, that the code above uses 
-[Curiously Recurring Template Pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern) 
+**NOTE**, that the code above uses
+[Curiously Recurring Template Pattern](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
 to provide the base
-[comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html) class with the 
-actual extending layer type using **comms::option::def::ExtendingClass** option. It makes the customization 
+[comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html) class with the
+actual extending layer type using **comms::option::def::ExtendingClass** option. It makes the customization
 of the default operations possible.
 
 In order to support alternating synchronization prefix the following member functions are overriden:
@@ -67,13 +67,13 @@ class AlternatingSync : public
 {
 public:
     // Repeat types defined in the base class (not visible by default)
-    using Field = typename Base::Field; 
+    using Field = typename Base::Field;
 
     // Customizing input field value verification logic
     bool verifyFieldValue(const Field& field)
     {
         ...
-    } 
+    }
 
     // Customizing output field preparation logic
     void prepareFieldForWrite(Field& field) const

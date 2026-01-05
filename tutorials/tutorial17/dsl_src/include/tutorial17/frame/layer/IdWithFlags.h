@@ -25,7 +25,7 @@ class IdWithFlags : public
     >
 {
     // Repeat base type
-    using Base = 
+    using Base =
         comms::frame::MsgIdLayer<
             TField,
             TMessage,
@@ -37,7 +37,7 @@ class IdWithFlags : public
 
 public:
     // Repeat some types from the base class
-    using Field = typename Base::Field;    
+    using Field = typename Base::Field;
     using MsgIdType = typename Base::MsgIdType;
     using MsgIdParamType = typename Base::MsgIdParamType;
 
@@ -48,11 +48,11 @@ public:
     }
 
     // Before forwarding read to the next layer update flags extra transport field in the interface
-    template<typename TMsg> 
+    template<typename TMsg>
     static void beforeRead(const Field& field, TMsg& msg)
     {
         msg.transportField_flags().setBitValue_B1(field.field_flags().getBitValue_F1());
-    } 
+    }
 
     // Prepare field value to be written
     template <typename TMsg>
@@ -68,6 +68,4 @@ public:
 } // namespace frame
 
 } // namespace tutorial17
-
-
 

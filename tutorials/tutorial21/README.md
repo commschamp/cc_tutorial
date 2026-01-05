@@ -9,10 +9,10 @@ SIZE (2 bytes) | ID (1 byte) | FLAGS (1 byte) | PAYLOAD
 ```
 
 The [schema](dsl/schema.xml) file defines two different messages `Msg1` and `Msg2`. The contents
-of the messages are not important. The important part is that the `FLAGS` byte in 
+of the messages are not important. The important part is that the `FLAGS` byte in
 the framing needs to be interpreted differently when handling the `Msg1` and `Msg2`.
 
-As was already described in one of the previous tutorials the value which resides in the framing, but needs 
+As was already described in one of the previous tutorials the value which resides in the framing, but needs
 to be available when message object is handled has to be propagated to the message `<interface>`.
 
 ```xml
@@ -22,8 +22,8 @@ to be available when message object is handled has to be propagated to the messa
 
 <interface name="Interface" description="Common Interface for all the messages.">
     <ref field="BasicFlags" name="Flags" />
-</interface>    
-    
+</interface>
+
 <frame name="Frame">
     <size name="Size">
         <int name="Field" type="uint16" displayName="Size" />
@@ -50,10 +50,10 @@ The interpretation of the flags for each message is defined as separate fields:
         <validValue name="V3" val="3" />
     </enum>
     <int name="IntMem" type="uint8" bitLength="6" />
-</bitfield>  
+</bitfield>
 ```
-Note the presence of **forceGen** property. It forces the code generator to 
-generate the definition of the field when it's not referenced anywhere in the 
+Note the presence of **forceGen** property. It forces the code generator to
+generate the definition of the field when it's not referenced anywhere in the
 schema.
 
 When sending `Msg1` and `Msg2` the [ClientSession](src/ClientSession.cpp) uses
@@ -71,7 +71,7 @@ void ClientSession::sendMsg1()
 
     // Assign the flags
     msg.transportField_flags() = comms::field_cast<Message::TransportField_flags>(flags);
-    
+
     sendMessage(msg);
 }
 
@@ -87,7 +87,7 @@ void ClientSession::sendMsg2()
 
     // Assign the flags
     msg.transportField_flags() = comms::field_cast<Message::TransportField_flags>(flags);
-    
+
     sendMessage(msg);
 }
 ```
@@ -121,17 +121,17 @@ file. Relevant include statement may be required:
 #include "comms/cast.h"
 ```
 
-**IMPORTANT**: For the cast operation to be successful the field types must have the 
+**IMPORTANT**: For the cast operation to be successful the field types must have the
 same length.
 
-According to the function documentation, the [COMMS Library](https://github.com/commschamp/comms) 
-performs some compile time analysis and will do a simple `static_cast` between the contained values 
-if their value types are convertible. Otherwise the write + read operations will be performed, i.e. the source field 
-will be written into a temporary buffer, and the target field will perform a read operation from that buffer. 
+According to the function documentation, the [COMMS Library](https://github.com/commschamp/comms)
+performs some compile time analysis and will do a simple `static_cast` between the contained values
+if their value types are convertible. Otherwise the write + read operations will be performed, i.e. the source field
+will be written into a temporary buffer, and the target field will perform a read operation from that buffer.
 
-In case of this tutorial the conversion between `BasicFlags` and `Msg1Flags` flags is simple `static_cast` 
-(because their inner `ValueType` types are convertible), 
-while conversion between `BasicFlags` and `Msg2Flags` will be performed using write to and read from 
+In case of this tutorial the conversion between `BasicFlags` and `Msg1Flags` flags is simple `static_cast`
+(because their inner `ValueType` types are convertible),
+while conversion between `BasicFlags` and `Msg2Flags` will be performed using write to and read from
 a temporary buffer (because their inner `ValueType` types are NOT convertible).
 
 ## Summary
@@ -139,8 +139,8 @@ a temporary buffer (because their inner `ValueType` types are NOT convertible).
 - Cast between fields of different types is performed using **comms::field_cast()**
   stand alone function defined in [comms/cast.h](https://commschamp.github.io/comms_doc/cast_8h.html)
 - For the cast to be successful the fields must be of the same length.
-- The [COMMS Library](https://github.com/commschamp/comms) implements the field cast using 
+- The [COMMS Library](https://github.com/commschamp/comms) implements the field cast using
   `static_cast` when field's inner `ValueType` types are convertible and uses temporary buffer
   with write / read operations when such conversion is not possible.
 
-[Read Previous Tutorial](../tutorial20) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial22) 
+[Read Previous Tutorial](../tutorial20) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial22)

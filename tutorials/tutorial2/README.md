@@ -2,7 +2,7 @@
 Introduction to message fields definitions and their usage.
 
 ## Multiple CommsDSL Schema Files
-The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification 
+The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
 as well as [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator
 allow usage of multiple schema files for the same protocol definition. It can
 be used to split protocol definition into multiple sub-sections for convenience,
@@ -13,11 +13,11 @@ The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) does not
 have any "include" statements. Instead the code generated must process the
 schema files in the provided order and allow references to the other elements
 if they were defined **before** being referenced (in earlier processed schema
-file or earlier in the same file). Such approach allows conditional assembling 
+file or earlier in the same file). Such approach allows conditional assembling
 of different versions of the protocol if needed.
 
 The [CMakeLists.txt](CMakeLists.txt) file of this tutorial code creates a list
-of schema files, which are processed by the 
+of schema files, which are processed by the
 [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator in the
 specified order.
 ```
@@ -30,7 +30,7 @@ set (schema_files
 ```
 
 NOTE, that when splitting schema into multiple files, the **first**
-processed file must properly define protocol name and endian (see 
+processed file must properly define protocol name and endian (see
 [dsl/main.xml](dsl/main.xml)).
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -87,17 +87,17 @@ The globally defined fields need to reside inside `<fields>` XML node:
     ...
 </fields>
 ```
-The code generated for every message and its fields resides inside the 
+The code generated for every message and its fields resides inside the
 [include/tutorial2/message](include/tutorial2/message) folder. The primary
 file containing definition of `Msg1` message class is
-[include/tutorial2/message/Msg1.h](include/tutorial2/message/Msg1.h). 
+[include/tutorial2/message/Msg1.h](include/tutorial2/message/Msg1.h).
 Let's take a look inside. It contains two class / struct definitions:
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions>
 struct Msg1Fields
 {
     ...
-}; 
+};
 
 template <typename TMsgBase, typename TOpt = tutorial2::options::DefaultOptions>
 class Msg1 : public comms::MessageBase<...>
@@ -110,17 +110,17 @@ The `Msg1` class is the one that defines the actual message, while `Msg1Fields` 
 the wrapping `struct` that contains definitions of the `Msg1` member fields.
 
 The secondary file containing `Msg1` and its fields related definitions is
-[include/tutorial2/message/Msg1Common.h](include/tutorial2/message/Msg1Common.h). 
-It contains common definitions of `Msg1` message as well as its fields, which are 
-template parameters independent and common for all `Msg1` instantiations. 
+[include/tutorial2/message/Msg1Common.h](include/tutorial2/message/Msg1Common.h).
+It contains common definitions of `Msg1` message as well as its fields, which are
+template parameters independent and common for all `Msg1` instantiations.
 
-As was mentioned earlier, the `Msg1` references external field `I1`. All the 
+As was mentioned earlier, the `Msg1` references external field `I1`. All the
 global fields (if referenced) end up being defined in separate file(s) inside
 [include/tutorial2/field](include/tutorial2/field) folder.
 
-The mentioned `I1` field is defined inside 
+The mentioned `I1` field is defined inside
 [include/tutorial2/field/I1.h](include/tutorial2/field/I1.h) and its common,
-template parameters independent definitions reside in 
+template parameters independent definitions reside in
 [include/tutorial2/field/I1Common.h](include/tutorial2/field/I1Common.h)
 
 Note, that [dsl/msg1.xml](dsl/msg1.xml) file also contains definition of
@@ -128,13 +128,13 @@ a dummy field, which is not referenced anywhere.
 ```xml
 <int name="Dummy" type="uint8" description="Not referenced anywhere" />
 ```
-If the field is not referenced anywhere the 
-[commsdsl2comms](https://github.com/commschamp/commsdsl) code generator 
+If the field is not referenced anywhere the
+[commsdsl2comms](https://github.com/commschamp/commsdsl) code generator
 does **NOT** generate unnecessary definition file(s).
 
 ----
 
-**SIDE NOTE**: Sometimes it can be useful to force generation of the field class and other 
+**SIDE NOTE**: Sometimes it can be useful to force generation of the field class and other
 relevant types. It can be achieved by using **forceGen** property:
 ```xml
 <int name="Dummy" type="uint8" forceGen="true" />
@@ -145,7 +145,7 @@ relevant types. It can be achieved by using **forceGen** property:
 ## Validating Message Length
 Quite often the protocol specifications indicate fixed or minimal length of the defined messages. The
 [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification allows
-optional verification of the message minimal length at the time of the schema parsing 
+optional verification of the message minimal length at the time of the schema parsing
 using **validateMinLength** property.
 ```xml
 <message name="Msg1" id="MsgId.M1" displayName="Message 1" validateMinLength="3">
@@ -154,10 +154,10 @@ using **validateMinLength** property.
 </message>
 ```
 It can be useful to prevent some typos or copy-paste errors when defining message fields. The
-property is optional and was introduced in **v4.0** of the 
+property is optional and was introduced in **v4.0** of the
 [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification.
 
-**NOTE**, that the value of the **validateMinLength** property is expected to be the 
+**NOTE**, that the value of the **validateMinLength** property is expected to be the
 serialization length of the message fields, **not** including the message transport framing.
 
 Since **v7.0** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
@@ -175,7 +175,7 @@ can also be verified (from [dsl/msg8.xml](dsl/msg8.xml)):
 ```
 
 ## Client / Server Sessions
-Both server and client sessions are very similar to the ones 
+Both server and client sessions are very similar to the ones
 presented in [tutorial1](../tutorial1). The **server** is just the simple
 "echo" one, which decodes and then sends the same message back to the client.
 
@@ -194,33 +194,33 @@ class SomeField
 public:
     // Define type used to store the field value
     using ValueType = ...;
-    
+
     // Access to stored field value
     ValueType& value();
     const ValueType& value() const;
-    
+
     // Read the field value
     template <typename TIter>
     comms::ErrorStatus read(TIter& iter, std::size_t len);
-    
+
     // Write the field value
     tempalte <typename TIter>
     comms::ErrorStatus write(TIter& iter, std::size_t) const;
-    
+
     // Get the serialization length of the stored value
     std::size_t length() const;
-    
+
     // Get compile time known min and max serialization length of the field
     static constexpr std::size_t minLength();
     static constexpr std::size_t maxLength();
-    
+
     // Check that field has the valid value
     bool valid() const;
-    
+
     // Bring field into a consistent state
     bool refresh();
-    
-    // Get human readable name of the field 
+
+    // Get human readable name of the field
     static const char* name();
 };
 ```
@@ -230,13 +230,13 @@ Please note the following
 rest are automatically used by the message class definition in order to
 implement message class functionality. In most cases these other member functions
 won't be used by the end application.
-- The `value()` member function returns reference to 
+- The `value()` member function returns reference to
 the stored value and can be used to assign value to the field as well.
 - All of the field abstraction member functions are **NON-virtual**, i.e. fields
 don't exhibit polymorphic behavior.
 - The iterators to **read()** and **write()** member functions are passed by
 reference and are advanced during the operation.
-- All of the presented member functions are provided by the 
+- All of the presented member functions are provided by the
 [COMMS Library](https://github.com/commschamp/comms) except
 **name()** which is a product of **commsdsl2comms** code generation.
 
@@ -257,21 +257,21 @@ public:
         f1,
         f2
     );
-    ...    
+    ...
 };
 ```
-Usage of `comms::option::def::FieldsImpl` option lets the 
+Usage of `comms::option::def::FieldsImpl` option lets the
 [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
 base class know the types of fields the message has. As the result the `comms::MessageBases`
 defines the following member types and functions that allow external access to the fields
 ```cpp
 template <typename TMsgBase, typename TOpt = tutorial2::options::DefaultOptions>
-class Msg1 
+class Msg1
 {
 public:
     // Type of tuple containing all member fields
     using AllFields = typename Msg1Fields<TOpt>::All;
-    
+
     // Access tuple of fields
     AllFields& fields();
     const Allfields& fields() const;
@@ -290,8 +290,8 @@ f2.value() = 100;
 ```
 However, accessing the fields by hard-coded numeric indices is quite
 inconvenient, not to mention being a bad practice. That's what
-usage of `COMMS_MSG_FIELDS_NAMES()` macro comes to resolve. It receives 
-arguments, which are names of the fields (**f1** and **f2**) and results in generating the 
+usage of `COMMS_MSG_FIELDS_NAMES()` macro comes to resolve. It receives
+arguments, which are names of the fields (**f1** and **f2**) and results in generating the
 following types and member functions:
 ```cpp
 template <typename TMsgBase, typename TOpt = tutorial2::options::DefaultOptions>
@@ -306,18 +306,18 @@ public:
         FieldIdx_f2,
         FieldIdx_numOfValues
     };
-    
+
     // Alias types to member fields
     using Field_f1 = Msg1Fields<TOpt>::F1;
     using Field_f2 = Msg1Fields<TOpt>::F2;
-    
+
     // Convenience access to member fields
     Field_f1& field_f1();
     const Field_f1& field_f1() const;
-    
+
     Field_f2& field_f2();
     const Field_f2& field_f2() const;
-    ...    
+    ...
 };
 ```
 Please pay attention to the following:
@@ -365,8 +365,8 @@ The message `Msg15` inside [dsl/msg15.xml](dsl/msg15.xml) is defined the followi
     <int name="F3" type="int8" />
 </message>
 ```
-Thanks to the **copyFieldsFrom** property the `Msg15` copied all the fields defined from the 
-definition of `Msg1` (`F1` and `F2`) and appended one more field (`F3`) at the end. The 
+Thanks to the **copyFieldsFrom** property the `Msg15` copied all the fields defined from the
+definition of `Msg1` (`F1` and `F2`) and appended one more field (`F3`) at the end. The
 value of **validateMinLength** property insures the total serialization length of the message
 fields.
 
@@ -395,7 +395,7 @@ The message `Msg16` inside [dsl/msg16.xml](dsl/msg16.xml) is defined the followi
 <fields>
     <bundle name="B1">
         <int name="F1" type="uint8" />
-        <int name="F2" type="int8" />            
+        <int name="F2" type="int8" />
     </bundle>
 </fields>
 
@@ -407,7 +407,7 @@ Copying from the [&lt;bundle&gt;](#bundle-fields) can be useful when several mes
 number of similar fields at the beginning, while having a difference in couple of last ones.
 
 ## Supported Field Types
-The [CommsChampion Ecosystem](https://commschamp.github.io) has multiple 
+The [CommsChampion Ecosystem](https://commschamp.github.io) has multiple
 supported field types which are covered below one by one. Due to the nature of
 these tutorials it is not possible to cover **all** aspects (properties) of all
 the available fields, it is highly recommended to read full
@@ -460,9 +460,9 @@ of external field `E2_1` which is referenced by the `Msg1` definition:
 <message name="Msg2" id="MsgId.M2" displayName="Message 2">
     <ref name="F1" field="E2_1" />
     ...
-</message>    
+</message>
 ```
-As the result the field definition will reside in 
+As the result the field definition will reside in
 [include/tutorial2/field/E2_1.h](include/tutorial2/field/E2_1.h) with its
 common, template parameters independent types and functions in
 [include/tutorial2/field/E2_1Common.h](include/tutorial2/field/E2_1Common.h)
@@ -480,7 +480,7 @@ struct E2_1Common
     ...
     enum class ValueType : std::uint8_t
     {
-        ...        
+        ...
     };
     ...
 };
@@ -499,7 +499,7 @@ struct E2_1Common
     ...
     enum class ValueType : std::uint8_t
     {
-        ...  
+        ...
         // --- Extra values generated for convenience ---
         FirstValue = 0, ///< First defined value.
         LastValue = 2, ///< Last defined value.
@@ -509,8 +509,8 @@ struct E2_1Common
 };
 
 ```
-- The field is defined using 
-[comms::field::EnumValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1EnumValue.html) 
+- The field is defined using
+[comms::field::EnumValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1EnumValue.html)
 class provided by the [COMMS Library](https://github.com/commschamp/comms).
 - The field's value is considered to be valid (determined by the call to the
 `valid()` member function) if it is equal to one of
@@ -536,8 +536,7 @@ of external `enum` field `E2_2` which is referenced by the `Msg1` definition:
         <validValue name="V1" val="0" />
         <validValue name="V2" val="100" />
         <validValue name="V3" val="0x10f" />
-    </enum>        
-
+    </enum>
 
 ...
 </fields>
@@ -547,8 +546,8 @@ of external `enum` field `E2_2` which is referenced by the `Msg1` definition:
     <ref name="F2" field="E2_2" />
     ...
 </message>
-```    
-This field definition will reside in 
+```
+This field definition will reside in
 [include/tutorial2/field/E2_2.h](include/tutorial2/field/E2_2.h) with its
 common, template parameter's independent types and functions in
 [include/tutorial2/field/E2_2Common.h](include/tutorial2/field/E2_2Common.h)
@@ -562,7 +561,7 @@ case of `E2_2` it is `V2`. It is implemented using `comms::option::def::DefaultN
 option passed to the class definition.
 - Any numeric value can be assigned as decimal or as hexadecimal value prefixed
 with `0x`.
-- When the `<validValue>`-es cannot be unified into one range, the 
+- When the `<validValue>`-es cannot be unified into one range, the
 [COMMS Library](https://github.com/commschamp/comms)
 allows usage of multiple `comms::option::def::ValidNumValue` options:
 ```cpp
@@ -589,9 +588,9 @@ The `Msg2` message defines its third field internally:
         <validValue name="V3" val="10" />
     </enum>
     ...
-</message> 
+</message>
 ```
-In this case, the field itself is defined as member of 
+In this case, the field itself is defined as member of
 [tutorial2::message::Msg2Fields](include/tutorial2/message/Msg2.h) and its
 common, template parameters independent definition is a member of
 [tutorial2::message::Msg2FieldsCommon](include/tutorial2/message/Msg2Common.h)
@@ -607,7 +606,7 @@ The fourth `enum` field of the `Msg2` is also defined internally:
         <validValue name="V4" val="0xfff" displayName="Value 4"/>
     </enum>
     ...
-</message> 
+</message>
 ```
 
 Please note the setting of **hexAssign** boolean property to **true**. It results
@@ -628,7 +627,7 @@ struct Msg2FieldsCommon
             V4 = 0x0FFFU, ///< value @b V4
             ...
         };
-    };    
+    };
 };
 ```
 
@@ -685,8 +684,8 @@ msg.field_f4().setValue(0xff);
 The definition of the enum fields also provides `valueName()` member function
 which allows retrieval of the human readable name of the current value. Note, that
 by default the value's name is the value of **name** property of the `<validValue>`
-XML note, unless **displayName** property is set, which takes over. 
-The usage of the `valueName()` member function is demonstrated inside 
+XML note, unless **displayName** property is set, which takes over.
+The usage of the `valueName()` member function is demonstrated inside
 message handling function when the received message content is printed:
 ```cpp
 void ClientSession::handle(Msg2& msg)
@@ -707,7 +706,7 @@ void ClientSession::handle(Msg2& msg)
 The `Msg3` message (defined inside [dsl/msg3.xml](dsl/msg3.xml) and implemented
 in [include/tutorial2/message/Msg3.h](include/tutorial2/message/Msg3.h)) is there to
 demonstrate basic usage of integral fields. The previous section showed that
-the fields can be defined as global ones or internally as members of 
+the fields can be defined as global ones or internally as members of
 `<message>` XML node. For reference and demonstration convenience, the
 explained fields in this and most of subsequent sections will be defined as
 global ones and referenced using `<ref>` XML node.
@@ -728,13 +727,13 @@ The first defined `<int>` field is:
 Please note the following:
 
 - The storage type of the field is specified using **type** property. The
-supported types are the same as for `enum` field: **int8**, **uint8**, 
-**int16**, **uint16**, **int32**, **uint32**, **int64**, **uint64**, 
+supported types are the same as for `enum` field: **int8**, **uint8**,
+**int16**, **uint16**, **int32**, **uint32**, **int64**, **uint64**,
 **intvar**, and **uintvar**.
 - The numeric value of the default constructed field specified using
 **defaultValue** property.
-- The field is defined using 
-[comms::field::IntValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html) 
+- The field is defined using
+[comms::field::IntValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1IntValue.html)
 class provided by the [COMMS Library](https://github.com/commschamp/comms).
 - The generated code resides in [include/tutorial2/field/I3_1.h](include/tutorial2/field/I3_1.h)
 file.
@@ -769,7 +768,7 @@ The generated code resides in [include/tutorial2/field/I3_2.h](include/tutorial2
 Please note the usage of **length** property. It can be used to limit
 serialization length of the specified field to lower number of bytes. In the
 example above, it is limited to be **3** bytes instead of default **4** (due
-to **uint32** storage type). In this case the 
+to **uint32** storage type). In this case the
 [COMMS Library](https://github.com/commschamp/comms)
 will serialize the field using correct number of bytes.
 ```cpp
@@ -811,8 +810,8 @@ issue for [commsdsl](https://github.com/commschamp/commsdsl) project.
 
 ----
 
-The value of the **length** property in the case above means **maximal** 
-allowed serialization length of the field. The 
+The value of the **length** property in the case above means **maximal**
+allowed serialization length of the field. The
 [generated code](include/tutorial2/field/I3_3.h)
 uses `comms::option::def::VarLength` option to provide the required information to
 the [COMMS Library](https://github.com/commschamp/comms).
@@ -843,9 +842,9 @@ void ClientSession::sendMsg3()
 ```
 
 In some protocols values of some fields may have special meaning. In order
-to prevent boilerplate code the 
+to prevent boilerplate code the
 [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
-provides an ability to specify names for some values, while 
+provides an ability to specify names for some values, while
 [commsdsl2comms](https://github.com/commschamp/commsdsl) code generator creates
 necessary helper functions to get/set special values.
 
@@ -876,11 +875,11 @@ public:
     static constexpr ValueType valueS1();
     bool isS1() const;
     void setS1();
-    
+
     static constexpr ValueType valueS2();
     bool isS2() const;
     void setS2();
-    
+
     ...
 };
 
@@ -896,7 +895,7 @@ void ClientSession::sendMsg3()
 }
 ```
 
-The fifth defined `<int>` field 
+The fifth defined `<int>` field
 ([I3_5](include/tutorial2/field/I3_5.h)) demonstrates usage of **serOffset**
 property. It is used to automatically add / subtract predefined value before / after
 field value serialization. The classic example is having a year number to be serialized
@@ -932,7 +931,7 @@ not need to know or care about applied serialization offset.
 
 ### &lt;set&gt; Fields
 The `<set>` field allows creation of bitset / bitmask fields where
-every bit has independent meaning. The `Msg4` message 
+every bit has independent meaning. The `Msg4` message
 (defined inside [dsl/msg4.xml](dsl/msg4.xml) and implemented
 in [include/tutorial2/message/Msg4.h](include/tutorial2/message/Msg4.h)) demonstrates usage of such fields.
 
@@ -955,7 +954,7 @@ The first defined `<set>` field is ([S4_1](include/tutorial2/field/S4_1.h)):
 Please note the following:
 
 - The length of the field is specified using **length** property. The value
-of the property is length of the field in **bytes**. 
+of the property is length of the field in **bytes**.
 - The information of the bit is defined using `<bit>` XML node, which
 also uses **name** property to specify name of the bit as well as **idx**
 property to specify bit index.
@@ -965,7 +964,7 @@ The [field class definition](include/tutorial2/field/S4_1.h) extends
 class and uses `COMMS_BITMASK_BITS_SEQ()` macro to specify names of the bits.
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
-class S4_1 : public 
+class S4_1 : public
     comms::field::BitmaskValue<...>
 {
     ...
@@ -975,14 +974,14 @@ public:
         B1,
         B2
     );
-    
+
     ...
 };
 ```
 Usage of `COMMS_BITMASK_BITS_SEQ()` macro is equivalent of having the following
 inner types and functions defined.
 ```cpp
-class S4_1 
+class S4_1
 {
 public:
     // Enumeration for bit indices
@@ -993,7 +992,7 @@ public:
         BitIdx_B2,
         BitIdx_numOfValues,
     };
-    
+
     // Get/Set for B0
     bool getBitValue_B0() const;
     void setBitValue_B0(bool value);
@@ -1007,10 +1006,10 @@ public:
     void setBitValue_B2(bool value);
 };
 ```
-It's worth mentioning that 
+It's worth mentioning that
 [comms::field::BitmaskValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1BitmaskValue.html)
 class defines `getBitValue()` and `setBitValue()` member functions that receive index of the bit as
-their parameter. The get/set functions generated by the `COMMS_BITMASK_BITS_SEQ()` macro are a mere 
+their parameter. The get/set functions generated by the `COMMS_BITMASK_BITS_SEQ()` macro are a mere
 wrappers around these functions.
 
 Please take a closer look at the extension options used to define the field
@@ -1027,17 +1026,17 @@ class S4_1 : public
 - The value of the **length** property finds its way as an argument of
 `comms::option::def::FixedLength` option.
 - All unspecified bits are considered to be **reserved** ones with default
-reserved value to be **0**. 
-- The information about reserved bits is passed to 
+reserved value to be **0**.
+- The information about reserved bits is passed to
 [comms::field::BitmaskValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1BitmaskValue.html)
 base class using `comms::option::def::BitmaskReservedBits` option, first template
 parameter of which is the mask of the reserved bits, while the second template
 parameter specifies the expected outcome when binary `and` operation is applied
 on the currently held field's value and the mask of the reserved bits. If the
-result differs, then the field's value is reported to be **invalid** (call 
+result differs, then the field's value is reported to be **invalid** (call
 to `valid()` member function returns **false**).
 - The inner value storage type (`ValueType` member type) is always unsigned
-integral one and based on the specified field length. It can be one of the 
+integral one and based on the specified field length. It can be one of the
 following: **std::uint8_t**, **std::uint16_t**, **std::uint32_t**, or **std::uint64_t**.
 - By default all the bits in such default constructed field are initialized
 to **false** (**0**).
@@ -1062,7 +1061,7 @@ The second defined `<set>` field is ([S4_2](include/tutorial2/field/S4_2.h)):
         <bit name="B0" idx="0" defaultValue="false" />
         <bit name="B5" idx="5" />
         <bit name="B15" idx="15" />
-    </set> 
+    </set>
     ...
 </fields>
 
@@ -1111,7 +1110,7 @@ demonstrates better control of reserved fields:
         <bit name="B1" idx="1" reserved="true" reservedValue="false" />
         <bit name="B5" idx="5" />
         <bit name="B20" idx="20" />
-    </set> 
+    </set>
 </fields>
 
 <message name="Msg4" id="MsgId.M4" displayName="Message 4">
@@ -1123,12 +1122,12 @@ By default the expected value of every reserved bit is **false** (**0**). Howeve
 it may be changed using **reservedValue** property. In the example above it
 states that every reserved bit expected to be **true** (**1**). Also such
 default definition can be updated for a specific bit using a combination of
-**reserved** (to mark the bit as reserved) and **reservedValue** 
+**reserved** (to mark the bit as reserved) and **reservedValue**
 (to specify the expected value for the bit) properties, as was done for bit **B1**
 in the example above.
 
 One more thing to notice is that **length** property can have any value up to **8**
-bytes. The example above limits the length of the field to 3 bytes only. 
+bytes. The example above limits the length of the field to 3 bytes only.
 
 Let's also take a closer look at the code that prepares this bit for being sent:
 ```cpp
@@ -1146,17 +1145,17 @@ void ClientSession::sendMsg4()
 As was mentioned early the internal value storage type of the field (`ValueType`)
 is unsigned integral one (**std::uint8_t**, **std::uint16_t**, **std::uint32_t**,
 or **std::uint64_t**). It means that it can be accessed and raw bulk value of all
-the bits can be assigned directly to it, like in the code example above. 
+the bits can be assigned directly to it, like in the code example above.
 It is obvious that in such assignment above many reserved bits end up with invalid
 value, that's why call to the `valid()` member function is expected to return **false**.
 
 Additional thing to mention is that the field class definition code generated by the
-[commsdsl2comms](https://github.com/commschamp/commsdsl) 
+[commsdsl2comms](https://github.com/commschamp/commsdsl)
 contains `bitName()` convenience member function, which can be used to retrieve
-human readable name of the bit. By default it is equal to the value of the 
+human readable name of the bit. By default it is equal to the value of the
 **name** property, but it can be overwritten with **displayName** one.
 The usage of the `bitName()` member function is demonstrated by the
-following function (implemented as member of 
+following function (implemented as member of
 [Session.h](../../lib/include/Session.h) base class):
 ```cpp
 template <typename TField>
@@ -1192,10 +1191,10 @@ void ClientSession::handle(Msg4& msg)
 ```
 
 ### &lt;float&gt; Fields
-The `<float>` stores and abstracts away value of floating point type 
-with IEEE 754 encoding. The `Msg5` message 
-(defined inside [dsl/msg5.xml](dsl/msg5.xml) and implemented in 
-[include/tutorial2/message/Msg5.h](include/tutorial2/message/Msg5.h)) 
+The `<float>` stores and abstracts away value of floating point type
+with IEEE 754 encoding. The `Msg5` message
+(defined inside [dsl/msg5.xml](dsl/msg5.xml) and implemented in
+[include/tutorial2/message/Msg5.h](include/tutorial2/message/Msg5.h))
 demonstrates usage of such fields.
 
 The first defined `<float>` field is ([F5_1](include/tutorial2/field/F5_1.h)):
@@ -1215,17 +1214,17 @@ used to specify underlying storage type of the field. The available values are
 **float** (with 4 bytes serialization length) and **double** (with 8 bytes
 serialization length).
 
-The `<float>` field is defined using 
-[comms::field::FloatValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1FloatValue.html) 
+The `<float>` field is defined using
+[comms::field::FloatValue](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1FloatValue.html)
 class provided by the [COMMS Library](https://github.com/commschamp/comms).
 
-The second defined `<float>` field 
+The second defined `<float>` field
 ([F5_2](include/tutorial2/field/F5_2.h)) demonstrates usage of values with
-special meaning (similar to special values that can be defined for 
+special meaning (similar to special values that can be defined for
 [&lt;int&gt;](#int-fields) fields).
 ```xml
 <fields>
-    ...    
+    ...
     <float name="F5_2" type="double" defaultValue="S1">
         <special name="S1" val="nan" />
         <special name="S2" val="inf" />
@@ -1261,12 +1260,12 @@ void ClientSession::sendMsg5()
 ```
 
 ### &lt;string&gt; Fields
-The `<string>` fields abstract away string values. The `Msg6` message 
+The `<string>` fields abstract away string values. The `Msg6` message
 (defined inside [dsl/msg6.xml](dsl/msg6.xml) and implemented in
-[include/tutorial2/message/Msg6.h](include/tutorial2/message/Msg6.h)) 
+[include/tutorial2/message/Msg6.h](include/tutorial2/message/Msg6.h))
 demonstrates usage of such fields.
 
-The first defined `<string>` field ([S6_1](include/tutorial2/field/S6_1.h)) 
+The first defined `<string>` field ([S6_1](include/tutorial2/field/S6_1.h))
 shows usage of fixed size string field:
 ```xml
 <fields>
@@ -1279,8 +1278,8 @@ shows usage of fixed size string field:
     ...
 </message>
 ```
-The `<string>` field is defined using 
-[comms::field::String](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1String.html) 
+The `<string>` field is defined using
+[comms::field::String](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1String.html)
 class provided by the [COMMS Library](https://github.com/commschamp/comms).
 
 The **default** storage type of any `<string>` field is `std::string`.
@@ -1308,7 +1307,7 @@ When such `<string>` field is serialized, the
 sure that correct number of bytes is written to the output buffer. In case the
 stored string value has shorter length, the output is padded with correct number
 of zeroes (**0**). In case the stored string value is longer than allowed, the
-serialization output will just be truncated without exceeding maximum allowed 
+serialization output will just be truncated without exceeding maximum allowed
 number of bytes.
 
 The second defined `<string>` field ([S6_2](include/tutorial2/field/S6_2.h))
@@ -1346,7 +1345,7 @@ void ClientSession::sendMsg6()
 }
 ```
 
-The third defined `<string>` field ([S6_3](include/tutorial2/field/S6_3.h)) 
+The third defined `<string>` field ([S6_3](include/tutorial2/field/S6_3.h))
 also demonstrates string prefixed with
 its serialization length, but this time of variable length.
 ```xml
@@ -1368,11 +1367,11 @@ it's value references already defined external `<int>` field.
 
 Also note that the length prefix has variable length of 1 or 2 bytes
 with [Base-128](https://en.wikipedia.org/wiki/LEB128) encoding. In case the
-stored string value has more than 127 characters, the length prefix will occupy 2 bytes 
+stored string value has more than 127 characters, the length prefix will occupy 2 bytes
 when string field is serialized.
 
 The fourth defined `<string>` field ([S6_4](include/tutorial2/field/S6_4.h))
-demonstrates zero (**0**) terminating 
+demonstrates zero (**0**) terminating
 string fields. Such fields are not prefixed with their length, their length is
 determined by the presence of zero (**0**) byte.
 ```xml
@@ -1395,7 +1394,7 @@ The preparation of such field for sending looks like this:
 void ClientSession::sendMsg6()
 {
     ...
-    assert(msg.field_f4().length() == 1U); 
+    assert(msg.field_f4().length() == 1U);
     msg.field_f4().value() = "blablabla";
     assert(msg.field_f4().length() == 10U);
     ...
@@ -1410,18 +1409,18 @@ any size limitations and/or termination character.
     <string name="F5" />
 </message>
 ```
-Such field usually resides at the end of the message. It 
+Such field usually resides at the end of the message. It
 writes all its contents during serialization stage and consumes
 all the available remaining data (bound by the total message length controlled
 by the framing).
 
 ### &lt;data&gt; Fields
-The `<data>` fields abstract away lists of raw binary bytes. The `Msg7` message 
+The `<data>` fields abstract away lists of raw binary bytes. The `Msg7` message
 (defined inside [dsl/msg7.xml](dsl/msg7.xml) and implemented in
-[include/tutorial2/message/Msg7.h](include/tutorial2/message/Msg7.h)) 
+[include/tutorial2/message/Msg7.h](include/tutorial2/message/Msg7.h))
 demonstrates usage of such fields.
 
-The `<data>` fields are very similar to `<string>` ones. 
+The `<data>` fields are very similar to `<string>` ones.
 The first defined `<data>` field ([D7_1](include/tutorial2/field/D7_1.h))
 shows usage of fixed size raw binary data sequence:
 ```xml
@@ -1435,8 +1434,8 @@ shows usage of fixed size raw binary data sequence:
     ...
 </message>
 ```
-The `<data>` field is defined using 
-[comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.htmll) 
+The `<data>` field is defined using
+[comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.htmll)
 class provided by the [COMMS Library](https://github.com/commschamp/comms).
 
 The **default** storage type of any `<data>` field is `std::vector<std::uint8_t>`.
@@ -1464,10 +1463,10 @@ Just like with `<string>` fields, when such `<data>` field is serialized, the
 sure that correct number of bytes is written to the output buffer. In case the
 stored string value has shorter length, the output is padded with correct number
 of zeroes (**0**). In case the stored data value is longer than allowed, the
-serialization output will just be truncated without exceeding maximum allowed 
+serialization output will just be truncated without exceeding maximum allowed
 number of bytes.
 
-The second defined `<data>` field ([D7_2](include/tutorial2/field/D7_2.h)) 
+The second defined `<data>` field ([D7_2](include/tutorial2/field/D7_2.h))
 demonstrates raw data prefixed with
 1 byte of its serialization length:
 ```xml
@@ -1488,7 +1487,7 @@ demonstrates raw data prefixed with
 ```
 Similar to other fields, it is possible to use **defaultValue** property to
 set default value for the default-constructed field. The **defaultValue** must
-specify hexadecimal value of each byte. Spaces are allowed 
+specify hexadecimal value of each byte. Spaces are allowed
 (just for readability) and ignored when the value is parsed by the code generator.
 
 When preparing the `Msg7` message to be sent, the value of the `F2` field is
@@ -1512,16 +1511,16 @@ any size limitations.
     <data name="F3" />
 </message>
 ```
-Such field usually resides at the end of the message. It writes all its 
+Such field usually resides at the end of the message. It writes all its
 contents during serialization stage and consumes
 all the available remaining data (bound by the total message length controlled
 by the framing).
 
 ### &lt;bundle&gt; Fields
 The `<bundle>` fields are composite fields that bundle multiple other
-fields into a single one. The `Msg8` message 
+fields into a single one. The `Msg8` message
 (defined inside [dsl/msg8.xml](dsl/msg8.xml) and implemented in
-[include/tutorial2/message/Msg8.h](include/tutorial2/message/Msg8.h)) 
+[include/tutorial2/message/Msg8.h](include/tutorial2/message/Msg8.h))
 demonstrates usage of such fields.
 
 The first defined `<bundle>` field is ([B8_1](include/tutorial2/field/B8_1.h)):
@@ -1545,7 +1544,7 @@ The first defined `<bundle>` field is ([B8_1](include/tutorial2/field/B8_1.h)):
 ```
 The member fields are listed as child XML elements of the `<bundle>` node.
 
-Let's take a closer look at the generated code of the field class definition 
+Let's take a closer look at the generated code of the field class definition
 inside [include/tutorial2/field/B8_1.h](include/tutorial2/field/B8_1.h).
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
@@ -1562,13 +1561,13 @@ public:
     ...
 };
 ```
-The class is defined using 
+The class is defined using
 [comms::field::Bundle](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Bundle.html).
 The names of the member fields are provided using `COMMS_FIELD_MEMBERS_NAMES()`
 macro. It is quite similar to `COMMS_MSG_FIELDS_NAMES()` (used to define member
 fields of the messages), but applicable to composite fields, such as bundles.
 
-The inner `ValueType` type of `comms::field::Bundle` (or its extended type) 
+The inner `ValueType` type of `comms::field::Bundle` (or its extended type)
 is `std::tuple` of all the member fields.
 
 Having `COMMS_FIELD_MEMBERS_NAMES()` macro inside class definition is equivalent
@@ -1604,7 +1603,7 @@ public:
     const Field_m3& field_m3() const;
 };
 ```
-Please note that names provided to `COMMS_FIELD_MEMBERS_NAMES()` macro 
+Please note that names provided to `COMMS_FIELD_MEMBERS_NAMES()` macro
 (`m1`, `m2`, `m3`) find their way to `FieldIdx_x` enum values, inner
 `Field_x` alias types and `field_x()` access member functions.
 
@@ -1615,7 +1614,7 @@ void ClientSession::sendMsg8()
     Msg8 msg;
 
     auto& f1 = msg.field_f1(); // Access to f1 field
-    
+
     // Assign values to f1 members
     f1.field_m1().value() = 1234;
     f1.field_m2().value() = Msg8::Field_f1::Field_m2::ValueType::V1;
@@ -1626,15 +1625,15 @@ void ClientSession::sendMsg8()
 ```
 Please take a closer look at assignment of `m2` value.
 
-- `Msg8::Field_f1` is full type ([tutorial2::field::B8_1](include/tutorial2/field/B8_1.h)) 
+- `Msg8::Field_f1` is full type ([tutorial2::field::B8_1](include/tutorial2/field/B8_1.h))
 of `Msg8.F1` field.
-- `Msg8::Filed_f1::Field_m2` is a full type ([tutorial2::field::B8_1Members::M2](include/tutorial2/field/B8_1.h)) of 
+- `Msg8::Filed_f1::Field_m2` is a full type ([tutorial2::field::B8_1Members::M2](include/tutorial2/field/B8_1.h)) of
 `Msg8.F1.M2` field.
 - `Msg8::Filed_f1::Field_m2::ValueType` is an enumeration type
-([comms::field::B8_1MembersCommon::M2Common::ValueType](include/tutorial2/field/B8_1Common.h)) 
+([comms::field::B8_1MembersCommon::M2Common::ValueType](include/tutorial2/field/B8_1Common.h))
 used by `Msg8.F1.M2` field.
 
-It is worth mentioning that it is possible to access member fields by index 
+It is worth mentioning that it is possible to access member fields by index
 instead of name:
 ```cpp
 auto& tupleOfMembers = msg.field_f1().value(); // ValueType of bundle field is tuple of members
@@ -1643,7 +1642,7 @@ auto& m2 = std::get<Msg8::Field_f1::FieldIdx_m2>(tupleOfMembers);
 auto& m3 = std::get<Msg8::Field_f1::FieldIdx_m3>(tupleOfMembers);
 ```
 
-The second `<bundle>` 
+The second `<bundle>`
 field ([B8_2](include/tutorial2/field/B8_2.h)) is defined to be:
 ```xml
 <fields>
@@ -1662,7 +1661,7 @@ field ([B8_2](include/tutorial2/field/B8_2.h)) is defined to be:
                 </lengthPrefix>
             </data>
         </members>
-    </bundle> 
+    </bundle>
 </fields>
 
 <message name="Msg8" id="MsgId.M8" displayName="Message 8">
@@ -1678,10 +1677,10 @@ children of `<bundle>`.
 ### &lt;bitfield&gt; Fields
 The `<bitfield>` fields are also composite ones, members of which limit
 their serialization lengths in **bits** (not bytes), with total sum of bits not
-exceeding **64** and being a multiplication of **8** (to properly fit into 
-serialization bytes). The `Msg9` message 
+exceeding **64** and being a multiplication of **8** (to properly fit into
+serialization bytes). The `Msg9` message
 (defined inside [dsl/msg9.xml](dsl/msg9.xml) and implemented in
-[include/tutorial2/message/Msg9.h](include/tutorial2/message/Msg9.h)) 
+[include/tutorial2/message/Msg9.h](include/tutorial2/message/Msg9.h))
 demonstrates usage of such fields.
 
 The first defined `<bitfield>` field is ([B9_1](include/tutorial2/field/B9_1.h)):
@@ -1706,10 +1705,10 @@ The first defined `<bitfield>` field is ([B9_1](include/tutorial2/field/B9_1.h))
     ...
 </message>
 ```
-Similar to [&lt;bundle&gt;](#bundle-fields) field, the member fields 
+Similar to [&lt;bundle&gt;](#bundle-fields) field, the member fields
 can be listed as child XML elements of the `<bitfield>` node.
 
-Let's take a closer look at the generated code of the field class definition 
+Let's take a closer look at the generated code of the field class definition
 inside [include/tutorial2/field/B9_1.h](include/tutorial2/field/B9_1.h).
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
@@ -1725,15 +1724,15 @@ public:
     ...
 };
 ```
-The class is defined using 
+The class is defined using
 [comms::field::Bitfield](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Bitfield.html).
-Similar to [&lt;bundle&gt;](#bundle-fields) the names of the member fields are 
-provided using the same `COMMS_FIELD_MEMBERS_NAMES()` macro. 
+Similar to [&lt;bundle&gt;](#bundle-fields) the names of the member fields are
+provided using the same `COMMS_FIELD_MEMBERS_NAMES()` macro.
 
-The inner `ValueType` type of `comms::field::Bitfield` (or its extended type) 
+The inner `ValueType` type of `comms::field::Bitfield` (or its extended type)
 is `std::tuple` of all the member fields.
 
-Just like with [&lt;bundle&gt;](#bundle-fields) fields, having 
+Just like with [&lt;bundle&gt;](#bundle-fields) fields, having
 `COMMS_FIELD_MEMBERS_NAMES()` macro inside class definition is equivalent
 to having the following types and functions defined:
 ```cpp
@@ -1786,7 +1785,7 @@ void ClientSession::sendMsg8()
 }
 ```
 
-The second `<bitfield>` 
+The second `<bitfield>`
 field ([B9_2](include/tutorial2/field/B9_2.h)) is defined to be:
 ```xml
 <fields>
@@ -1816,16 +1815,16 @@ field ([B9_2](include/tutorial2/field/B9_2.h)) is defined to be:
 Just like with [&lt;bundle&gt;](#bundle-fields) fields, in case some property
 of the `<bitfield>` is defined as XML child element (like `<description>`
 in the example above), the member fields must be wrapped in `<members>`
-XML element. 
+XML element.
 
 Please also note, that only [&lt;int&gt;](#int-fields), [&lt;enum&gt;](#enum-fields),
 and [&lt;set&gt;](#set-fields) fields (or [&lt;ref&gt;](#ref-fields) to them) can be members of [&lt;bitfield&gt;](#bitfield-fields),
 value of any other field cannot limit its length to number of bits.
 
 ### &lt;list&gt; Fields
-The `<list>` fields abstract away sequences of other fields. 
+The `<list>` fields abstract away sequences of other fields.
 The `Msg10` message  (defined inside [dsl/msg10.xml](dsl/msg10.xml) and implemented in
-[include/tutorial2/message/Msg10.h](include/tutorial2/message/Msg10.h)) 
+[include/tutorial2/message/Msg10.h](include/tutorial2/message/Msg10.h))
 demonstrates usage of such fields.
 
 The first defined `<list>` field is ([L10_1](include/tutorial2/field/L10_1.h)):
@@ -1846,7 +1845,7 @@ The first defined `<list>` field is ([L10_1](include/tutorial2/field/L10_1.h)):
 The list element field can be defined as child XML elements of the `<list>` node.
 
 The definition above specifies list of **fixed** size of 5 elements (using **count**
-property). Each element is 32 bit unsigned integer. Let's take a look at 
+property). Each element is 32 bit unsigned integer. Let's take a look at
 generated code inside [include/tutoridal2/field/L10_1.h](include/tutoridal2/field/L10_1.h).
 ```cpp
 template <typename TOpt = tutorial2::options::DefaultOptions>
@@ -1857,7 +1856,7 @@ struct L10_1Members
     {
         ...
     };
-    
+
 };
 
 template <typename TOpt = tutorial2::options::DefaultOptions, typename... TExtraOpts>
@@ -1873,14 +1872,14 @@ struct L10_1 : public
     ...
 };
 ```
-The definition of the list field uses 
+The definition of the list field uses
 [comms::field::ArrayList](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1ArrayList.html)
 to define the field (the same as [&lt;data&gt;](#data-fields) field), but as
 its element type uses field (`typename L10_1Members<TOpt>::Element`) definition
 instead of raw binary data (`std::uint8_t`). It means that the **default** value storage
-type (inner `ValueType`) of such field is `std::vector<typename L10_1Members<TOpt>::Element>`. Just 
+type (inner `ValueType`) of such field is `std::vector<typename L10_1Members<TOpt>::Element>`. Just
 like with [&lt;data&gt;](#data-fields) fields, such default storage value may
-be customized to be something else, more suitable for bare-metal development 
+be customized to be something else, more suitable for bare-metal development
 for example, but it's a subject for another a bit later tutorial.
 
 Let's also take a look at the example code that prepares such field to be sent
@@ -1904,7 +1903,7 @@ Note that `msg.field_f1()` gives an access to the list field. To access its stor
 additional call to `.value()` needs to be performed. As the result the `f1Vec` is
 a reference to vector of fields (`std::vector<tutorial2::field::L10_1Members<tutorial2::options::DefaultOptions>::Element>`).
 
-Also note that usage of **count="5"** property in the 
+Also note that usage of **count="5"** property in the
 [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) schema as well
 as reflected in the generated code usage of `comms::option::def::SequenceFixedSize<5U>`
 option ensures requested number of elements in the serialized output buffer, and
@@ -1915,7 +1914,7 @@ does the rest to ensure correct number of elements is serialized. The missing
 elements will be default constructed and their value is properly serialized.
 
 Also note, that accessing the vector element (`f1Vec[0]`) gives a reference to
-the **field** object, not its storage value. To access the storage, there is a 
+the **field** object, not its storage value. To access the storage, there is a
 need to use additional `.value()` call.
 
 The second defined `<list>` field is ([L10_2](include/tutorial2/field/L10_2.h)):
@@ -1938,14 +1937,14 @@ The second defined `<list>` field is ([L10_2](include/tutorial2/field/L10_2.h)):
     ...
 </message>
 ```
-Such field defines a list prefixed with number of its elements (the 
-`<countPrefix>` XML child contains definition of the prefix field). 
+Such field defines a list prefixed with number of its elements (the
+`<countPrefix>` XML child contains definition of the prefix field).
 The `Size` field is of variable length and has `Base-128` encoding. Just a reminder,
 usage of the **length** property for variable length integral field (**type="uintvar"**)
 specifies **maximal** allowed length.
 
 Also note that due to existence of other, non-element XML nodes as child of the
-`<list>` (`<countPrefix>` for example), it is required to 
+`<list>` (`<countPrefix>` for example), it is required to
 define the element inside the `<element>`
 XML node.
 
@@ -1972,8 +1971,8 @@ The third defined `<list>` field is ([L10_3](include/tutorial2/field/L10_3.h)):
     ...
 </message>
 ```
-It defines a list prefixed with 2 bytes of total serialization length of the whole list (the 
-`<lengthPrefix>` XML child contains definition of the prefix field). 
+It defines a list prefixed with 2 bytes of total serialization length of the whole list (the
+`<lengthPrefix>` XML child contains definition of the prefix field).
 
 Note, that `<list>` allows only single field as its element. In order to
 have multiple fields inside, they need to be bundled together as a single field
@@ -2036,14 +2035,14 @@ The fourth defined `<list>` field is ([L10_4](include/tutorial2/field/L10_4.h)):
 ```
 In addition to `<countPrefix>` node that defines number of element prefix
 of the list, there is `<elemLengthPrefix>` node which defines serialization
-length prefix for **every** element that follows. Some protocols use this 
+length prefix for **every** element that follows. Some protocols use this
 feature to allow forward-compatibility of the protocol. For example if in the
 future some new fields are going to be added to the element, the element length
-information allows older version of the protocol, which is not aware of the 
+information allows older version of the protocol, which is not aware of the
 newly added fields to skip extra bytes before reading the next element.
 
 In the example above, the last `<string>` member field of the `<bundle>`
-element doesn't have any length bound. Its length will be limited by the 
+element doesn't have any length bound. Its length will be limited by the
 element length prefix value.
 
 The preparation of the field looks like this:
@@ -2057,21 +2056,21 @@ void ClientSession::sendMsg10()
     f4Vec.resize(1);
     f4Vec[0].field_m1().value() = 99;
     f4Vec[0].field_m2().value() = Msg10::Field_f4::ValueType::value_type::Field_m2::ValueType::V2;
-    f4Vec[0].field_m3().value() = "hello"; 
+    f4Vec[0].field_m3().value() = "hello";
     sendMessage(msg);
 }
 ```
 The assignment for of the **m2** member field value requires a bit of explanation.
 
-- `Msg10::Field_f4` is an alias to the `F4` field, which in turn extends the 
+- `Msg10::Field_f4` is an alias to the `F4` field, which in turn extends the
 [L10_4](include/tutorial2/field/L10_4.h) list class.
-- Access to inner `ValueType` (`Msg10::Field_f4::ValueType`) provides a storage 
+- Access to inner `ValueType` (`Msg10::Field_f4::ValueType`) provides a storage
 type, i.e. std::vector of stored bundle field.
 - Access to inner `value_type` of the storage vector (`Msg10::Field_f4::ValueType::value_type`)
 provides a type of the stored bundle element.
 - As was already mentioned in [&lt;bundle&gt; Fields](#bundle-fields) section, every
-bundle field creates alias types for its members, so 
-`Msg10::Field_f4::ValueType::value_type::Field_m2` is accessing the type of the 
+bundle field creates alias types for its members, so
+`Msg10::Field_f4::ValueType::value_type::Field_m2` is accessing the type of the
 **M2** member field, which is `<enum>` field.
 - The inner `ValueType` type of the enum field definition
 (`Msg10::Field_f4::ValueType::value_type::Field_m2::ValueType`) is an alias to actual
@@ -2082,7 +2081,7 @@ enumeration type.
 ### &lt;variant&gt; Fields
 The `<variant>` fields abstract away a "union" of multiple other fields. They
 can initialize and hold only one instance of any member member fields at a time. The
-`<variant>` fields can be used to create a heterogeneous list of some properties, 
+`<variant>` fields can be used to create a heterogeneous list of some properties,
 such as **key-value** pairs or **TLV** (type-length-value) triplets.
 Note, that working with `<variant>` fields is not simple and requires a bit deeper
 understanding. It's a bit out of "introductory" scope of this tutorial. The `<variant>`
@@ -2093,14 +2092,14 @@ The `<ref>` fields are there to define a reference to other fields in order to a
 code duplication in the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification)
 schema as well as in the generated code. The `<ref>` fields have been used
 throughout this tutorial as fields of the `<message>`-s and referenced
-ones in the global space. 
+ones in the global space.
 
 NOTE, that `<ref>` field can only reference freestanding fields (not members
 of other `<message>`, `<bundle>`, or `<bitfield>`).
 
 There are a couple of extra aspects about `<ref>` that are worth emphasizing.
 The `Msg11` message  (defined inside [dsl/msg11.xml](dsl/msg11.xml) and implemented in
-[include/tutorial2/message/Msg11.h](include/tutorial2/message/Msg11.h)) 
+[include/tutorial2/message/Msg11.h](include/tutorial2/message/Msg11.h))
 is there to demonstrate them.
 
 The `<ref>` field uses **field** property to reference
@@ -2119,7 +2118,7 @@ properties of the referenced field.
 ```
 In the example above the first `<ref>` member field of the `Msg11` inherits the
 `F11_1` as **name** and `Field 11_1` as **displayName**. It results in the
-following definition of the member field names inside 
+following definition of the member field names inside
 [include/tutorial2/message/Msg11.h](include/tutorial2/message/Msg11.h)
 ```cpp
 template <typename TMsgBase, typename TOpt = tutorial2::options::DefaultOptions>
@@ -2131,7 +2130,7 @@ public:
         f11_1,
         ...
     );
-    
+
     ...
 };
 ```
@@ -2188,7 +2187,7 @@ still inheriting **displayName** one.
 </message>
 ```
 
-It results in the following definition of the member field names inside 
+It results in the following definition of the member field names inside
 [include/tutorial2/message/Msg11.h](include/tutorial2/message/Msg11.h)
 ```cpp
 template <typename TMsgBase, typename TOpt = tutorial2::options::DefaultOptions>
@@ -2201,7 +2200,7 @@ public:
         f2,
         ...
     );
-    
+
     ...
 };
 ```
@@ -2238,7 +2237,7 @@ Received "Message 11" with ID=11
     ...
 ```
 
-Another important aspect of `<ref>` fields is that it can be used 
+Another important aspect of `<ref>` fields is that it can be used
 as member of [&lt;bitfield&gt;](#bitfield-fields).
 ```xml
 <bitfield name="F11_3">
@@ -2253,7 +2252,7 @@ referenced field in bits.
 Many binary protocols introduce some kind of optional field, which gets (or doesn't get)
 serialized based on some conditions, usually based on values of other fields. The
 [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows definition
-of such optional fields by using `<optional>` wrapping around it. 
+of such optional fields by using `<optional>` wrapping around it.
 
 The `Msg12` message  (defined inside [dsl/msg12.xml](dsl/msg12.xml) and implemented in
 [include/tutorial2/message/Msg12.h](include/tutorial2/message/Msg12.h)) demonstrates
@@ -2273,13 +2272,13 @@ Every `<optional>` field has the following modes:
 
 The **tentative** mode is a default one, it can be updated using **defaultMode** property of the `<optional>` field (will be demonstrated a bit later).
 
-In the example above the field is constructed with **tentative** mode. If such field (without any further updates) is serialized 
-(during write operation) no output is going to be produced. In case such field is deserialized (in read operation), then if there are some bytes left 
+In the example above the field is constructed with **tentative** mode. If such field (without any further updates) is serialized
+(during write operation) no output is going to be produced. In case such field is deserialized (in read operation), then if there are some bytes left
 in the input buffer to be read the contained field is going to be deserialized, data in input buffer is going to be consumed and the mode with be changed to
 **exists**. If during the read operation the input buffer is empty, then the mode of such field is changed to be **missing** and no deserialization attempt
 for the contained field is going to be performed.
 
-Such optional field is implemented (in the generated code) using 
+Such optional field is implemented (in the generated code) using
 [comms::field::Optional](https://commschamp.github.io/comms_doc/classcomms_1_1field_1_1Optional.html)
 class provided by the [COMMS Library](https://github.com/commschamp/comms), which also wraps the contained field.
 
@@ -2294,18 +2293,18 @@ public:
     using ValueType = TField; // ValueType is the type of the contained field
     using Field = ValueType; // Alias to ValueType
     using Mode = comms::field::OptionalMode;
-    
+
     // Access to the contained field
     ValueType& value() { return m_field; }
     const ValueType& value() const  { return m_field; }
-    
+
     // Same as value()
     Field& field()  { return m_field; }
     const Field& field() { return m_field; }
-    
+
     void setMode(Mode mode) { m_mode = mode; }
     Mode getMode() const { return m_mode; }
-    
+
 private:
     Field m_field; // The contained field
     Mode m_mode = Mode::Tentative;
@@ -2323,7 +2322,7 @@ public:
     void setTentative();
     void setExists();
     void setMissing();
-    
+
     bool isTentative() const;
     bool doesExist() const;
     bool isMissing() const;
@@ -2341,9 +2340,9 @@ struct Msg12Fields
         {
             ...
         };
-        
+
     };
-    
+
     struct F1 : public
         comms::field::Optional<
             typename F1Members::ActF1
@@ -2351,7 +2350,7 @@ struct Msg12Fields
     {
         ...
     };
-    
+
     ...
 };
 ```
@@ -2392,8 +2391,8 @@ Received "Message 12" with ID=12
 ```
 
 In many cases the existence of the optional field depends on the value of other fields. The classical example
-would be a presence of value fields based on some kind of flags `<set>` field where single bit marks presence 
-or absence of other field(s) that follow. Such example is demonstrated by the 
+would be a presence of value fields based on some kind of flags `<set>` field where single bit marks presence
+or absence of other field(s) that follow. Such example is demonstrated by the
 the `Msg13` message  (defined inside [dsl/msg13.xml](dsl/msg13.xml) and implemented in
 [include/tutorial2/message/Msg13.h](include/tutorial2/message/Msg13.h)).
 ```xml
@@ -2410,10 +2409,10 @@ the `Msg13` message  (defined inside [dsl/msg13.xml](dsl/msg13.xml) and implemen
     </optional>
 </message>
 ```
-In the example above the `Msg13.Flags.F2Present` bit indicates that `Msg13.F2` field is present (exists), 
+In the example above the `Msg13.Flags.F2Present` bit indicates that `Msg13.F2` field is present (exists),
 while `Msg13.Flags.F3Missing` bit indicates that `Msg13.F3` field is missing (reverse condition).
 
-The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows specifying conditions 
+The [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows specifying conditions
 (using **cond** property) of when the optional field must have **exists** mode.
 
 Please note the usage of `$` before referencing the bits in the condition statements. According to
@@ -2445,9 +2444,9 @@ void ClientSession::sendMsg13()
 ```
 Please pay attention to the following details:
 
-- When the `Msg13` is default constructed the `F2` is **missing** while `F3` **exists**. The code above reverses it. 
+- When the `Msg13` is default constructed the `F2` is **missing** while `F3` **exists**. The code above reverses it.
 - The contained field of the `F2` (`ActF2`) is accessed using additional `.field()` call before call to `.value()`.
-- After the `flags` are modified the message contents are in an **inconsistent** state, i.e. the modes of `F2` and `F3` 
+- After the `flags` are modified the message contents are in an **inconsistent** state, i.e. the modes of `F2` and `F3`
 haven't been modified yet, while the `flags` have already been updated.
 - If such message with **inconsistent** state is sent, the decoding on the other side is going to be incorrect (if possible at all).
 - To bring message to the consistent state the `doRefresh()` **non-virtual** member function of the message is called.
@@ -2470,12 +2469,12 @@ bool doRefresh()
 }
 ```
 The API requirement imposed by the [COMMS Library](https://github.com/commschamp/comms) is that
-`doRefresh()` member function (which is responsible to bring message contents into a consistent state) 
+`doRefresh()` member function (which is responsible to bring message contents into a consistent state)
 must return `bool` with value `true` when message contents and/or state has been updated and `false` when nothing
 has been changed.
 
-The code above calls to the `doRefresh()` member function of the base class 
-([comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)), which is 
+The code above calls to the `doRefresh()` member function of the base class
+([comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)), which is
 responsible to call `refresh()` member function of **every** member field of the message. It allows having
 similar conditional constructs in composite fields like [&lt;bundle&gt;](#bundle-fields).
 
@@ -2494,7 +2493,7 @@ using MyMessage =
         comms::option::app::RefreshInterface // Polymorphic refresh functionality
     >;
 ```
-When `comms::option::app::RefreshInterface` option is added to the interface definition it is 
+When `comms::option::app::RefreshInterface` option is added to the interface definition it is
 equivalent to having the following interface member functions:
 ```cpp
 class MyMessage
@@ -2504,7 +2503,7 @@ public:
     {
         return refreshImpl();
     }
-    
+
 protected:
     virtual refreshImpl()
     {
@@ -2512,7 +2511,7 @@ protected:
     }
 };
 ```
-Note, that [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) provides a default 
+Note, that [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html) provides a default
 implementation of virtual `refreshImpl()` which constantly return false.
 
 The [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) is expected
@@ -2523,22 +2522,22 @@ class comms::MessageBase<...>
 {
 public:
     bool doRefresh() { ... /* call .refresh() of every member field */};
-    
-protected:    
+
+protected:
     virtual bool refreshImpl() override
     {
         return doRefresh();
     }
 }
 ```
-**HOWEVER**, In many cases the `refresh()` member function of all the fields in the message don't do anything (i.e. 
-unconditionally report `false` without doing anything else). In such case (determined at **compile-time** using 
+**HOWEVER**, In many cases the `refresh()` member function of all the fields in the message don't do anything (i.e.
+unconditionally report `false` without doing anything else). In such case (determined at **compile-time** using
 multiple meta-programming techniques), the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
 does **NOT** override `refreshImpl()` and as the result inherits the default implementation provided by the
-[comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html). It avoids a lot of 
+[comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html). It avoids a lot of
 unnecessary code generation.
 
-Unfortunately the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) is not 
+Unfortunately the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) is not
 aware of any extra **refreshing** functionality that might be needed by the actual message, like with `Msg13` in
 our recent example. That's why the definition of `Msg13` passes extra `comms::option::def::HasCustomRefresh` option
 to let the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) know that
@@ -2556,14 +2555,14 @@ class Msg13 : public
     ...
 };
 ```
-Also note the usage of `comms::option::def::MsgType` option, it just uses the 
+Also note the usage of `comms::option::def::MsgType` option, it just uses the
 [CRTP](https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern)
 idiom to let the [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html) know
 real derived class type to do appropriate casting in its `refreshImpl()` implementation:
 ```cpp
 class comms::MessageBase<...>
 {
-protected:    
+protected:
     virtual bool refreshImpl() override
     {
         return static_cast<RealMessageType&>(*this).doRefresh();
@@ -2571,20 +2570,20 @@ protected:
 }
 ```
 As a general rule, every **generated** message and/or field class with custom **refresh** functionality will
-use `comms::option::def::HasCustomRefresh` option to let the 
+use `comms::option::def::HasCustomRefresh` option to let the
 [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)
 know that previously described optimization of skipping `refreshImpl()` generation must be avoided.
 
 ---
 
-Another thing to pay attention to is when message object is default constructed, the 
+Another thing to pay attention to is when message object is default constructed, the
 **refreshing** functionality (bringing message to a consistent state) is **NOT** called automatically.
 Hence, it is highly recommended to define a message in already consistent state, like with
 `Msg13` described above, the default modes of `f2` as well as `f3` fields were set in accordance
 with default value of the `flags` field.
 
 The optional existence conditions (**cond**) can also contain value comparisons as well as involve
-multiple fields and contain logical **"or"** and **"and"** statements. The 
+multiple fields and contain logical **"or"** and **"and"** statements. The
 `Msg14` message  (defined inside [dsl/msg14.xml](dsl/msg14.xml) and implemented in
 [include/tutorial2/message/Msg14.h](include/tutorial2/message/Msg14.h)) demonstrates exactly that.
 ```xml
@@ -2607,7 +2606,7 @@ multiple fields and contain logical **"or"** and **"and"** statements. The
 ```
 The message definition above has the following logic for having `F3` field being present (**exist**).
 ```
-(F1 > 0) || 
+(F1 > 0) ||
 ((F1 == 0) && (F2 != 0));
 ```
 Please note the following aspects:
@@ -2619,7 +2618,7 @@ Please note the following aspects:
   node.
 - The `Msg14` is defined in such a way that default constructed object is in a proper consistent state (`F3` is defined to be **missing**
   by default).
-  
+
 When `Msg14` is prepared for being sent, the call to `doRefresh()` updates the mode of the `f3` member field in accordance
 with the values of other fields:
 ```cpp
@@ -2659,7 +2658,7 @@ The `Msg18` message  (defined inside [dsl/msg18.xml](dsl/msg18.xml) and implemen
     ...
 </message>
 ```
-In the example above the optional field `F2` exists if the size of the `F1` is not 0, i.e. 
+In the example above the optional field `F2` exists if the size of the `F1` is not 0, i.e.
 it is not empty.
 
 The **v6.1** of the [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) specification
@@ -2677,11 +2676,11 @@ To do so there is a need to use `?` character after the sibling field reference 
 </message>
 ```
 In the example above the optional field `F3` exists if the `F2` does NOT exist (due to negation operator `!`).
-  
+
 ## Reusing Fields Definitions
 In many cases some fields may share some portions of their definitions. To avoid various
 copy-paste errors, the **CommsDSL** allows reusing of other fields using `reuse`
-property like it is done in [dsl/msg17.xml](dsl/msg17.xml). Using this property is 
+property like it is done in [dsl/msg17.xml](dsl/msg17.xml). Using this property is
 equivalent to copying all other properties from one field to another.
 ```xml
 <fields>
@@ -2712,7 +2711,7 @@ then modifies its `defaultValue` as well as adds extra `<special>` value.
 The `Msg17.F2`'s `<bundle>` field copies all the properties including the original two
 member fields, adds the third one (`M3`) and replaces the (`M2`) with different field.
 
-The replacing of the member fields became available since **v5.0** of the 
+The replacing of the member fields became available since **v5.0** of the
 [CommsDSL Specification](https://commschamp.github.io/commsdsl_spec).
 
 ## Summary
@@ -2725,54 +2724,54 @@ The replacing of the member fields became available since **v5.0** of the
   then referenced by other message member fields.
 - The code for global field which is not referenced by other field or message definition
   won't be generated.
-- Validation of message minimal length at the time of schema parsing can be performed 
+- Validation of message minimal length at the time of schema parsing can be performed
   using **validateMinLength** property.
 - Reusing definition of one message to define another is possible using **copyFieldsFrom**
-  property. The same property can be used to copy member fields from the definition of 
+  property. The same property can be used to copy member fields from the definition of
   the [&lt;bundle&gt;](#bundle-fields) field.
 - Reusing other fields definitions is possible using **reuse** property.
 - The replacing of member fields in composite fields like `<bundle>` and `<bitfield>`
   is available since version **v5.0** of the **CommsDSL** using `<replace>` child node.
 - The fields are abstractions around actual value storage to provide common
-  interface for all field types. 
+  interface for all field types.
 - The primary and most frequently used member function of the field objects
   is **value()**. It is used to access the value storage **by-reference**.
 - Every field has inner `ValueType` type, which defines type of the inner value storage.
   - `ValueType` of [&lt;enum&gt;](#enum-fields) is a relevant C++ enum class.
   - `ValueType` of [&lt;int&gt;](#int-fields) is an appropriate integral type (`std::int8_t`,
-    `std::uint8_t`, etc ...) 
+    `std::uint8_t`, etc ...)
   - `ValueType` of [&lt;set&gt;](#set-fields) is an appropriate **unsigned** integral type
     (`std::uint8_t`, `std::uint16_t`, etc...).
-  - `ValueType` of [&lt;float&gt;](#float-fields) is an appropriate floating point type (`float` or 
+  - `ValueType` of [&lt;float&gt;](#float-fields) is an appropriate floating point type (`float` or
     `double`).
-  - **Default** `ValueType` of [&lt;string&gt;](#string-fields) is `std::string`, but it can be changed 
+  - **Default** `ValueType` of [&lt;string&gt;](#string-fields) is `std::string`, but it can be changed
     to better suit the application's needs.
-  - **Default** `ValueType` of [&lt;data&gt;](#data-fields) is `std::vector<std::uint8_t>`, but it 
+  - **Default** `ValueType` of [&lt;data&gt;](#data-fields) is `std::vector<std::uint8_t>`, but it
     can be changed to better suit the application's needs.
   - `ValueType` of [&lt;bundle&gt;](#bundle-fields) is `std::tuple` of all its member fields.
   - `ValueType` of [&lt;bitfield&gt;](#bitfield-fields) is `std::tuple` of all its member fields.
-  - **Default** `ValueType` of [&lt;list&gt;](#list-fields) is `std::vector` of the element field, but it 
+  - **Default** `ValueType` of [&lt;list&gt;](#list-fields) is `std::vector` of the element field, but it
     can be changed to better suit the application's needs.
-  - `ValueType` of [&lt;variant&gt;](#variant-fields) is a variant of 
-    [std::aligned_storage](https://en.cppreference.com/w/cpp/types/aligned_storage) and should 
+  - `ValueType` of [&lt;variant&gt;](#variant-fields) is a variant of
+    [std::aligned_storage](https://en.cppreference.com/w/cpp/types/aligned_storage) and should
     **NOT** be accessed directly via **value()** member function.
-  - `ValueType` of [&lt;ref&gt;](#ref-fields) is a the same as `ValueType` of the referenced field.    
+  - `ValueType` of [&lt;ref&gt;](#ref-fields) is a the same as `ValueType` of the referenced field.
   - `ValueType` of [&lt;optional&gt;](#optional-fields) is a type of the field being wrapped.
 - All the member functions of all the fields are **non**-virtual.
-- Every message definition class containing inner fields uses 
-  `COMMS_MSG_FIELDS_NAMES()` macro (provided by the 
+- Every message definition class containing inner fields uses
+  `COMMS_MSG_FIELDS_NAMES()` macro (provided by the
   [COMMS Library](https://github.com/commschamp/comms))
-  to create convenience access member functions for member fields. For every field name **x** 
+  to create convenience access member functions for member fields. For every field name **x**
   mentioned in the macro, there is `Field_x` member alias type to specify type of the field
-  as well as `field_x()` member function to provide an access to the contained member field 
+  as well as `field_x()` member function to provide an access to the contained member field
   object.
 - Generated classes of both [&lt;bundle&gt;](#bundle-fields) and [&lt;bitfield&gt;](#bitfield-fields)
-  fields use `COMMS_FIELD_MEMBERS_NAMES()` macro to provide names for their member fields. For every 
-  field name **x** mentioned in the macro, there is `Field_x` member alias type to specify type of the 
-  field as well as `field_x()` member function to provide an access to the contained member field 
+  fields use `COMMS_FIELD_MEMBERS_NAMES()` macro to provide names for their member fields. For every
+  field name **x** mentioned in the macro, there is `Field_x` member alias type to specify type of the
+  field as well as `field_x()` member function to provide an access to the contained member field
   object.
 - Due to the nature of these tutorials it is not possible to cover **all** aspects (properties) of all
-  the available fields, it is highly recommended to read 
+  the available fields, it is highly recommended to read
   [CommsDSL](https://commschamp.github.io/commsdsl_spec) specification in
   full after reading the tutorials.
 - All the field classes are implemented by extending one of the field definition
@@ -2780,4 +2779,4 @@ The replacing of the member fields became available since **v5.0** of the
   and residing in [comms::field](https://commschamp.github.io/comms_doc/namespacecomms_1_1field.html)
   namespace.
 
-[Read Previous Tutorial](../tutorial1) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial3) 
+[Read Previous Tutorial](../tutorial1) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial3)

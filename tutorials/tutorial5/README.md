@@ -6,14 +6,14 @@ not uncommon for new I/O interfaces been added in the future versions of the har
 make a prudent choice and try to reuse the same communication protocol for multiple available I/O links.
 However, every type of I/O has different reliability built-in and may require different message framing.
 
-For example the TCP/IP link uses checksum in its packets to insure that data is not corrupted and 
+For example the TCP/IP link uses checksum in its packets to insure that data is not corrupted and
 automatically re-requests packets to be sent again if needed. As the result simple framing below is
 suitable in most cases.
 ```
 SIZE | ID | PAYLOAD
 ```
 
-With RS-232 link (or similar) there is a need to take extra measures to identify where the message packet 
+With RS-232 link (or similar) there is a need to take extra measures to identify where the message packet
 starts and whether the message data was not corrupted on the way with a checksum. It many cases it looks
 something like this:
 ```
@@ -22,14 +22,14 @@ SYNC (predefined header) | SIZE | ID | PAYLOAD | CHECKSUM
 
 The whole [CommsChampion Ecosystem](https://commschamp.github.io/) was designed with clean separation
 of message definitions with their payloads and the actual framing. It also allows definition of multiple
-frames in the same protocol schema file(s) and allows the end application to pick at compile time the one 
+frames in the same protocol schema file(s) and allows the end application to pick at compile time the one
 that is needed.
 
-In this tutorial we will use two different frames: one for messages sent from **client** to **server** 
+In this tutorial we will use two different frames: one for messages sent from **client** to **server**
 and another for the opposite direction. In the process we'll get a deeper understanding of `<frame>`
 definition options.
 
-The [schema](dsl/schema.xml) defines two frames. One is for messages being sent by the **server** to the 
+The [schema](dsl/schema.xml) defines two frames. One is for messages being sent by the **server** to the
 **client**.
 ```xml
 <frame name="ServerToClientFrame">
@@ -58,7 +58,7 @@ The other one for messages being sent from the **client** to the **server** is:
     <payload name="Data" />
     <checksum name="Checksum" alg="crc-ccitt" from="Size" >
         <int name="ChecksumField" type="uint16" />
-    </checksum>        
+    </checksum>
 </frame>
 ```
 It represents the following framing:
@@ -66,15 +66,14 @@ It represents the following framing:
 SYNC (0xabcd - 2 bytes) | SIZE (up until and including CHECKSUM - 2 bytes) | ID (1 byte) | PAYLOAD | CHECKSUM (crc-ccitt - 2 bytes)
 ```
 
-The relevant generated code reside in 
+The relevant generated code reside in
 [include/tutorial5/frame/ServerToClientFrame.h](include/tutorial5/frame/ServerToClientFrame.h)
 and [include/tutorial5/frame/ClientToServerFrame.h](include/tutorial5/frame/ClientToServerFrame.h)
-
 
 To properly understand the schema definition above and the implementation implications let's go through the
 important points one by one.
 
-First of all, every `<frame>` must define internal so called **layers** (`<sync>`, 
+First of all, every `<frame>` must define internal so called **layers** (`<sync>`,
 `<size>`, etc...). Every such layer handles only one specific value inside the message frame. To
 properly describe the length and type of such value, the layer needs to define suitable inner **field**:
 ```xml
@@ -118,7 +117,7 @@ node:
 ----
 
 Let's take a look at the defined layers of `ClientToServerFrame` (from
-[include/tutorial5/frame/ClientToServerFrame.h](include/tutorial5/frame/ClientToServerFrame.h)) one by one. 
+[include/tutorial5/frame/ClientToServerFrame.h](include/tutorial5/frame/ClientToServerFrame.h)) one by one.
 
 ## &lt;payload&gt; Layer
 The `<payload>` layer represents message payload (serialized fields). It is **the only**
@@ -126,7 +125,7 @@ layer that doesn't have any inner field that represents framing value.
 ```xml
 <payload name="Data" />
 ```
-Such layer is implemented by extending or aliasing 
+Such layer is implemented by extending or aliasing
 [comms::frame::MsgDataLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgDataLayer.html).
 ```cpp
 using Data =
@@ -140,11 +139,11 @@ The `<id>` layer represents numeric message ID.
 ```xml
 <id name="Id" field="MsgId" />
 ```
-Note that the `MsgId` field is defined in the global space and is used to enumerate messages. The 
+Note that the `MsgId` field is defined in the global space and is used to enumerate messages. The
 [CommsDSL](https://github.com/commschamp/CommsDSL-Specification) allows reference of such field
-with **field** property rather than defining a field as XML child element. 
+with **field** property rather than defining a field as XML child element.
 
-Such layer is implemented by extending or aliasing 
+Such layer is implemented by extending or aliasing
 [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html),
 which is responsible to read the numeric message ID and create (allocate) appropriate message object.
 ```cpp
@@ -160,22 +159,22 @@ using Id =
 ```
 Note, that [COMMS Library](https://github.com/commschamp/comms) implement message framing
 by folding layers, where one layer wraps another and keeps the latter as its private data member. Such architecture
-allows assembling a required framing out of multiple building blocks as well as 
+allows assembling a required framing out of multiple building blocks as well as
 having any extra logic **before** and **after** read/write operations are forwarded the the next layer
 for processing.
 
 The definition above receives two template parameters `TMessage` and `TAllMessages`. The first one
-(`TMessage`) is expected to be a type of common **interface** class (descendant of 
+(`TMessage`) is expected to be a type of common **interface** class (descendant of
 [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html)) of all the message
 types, while second (`TAllMessages`) is `std::tuple` of all the **input** message types
-(descendants of [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)), which 
+(descendants of [comms::MessageBase](https://commschamp.github.io/comms_doc/classcomms_1_1MessageBase.html)), which
 the `ID` layer is expected to recognize and create relevant object during **read** operation.
 
 ----
 
 **SIDE NOTE**: The last template parameter passed to the [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html)
 is actually a compile time configuration parameter that can be used by the end-application to configure the
-behavior of the layer, such as replace default dynamic memory allocation of message objects with in-place allocation more 
+behavior of the layer, such as replace default dynamic memory allocation of message objects with in-place allocation more
 suitable for bare-metal development. Such compile time configuration is a subject for another a bit later tutorial.
 
 ----
@@ -191,7 +190,7 @@ values after `<payload>`.
 ```
 Note, that in this particular tutorial the `SIZE` value in the framing represents remaining length until
 end of the message **including** checksum (which follows the `<payload>`). To satisfy this
-requirement, the **serOffset="2"** property has been used to add extra 2 bytes (length of the checksum) to the 
+requirement, the **serOffset="2"** property has been used to add extra 2 bytes (length of the checksum) to the
 serialized value.
 
 There are protocols that include length of the size field itself as the value of the `SIZE` in the
@@ -201,7 +200,7 @@ Usage of the **displayOffset** property can be used the force adding the same of
 value displayed in [CommsChampion Tools](https://github.com/commschamp/cc_tools_qt) and it's
 not really relevant to this tutorial.
 
-The `<size>` layer is implemented by extending or aliasing 
+The `<size>` layer is implemented by extending or aliasing
 [comms::frame::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgSizeLayer.html).
 ```cpp
 template <typename TMessage, typename TAllMessages>
@@ -219,12 +218,12 @@ The `<checksum>` layer is used to define checksum information that needs to be c
 ```xml
 <checksum name="Checksum" alg="crc-ccitt" from="Size" >
     <int name="ChecksumField" type="uint16" />
-</checksum>        
+</checksum>
 ```
-The [CommsChampion Ecosystem](https://commschamp.github.io/) has a list of supported built-in checksum 
-algorithms which can be specified using **alg** property. Please refer to 
+The [CommsChampion Ecosystem](https://commschamp.github.io/) has a list of supported built-in checksum
+algorithms which can be specified using **alg** property. Please refer to
 [CommsDSL](https://commschamp.github.io/commsdsl_spec/#frames-checksum) specification for a full list. In this
-particular tutorial [CRC-CCITT](https://en.wikipedia.org/wiki/Cyclic_redundancy_check) is used. 
+particular tutorial [CRC-CCITT](https://en.wikipedia.org/wiki/Cyclic_redundancy_check) is used.
 
 ----
 
@@ -234,14 +233,14 @@ tutorials.
 
 ----
 
-Please also pay attention to usage of **from** property in `<checksum>` layer definition. 
+Please also pay attention to usage of **from** property in `<checksum>` layer definition.
 It specifies from which layer the checksum calculation needs to be performed. In the case of
 this tutorial it's from `SIZE` layer until the `CHECKSUM` itself. The
-[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) also supports 
+[CommsDSL](https://github.com/commschamp/CommsDSL-Specification) also supports
 usage of `<checksum>` layer as prefix to the area on which the checksum needs to be
 calculated. In this case the **until** property needs to be used.
 
-The suffix `<checksum>` layer is implemented by extending or aliasing 
+The suffix `<checksum>` layer is implemented by extending or aliasing
 [comms::frame::ChecksumLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumLayer.html)
 or [comms::frame::ChecksumPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1ChecksumPrefixLayer.html)
 depending on whether the checksum follows or precedes the data used for checksum
@@ -259,14 +258,14 @@ Note, that the C++ class of `Checksum` layer needs to wrap all the other layers 
 the checksum value is calculated. That's the reason while the `Checksum` wraps the `Size`.
 
 ## &lt;sync&gt; Layer
-The `<sync>` layer is used to define synchronization prefix. The **defaultValue** property of the field 
+The `<sync>` layer is used to define synchronization prefix. The **defaultValue** property of the field
 needs to be used to define the synchronization value.
 ```xml
 <sync name="Sync">
     <int name="SyncField" type="uint16" defaultValue="0xabcd" />
 </sync>
 ```
-The `<sync>` layer is implemented by extending or aliasing 
+The `<sync>` layer is implemented by extending or aliasing
 [comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html).
 ```cpp
 template <typename TMessage, typename TAllMessages>
@@ -276,12 +275,12 @@ using Sync =
         Checksum<TMessage, TAllMessages>
     >;
 ```
-Note, that there is no real need to use **validValue** and/or **failOnInvalid** properties for the definition 
+Note, that there is no real need to use **validValue** and/or **failOnInvalid** properties for the definition
 of the `SyncField` to force the read operation to fail on invalid value. The implementation of the
 [comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html)
 just compares the read field with the default constructed one and fails the read operation if they are
 not equal. During write operation the layer will just invoke `write()` member function on
-the default constructed field, which will write the correct value thanks to 
+the default constructed field, which will write the correct value thanks to
 usage of **defaultValue** property in the field definition.
 
 ## Full Frame
@@ -291,7 +290,7 @@ template <typename TOpt = tutorial5::options::DefaultOptions>
 struct ClientToServerFrameLayers
 {
     ...
-    
+
     template<typename TMessage, typename TAllMessages>
     using Stack = Sync<TMessage, TAllMessages>;
 };
@@ -314,12 +313,12 @@ public:
     );
 };
 ```
-As the result the documentation of the last layer type 
-([comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html) 
+As the result the documentation of the last layer type
+([comms::frame::SyncPrefixLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1SyncPrefixLayer.html)
 for the current example) can be used for reference on available framing API.
 
 The final definition of `ClientToServerFrame` frame class uses `COMMS_FRAME_LAYERS_NAMES()`
-macro to assign names for the defined layers. For every name **X** the macro generates 
+macro to assign names for the defined layers. For every name **X** the macro generates
 `Layer_X` type and `layer_X()` member function to allow access to it if needed. This particular tutorial doesn't
 have such a need, so these functions are not really used.
 
@@ -344,15 +343,15 @@ void ClientSession::sendMessage(const Message& msg)
     ...
 }
 ```
-The important code is listed above. Note, that the write operation uses 
+The important code is listed above. Note, that the write operation uses
 [output](https://en.cppreference.com/w/cpp/named_req/OutputIterator) iterator
-to write the code (`std::back_inserter(output)`) which cannot be returned back 
-to and used to re-read the written data in order to calculate the checksum value 
+to write the code (`std::back_inserter(output)`) which cannot be returned back
+to and used to re-read the written data in order to calculate the checksum value
 before it's been written. As the result the call to `m_clientToServerFrame.write(...)`
-will put some dummy (`0`) two bytes as the checksum and return 
+will put some dummy (`0`) two bytes as the checksum and return
 [commms::ErrorStatus::UpdateRequired](https://commschamp.github.io/comms_doc/ErrorStatus_8h.html)
-to indicate that the `write()` operation is not complete. The call to 
-`update()` with [random access](https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator) 
+to indicate that the `write()` operation is not complete. The call to
+`update()` with [random access](https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator)
 iterator needs to follow. It will be used to re-read the written data as well as
 overwrite the dummy checksum with a correct value.
 
@@ -362,7 +361,7 @@ has **NOT** been provided). In such case when `SIZE` value needs to be written t
 proper value cannot be retrieved (because length of message payload is not known).
 In this case the [comms::frame::MsgSizeLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgSizeLayer.html)
 will write a dummy value and force a return of `commms::ErrorStatus::UpdateRequired`.
-After that when the `update()` is called, the layer will calculate size of the written 
+After that when the `update()` is called, the layer will calculate size of the written
 code and update previously written dummy value with the correct one.
 
 ---
@@ -370,7 +369,7 @@ code and update previously written dummy value with the correct one.
 **SIDE NOTE**: In the example above the `update()` functionality doesn't require
 any knowledge about the recently written message to be able to analyse the recently
 written data and update values where needed. However, in some cases the
-access to previously written message needs to be provided. 
+access to previously written message needs to be provided.
 The [COMMS Library](https://github.com/commschamp/comms)
 provides such overloaded `update()` member function which receives a reference to
 the message object as its first parameter.
@@ -378,14 +377,14 @@ the message object as its first parameter.
 ---
 
 Note that this particular tutorial focuses on the deeper understanding of message framing rather
-than messages and their fields. All the exchanged messages are defined not to contain 
+than messages and their fields. All the exchanged messages are defined not to contain
 any payload:
 ```xml
 <message name="Msg1" id="MsgId.M1" displayName="^Msg1Name" />
 <message name="Msg2" id="MsgId.M2" displayName="^Msg2Name" />
 <message name="Msg3" id="MsgId.M3" displayName="^Msg3Name" />
 ```
-In this particular case there is no real need to do a separate `handle()` 
+In this particular case there is no real need to do a separate `handle()`
 message for every message type. There is only one common function:
 ```cpp
 void ClientSession::handle(Message& msg)
@@ -401,28 +400,26 @@ if you add a handling function with better type match say `void ClientSession::h
 then this function will be called to handle `Msg1` message instead of common one
 when the code is recompiled.
 
-
 ## Summary
 
-- The [CommsChampion Ecosystem](https://commschamp.github.io/) allows clear separation of the protocol 
+- The [CommsChampion Ecosystem](https://commschamp.github.io/) allows clear separation of the protocol
   messages definition and the transport framing.
 - The transport framing is defined using `<frame>` XML node.
 - The protocol schema allows definition of multiple transport frames and the generated code
   allows the end application to select required one at compile time.
-- Every `<frame>` uses internal layers to specify transport fields and their 
+- Every `<frame>` uses internal layers to specify transport fields and their
   roles.
 - The generated C++ code of the frame(s) resides in [include/&lt;namespace&gt;/frame](include/tutorial5/frame) folder and
   uses classes from [comms::frame](https://commschamp.github.io/comms_doc/namespacecomms_1_1frame.html)
   namespace to define the layers.
-- The defined framing layers wrap one another, as the result the outermost layer is used 
+- The defined framing layers wrap one another, as the result the outermost layer is used
   to handle the whole transport framing.
-- For available frame API reference open the documentation of the 
+- For available frame API reference open the documentation of the
   [outermost layer](https://commschamp.github.io/comms_doc/namespacecomms_1_1frame.html) type.
-- The polymorphic behavior of the common interface class may influence the ability of the 
-  frame to perform its `write()` operation. 
+- The polymorphic behavior of the common interface class may influence the ability of the
+  frame to perform its `write()` operation.
 - When write operation returns [commms::ErrorStatus::UpdateRequired](https://commschamp.github.io/comms_doc/ErrorStatus_8h.html)
-  use [random access](https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator) iterator to 
+  use [random access](https://en.cppreference.com/w/cpp/named_req/RandomAccessIterator) iterator to
   perform `update()` operation.
 
-  
-[Read Previous Tutorial](../tutorial4) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial6) 
+[Read Previous Tutorial](../tutorial4) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial6)

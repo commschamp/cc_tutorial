@@ -13,13 +13,13 @@ struct DataViewBareMetalProtocolOptionsT : public TBase
     {
         struct Msg3Fields : public TBase::message::Msg3Fields
         {
-            using F1 = 
+            using F1 =
                 std::tuple<
                     comms::option::app::FixedSizeStorage<16>,
                     typename TBase::message::Msg3Fields::F1
                 >;
 
-            using F2 = 
+            using F2 =
                 std::tuple<
                     comms::option::app::SequenceFixedSizeUseFixedSizeStorage,
                     typename TBase::message::Msg3Fields::F2
@@ -32,8 +32,8 @@ struct DataViewBareMetalProtocolOptionsT : public TBase
                 comms::option::app::InPlaceAllocation,
                 typename TBase::frame::FrameLayers::Id
             >;
-            
-        }; // struct FrameLayers        
+
+        }; // struct FrameLayers
 
     }; // struct frame
 };

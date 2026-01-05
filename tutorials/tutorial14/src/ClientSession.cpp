@@ -23,7 +23,7 @@ void ClientSession::handle(Msg1& msg)
     if (printOptionalField(msg.field_f3())) {
         printIntField(msg.field_f3().field(), "\t");
     }
-    
+
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg1) {

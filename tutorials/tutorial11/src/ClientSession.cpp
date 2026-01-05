@@ -32,7 +32,7 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
 
     // Force switch statement based dispatch
     using Dispatcher =
-        tutorial11::dispatch::ClientInputMsgDispatcher<ClientProtocolOptions>;    
+        tutorial11::dispatch::ClientInputMsgDispatcher<ClientProtocolOptions>;
 
     // Process reported input, create relevant message objects and
     // dispatch all the created messages

@@ -11,12 +11,12 @@ namespace cc_tutorial
 
 void ClientSession::handle(Msg1& msg)
 {
-    std::cout << "Received message \"" << msg.doName() << "\" with ID=" << 
+    std::cout << "Received message \"" << msg.doName() << "\" with ID=" <<
         (unsigned)msg.doGetId() << " and version=" << msg.version() << '\n';
     printIntField(msg.field_f1());
     if (printOptionalField(msg.field_f2())) {
         printIntField(msg.field_f2().field(), "\t");
-    }    
+    }
     if (printOptionalField(msg.field_f3())) {
         printIntField(msg.field_f3().field(), "\t");
     }
@@ -32,15 +32,15 @@ void ClientSession::handle(Msg1& msg)
 
 void ClientSession::handle(Msg2& msg)
 {
-    std::cout << "Received message \"" << msg.doName() << "\" with ID=" << 
+    std::cout << "Received message \"" << msg.doName() << "\" with ID=" <<
         (unsigned)msg.doGetId() << " and version=" << msg.version() << '\n';
 
     if (printOptionalField(msg.field_f1())) {
         printEnumField(msg.field_f1().field(), "\t");
-    }         
+    }
     if (printOptionalField(msg.field_f2())) {
         printEnumField(msg.field_f2().field(), "\t");
-    }    
+    }
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg2) {
@@ -53,7 +53,7 @@ void ClientSession::handle(Msg2& msg)
 
 void ClientSession::handle(Msg3& msg)
 {
-    std::cout << "Received message \"" << msg.doName() << "\" with ID=" << 
+    std::cout << "Received message \"" << msg.doName() << "\" with ID=" <<
         (unsigned)msg.doGetId() << " and version=" << msg.version() << '\n';
 
     printSetField(msg.field_f1());
@@ -62,10 +62,10 @@ void ClientSession::handle(Msg3& msg)
     }
     if (printOptionalField(msg.field_f3())) {
         printIntField(msg.field_f3().field(), "\t");
-    }    
+    }
     if (printOptionalField(msg.field_f4())) {
         printIntField(msg.field_f4().field(), "\t");
-    }    
+    }
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg3) {
@@ -174,7 +174,7 @@ void ClientSession::sendMsg1()
     // The version based optional fields must exist by default
     assert(msg.field_f2().doesExist());
     assert(msg.field_f3().doesExist());
-    
+
     msg.field_f1().value() = 1111;
     msg.field_f2().field().value() = 2222;
     msg.field_f3().field().value() = 3333;
@@ -183,8 +183,8 @@ void ClientSession::sendMsg1()
     msg.doRefresh(); // Update version fields;
 
     assert(msg.field_f2().doesExist());
-    assert(msg.field_f3().isMissing()); // Does not exist for version 3    
-    
+    assert(msg.field_f3().isMissing()); // Does not exist for version 3
+
     sendMessage(msg);
 }
 
@@ -196,7 +196,7 @@ void ClientSession::sendMsg2()
     // The version based optional fields must exist by default
     assert(msg.field_f1().doesExist());
     assert(msg.field_f2().doesExist());
-    
+
     msg.field_f1().field().value() = Msg2::Field_f1::Field::ValueType::V1;
     msg.field_f2().field().value() = Msg2::Field_f2::Field::ValueType::V2;
 
@@ -204,7 +204,7 @@ void ClientSession::sendMsg2()
     msg.doRefresh(); // Update version fields;
 
     assert(msg.field_f1().doesExist());
-    assert(msg.field_f2().isMissing()); // Does not exist for version 2       
+    assert(msg.field_f2().isMissing()); // Does not exist for version 2
     sendMessage(msg);
 }
 
@@ -221,7 +221,7 @@ void ClientSession::sendMsg3()
     msg.doRefresh(); // Update version fields;
 
     assert(msg.field_f2().doesExist());
-    assert(msg.field_f3().isMissing()); 
+    assert(msg.field_f3().isMissing());
     assert(msg.field_f4().doesExist()); // Exists for versison 5
     sendMessage(msg);
 }

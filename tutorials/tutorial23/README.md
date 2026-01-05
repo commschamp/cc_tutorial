@@ -91,17 +91,17 @@ using ClientProtocolOptions =
 
 The [ServerSession](src/ServerSession.h) used even more complex definition:
 ```cpp
-using ExtProtocolOptions = 
+using ExtProtocolOptions =
     t23_ext::options::DataViewDefaultOptionsT<
         t23_ext::options::ServerDefaultOptions
     >;
 
-using ServerProtocolOptions = 
+using ServerProtocolOptions =
     tutorial23::options::DataViewDefaultOptionsT<
         tutorial23::options::ServerDefaultOptionsT<
             tutorial23::options::DefaultOptionsT<
                 ExtProtocolOptions
-            >   
+            >
         >
     >;
 ```
@@ -146,5 +146,4 @@ than `<ref>`-erence them.
 - When using multiple schemas it is highly recommended to **reuse** the fields  rather
 than `<ref>`-erence them.
 
-
-[Read Previous Tutorial](../tutorial22) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial24) 
+[Read Previous Tutorial](../tutorial22) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial24)

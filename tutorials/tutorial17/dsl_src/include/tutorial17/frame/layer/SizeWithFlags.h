@@ -23,7 +23,7 @@ class SizeWithFlags : public
     >
 {
     // Repeat base type
-    using Base = 
+    using Base =
         comms::frame::MsgSizeLayer<
             TField,
             TNextLayer,
@@ -33,7 +33,7 @@ class SizeWithFlags : public
 
 public:
     // Repeat some types from the base class
-    using Field = typename Base::Field;    
+    using Field = typename Base::Field;
 
     // Given the combined bitfield field, retrieve remaining size
     static std::size_t getRemainingSizeFromField(const Field& field)
@@ -42,12 +42,12 @@ public:
     }
 
     // Before forwarding read to the next layer update flags extra transport field in the interface
-    template<typename TMsg> 
+    template<typename TMsg>
     static void beforeRead(const Field& field, TMsg* msg)
     {
         COMMS_ASSERT(msg != nullptr); // The message object is expected to be created
         msg->transportField_flags().setBitValue_B0(field.field_flags().getBitValue_F1());
-    } 
+    }
 
     // Prepare field value to be written
     template <typename TMsg>
@@ -64,6 +64,4 @@ public:
 } // namespace frame
 
 } // namespace tutorial17
-
-
 

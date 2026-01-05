@@ -17,7 +17,7 @@ int main(int argc, const char* argv[])
         cc_tutorial::TcpClient client(io);
 
         if (!client.start()) {
-            std::cerr << "Failed to start tcp server!" << std::endl;
+            std::cerr << "Failed to start tcp client!" << std::endl;
             return -1;
         }
 

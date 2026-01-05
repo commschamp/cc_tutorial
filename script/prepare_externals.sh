@@ -123,7 +123,7 @@ function build_commsdsl() {
         -DCMAKE_INSTALL_PREFIX=${COMMSDSL_INSTALL_DIR} -DCMAKE_BUILD_TYPE=${COMMON_BUILD_TYPE} \
         ${COMMON_USE_CCACHE:+"-DCOMMSDSL_USE_CCACHE=${COMMON_USE_CCACHE}"} \
         ${COMMON_CCACHE_EXECUTABLE:+"-DCOMMSDSL_CCACHE_EXECUTABLE=${COMMON_CCACHE_EXECUTABLE}"} \
-        -DCOMMSDSL_INSTALL_LIBRARY=OFF 
+        -DCOMMSDSL_INSTALL_LIBRARY=OFF
     cmake --build ${COMMSDSL_BUILD_DIR} --config ${COMMON_BUILD_TYPE} --target install ${procs_param}
 }
 
@@ -131,6 +131,4 @@ set -e
 export VERBOSE=1
 build_comms
 build_commsdsl
-
-
 

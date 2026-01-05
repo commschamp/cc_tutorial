@@ -1,4 +1,4 @@
-/// @brief Custom read 
+/// @brief Custom read
 template <typename TIter>
 comms::ErrorStatus doRead(TIter& iter, std::size_t len)
 {

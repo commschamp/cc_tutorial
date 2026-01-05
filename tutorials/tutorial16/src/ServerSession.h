@@ -19,7 +19,7 @@ public:
     using Base::Base; // Inherit constructors
 
     // Common interface class for all the messages
-    using Message = 
+    using Message =
         tutorial16::Interface<
             comms::option::app::ReadIterator<const std::uint8_t*>, // Polymorphic read
             comms::option::app::WriteIterator<std::uint8_t*>, // Polymorphic write
@@ -29,7 +29,7 @@ public:
             comms::option::app::Handler<ServerSession> // Polymorphic dispatch
         >;
 
-    using ServerProtocolOptions = 
+    using ServerProtocolOptions =
         tutorial16::options::DataViewDefaultOptionsT<
             tutorial16::options::ServerDefaultOptions
         >;
@@ -41,8 +41,8 @@ protected:
     virtual std::size_t processInputImpl(const std::uint8_t* buf, std::size_t bufLen) override final;
 
 private:
-    // Server specific frame 
-    using Frame = 
+    // Server specific frame
+    using Frame =
         tutorial16::frame::Frame<
             Message,
             tutorial16::input::ServerInputMessages<Message, ServerProtocolOptions>,

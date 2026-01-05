@@ -31,13 +31,12 @@ private:
     ClientSession& m_session;
 };
 
-
-} // namespace 
+} // namespace
 
 void ClientSession::handle(Msg& msg)
 {
     std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << '\n';
-    
+
     auto& propsVec = msg.field_props().value();
     std::cout << '\t' << msg.field_props().name() << " (" << propsVec.size() << " elements)\n";
     for (auto idx = 0U; idx < propsVec.size(); ++idx) {
@@ -46,7 +45,7 @@ void ClientSession::handle(Msg& msg)
     }
 
     std::cout << std::endl;
-    doNextStage();    
+    doNextStage();
 }
 
 void ClientSession::handle(Message& msg)
@@ -151,7 +150,7 @@ void ClientSession::sendMsg()
     propsVec[0].initField_prop1().field_val().value() = 0x12345678;
     propsVec[1].initField_prop2().field_val().value() = 1.23;
     propsVec[2].initField_prop3().field_val().value() = "hello";
-    
+
     msg.doRefresh(); // Update the length fields.
 
     std::vector<std::uint8_t> output;

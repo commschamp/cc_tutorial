@@ -7,7 +7,7 @@ fi
 
 if [ -z "${COMMON_BUILD_TYPE}" ]; then
     echo "ERROR: Build type not provided"
-    exit 1    
+    exit 1
 fi
 
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

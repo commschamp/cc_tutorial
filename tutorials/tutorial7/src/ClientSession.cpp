@@ -17,7 +17,6 @@ ClientSession::ClientSession(boost_wrap::io& io)
     m_handlers.emplace_back(new Handler2);
 }
 
-
 bool ClientSession::startImpl()
 {
     doNextStage();
@@ -175,6 +174,5 @@ SessionPtr Session::createClient(boost_wrap::io& io)
 {
     return SessionPtr(new ClientSession(io));
 }
-
 
 } // namespace cc_tutorial

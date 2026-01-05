@@ -234,7 +234,7 @@ void ClientSession::handle(Msg11& msg)
             (unsigned)msg.field_f3().field_m2().value() << " (" << msg.field_f3().field_m2().valueName()  << ")\n" <<
         std::endl;
 
-    doNextStage();        
+    doNextStage();
 }
 
 void ClientSession::handle(Msg12& msg)
@@ -245,7 +245,7 @@ void ClientSession::handle(Msg12& msg)
     }
     std::cout << std::endl;
 
-    doNextStage();        
+    doNextStage();
 }
 
 void ClientSession::handle(Msg13& msg)
@@ -258,10 +258,10 @@ void ClientSession::handle(Msg13& msg)
 
     if (printOptionalField(msg.field_f3())) {
         std::cout << "\t\t" << msg.field_f3().field().name() << " = " << (unsigned)msg.field_f3().field().value() << '\n';
-    }    
+    }
     std::cout << std::endl;
 
-    doNextStage();        
+    doNextStage();
 }
 
 void ClientSession::handle(Msg14& msg)
@@ -322,7 +322,7 @@ void ClientSession::handle(Msg17& msg)
         '\t' << f2Name << '.' << msg.field_f2().field_m2().name() << " = " <<
             msg.field_f2().field_m2().value() << '\n' <<
         '\t' << f2Name << '.' << msg.field_f2().field_m3().name() << " = " <<
-            msg.field_f2().field_m3().value() << '\n';            
+            msg.field_f2().field_m3().value() << '\n';
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg17) {
@@ -343,15 +343,15 @@ void ClientSession::handle(Msg18& msg)
 
     if (printOptionalField(msg.field_f3())) {
         std::cout << "\t\t" << msg.field_f3().field().name() << " = " << (unsigned)msg.field_f3().field().value() << '\n';
-    }    
+    }
     std::cout << std::endl;
 
     if (m_currentStage != CommsStage_Msg18) {
         std::cerr << "ERROR: Unexpected message received: " << std::endl;
         return;
-    }    
+    }
 
-    doNextStage();        
+    doNextStage();
 }
 
 void ClientSession::handle(Message& msg)
@@ -386,7 +386,7 @@ std::size_t ClientSession::processInputImpl(const std::uint8_t* buf, std::size_t
 void ClientSession::sendMessage(const Message& msg)
 {
     std::cout << "Sending message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << std::endl;
-    
+
     // The statement below uses polymorphic message name and ID retrievals.
     std::vector<std::uint8_t> output;
 
@@ -649,7 +649,7 @@ void ClientSession::sendMsg10()
     f4Vec.resize(1);
     f4Vec[0].field_m1().value() = 99;
     f4Vec[0].field_m2().value() = Msg10::Field_f4::ValueType::value_type::Field_m2::ValueType::V2;
-    f4Vec[0].field_m3().value() = "hello"; 
+    f4Vec[0].field_m3().value() = "hello";
     sendMessage(msg);
 }
 
@@ -730,7 +730,6 @@ void ClientSession::sendMsg16()
     msg.field_f3().value() = 3;
     sendMessage(msg);
 }
-
 
 void ClientSession::sendMsg17()
 {

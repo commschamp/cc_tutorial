@@ -10,22 +10,22 @@ namespace cc_tutorial
 
 void ServerSession::handle(Msg1& msg)
 {
-    std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << 
+    std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() <<
         ", dropping it..." << std::endl;
 }
 
 void ServerSession::handle(GenericMessage& msg)
 {
-    std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() << 
+    std::cout << "Received message \"" << msg.doName() << "\" with ID=" << (unsigned)msg.doGetId() <<
         ", echoing it back..." << std::endl;
-    
+
     sendMessage(msg);
 }
 
 void ServerSession::handle(Message& msg)
 {
     // The statement below uses polymorphic message name and ID retrievals.
-    std::cout << "Received unexpected message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() << 
+    std::cout << "Received unexpected message \"" << msg.name() << "\" with ID=" << (unsigned)msg.getId() <<
         ", ignoring..." << std::endl;
 
     assert(!"Should not happen");

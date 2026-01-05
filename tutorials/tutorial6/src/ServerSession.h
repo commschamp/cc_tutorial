@@ -22,7 +22,7 @@ public:
             comms::option::app::LengthInfoInterface, // Polymorphic length calculation
             comms::option::app::IdInfoInterface // Polymorphic message ID retrieval
         >;
-        
+
     // Handle all the received messages in a common generic fuctnion
     template <typename TMsg>
     void handle(TMsg& msg)

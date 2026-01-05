@@ -4,7 +4,7 @@ if [ -z "${CC}" ]; then
     export CC=clang
 fi
 
-if [ -z "${CXX}" ]; then    
+if [ -z "${CXX}" ]; then
     export CXX=clang++
 fi
 

@@ -1,8 +1,8 @@
 # Tutorial 7
 Dispatching single message object to multiple handlers.
 
-In this tutorial the **server** is a usual _echo_ one and of little interest to us. 
-The **client** side, however, shows a way of how to dispatch a single message object to 
+In this tutorial the **server** is a usual _echo_ one and of little interest to us.
+The **client** side, however, shows a way of how to dispatch a single message object to
 multiple handlers.
 
 First of all, there is no limitation imposed on the handling class against using
@@ -14,12 +14,12 @@ option.
 class HandlerBase;
 
 // Interface defintion
-using Message = 
+using Message =
     comms::Message<
         ...,
         comms::option::app::Handler<HandlerBase>
     >;
-    
+
 // Definition of the messages
 using Msg1 = tutorial7::message::Message1<Message>;
 using Msg2 = ...
@@ -77,10 +77,10 @@ Please pay attention to the following details:
 It's easy to notice that there is a circular dependency on type definition. The good thing is that the
 `dispatch()` member function defined by the [comms::Message](https://commschamp.github.io/comms_doc/classcomms_1_1Message.html)
 receives the handler type by reference and does **NOT** require a knowledge about the internals of
-the handler class, just that it exists. That's why there is a forward declaration of the 
+the handler class, just that it exists. That's why there is a forward declaration of the
 handler base class (`HandlerBase`) before the interface class definition (`Message`).
 
-Similar logic could apply to the definition of the handler classes. When the base class 
+Similar logic could apply to the definition of the handler classes. When the base class
 (`HandlerBase`) is defined, the `handle()` member functions receive the message objects by
 reference. If there is a problem of circular dependencies on type definition for some reason,
 the message classes can be forward declared, like this:
@@ -103,13 +103,13 @@ class Msg1 : public tutorial7::message::Message1<Message> {};
 class Msg2 : public tutorial7::message::Message2<Message> {};
 ...
 ```
-Also note, that when defining the actual handler classes with accessing the message member 
+Also note, that when defining the actual handler classes with accessing the message member
 fields and/or member functions the actual type of the message needs to be known, i.e. the
 message types / classes need to be defined before defining the handling functions.
 
 This was a bit of theory. Now let's take a closer look at the [ClientSession](src/ClientSession.h).
 The [comms::GenericHandler](https://commschamp.github.io/comms_doc/classcomms_1_1GenericHandler.html)
-helper class provided by the [COMMS Library](https://github.com/commschamp/comms) 
+helper class provided by the [COMMS Library](https://github.com/commschamp/comms)
 is used.
 ```cpp
 class HandlerBase : public
@@ -122,7 +122,7 @@ public:
     virtual ~HandlerBase() = default;
 };
 ```
-The first template parameter passed to the 
+The first template parameter passed to the
 [comms::GenericHandler](https://commschamp.github.io/comms_doc/classcomms_1_1GenericHandler.html)
 is the common message interface class. The second one is `std::tuple` of all the message types
 handling of which needs to be supported. In this example we reuse the definition of all the
@@ -133,7 +133,7 @@ creates a common `virtual void handle(Message& msg)` member function that receiv
 the common interface class and does nothing in its body. It also
 creates `virtual void handle(...)` member function for every message type provided as a member of the
 tuple passed as the second template parameter. The default implementation of such function is to
-upcast the message object into the common interface and invoke the common handling function (which 
+upcast the message object into the common interface and invoke the common handling function (which
 does nothing). Something like this:
 ```cpp
 class HandlerBase
@@ -143,17 +143,17 @@ public:
     {
         handle(static_cast<Message&>(msg));
     }
-    
+
     virtual void handle(Msg2& msg)
     {
         handle(static_cast<Message&>(msg));
-    }    
+    }
     ...
     // Handling with common interface
     virtual void handle(Message& msg)
     {
         // Do nothing
-    }      
+    }
 }
 ```
 The deriving class may override any of the defined virtual `handle()` member function to modify the default
@@ -167,7 +167,7 @@ public:
     virtual ~HandlerBase() = default;
 };
 ```
-The reason for explicit definition is that 
+The reason for explicit definition is that
 [comms::GenericHandler](https://commschamp.github.io/comms_doc/classcomms_1_1GenericHandler.html)
 uses inheritance to properly generate its `handle()` member functions. It's been noticed that if
 any of such base classes used in inheritance has a virtual destructor, then the compiler creates
@@ -175,7 +175,7 @@ multiple unnecessary v-tables which results in significant code size growth. To 
 code quality and size it has been decided to define destructor of the
 [comms::GenericHandler](https://commschamp.github.io/comms_doc/classcomms_1_1GenericHandler.html)
 as **non-virtual**. In case the actual handlers are dynamically allocated and held by the pointer
-to their base class, the compiler might report and error of destroying the polymorphic object without 
+to their base class, the compiler might report and error of destroying the polymorphic object without
 virtual destructor. The explicit definition of the later solves the problem.
 
 The definition of the handlers look like this:
@@ -206,10 +206,10 @@ is used.
 
 Please also take a look how the `ClientSession::processInputImpl()` is implemented.
 It doesn't use `comms::processAllWithDispatch()` as many other tutorials did because
-there is no single handler object to dispatch the message to. The handling loop 
+there is no single handler object to dispatch the message to. The handling loop
 needs to be implemented manually.
 
-Once the message object is successfully created the dispatch to multiple handlers is 
+Once the message object is successfully created the dispatch to multiple handlers is
 implemented like this:
 ```cpp
 assert(msg); // Message object must be allocated
@@ -221,7 +221,7 @@ for (auto& h : m_handlers) {
 }
 ```
 
-The handlers are dynamically allocated and held by `std::unique_ptr` to 
+The handlers are dynamically allocated and held by `std::unique_ptr` to
 the base class.
 ```cpp
 class ClientSession : public Session
@@ -229,7 +229,7 @@ class ClientSession : public Session
 public:
     ...
     using HandlerPtr = std::unique_ptr<HandlerBase>;
-    
+
 private:
     ...
     std::vector<HandlerPtr> m_handlers;
@@ -243,7 +243,7 @@ ClientSession::ClientSession(boost_wrap::io& io)
 }
 ```
 
---- 
+---
 
 **SIDE NOTE**: Using polymorphic dispatch described above to support multiple
 handlers is **NOT** a must have solution. It is still possible to use various
@@ -258,7 +258,7 @@ Handler2 handler2;
 comms::dispatchMsgStaticBinSearch<Frame::AllMessages>(*msg, handler1);
 comms::dispatchMsgStaticBinSearch<Frame::AllMessages>(*msg, handler2);
 ```
-However be aware that the types of the handlers differ and the code of 
+However be aware that the types of the handlers differ and the code of
 `comms::dispatchMsgStaticBinSearch()` will be duplicated for every handler
 type passed to the function.
 
@@ -272,17 +272,17 @@ for (auto& h : m_handlers) {
 }
 ```
 
-Also note that `comms::dispatchMsgStaticBinSearch()` requires knowledge about message ID to 
-be able to implement proper comparison statements. The variant of the 
+Also note that `comms::dispatchMsgStaticBinSearch()` requires knowledge about message ID to
+be able to implement proper comparison statements. The variant of the
 `comms::dispatchMsgStaticBinSearch()` used above does not receive the message ID as
-its parameter, hence must retrieve it using polymorphic `msg.getId()` call. There 
+its parameter, hence must retrieve it using polymorphic `msg.getId()` call. There
 might be a case when message interface does not allow polymorphic retrieval of message ID.
-In such case the ID information needs to be retrieved during framing processing. How to 
+In such case the ID information needs to be retrieved during framing processing. How to
 do it is out of scope for this tutorial and will be covered later.
 
-It is also recommended to read 
+It is also recommended to read
 [Advanced Guide to Message Dispatching](https://commschamp.github.io/comms_doc/page_dispatch.html)
-tutorial page for deeper understanding of available dispatch mechanisms provided by 
+tutorial page for deeper understanding of available dispatch mechanisms provided by
 the [COMMS Library](https://github.com/commschamp/comms).
 
 ----
@@ -290,16 +290,16 @@ the [COMMS Library](https://github.com/commschamp/comms).
 ## Summary
 - Dispatch of the single message object to multiple handlers can be implemented by using
   common base class for all the handlers with virtual `handle()` member functions.
-- The type of such common base class needs to be passed to the message interface 
+- The type of such common base class needs to be passed to the message interface
   using `comms::option::app::Handler` option.
 - If there are type definition circular dependencies the handler class can be forward declared.
 - It is recommended to use [comms::GenericHandler](https://commschamp.github.io/comms_doc/classcomms_1_1GenericHandler.html)
   to implement polymorphic base class for all the handlers.
 - The polymorphic way of dispatch is recommended solution when multiple handlers need to
-  be supported, but it's **NOT** a "must have" one. Other dispatch functions 
+  be supported, but it's **NOT** a "must have" one. Other dispatch functions
   defined in [comms/dispatch.h](https://commschamp.github.io/comms_doc/dispatch_8h.html)
-  can also be used. See also 
+  can also be used. See also
   [Advanced Guide to Message Dispatching](https://commschamp.github.io/comms_doc/page_dispatch.html)
   tutorial page.
 
-[Read Previous Tutorial](../tutorial6) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial8) 
+[Read Previous Tutorial](../tutorial6) &lt;-----------------------&gt; [Read Next Tutorial](../tutorial8)

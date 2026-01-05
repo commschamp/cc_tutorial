@@ -13,7 +13,7 @@
         <fields>
             <enum name="MsgId" type="uint8" semanticType="messageId">
                 <validValue name="M0" val="0" displayName="^Msg1Name" />
-            </enum>    
+            </enum>
         </fields>
 
         <frame name="Frame">
@@ -25,7 +25,7 @@
             </id>
             <payload name="Data" />
         </frame>
-    
+
         <message name="Msg1" id="sub1.MsgId.M0" order="0" displayName="^Msg1Name" />
         <message name="Msg2" id="sub1.MsgId.M0" order="1" displayName="^Msg2Name" />
         <message name="Msg3" id="sub1.MsgId.M0" order="2" displayName="^Msg3Name" />
@@ -37,7 +37,7 @@
                 <validValue name="M4" val="1" displayName="^Msg1Name" />
                 <validValue name="M5" val="2" displayName="^Msg2Name" />
                 <validValue name="M6" val="3" displayName="^Msg3Name" />
-            </enum>    
+            </enum>
         </fields>
 
         <frame name="Frame">
@@ -47,9 +47,9 @@
             <id name="Id" field="sub2.MsgId" />
             <payload name="Data" />
         </frame>
-    
+
         <message name="Msg4" id="sub2.MsgId.M4" displayName="^Msg4Name" />
         <message name="Msg5" id="sub2.MsgId.M5" displayName="^Msg5Name" />
         <message name="Msg6" id="sub2.MsgId.M6" displayName="^Msg6Name" />
-    </ns>    
+    </ns>
 </schema>

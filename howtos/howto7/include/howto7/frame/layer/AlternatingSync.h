@@ -25,7 +25,7 @@ class AlternatingSync : public
     >
 {
     // Repeat base type
-    using Base = 
+    using Base =
         comms::frame::SyncPrefixLayer<
             TField,
             TNextLayer,
@@ -35,7 +35,7 @@ class AlternatingSync : public
 
 public:
     // Repeat types defined in the base class (not visible by default)
-    using Field = typename Base::Field; 
+    using Field = typename Base::Field;
 
     // Customizing input field value verification logic
     bool verifyFieldValue(const Field& field)
@@ -45,7 +45,7 @@ public:
             ++m_inputCount;
         }
         return valid;
-    } 
+    }
 
     // Customizing output field preparation logic
     void prepareFieldForWrite(Field& field) const
@@ -70,12 +70,10 @@ private:
     unsigned m_inputCount = 0;
     mutable unsigned m_outputCount = 0;
 };
-   
+
 } // namespace layer
 
 } // namespace frame
 
 } // namespace howto7
-
-
 

@@ -6,14 +6,14 @@
             <validValue name="V2" val="1" />
             <validValue name="V3" val="2" />
         </enum>
-        
+
         <enum name="E2_2" type="uint16" defaultValue="V2">
             <validValue name="V1" val="0" />
             <validValue name="V2" val="100" />
             <validValue name="V3" val="0x10f" />
-        </enum>        
+        </enum>
     </fields>
-    
+
     <message name="Msg2" id="MsgId.M2" displayName="Message 2">
         <ref name="F1" field="E2_1" />
         <ref name="F2" field="E2_2" />
@@ -28,5 +28,5 @@
             <validValue name="V3" val="0x2ff" displayName="Value 3"/>
             <validValue name="V4" val="0xfff" displayName="Value 4"/>
         </enum>
-    </message>    
+    </message>
 </schema>

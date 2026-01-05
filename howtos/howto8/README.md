@@ -1,7 +1,7 @@
 # How-To 8
 Optional fields in message framing.
 
-There are protocols that may contain some extra optional fields as part of message 
+There are protocols that may contain some extra optional fields as part of message
 framing, presence of which is determined by some other condition, for example
 some bit is set in one of the preceding framing fields.
 
@@ -9,11 +9,11 @@ This howto uses the following frame:
 ```
 SIZE (2 bytes) | ID | FLAGS (optional 1 byte) | PAYLOAD
 ```
-Where `ID` is 7 bit numeric ID with most significant bit indicating presence of the optional `FLAGS` 
+Where `ID` is 7 bit numeric ID with most significant bit indicating presence of the optional `FLAGS`
 that might follow. The value of `FLAGS` may have an influence on presence of some fields in the
 `PAYLOAD`.
 
-Due to the fact that the value of `FLAGS` may have an influence on how the message payload 
+Due to the fact that the value of `FLAGS` may have an influence on how the message payload
 is read/processes, the [schema](dsl/schema.xml) needs to define common `<interface>`.
 ```xml
 <fields>
@@ -58,7 +58,7 @@ additional processing logic of whether the field is present.
 The `<custom>` layers require C++ code to be provided. The `Id` layer is implemented inside
 [dsl_src/include/howto8/frame/layer/Id.h](dsl_src/include/howto8/frame/layer/Id.h)
 (copied by the code generator to [include/howto8/frame/layer/Id.h](include/howto8/frame/layer/Id.h))
-and the `Flags` layer is implemented inside 
+and the `Flags` layer is implemented inside
 [dsl_src/include/howto8/frame/layer/Flags.h](dsl_src/include/howto8/frame/layer/Flags.h)
 (copied by the code generator to [include/howto8/frame/layer/Flags.h](include/howto8/frame/layer/Flags.h))
 
@@ -81,7 +81,7 @@ class Id : public
 
 public:
     // Repeat some types from the base class
-    using Field = typename Base::Field;    
+    using Field = typename Base::Field;
     using MsgIdType = typename Base::MsgIdType;
     using MsgIdParamType = typename Base::MsgIdParamType;
 
@@ -93,13 +93,13 @@ public:
 
     // Before forwarding read to the next layer let the flags layer know
     // whether its field is present
-    template<typename TMsg> 
+    template<typename TMsg>
     void beforeRead(const Field& field, TMsg& msg)
     {
         static_cast<void>(msg);
         bool hasFlags = field.field_ctrl().getBitValue_HasFlags();
         Base::nextLayer().setFieldPreset(hasFlags);
-    } 
+    }
 
     // Prepare field value to be written
     template <typename TMsg>
@@ -111,22 +111,22 @@ public:
     }
 };
 ```
-**NOTE** that the inner (wrapped) layers like `Flags` can be accessed using a 
+**NOTE** that the inner (wrapped) layers like `Flags` can be accessed using a
 sequence of [nextLayer()](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html)
-member functions invocations (`Base::nextLayer().nextLayer().nextLayer()....`). 
+member functions invocations (`Base::nextLayer().nextLayer().nextLayer()....`).
 In this case the `Flags` is actually the next one and only single invocation needs to be used.
 
-The `Flags` layer class is also expected to provide `setFieldPreset()` and 
+The `Flags` layer class is also expected to provide `setFieldPreset()` and
 `isFieldPresent()` member functions.
 
-For more details on available customization of the 
+For more details on available customization of the
 [comms::frame::MsgIdLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1MsgIdLayer.html)
-please refer to 
+please refer to
 [Defining Custom Message ID Frame Layer](https://commschamp.github.io/comms_doc/page_custom_id_layer.html)
 COMMS library tutorial page.
 
 The [Flags](dsl_src/include/howto8/frame/layer/Flags.h) is implemented by extending
-and customizing 
+and customizing
 [comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html).
 ```cpp
 template<typename TField, typename TNextLayer, typename... TOptions>
@@ -144,12 +144,12 @@ class Flags : public
 
 public:
     // Repeat types defined in the base class (not visible by default)
-    using Field = typename Base::Field; 
+    using Field = typename Base::Field;
 
     // Extra public functions
     void setFieldPreset(bool value)
     {
-        m_hasFlagsOnRead = value;    
+        m_hasFlagsOnRead = value;
     }
 
     template <typename TMsg>
@@ -178,7 +178,7 @@ public:
         assert(msgPtr != nullptr);
         msgPtr->transportField_flags().value() = field.field().value();
         return true;
-    }    
+    }
 
     // Overriding default field preparation functionality
     template <typename TMsg>
@@ -190,7 +190,7 @@ public:
             mode = comms::field::OptionalMode::Exists;
         }
         field.setMode(mode);
-    } 
+    }
 
     template <typename TMsg>
     static std::size_t doFieldLength(const TMsg& msg)
@@ -200,22 +200,21 @@ public:
         }
 
         return Field::minLength(); // returns 0
-    }    
-    
+    }
+
 private:
-    bool m_hasFlagsOnRead = false;    
+    bool m_hasFlagsOnRead = false;
 };
 ```
-Note that only the read of the field needs to be customized by forcing a mode of the `<optional>` field. 
+Note that only the read of the field needs to be customized by forcing a mode of the `<optional>` field.
 The write operation is performed normally due to the mode preparation is done inside
 the `prepareFieldForWrite()`.
 
-For more details on available customization of the 
+For more details on available customization of the
 [comms::frame::TransportValueLayer](https://commschamp.github.io/comms_doc/classcomms_1_1frame_1_1TransportValueLayer.html)
-please refer to 
+please refer to
 [Defining Custom Transport Value Frame Layer](https://commschamp.github.io/comms_doc/page_custom_transport_value_layer.html)
 COMMS library tutorial page.
-
 
 Note that the flags inside the interface influence the presence of some fields in
 `Msg1` and `Msg2`, some operations of which are customized by providing relevant
