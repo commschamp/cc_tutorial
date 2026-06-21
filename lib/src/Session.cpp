@@ -83,7 +83,7 @@ void Session::doRead()
 
             auto consumed = processInputImpl(buf, bufLen);
             if (useVector) {
-                m_inData.erase(m_inData.begin(), m_inData.begin() + consumed);
+                m_inData.erase(m_inData.begin(), m_inData.begin() + static_cast<int>(consumed));
             }
             else {
                 auto begIter = buf + consumed;
