@@ -9,7 +9,7 @@ function (lib_server)
     
     add_library(${name} STATIC ${src})
     target_link_libraries(
-        ${name} PUBLIC Boost::system Boost::boost)
+        ${name} PUBLIC Boost::boost)
         
     target_include_directories(
         ${name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)        
@@ -41,7 +41,7 @@ function (lib_client)
     
     add_library(${name} STATIC ${src})
     target_link_libraries(
-        ${name} PUBLIC Boost::system Boost::boost)
+        ${name} PUBLIC Boost::boost)
         
     target_include_directories(
         ${name} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)        
