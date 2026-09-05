@@ -8,8 +8,8 @@ on:
       - '**'
 
 env:
-  COMMS_TAG: v5.5.2
-  COMMSDSL_TAG: v8.1
+  COMMS_TAG: v5.5.3
+  COMMSDSL_TAG: v8.1.1
   WIN_BOOST_VERSION: "1.87.0"
   WIN_BOOST_DIR: "C:/local/boost_1_87_0"
 
@@ -30,7 +30,7 @@ jobs:
       run: sudo apt-get update --fix-missing
 
     - name: Install Packages
-      run: sudo apt install libqt5gui5 libboost-all-dev libxml2-dev gcc-${{matrix.cc_ver}} g++-${{matrix.cc_ver}}
+      run: sudo apt install libboost-all-dev libxml2-dev gcc-${{matrix.cc_ver}} g++-${{matrix.cc_ver}}
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
@@ -85,7 +85,7 @@ jobs:
       run: sudo apt-get update --fix-missing
 
     - name: Install Packages
-      run: sudo apt install libqt5gui5 libboost-all-dev libxml2-dev gcc-${{matrix.cc_ver}} g++-${{matrix.cc_ver}}
+      run: sudo apt install libboost-all-dev libxml2-dev gcc-${{matrix.cc_ver}} g++-${{matrix.cc_ver}}
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
@@ -142,7 +142,7 @@ jobs:
       run: sudo apt-get update --fix-missing
 
     - name: Install Packages
-      run: sudo apt install libqt5gui5 libboost-all-dev libxml2-dev clang-${{matrix.cc_ver}}
+      run: sudo apt install libboost-all-dev libxml2-dev clang-${{matrix.cc_ver}}
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
@@ -197,7 +197,7 @@ jobs:
       run: sudo apt-get update --fix-missing
 
     - name: Install Packages
-      run: sudo apt install libqt5gui5 libboost-all-dev libxml2-dev clang-${{matrix.cc_ver}}
+      run: sudo apt install libboost-all-dev libxml2-dev clang-${{matrix.cc_ver}}
 
     - name: Create Build Environment
       run: cmake -E make_directory ${{runner.workspace}}/build
