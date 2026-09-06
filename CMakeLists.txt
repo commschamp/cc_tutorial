@@ -25,7 +25,7 @@ endif ()
 
 include(GNUInstallDirs)
 
-find_package(Boost REQUIRED COMPONENTS system)
+find_package(Boost REQUIRED)
 
 if (OPT_FORCE_EXTRA_BOOST_LIBS)
     set (EXTRA_BOOST_TARGETS Boost::date_time Boost::regex)
@@ -66,6 +66,12 @@ if (EXISTS ${cc_compile_file})
 
     include (${cc_compile_file})
     cc_compile(${extra_opts})
+
+    if (CMAKE_COMPILER_IS_GNUCC)
+        if((CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 12) AND (CMAKE_CXX_COMPILER_VERSION VERSION_LESS 13))
+            list (APPEND extra_flags_list "-Wno-maybe-uninitialized")
+        endif()
+    endif ()    
 endif ()
 
 #######################################################
@@ -115,7 +121,7 @@ function (bin_server type name)
     set (bin_name ${name}_server)
     add_executable(${bin_name} ${ARGN})
     target_link_libraries(
-        ${bin_name} PRIVATE ${COMMON_SERVER_LIB} cc::comms Boost::system Boost::boost ${CMAKE_THREAD_LIBS_INIT})
+        ${bin_name} PRIVATE ${COMMON_SERVER_LIB} cc::comms Boost::boost ${CMAKE_THREAD_LIBS_INIT})
 
     if (OPT_FORCE_EXTRA_BOOST_LIBS)
         target_link_libraries(
@@ -149,7 +155,7 @@ function (bin_client type name)
     set (bin_name ${name}_client)
     add_executable(${bin_name} ${ARGN})
     target_link_libraries(
-        ${bin_name} PRIVATE ${COMMON_CLIENT_LIB} cc::comms Boost::system Boost::boost ${CMAKE_THREAD_LIBS_INIT})
+        ${bin_name} PRIVATE ${COMMON_CLIENT_LIB} cc::comms Boost::boost ${CMAKE_THREAD_LIBS_INIT})
 
     if (OPT_FORCE_EXTRA_BOOST_LIBS)
         target_link_libraries(
